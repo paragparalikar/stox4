@@ -44,10 +44,6 @@
 	-fx-stroke: derive(background-color, 70%);
 }
 
-.snap-to-grid-rectangle {
-	-fx-fill: derive(background-color, 70%);
-} 
-
 .target-aware-context-menu{
 	-fx-effect: dropshadow( gaussian, rgba(0,0,0,0.6), 10, 0.0 , 10 , 10);
 }

@@ -1,5 +1,8 @@
 package com.stox.fx.workbench;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.stox.Context;
 import com.stox.fx.fluent.scene.layout.FluentBorderPane;
 import com.stox.fx.fluent.stage.IFluentStage;
@@ -7,15 +10,17 @@ import com.stox.fx.widget.MovableArea;
 import com.stox.fx.widget.ResizableArea;
 import com.stox.fx.widget.SnapPane;
 import com.stox.fx.workbench.event.ModuleViewCloseRequestEvent;
+import com.stox.module.data.donwloader.DownloaderModule;
 
 import javafx.application.Application;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NonNull;
 
 public class Workbench extends Stage implements IFluentStage<Workbench>, MovableArea<Workbench>, ResizableArea<Workbench> {
@@ -23,8 +28,11 @@ public class Workbench extends Stage implements IFluentStage<Workbench>, Movable
 	private final WorkbenchTitleBar titleBar;
 	private final FluentBorderPane container;
 	private final SnapPane snapPane = new SnapPane();
+	@Getter(AccessLevel.PACKAGE)
+	private final List<? extends Module> modules;
 
-	public Workbench(final Context context) {
+	public Workbench(@NonNull final Context context) {
+		modules = Arrays.asList(new DownloaderModule(context));
 		titleBar = new WorkbenchTitleBar(context, this);
 		titleProperty().bind(context.getMessageSource().get("Stox"));
 		container = new FluentBorderPane().top(titleBar).center(snapPane);

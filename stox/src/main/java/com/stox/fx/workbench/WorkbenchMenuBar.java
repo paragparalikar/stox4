@@ -3,8 +3,6 @@ package com.stox.fx.workbench;
 import com.stox.Context;
 import com.stox.fx.fluent.scene.control.FluentLabel;
 import com.stox.fx.fluent.scene.control.IFluentMenuBar;
-import com.stox.fx.widget.Icon;
-import com.stox.module.data.donwloader.DownloaderModuleView;
 
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
@@ -25,25 +23,26 @@ public class WorkbenchMenuBar extends MenuBar implements IFluentMenuBar<Workbenc
 		getMenus().add(buildNewMenu());
 	}
 	
+	private Menu buildNewMenu() {
+		final Menu newMenu = new Menu();
+		newMenu.textProperty().bind(context.getMessageSource().get("New"));
+		workbench.getModules().forEach(module -> {
+			newMenu.getItems().add(buildModuleMenuItem(module));
+		});
+		return newMenu;
+	}
+	
+	private ModuleMenuItem buildModuleMenuItem(final Module module) {
+		final ModuleMenuItem item = new ModuleMenuItem(module.getIcon(), module.getName());
+		item.setOnAction(event -> add(module.buildModuleView()));
+		return item;
+	}
+	
 	private void add(final ModuleView<?> moduleView) {
 		workbench.add(moduleView);
 		final Bounds bounds = workbench.visualBounds();
 		moduleView.initDefaultBounds(bounds.getWidth(), bounds.getHeight());
 	}
-	
-	private Menu buildNewMenu() {
-		final Menu newMenu = new Menu();
-		newMenu.textProperty().bind(context.getMessageSource().get("New"));
-		newMenu.getItems().add(buildDownloaderMenuItem());
-		return newMenu;
-	}
-	
-	private ModuleMenuItem buildDownloaderMenuItem() {
-		final ModuleMenuItem item = new ModuleMenuItem(Icon.DOWNLOAD, context.getMessageSource().get("Downloader"));
-		item.setOnAction(event -> add(new DownloaderModuleView(context)));
-		return item;
-	}
-	
 	
 	
 	@Override

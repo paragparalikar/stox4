@@ -13,7 +13,6 @@ public class WorkbenchTitleBar extends TitleBar {
 	private final WindowControls windowControls;
 
 	public WorkbenchTitleBar(final Context context, final Workbench workbench) {
-		super(context.getMessageSource().get("application.title", "Stox"));
 		menuBar = new WorkbenchMenuBar(context, workbench);
 		center(new FluentHBox(menuBar, new Spacer(), new AuthorContact())).right(windowControls = new WindowControls(context.getMessageSource()));
 		addEventHandler(MouseEvent.MOUSE_PRESSED, this::onMouseEvent);

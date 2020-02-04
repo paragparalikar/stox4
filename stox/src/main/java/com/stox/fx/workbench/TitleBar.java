@@ -3,21 +3,21 @@ package com.stox.fx.workbench;
 import com.stox.fx.fluent.scene.layout.FluentHBox;
 import com.stox.fx.fluent.scene.layout.IFluentBorderPane;
 
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Side;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import lombok.NonNull;
 
 public class TitleBar extends BorderPane implements IFluentBorderPane<TitleBar> {
 
-	private final FluentHBox top = new FluentHBox(), right = new FluentHBox(), bottom = new FluentHBox(), left = new FluentHBox();
+	private final FluentHBox 
+			top = new FluentHBox(), 
+			right = new FluentHBox(), 
+			bottom = new FluentHBox(), 
+			left = new FluentHBox();
 
-	public TitleBar(final ObservableValue<String> titleValue) {
-		final Label titleLabel = new Label();
-		titleLabel.textProperty().bind(titleValue);
-		center(titleLabel).classes("primary-background", "title-bar");
+	public TitleBar() {
+		classes("primary-background", "title-bar");
 	}
 
 	public TitleBar append(@NonNull final Side side, @NonNull final Node node) {
