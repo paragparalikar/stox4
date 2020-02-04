@@ -1,0 +1,29 @@
+.root{
+	default-background-color: #888888;
+	default-text-color: white;
+	primary-background-color: #292929;
+	primary-text-color: white;
+	success-background-color: #5cb85c;
+	success-text-color: white;
+	danger-background-color: #d9534f;
+	danger-text-color: white;
+	
+	background-color: default-background-color;
+	text-color: default-text-color;
+}
+.tooltip {
+    -fx-background: black;
+    -fx-text-fill: white;
+    -fx-background-color: rgba(30,30,30,0.8);
+    -fx-background-radius: 6px;
+    -fx-background-insets: 0;
+    -fx-padding: 0.667em 0.75em 0.667em 0.75em; /* 10px */
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 3 , 3 );
+    -fx-font-size: 0.85em;
+}
+
+.auto-widget{
+	-fx-pref-width: 10em;
+	-fx-max-width: 10em;
+	-fx-min-width: 10em;
+}

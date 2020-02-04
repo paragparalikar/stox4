@@ -1,0 +1,111 @@
+.transparent-background{
+	-fx-background-color: transparent;
+}
+.primary-background{
+	-fx-background-color: primary-background-color;
+}
+.success-background{
+	-fx-background-color: success-background-color;
+}
+.danger-background{
+	-fx-background-color: danger-background-color;
+}
+
+
+.icon{
+	-fx-font-family: 'FontAwesome';
+	-fx-padding: 0;
+	-fx-pref-width: 25px;
+	-fx-pref-height: 25px;
+	-fx-alignment: center;
+	-fx-content-display: center;
+}
+.box {
+	-fx-spacing: 0;
+}
+.box .first {
+	-fx-border-radius: 0.3em 0 0 0.3em;
+	-fx-background-radius: 0.3em 0 0 0.3em;
+}
+.box .last {
+	-fx-border-radius: 0 0.3em 0.3em 0;
+	-fx-background-radius: 0 0.3em 0.3em 0;
+}
+.box .middle {
+	-fx-border-radius: 0 0 0 0;
+	-fx-background-radius: 0 0 0 0;
+}
+
+
+
+.tiny{
+	-fx-min-height: 1.4em;
+	-fx-pref-height: 1.4em;
+	-fx-max-height: 1.4em;
+	-fx-min-width: 1.4em;
+	-fx-pref-width: 1.4em;
+	-fx-max-width: 1.4em;
+	-fx-padding: 0;
+}
+.small{
+	-fx-min-height: 1.6em;
+	-fx-pref-height: 1.6em;
+	-fx-max-height: 1.6em;
+	-fx-min-width: 1.6em;
+	-fx-pref-width: 1.6em;
+	-fx-max-width: 1.6em;
+	-fx-padding: 0.2em;
+}
+.large{
+	-fx-min-height: 6em;
+	-fx-pref-height: 6em;
+	-fx-max-height: 6em;
+	-fx-min-width: 6em;
+	-fx-pref-width: 6em;
+	-fx-max-width: 6em;
+}
+.padded{
+	-fx-padding: 0.5em;
+}
+.spaced{
+	-fx-spacing: 0.5em;
+}
+.bordered{
+	-fx-border-width: 1px;
+	-fx-border-color: default-background-color;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.debug{
+	-fx-border-width: 1px;
+	-fx-border-color: red;
+}
+.debug1{
+	-fx-border-width: 1px;
+	-fx-border-color: green;
+}
+.debug2{
+	-fx-border-width: 1px;
+	-fx-border-color: blue;
+}
+

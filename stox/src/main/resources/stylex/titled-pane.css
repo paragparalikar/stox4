@@ -1,0 +1,30 @@
+.titled-pane{
+	background-color: default-background-color;
+	text-color: default-text-color;
+}
+.titled-pane > .title{
+	-fx-padding: 0.5em;
+}
+.titled-pane > .title,
+.titled-pane > .title .text{
+	-fx-background-color: background-color;
+	-fx-text-color: text-color;
+	-fx-fill: text-color;
+}
+
+.titled-pane.primary > .title{
+	background-color: primary-background-color;
+	text-color: primary-text-color;
+}
+.titled-pane > .title > .arrow-button {
+    -fx-background-color: null;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0.0em 0.583em 0.0em 0.0em; /* 0 7 0 0 */
+}
+.titled-pane > .title > .arrow-button > .arrow {
+    -fx-background-color: text-color;
+    -fx-background-insets: 1 0 -1 0, 0;
+    -fx-padding: 0.25em 0.3125em 0.25em 0.3125em; /* 3 3.75 3 3.75 */
+    -fx-shape: "M 0 0 h 7 l -3.5 4 z";
+}

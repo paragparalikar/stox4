@@ -1,0 +1,84 @@
+.button, .toggle-button{
+	-fx-padding: 0.5em 1.5em;
+	-fx-background-radius: 0.35em;
+	-fx-border-radius: 0.35em;
+	-fx-alignment: CENTER;
+	-fx-content-display: CENTER;
+	-fx-border-width: 0;
+	-fx-border-insets: 0;
+	-fx-background-insets: 0;
+	-fx-background-color: background-color;
+	-fx-text-fill: text-color;
+}
+.button:hover, .toggle-button:hover{
+	-fx-background-color: derive(background-color, 10%);
+}
+.button:pressed, .toggle-button:pressed, .toggle-button:selected{
+	-fx-background-color: derive(background-color, 20%);
+}
+.button:focused, .toggle-button:focused{
+	-fx-border-width: 1px;
+	-fx-border-color: derive(background-color, 20%);
+}
+.button:disabled, .toggle-button:disabled{
+	-fx-text-color: derive(text-color, -20%);
+}
+
+
+/* primary */
+.button.primary, .toggle-button.primary{
+	background-color: primary-background-color;
+	text-color: primary-text-color;
+}
+.button.primary.inverted, .toggle-button.primary.inverted{
+	background-color: primary-text-color;
+	text-color: primary-background-color;
+}
+
+
+/* success */
+.button.success, .toggle-button.success{
+	background-color: success-background-color;
+	text-color: success-text-color;
+}
+.button.success.inverted, .toggle-button.success.inverted{
+	background-color: success-text-color;
+	text-color: success-background-color;
+}
+.button.hover-success:hover, .toggle-button.hover-success:hover{
+	text-color: success-background-color;
+}
+
+/* danger */
+.button.danger, .toggle-button.danger{
+	background-color: danger-background-color;
+	text-color: danger-text-color;
+}
+.button.danger.inverted, .toggle-button.danger.inverted{
+	background-color: danger-text-color;
+	text-color: danger-background-color;
+}
+.button.hover-danger:hover, .toggle-button.hover-danger:hover{
+	text-color: danger-background-color;
+}
+
+
+/* combinations */
+.button.primary.success, .toggle-button.primary.success{
+	background-color: primary-background-color;
+	text-color: success-background-color;
+}
+.button.primary.success.inverted, .toggle-button.primary.success.inverted{
+	background-color: success-background-color;
+	text-color: primary-background-color;
+}
+
+.button.primary.danger, .toggle-button.primary.danger{
+	background-color: primary-background-color;
+	text-color: danger-background-color;
+}
+.button.primary.danger.inverted, .toggle-button.primary.danger.inverted{
+	background-color: danger-background-color;
+	text-color: primary-background-color;
+}
+

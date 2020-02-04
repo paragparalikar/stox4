@@ -1,0 +1,29 @@
+.menu-bar, .menu, .menu .label, .menu-button, .menu-item, .menu-item .label{
+	-fx-background-color: background-color;
+	-fx-text-color: text-color;
+}
+.menu-item {
+	-fx-padding: 0.25em 1em;
+	-fx-min-width: 15em;
+	-fx-pref-width: 15em;
+	-fx-min-height: 2.5em;
+	-fx-pref-height: 2.5em;
+}
+.menu-item:hover, .menu-item:hover .label{
+	-fx-background-color: derive(background-color, 10%);
+}
+.menu-item:pressed, .menu-item:pressed .label, 
+.menu-item:selected, .menu-item:selected .label,
+.menu-item:focused, .menu-item:focused .label
+{
+	-fx-background-color: derive(background-color, 20%);
+}
+
+
+.menu-bar.primary, 
+.primary.menu-bar .menu, .primary.menu-bar .menu .label, 
+.primary.menu-bar .menu-button, 
+.primary.menu-bar .menu-item, .primary.menu-bar .menu-item .label{
+	background-color: primary-background-color;
+	text-color: primary-text-color;
+}

@@ -1,0 +1,10 @@
+.tool-bar{
+	-fx-background-color: default-background-color;
+    -fx-background-insets: 0;
+    -fx-padding: 0.2em 1em;
+    -fx-spacing: 2em;
+    -fx-alignment: CENTER_LEFT;
+}
+.tool-bar.primary{
+	-fx-background-color: primary-background-color;
+}

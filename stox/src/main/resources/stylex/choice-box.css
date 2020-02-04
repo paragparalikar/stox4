@@ -1,0 +1,13 @@
+.choice-box{
+	-fx-background-radius: 0.3em;
+	-fx-border-radius: 0.3em;
+	-fx-content-display: LEFT;
+	-fx-padding: 0.2em 1em;
+	
+	-fx-border-width: 0 0 1px 0;
+	-fx-border-color: primary-background-color;
+}
+
+.choice-box.primary.inverted{
+	-fx-border-width: 0;
+}

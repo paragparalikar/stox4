@@ -1,0 +1,11 @@
+.search-box.primary .text-field{
+	-fx-padding: 0.2em 1em;
+	-fx-border-width: 0;
+}
+.search-box.primary .icon:hover{
+	-fx-background-color: derive(primary-text-color, -10%);
+}
+.search-box.primary .text-field, .search-box.primary .icon{
+	-fx-background-color: primary-text-color;
+	-fx-text-fill: primary-background-color;
+}

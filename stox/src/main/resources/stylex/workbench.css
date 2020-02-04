@@ -1,0 +1,53 @@
+.border{
+	background-color: primary-background-color;
+	-fx-background-color: background-color;
+}
+.border.left,
+.border.right{
+	-fx-min-width:2px;
+	-fx-pref-width:2px;
+	-fx-max-width:2px;
+}
+.border.top,
+.border.bottom{
+	-fx-min-height:2px;
+	-fx-pref-height:2px;
+	-fx-max-height:2px;
+}
+
+.glass{
+	-fx-background-color: background-color;
+	-fx-opacity: 0.3;
+}
+
+.module-view{
+	background-color: default-text-color;
+	-fx-background-color: background-color;
+}
+
+.title-bar{
+	-fx-spacing: 0.5em;
+	-fx-padding: 0.5em;
+	-fx-alignment: center;
+	-fx-fill-height: true;
+}
+.title-text{
+	-fx-text-fill: primary-text-color;
+}
+.contact-box{
+	-fx-spacing: 1em;
+	-fx-padding: 0 1em;
+}
+
+.snap-to-grid-line {
+	-fx-stroke-width: 0.5px;
+	-fx-stroke: derive(background-color, 70%);
+}
+
+.snap-to-grid-rectangle {
+	-fx-fill: derive(background-color, 70%);
+} 
+
+.target-aware-context-menu{
+	-fx-effect: dropshadow( gaussian, rgba(0,0,0,0.6), 10, 0.0 , 10 , 10);
+}

@@ -1,0 +1,38 @@
+.label{
+	background-color: transparent;
+	text-color: primary-background-color;
+	-fx-background-color: background-color;
+	-fx-text-fill: text-color;
+}
+.label:disabled{
+	-fx-text-color: derive(text-color, 20%);
+}
+
+
+.label.primary{
+	background-color: primary-background-color;
+	text-color: primary-text-color;
+}
+.label.primary.inverted{
+	background-color: primary-text-color;
+	text-color: primary-background-color;
+}
+
+
+.label.success{
+	background-color: success-background-color;
+	text-color: success-text-color;
+}
+.label.success.inverted{
+	background-color: success-text-color;
+	text-color: success-background-color;
+}
+
+.label.danger{
+	background-color: danger-background-color;
+	text-color: danger-text-color;
+}
+.label.danger.inverted{
+	background-color: danger-text-color;
+	text-color: danger-background-color;
+}

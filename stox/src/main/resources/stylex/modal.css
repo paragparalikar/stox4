@@ -1,0 +1,27 @@
+.modal .button-bar{
+	-fx-padding: 1em;
+	-fx-spacing: 1em;
+	-fx-alignment: center-right;
+}
+.modal .title-bar, .modal .border{
+	-fx-background-color: background-color;
+	-fx-text-fill: text-color;
+}
+.modal{
+	-fx-background-color: primary-text-color;
+	-fx-text-fill: primary-background-color;
+	-fx-effect: dropshadow( gaussian, rgba(0,0,0,0.6), 10, 0.0 , 10 , 10);
+}
+.modal .title-bar, .modal .title-bar .button, .modal .border{
+	background-color: primary-background-color;
+	text-color: primary-text-color;
+}
+
+.modal .content{
+	-fx-padding: 1em 1em 0 1em;
+}
+
+
+.modal.danger .title-bar, .modal.danger .title-bar .button, .modal.danger .border{
+	background-color: danger-background-color;
+}
