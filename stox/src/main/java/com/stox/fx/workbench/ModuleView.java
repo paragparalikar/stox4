@@ -34,7 +34,8 @@ public abstract class ModuleView<T extends ModuleView<T>> extends BorderPane imp
 	}
 	
 	public T initDefaultBounds(final double width, final double height) {
-		return layoutX(width/4).layoutY(height/4).width(width/2).height(height/2);
+		layoutX(width/4).layoutY(height/4).width(width/2).height(height/2).autosize();
+		return getThis();
 	}
 	
 	protected abstract TitleBar buildTitleBar();
