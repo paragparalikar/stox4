@@ -1,11 +1,15 @@
 package com.stox;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Icon;
+import com.stox.fx.workbench.Module;
 import com.stox.fx.workbench.Workbench;
+import com.stox.module.data.donwloader.DownloaderModule;
 
 import javafx.application.Application;
 import javafx.scene.text.Font;
@@ -19,6 +23,7 @@ public class Main extends Application {
 	
 	private Context context;
 	private Workbench workbench;
+	private List<? extends Module> modules;
 	
 	@Override
 	public void init() throws Exception {
@@ -32,7 +37,7 @@ public class Main extends Application {
 				.messageSource(new FxMessageSource())
 				.scheduledExecutorService(Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors()))
 				.build();
-		workbench = new Workbench(context);
+		workbench = new Workbench(context, modules = Arrays.asList(new DownloaderModule(context)));
 		workbench.show();
 	}
 	

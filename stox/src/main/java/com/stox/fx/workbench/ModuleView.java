@@ -31,7 +31,7 @@ public abstract class ModuleView<T extends ModuleView<T>> extends BorderPane imp
 	public ModuleView(@NonNull final String icon, @NonNull final ObservableValue<String> titleValue, @NonNull final Context context) {
 		this.context = context;
 		container.top(titleBar = buildTitleBar(icon, titleValue));
-		classes("module-view").dockable(container.top()).center(root);
+		classes("module-view").dockable(titleBar).center(root);
 	}
 
 	public T initDefaultBounds(final double width, final double height) {

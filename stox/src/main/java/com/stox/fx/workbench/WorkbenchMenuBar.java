@@ -1,5 +1,7 @@
 package com.stox.fx.workbench;
 
+import java.util.List;
+
 import com.stox.Context;
 import com.stox.fx.fluent.scene.control.FluentLabel;
 import com.stox.fx.fluent.scene.control.IFluentMenuBar;
@@ -15,8 +17,10 @@ public class WorkbenchMenuBar extends MenuBar implements IFluentMenuBar<Workbenc
 
 	private final Context context;
 	private final Workbench workbench;
+	private final List<? extends Module> modules;
 	
-	public WorkbenchMenuBar(final Context context, final Workbench workbench) {
+	public WorkbenchMenuBar(final Context context, final Workbench workbench, final List<? extends Module> modules) {
+		this.modules = modules;
 		this.context = context;
 		this.workbench = workbench;
 		getStyleClass().addAll("primary", "workbench-menu-bar");
@@ -26,7 +30,7 @@ public class WorkbenchMenuBar extends MenuBar implements IFluentMenuBar<Workbenc
 	private Menu buildNewMenu() {
 		final Menu newMenu = new Menu();
 		newMenu.textProperty().bind(context.getMessageSource().get("New"));
-		workbench.getModules().forEach(module -> {
+		modules.forEach(module -> {
 			newMenu.getItems().add(buildModuleMenuItem(module));
 		});
 		return newMenu;
