@@ -7,6 +7,7 @@ import com.stox.fx.fluent.scene.layout.FluentStackPane;
 import com.stox.fx.fluent.scene.layout.IFluentBorderPane;
 import com.stox.fx.widget.DockableArea;
 import com.stox.fx.widget.Icon;
+import com.stox.fx.workbench.event.ModuleViewCloseRequestEvent;
 
 import javafx.geometry.Side;
 import javafx.scene.layout.BorderPane;
@@ -22,7 +23,9 @@ public abstract class ModuleView<T extends ModuleView<T>> extends BorderPane imp
 	private final TitleBar titleBar;
 	private final FluentBorderPane container = new FluentBorderPane();
 	private final FluentStackPane root = new FluentStackPane(container);
-	private final FluentButton closeButton = new FluentButton(Icon.TIMES).classes("primary","icon","hover-danger");
+	private final FluentButton closeButton = new FluentButton(Icon.TIMES)
+			.onAction(event -> fireEvent(new ModuleViewCloseRequestEvent(this)))
+			.classes("primary","icon","hover-danger");
 	
 	public ModuleView(@NonNull final Context context) {
 		this.context = context;

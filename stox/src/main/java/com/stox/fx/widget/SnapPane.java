@@ -57,7 +57,7 @@ public class SnapPane extends Pane {
 	}
 
 	public void add(final Node knob, final IFluentBorderPane<? extends BorderPane> target) {
-		getChildren().add((Node) target);
+		getChildren().add(target.getThis());
 		bind(e -> mousePressed(target), e -> mouseReleased(target), knob, target.top(), target.right(), target.bottom(), target.left());
 		snap(target);
 	}
@@ -70,10 +70,6 @@ public class SnapPane extends Pane {
 		});
 	}
 	
-	public void remove(final IFluentRegion<? extends Region> target){
-		getChildren().remove(target.getThis());
-	}
-
 	private void mousePressed(IFluentRegion<? extends Region> region) {
 		if (!initialized)
 			rebuild();
