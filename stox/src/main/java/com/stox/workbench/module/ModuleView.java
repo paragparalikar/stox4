@@ -9,6 +9,7 @@ import com.stox.fx.widget.TitleBar;
 
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import lombok.Getter;
@@ -27,6 +28,11 @@ public abstract class ModuleView<T extends ModuleView<T>> extends BorderPane imp
 		this.context = context;
 		container.top(titleBar = buildTitleBar(icon, titleValue));
 		classes("module-view").dockable(titleBar).center(root);
+	}
+	
+	protected T content(final Node node) {
+		container.center(node);
+		return getThis();
 	}
 
 	public T initDefaultBounds(final double width, final double height) {
