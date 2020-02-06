@@ -1,8 +1,8 @@
-package com.stox.fx.workbench;
+package com.stox.workbench.module;
 
 import javafx.beans.value.ObservableValue;
 
-public interface Module {
+public interface UiModule extends Module{
 
 	String getId();
 	

@@ -1,4 +1,4 @@
-package com.stox.fx.workbench;
+package com.stox.workbench.module;
 
 import com.stox.Context;
 import com.stox.fx.fluent.scene.control.FluentButton;
@@ -10,12 +10,12 @@ import com.stox.fx.fluent.scene.layout.IFluentBorderPane;
 import com.stox.fx.widget.DockableArea;
 import com.stox.fx.widget.Icon;
 import com.stox.fx.widget.Spacer;
-import com.stox.fx.workbench.event.ModuleViewCloseRequestEvent;
+import com.stox.fx.widget.TitleBar;
+import com.stox.workbench.event.ModuleViewCloseRequestEvent;
 
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Side;
 import javafx.scene.layout.BorderPane;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -23,7 +23,7 @@ public abstract class ModuleView<T extends ModuleView<T>> extends BorderPane imp
 
 	@Getter
 	private final Context context;
-	@Getter(AccessLevel.PACKAGE)
+	@Getter
 	private final TitleBar titleBar;
 	private final FluentBorderPane container = new FluentBorderPane();
 	private final FluentStackPane root = new FluentStackPane(container);

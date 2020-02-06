@@ -1,0 +1,84 @@
+package com.stox.core.model;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+public class Move {
+
+	public static List<Move> parse(final List<Bar> bars, final double percentage, final BarValue barValue) {
+		boolean up = true;
+		final List<Move> moves = new ArrayList<>();
+		int lastPivotIndex = bars.size() - 1, pivotIndex = lastPivotIndex;
+		double pivotValue = barValue.get(bars.get(lastPivotIndex));
+		double max = pivotValue * (1 + (percentage / 100));
+		double min = pivotValue * (1 - (percentage / 100));
+		for (int index = lastPivotIndex; index >= 0; index--) {
+			final double value = barValue.get(bars.get(index));
+			if (up) {
+				if (value < min) {
+					up = false;
+					moves.add(new Move(barValue,
+							Collections.unmodifiableList(new ArrayList<>(bars.subList(pivotIndex, lastPivotIndex + 1))),
+							pivotIndex, lastPivotIndex));
+					lastPivotIndex = pivotIndex;
+					pivotValue = value;
+					pivotIndex = index;
+					max = pivotValue * (1 + (percentage / 100));
+				} else if (value > pivotValue) {
+					pivotValue = value;
+					pivotIndex = index;
+					min = pivotValue * (1 - (percentage / 100));
+				}
+			} else {
+				if (value > max) {
+					up = true;
+					moves.add(new Move(barValue,
+							Collections.unmodifiableList(new ArrayList<>(bars.subList(pivotIndex, lastPivotIndex + 1))),
+							pivotIndex, lastPivotIndex));
+					lastPivotIndex = pivotIndex;
+					pivotValue = value;
+					pivotIndex = index;
+					min = pivotValue * (1 - (percentage / 100));
+				} else if (value < pivotValue) {
+					pivotValue = value;
+					pivotIndex = index;
+					max = pivotValue * (1 + (percentage / 100));
+				}
+			}
+		}
+		if (0 != pivotIndex) {
+			moves.add(new Move(barValue, Collections.unmodifiableList(new ArrayList<>(bars.subList(0, pivotIndex))),
+					0, pivotIndex));
+		}
+		return moves;
+	}
+
+	@Getter
+	@NonNull
+	private final BarValue barValue;
+
+	@NonNull
+	private final List<Bar> bars;
+
+	@Getter
+	private final int startIndex, endIndex;
+
+	public Bar getEnd() {
+		return bars.isEmpty() ? null : bars.get(bars.size() - 1);
+	}
+
+	public Bar getStart() {
+		return bars.isEmpty() ? null : bars.get(0);
+	}
+
+	public int getCount() {
+		return bars.size();
+	}
+
+}

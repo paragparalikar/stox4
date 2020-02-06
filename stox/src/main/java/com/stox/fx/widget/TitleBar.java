@@ -1,4 +1,4 @@
-package com.stox.fx.workbench;
+package com.stox.fx.widget;
 
 import com.stox.fx.fluent.scene.layout.FluentHBox;
 import com.stox.fx.fluent.scene.layout.IFluentBorderPane;

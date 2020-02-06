@@ -1,4 +1,4 @@
-package com.stox.fx.workbench;
+package com.stox.workbench;
 
 import java.util.List;
 
@@ -8,7 +8,9 @@ import com.stox.fx.fluent.stage.IFluentStage;
 import com.stox.fx.widget.MovableArea;
 import com.stox.fx.widget.ResizableArea;
 import com.stox.fx.widget.SnapPane;
-import com.stox.fx.workbench.event.ModuleViewCloseRequestEvent;
+import com.stox.workbench.event.ModuleViewCloseRequestEvent;
+import com.stox.workbench.module.ModuleView;
+import com.stox.workbench.module.UiModule;
 
 import javafx.application.Application;
 import javafx.geometry.Bounds;
@@ -23,7 +25,7 @@ public class Workbench extends Stage implements IFluentStage<Workbench>, Movable
 
 	private final SnapPane snapPane = new SnapPane();
 
-	public Workbench(@NonNull final Context context, final List<? extends Module> modules) {
+	public Workbench(@NonNull final Context context, final List<? extends UiModule> modules) {
 		final WorkbenchTitleBar titleBar = new WorkbenchTitleBar(context, new WorkbenchMenuBar(context, this, modules));
 		titleProperty().bind(context.getMessageSource().get("Stox"));
 		final FluentBorderPane container = new FluentBorderPane().top(titleBar).center(snapPane);

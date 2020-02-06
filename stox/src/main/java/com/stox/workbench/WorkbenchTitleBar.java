@@ -1,8 +1,9 @@
-package com.stox.fx.workbench;
+package com.stox.workbench;
 
 import com.stox.Context;
 import com.stox.fx.fluent.scene.layout.FluentHBox;
 import com.stox.fx.widget.Spacer;
+import com.stox.fx.widget.TitleBar;
 
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;

@@ -1,4 +1,4 @@
-package com.stox.fx.workbench;
+package com.stox.workbench;
 
 import java.awt.Desktop;
 import java.net.URI;

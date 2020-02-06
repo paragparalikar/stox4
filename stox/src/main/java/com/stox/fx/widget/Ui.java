@@ -2,12 +2,10 @@ package com.stox.fx.widget;
 
 import java.util.List;
 
-import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 
 public class Ui {
 	

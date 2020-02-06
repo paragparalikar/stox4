@@ -1,6 +1,6 @@
-package com.stox.fx.workbench.event;
+package com.stox.workbench.event;
 
-import com.stox.fx.workbench.ModuleView;
+import com.stox.workbench.module.ModuleView;
 
 import javafx.event.Event;
 import javafx.event.EventType;
