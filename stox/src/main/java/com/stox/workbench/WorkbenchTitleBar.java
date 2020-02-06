@@ -9,17 +9,17 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import lombok.Getter;
 
-@Getter
 public class WorkbenchTitleBar extends TitleBar {
 
+	@Getter
+	private final WorkbenchMenuBar menuBar;
 	private final WindowControls windowControls;
-	private final WorkbenchMenuBar workbenchMenuBar;
 	
 	public WorkbenchTitleBar(final FxMessageSource messageSource) {
 		this.windowControls = new WindowControls(messageSource);
-		this.workbenchMenuBar = new WorkbenchMenuBar(messageSource);
+		this.menuBar = new WorkbenchMenuBar(messageSource);
 		
-		center(new FluentHBox(workbenchMenuBar, new Spacer(), new AuthorContact())).right(windowControls);
+		center(new FluentHBox(menuBar, new Spacer(), new AuthorContact())).right(windowControls);
 		addEventHandler(MouseEvent.MOUSE_PRESSED, this::onMouseEvent);
 	}
 

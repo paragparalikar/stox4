@@ -15,7 +15,7 @@ import com.stox.core.persistence.ExchangeRepository;
 import com.stox.core.persistence.ScripRepository;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Icon;
-import com.stox.module.data.donwloader.DownloaderModule;
+import com.stox.module.explorer.ExplorerModule;
 import com.stox.util.JsonConverter;
 import com.stox.workbench.Workbench;
 import com.stox.workbench.module.Module;
@@ -36,7 +36,7 @@ public class Main extends Application {
 	private final Workbench workbench = new Workbench(messageSource);
 	private final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 	private final Context context = buildContext();
-	private final List<? extends Module> modules = Arrays.asList(new DownloaderModule(context));
+	private final List<? extends Module> modules = Arrays.asList(new ExplorerModule(context));
 
 	@Override
 	public void init() throws Exception {
@@ -54,7 +54,7 @@ public class Main extends Application {
 	}
 	
 	private void start(final Module module) {
-		scheduledExecutorService.submit(() -> module.start(context));
+		module.start();
 	}
 	
 	private void stop(final Module module) {
