@@ -1,9 +1,9 @@
-package com.stox.core.model.intf;
+package com.stox.module.core.model.intf;
 
 import java.util.List;
 
-import com.stox.core.model.Bar;
-import com.stox.core.model.BarSpan;
+import com.stox.module.core.model.Bar;
+import com.stox.module.core.model.BarSpan;
 
 public interface BarProvider {
 

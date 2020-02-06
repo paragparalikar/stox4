@@ -1,10 +1,10 @@
-package com.stox.core.persistence;
+package com.stox.module.core.persistence;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 
-import com.stox.core.model.Exchange;
+import com.stox.module.core.model.Exchange;
 import com.stox.persistence.store.DateFileStore;
 
 import lombok.NonNull;

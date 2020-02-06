@@ -1,4 +1,4 @@
-package com.stox.core.model;
+package com.stox.module.core.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;

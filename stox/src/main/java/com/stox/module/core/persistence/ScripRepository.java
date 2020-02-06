@@ -1,4 +1,4 @@
-package com.stox.core.persistence;
+package com.stox.module.core.persistence;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,8 +14,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.stox.core.model.Exchange;
-import com.stox.core.model.Scrip;
+import com.stox.module.core.model.Exchange;
+import com.stox.module.core.model.Scrip;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

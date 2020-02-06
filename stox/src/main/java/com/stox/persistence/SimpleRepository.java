@@ -3,7 +3,7 @@ package com.stox.persistence;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.stox.core.model.intf.HasId;
+import com.stox.module.core.model.intf.HasId;
 import com.stox.util.JsonConverter;
 
 import lombok.NonNull;

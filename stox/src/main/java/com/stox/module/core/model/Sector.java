@@ -1,4 +1,4 @@
-package com.stox.core.model;
+package com.stox.module.core.model;
 
 import java.util.Objects;
 

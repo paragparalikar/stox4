@@ -2,10 +2,10 @@ package com.stox;
 
 import java.util.concurrent.ScheduledExecutorService;
 
-import com.stox.core.persistence.BarRepository;
-import com.stox.core.persistence.ExchangeRepository;
-import com.stox.core.persistence.ScripRepository;
 import com.stox.fx.widget.FxMessageSource;
+import com.stox.module.core.persistence.BarRepository;
+import com.stox.module.core.persistence.ExchangeRepository;
+import com.stox.module.core.persistence.ScripRepository;
 import com.stox.util.JsonConverter;
 import com.stox.workbench.Workbench;
 

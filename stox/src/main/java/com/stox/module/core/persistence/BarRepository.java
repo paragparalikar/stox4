@@ -1,4 +1,4 @@
-package com.stox.core.persistence;
+package com.stox.module.core.persistence;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,9 +16,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import com.stox.core.model.Bar;
-import com.stox.core.model.BarSpan;
-import com.stox.core.model.intf.BarProvider;
+import com.stox.module.core.model.Bar;
+import com.stox.module.core.model.BarSpan;
+import com.stox.module.core.model.intf.BarProvider;
 import com.stox.util.Uncheck;
 
 import lombok.NonNull;
@@ -44,13 +44,17 @@ public class BarRepository implements BarProvider {
 	public BarRepository(@NonNull final Path home) {
 		this.home = home;
 		try {
-			Runtime.getRuntime().addShutdownHook(new Thread(() -> fileCache.values().forEach(Uncheck.consumer(RandomAccessFile::close))));
+			Runtime.getRuntime().addShutdownHook(new Thread(this::close));
 			for (final BarSpan barSpan : BarSpan.values()) {
 				Files.createDirectories(Paths.get(getPath("", barSpan)));
 			}
 		} catch (final IOException ioException) {
 			throw new RuntimeException(ioException);
 		}
+	}
+	
+	public void close() {
+		fileCache.values().forEach(Uncheck.consumer(RandomAccessFile::close));
 	}
 
 	private RandomAccessFile getFile(String path) throws IOException {
