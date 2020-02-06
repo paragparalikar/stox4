@@ -3,13 +3,11 @@ package com.stox.persistence.store;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.SneakyThrows;
 
 public class TextFileStore implements Store<String>  {
 
-	@Getter
 	private final Path path;
 	
 	@SneakyThrows

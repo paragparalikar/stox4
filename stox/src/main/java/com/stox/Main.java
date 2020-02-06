@@ -1,5 +1,6 @@
 package com.stox;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -9,9 +10,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.stox.core.model.Exchange;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Icon;
 import com.stox.module.data.donwloader.DownloaderModule;
+import com.stox.persistence.store.DateFileStore;
 import com.stox.util.JsonConverter;
 import com.stox.workbench.Workbench;
 import com.stox.workbench.module.Module;
@@ -58,13 +61,19 @@ public class Main extends Application {
 	}
 	
 	private Context buildContext() {
-		return  Context.builder()
+		final Context context =  Context.builder()
 				.config(buildConfig())
 				.workbench(workbench)
 				.jsonConverter(jsonConverter)
 				.messageSource(messageSource)
 				.scheduledExecutorService(scheduledExecutorService)
 				.build();
+		Arrays.asList(Exchange.values()).forEach(exchange -> {
+			final Path relativePath = Paths.get("exchanges", exchange.getCode().toLowerCase() + ".txt");
+			final Path path = context.getConfig().getHome().resolve(relativePath);
+			context.getLasdDownloadDateStore().put(exchange, new DateFileStore(path));
+		});
+		return context;
 	}
 
 	private Config buildConfig() {

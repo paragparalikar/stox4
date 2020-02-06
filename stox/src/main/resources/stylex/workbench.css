@@ -24,10 +24,10 @@
 	background-color: default-text-color;
 	-fx-background-color: background-color;
 }
-
+.info-bar,
 .title-bar{
 	-fx-spacing: 0.5em;
-	-fx-padding: 0.5em;
+	-fx-padding: 0.25em;
 	-fx-alignment: center;
 	-fx-fill-height: true;
 }

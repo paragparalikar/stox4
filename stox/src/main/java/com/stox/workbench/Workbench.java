@@ -20,6 +20,7 @@ public class Workbench extends Stage implements IFluentStage<Workbench>, Movable
 
 	private final WorkbenchTitleBar titleBar;
 	private final SnapPane snapPane = new SnapPane();
+	private final WorkbenchInfoBar infoBar = new WorkbenchInfoBar();
 
 	public Workbench(@NonNull final FxMessageSource messageSource) {
 		this.titleBar = new WorkbenchTitleBar(messageSource);
@@ -32,7 +33,7 @@ public class Workbench extends Stage implements IFluentStage<Workbench>, Movable
 	
 	private Scene buildScene() {
 		final Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-		final FluentBorderPane container = new FluentBorderPane().top(titleBar).center(snapPane);
+		final FluentBorderPane container = new FluentBorderPane().top(titleBar).center(snapPane).bottom(infoBar);
 		final Scene scene = new Scene(resizableWrapper().center(container), bounds.getWidth() / 2., bounds.getHeight() / 2);
 		Application.setUserAgentStylesheet("stylex/base.css");
 		scene.getStylesheets().addAll("stylex/label.css", "stylex/button.css", "stylex/menu.css", "stylex/scroll-bar.css", "stylex/table-view.css",
