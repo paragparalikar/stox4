@@ -1,6 +1,7 @@
 package com.stox.fx.widget;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import com.stox.fx.fluent.scene.layout.IFluentBorderPane;
 import com.stox.fx.fluent.scene.layout.IFluentRegion;
@@ -58,7 +59,14 @@ public class SnapPane extends Pane {
 
 	public void add(final Node knob, final IFluentBorderPane<? extends BorderPane> target) {
 		getChildren().add(target.getThis());
-		bind(e -> mousePressed(target), e -> mouseReleased(target), knob, target.top(), target.right(), target.bottom(), target.left());
+		final EventHandler<MouseEvent> mousePressedHandler = e -> mousePressed(target);
+		final EventHandler<MouseEvent> mouseReleasedHandler = e -> mouseReleased(target);
+		bind(mousePressedHandler, mouseReleasedHandler, knob, target.top(), target.right(), target.bottom(), target.left());
+		target.getThis().parentProperty().addListener((o,old,value) -> {
+			if(Objects.equals(SnapPane.this, old) && Objects.isNull(value)) {
+				unbind(mousePressedHandler, mouseReleasedHandler, knob, target.top(), target.right(), target.bottom(), target.left());
+			}
+		});
 		snap(target);
 	}
 
@@ -67,6 +75,14 @@ public class SnapPane extends Pane {
 			node.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
 			node.addEventHandler(MouseEvent.MOUSE_DRAGGED, mousePressedHandler);
 			node.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+		});
+	}
+	
+	private void unbind(final EventHandler<MouseEvent> mousePressedHandler, final EventHandler<MouseEvent> mouseReleasedHandler, Node... nodes) {
+		Arrays.asList(nodes).forEach(node -> {
+			node.removeEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
+			node.removeEventHandler(MouseEvent.MOUSE_DRAGGED, mousePressedHandler);
+			node.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
 		});
 	}
 	

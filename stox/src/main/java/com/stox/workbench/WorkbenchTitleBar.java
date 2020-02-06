@@ -1,19 +1,25 @@
 package com.stox.workbench;
 
-import com.stox.Context;
 import com.stox.fx.fluent.scene.layout.FluentHBox;
+import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Spacer;
 import com.stox.fx.widget.TitleBar;
 
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import lombok.Getter;
 
+@Getter
 public class WorkbenchTitleBar extends TitleBar {
 
 	private final WindowControls windowControls;
-
-	public WorkbenchTitleBar(final Context context, final WorkbenchMenuBar workbenchMenuBar) {
-		center(new FluentHBox(workbenchMenuBar, new Spacer(), new AuthorContact())).right(windowControls = new WindowControls(context.getMessageSource()));
+	private final WorkbenchMenuBar workbenchMenuBar;
+	
+	public WorkbenchTitleBar(final FxMessageSource messageSource) {
+		this.windowControls = new WindowControls(messageSource);
+		this.workbenchMenuBar = new WorkbenchMenuBar(messageSource);
+		
+		center(new FluentHBox(workbenchMenuBar, new Spacer(), new AuthorContact())).right(windowControls);
 		addEventHandler(MouseEvent.MOUSE_PRESSED, this::onMouseEvent);
 	}
 

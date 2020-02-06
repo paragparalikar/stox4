@@ -1,69 +1,33 @@
 package com.stox.workbench;
 
-import java.util.List;
-
-import com.stox.Context;
-import com.stox.fx.fluent.scene.control.FluentLabel;
 import com.stox.fx.fluent.scene.control.IFluentMenuBar;
-import com.stox.workbench.module.ModuleView;
-import com.stox.workbench.module.UiModule;
+import com.stox.fx.widget.FxMessageSource;
 
-import javafx.beans.value.ObservableValue;
-import javafx.geometry.Bounds;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import lombok.NonNull;
+import lombok.Getter;
 
 public class WorkbenchMenuBar extends MenuBar implements IFluentMenuBar<WorkbenchMenuBar>{
 
-	private final Context context;
-	private final Workbench workbench;
-	private final List<? extends UiModule> modules;
+	@Getter
+	private final Menu newMenu;
+	private final FxMessageSource messageSource;
 	
-	public WorkbenchMenuBar(final Context context, final Workbench workbench, final List<? extends UiModule> modules) {
-		this.modules = modules;
-		this.context = context;
-		this.workbench = workbench;
+	public WorkbenchMenuBar(final FxMessageSource messageSource) {
+		this.messageSource = messageSource;
 		getStyleClass().addAll("primary", "workbench-menu-bar");
-		getMenus().add(buildNewMenu());
+		getMenus().add(newMenu = buildNewMenu());
 	}
 	
 	private Menu buildNewMenu() {
 		final Menu newMenu = new Menu();
-		newMenu.textProperty().bind(context.getMessageSource().get("New"));
-		modules.forEach(module -> {
-			newMenu.getItems().add(buildModuleMenuItem(module));
-		});
+		newMenu.textProperty().bind(messageSource.get("New"));
 		return newMenu;
 	}
-	
-	private ModuleMenuItem buildModuleMenuItem(final UiModule module) {
-		final ModuleMenuItem item = new ModuleMenuItem(module.getIcon(), module.getName());
-		item.setOnAction(event -> add(module.buildModuleView()));
-		return item;
-	}
-	
-	private void add(final ModuleView<?> moduleView) {
-		workbench.add(moduleView);
-		final Bounds bounds = workbench.visualBounds();
-		moduleView.initDefaultBounds(bounds.getWidth(), bounds.getHeight());
-	}
-	
 	
 	@Override
 	public WorkbenchMenuBar getThis() {
 		return this;
 	}
 	
-}
-
-class ModuleMenuItem extends MenuItem {
-
-	public ModuleMenuItem(@NonNull final String icon, @NonNull final ObservableValue<String> textValue) {
-		textProperty().bind(textValue);
-		setGraphic(new FluentLabel(icon).classes("icon", "primary"));
-		getStyleClass().add("primary");
-	}
-
 }

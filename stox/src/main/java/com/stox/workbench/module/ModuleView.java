@@ -11,7 +11,6 @@ import com.stox.fx.widget.DockableArea;
 import com.stox.fx.widget.Icon;
 import com.stox.fx.widget.Spacer;
 import com.stox.fx.widget.TitleBar;
-import com.stox.workbench.event.ModuleViewCloseRequestEvent;
 
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Side;
@@ -43,7 +42,6 @@ public abstract class ModuleView<T extends ModuleView<T>> extends BorderPane imp
 		final FluentLabel titleLabel = new FluentLabel().classes("primary");
 		titleLabel.textProperty().bind(titleValue);
 		final FluentButton closeButton = new FluentButton(Icon.TIMES)
-				.onAction(event -> fireEvent(new ModuleViewCloseRequestEvent(this)))
 				.classes("primary", "icon", "hover-danger");
 		return new TitleBar().append(Side.RIGHT, closeButton).center(new FluentHBox(new FluentLabel(icon).classes("primary", "icon"), titleLabel, new Spacer()));
 	}

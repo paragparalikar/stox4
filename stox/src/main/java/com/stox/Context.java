@@ -4,6 +4,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.util.JsonConverter;
+import com.stox.workbench.Workbench;
 
 import lombok.Builder;
 import lombok.NonNull;
@@ -15,6 +16,9 @@ public class Context {
 	
 	@NonNull
 	private final Config config;
+	
+	@NonNull
+	private final Workbench workbench;
 	
 	@NonNull
 	private final JsonConverter jsonConverter;
