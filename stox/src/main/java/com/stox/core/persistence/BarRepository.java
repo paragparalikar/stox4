@@ -41,7 +41,7 @@ public class BarRepository implements BarProvider {
 		}
 	};
 
-	private BarRepository(@NonNull final Path home) {
+	public BarRepository(@NonNull final Path home) {
 		this.home = home;
 		try {
 			Runtime.getRuntime().addShutdownHook(new Thread(() -> fileCache.values().forEach(Uncheck.consumer(RandomAccessFile::close))));
@@ -68,7 +68,7 @@ public class BarRepository implements BarProvider {
 
 	private String getPath(final String isin, final BarSpan barSpan) {
 		final BarSpan effectiveBarSpan = barSpan.equals(BarSpan.M) || barSpan.equals(BarSpan.W) ? BarSpan.D : barSpan;
-		return home.resolve(Paths.get("bar","indexed",effectiveBarSpan.getShortName(), isin)).toString().intern();
+		return home.resolve(Paths.get("bars",effectiveBarSpan.getShortName(), isin)).toString().intern();
 	}
 
 	private long getLocation(final long initialDate, final long date) {

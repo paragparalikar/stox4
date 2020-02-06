@@ -16,7 +16,7 @@ public class WorkbenchInfoBar extends HBox implements IFluentHBox<WorkbenchInfoB
 
 	private final FluentLabel messageLabel = new FluentLabel().fullWidth();
 	private final FluentPane messageLabelContainer = new FluentPane().fullWidth();
-	private final FluentProgressBar progressBar = new FluentProgressBar(0).classes("primary");
+	private final FluentProgressBar progressBar = new FluentProgressBar();
 	private final FluentPane progressBarContainer = new FluentPane();
 	private final FluentLabel networkStatusLabel = new FluentLabel(Icon.CLOUD).classes("primary", "icon");
 	private final FluentLabel diskStatusLabel = new FluentLabel(Icon.DATABASE).classes("primary", "icon");
@@ -31,7 +31,8 @@ public class WorkbenchInfoBar extends HBox implements IFluentHBox<WorkbenchInfoB
 	
 	public WorkbenchInfoBar message(@NonNull final ObservableValue<String> message, final String messageStyle, final double progress, final String progressStyle) {
 		message(message, messageStyle);
-		progressBarContainer.child(progressBar.styleClass(progressStyle).progress(progress));
+		progressBar.styleClass().clear();
+		progressBarContainer.child(progressBar.styleClass(progressStyle, "primary").progress(progress));
 		return this;
 	}
 	

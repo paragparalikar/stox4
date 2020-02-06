@@ -10,11 +10,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.stox.core.model.Exchange;
+import com.stox.core.persistence.BarRepository;
+import com.stox.core.persistence.ExchangeRepository;
+import com.stox.core.persistence.ScripRepository;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Icon;
 import com.stox.module.data.donwloader.DownloaderModule;
-import com.stox.persistence.store.DateFileStore;
 import com.stox.util.JsonConverter;
 import com.stox.workbench.Workbench;
 import com.stox.workbench.module.Module;
@@ -61,19 +62,18 @@ public class Main extends Application {
 	}
 	
 	private Context buildContext() {
-		final Context context =  Context.builder()
-				.config(buildConfig())
+		final Config config = buildConfig();
+		final Path home = config.getHome();
+		return Context.builder()
+				.config(config)
 				.workbench(workbench)
 				.jsonConverter(jsonConverter)
 				.messageSource(messageSource)
 				.scheduledExecutorService(scheduledExecutorService)
+				.exchangeRepository(new ExchangeRepository(home))
+				.scripRepository(new ScripRepository(home))
+				.barRepository(new BarRepository(home))
 				.build();
-		Arrays.asList(Exchange.values()).forEach(exchange -> {
-			final Path relativePath = Paths.get("exchanges", exchange.getCode().toLowerCase() + ".txt");
-			final Path path = context.getConfig().getHome().resolve(relativePath);
-			context.getLasdDownloadDateStore().put(exchange, new DateFileStore(path));
-		});
-		return context;
 	}
 
 	private Config buildConfig() {
