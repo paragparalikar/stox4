@@ -19,8 +19,10 @@ public class ExplorerView extends ModuleView {
 	public ExplorerView(@NonNull final String icon, @NonNull final ObservableValue<String> titleValue, @NonNull final Context context) {
 		super(context);
 		content(listView);
-		listView.getItems().addAll(context.getScripRepository().find(Exchange.NSE));
-		title(titleBar = new ExplorerTitleBar(icon, titleValue, super::onClose, listView));
+		title(titleBar = new ExplorerTitleBar(icon, titleValue, super::onClose, listView).exchangeSelectionListener(this::load));
 	}
 
+	private void load(@NonNull final Exchange exchange) {
+		listView.getItems().addAll(getContext().getScripRepository().find(exchange));
+	}
 }

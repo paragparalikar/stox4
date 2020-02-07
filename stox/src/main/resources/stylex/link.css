@@ -1,0 +1,40 @@
+.link-button, .link-button .label, 
+.link-button .context-menu .menu-item, .link-button .context-menu .menu-item .label{
+	-fx-background-insets: 0;
+	-fx-border-insets: 0;
+	-fx-graphic-text-gap: 0;
+	-fx-alignment: center;
+	-fx-text-alignment: center;
+	-fx-background-color: transparent;
+	-fx-min-width: 2.6em;
+	-fx-pref-width: 2.6em;
+	-fx-max-width: 2.6em;
+	-fx-min-height: 2em;
+	-fx-pref-height: 2em;
+	-fx-max-height: 2em;
+	-fx-padding: 0;
+	-fx-font-weight: 800;
+}
+
+.link-button .arrow-button{
+	visibility: hidden;
+	-fx-min-width: 0;
+	-fx-pref-width: 0;
+	-fx-max-width: 0;
+}
+
+.link-button .context-menu {
+	-fx-skin: "com.sun.javafx.scene.control.skin.ContextMenuSkin";
+	-fx-background-color: transparent;
+}
+
+.link-button .label,
+.link-button .context-menu .menu-item .label{
+	link-color: green;
+	-fx-text-fill: link-color;
+}
+
+.link-button:hover .label,
+.link-button .context-menu .menu-item:hover .label{
+	-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 5 , 5 );
+}

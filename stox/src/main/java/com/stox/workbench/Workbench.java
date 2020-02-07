@@ -49,7 +49,7 @@ public class Workbench {
 		Application.setUserAgentStylesheet("stylex/base.css");
 		scene.getStylesheets().addAll("stylex/label.css", "stylex/button.css", "stylex/menu.css", "stylex/scroll-bar.css", "stylex/table-view.css",
 				"stylex/combo-box.css", "stylex/choice-box.css", "stylex/check-box.css", "stylex/text-field.css", "stylex/list-view.css", "stylex/progress-indicator.css",
-				"stylex/progress-bar.css", "stylex/tool-bar.css", "stylex/titled-pane.css", "stylex/search-box.css", "stylex/override.css");
+				"stylex/progress-bar.css", "stylex/tool-bar.css", "stylex/titled-pane.css", "stylex/search-box.css", "stylex/link.css", "stylex/override.css");
 		scene.getStylesheets().addAll("stylex/workbench.css", "stylex/modal.css");
 		return scene;
 	}
