@@ -2,6 +2,7 @@ package com.stox.workbench.module;
 
 import com.stox.fx.fluent.scene.control.FluentButton;
 import com.stox.fx.fluent.scene.control.FluentLabel;
+import com.stox.fx.fluent.scene.control.FluentToggleButton;
 import com.stox.fx.fluent.scene.layout.FluentHBox;
 import com.stox.fx.widget.HasNode;
 import com.stox.fx.widget.Icon;
@@ -28,6 +29,19 @@ public class ModuleTitleBar implements HasNode<Node> {
 		titleLabel.textProperty().bind(titleValue);
 		final FluentButton closeButton = new FluentButton(Icon.TIMES).classes("primary", "icon", "hover-danger").onAction(closeEventHandler);
 		titleBar.append(Side.RIGHT, closeButton).center(new FluentHBox(graphic, titleLabel, new Spacer()));
+	}
+	
+	protected ModuleTitleBar appendToggleNode(@NonNull final String icon,@NonNull final Node node) {
+		final FluentToggleButton toggleButton = new FluentToggleButton(icon).classes("primary", "icon");
+		titleBar.append(Side.RIGHT, toggleButton);
+		toggleButton.selectedProperty().addListener((o,old,value) -> {
+			if(value) {
+				titleBar.append(Side.BOTTOM, node);
+			}else {
+				titleBar.remove(Side.BOTTOM, node);
+			}
+		});
+		return this;
 	}
 
 	@Override

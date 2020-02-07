@@ -1,6 +1,7 @@
 package com.stox.fx.widget;
 
 import com.stox.fx.fluent.scene.layout.FluentHBox;
+import com.stox.fx.fluent.scene.layout.FluentVBox;
 import com.stox.fx.fluent.scene.layout.IFluentBorderPane;
 
 import javafx.geometry.Side;
@@ -10,11 +11,8 @@ import lombok.NonNull;
 
 public class TitleBar extends BorderPane implements IFluentBorderPane<TitleBar> {
 
-	private final FluentHBox 
-			top = new FluentHBox(), 
-			right = new FluentHBox(), 
-			bottom = new FluentHBox(), 
-			left = new FluentHBox();
+	private final FluentHBox right = new FluentHBox(), left = new FluentHBox();
+	private final FluentVBox top = new FluentVBox().classes("spaced"), bottom = new FluentVBox().classes("spaced");
 
 	public TitleBar() {
 		classes("primary-background", "title-bar");
@@ -23,16 +21,16 @@ public class TitleBar extends BorderPane implements IFluentBorderPane<TitleBar> 
 	public TitleBar append(@NonNull final Side side, @NonNull final Node node) {
 		switch (side) {
 			case BOTTOM:
-				bottom(bottom.child(node));
+				bottom(bottom.child(0, node));
 				break;
 			case LEFT:
-				left(left.child(node));
+				left(left.child(0, node));
 				break;
 			case RIGHT:
-				right(right.child(node));
+				right(right.child(0, node));
 				break;
 			case TOP:
-				top(top.child(node));
+				top(top.child(0, node));
 				break;
 			default:
 				break;
