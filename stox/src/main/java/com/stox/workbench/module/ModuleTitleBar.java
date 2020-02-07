@@ -13,10 +13,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.Node;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NonNull;
 
 public class ModuleTitleBar implements HasNode<Node> {
 	
+	@Getter(AccessLevel.PROTECTED)
 	private final TitleBar titleBar = new TitleBar();
 
 	public ModuleTitleBar(@NonNull final String icon, @NonNull final ObservableValue<String> titleValue, @NonNull final EventHandler<ActionEvent> closeEventHandler) {
