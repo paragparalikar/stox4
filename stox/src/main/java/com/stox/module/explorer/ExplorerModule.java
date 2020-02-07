@@ -2,32 +2,31 @@ package com.stox.module.explorer;
 
 import com.stox.Context;
 import com.stox.fx.widget.Icon;
-import com.stox.workbench.module.Module;
+import com.stox.workbench.module.ModuleView;
+import com.stox.workbench.module.UiModule;
 
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Bounds;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-public class ExplorerModule implements Module {
+public class ExplorerModule extends UiModule {
 
-	@NonNull
-	private final Context context;
+	public ExplorerModule(@NonNull final Context context) {
+		super(context);
+	}
 	
 	@Override
-	public void start() {
-		final String icon = Icon.LIST;
-		final ObservableValue<String> textValue = context.getMessageSource().get("Instrument Explorer");
-		context.getWorkbench().getTitleBar().getMenuBar().newMenuItem(icon, textValue, event -> {
-			final ExplorerView view = new ExplorerView(icon, textValue, context);
-			final Bounds bounds = context.getWorkbench().add(view).visualBounds();
-			view.initDefaultBounds(bounds.getWidth(), bounds.getHeight());
-		});
+	protected String getIcon() {
+		return Icon.LIST;
 	}
 
 	@Override
-	public void stop() {
+	protected ObservableValue<String> getModuleName() {
+		return getContext().getMessageSource().get("Instrument Explorer");
+	}
+
+	@Override
+	protected ModuleView buildModuleView() {
+		return new ExplorerView(getIcon(), getModuleName(), getContext());
 	}
 
 }
