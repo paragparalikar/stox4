@@ -8,6 +8,7 @@ import com.stox.fx.widget.search.SearchBox;
 import com.stox.fx.widget.search.SearchableListView;
 import com.stox.module.core.model.Exchange;
 import com.stox.module.core.model.Scrip;
+import com.stox.workbench.link.Link.State;
 import com.stox.workbench.link.LinkButton;
 import com.stox.workbench.module.ModuleTitleBar;
 
@@ -33,6 +34,11 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 	ExplorerTitleBar exchangeSelectionListener(@NonNull final Consumer<Exchange> consumer) {
 		exchangeComboBox.selectionModel().selectedItemProperty().addListener((o, old, exchange) -> consumer.accept(exchange));
 		exchangeComboBox.select(Exchange.NSE);
+		return this;
+	}
+	
+	ExplorerTitleBar scrip(final Scrip scrip) {
+		linkButton.getLink().setState(new State(0, scrip, null));
 		return this;
 	}
 

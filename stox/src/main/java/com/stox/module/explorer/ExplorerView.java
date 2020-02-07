@@ -20,6 +20,7 @@ public class ExplorerView extends ModuleView {
 		super(context);
 		content(listView);
 		title(titleBar = new ExplorerTitleBar(icon, titleValue, super::onClose, listView).exchangeSelectionListener(this::load));
+		listView.getSelectionModel().selectedItemProperty().addListener((o,old,scrip) -> titleBar.scrip(scrip));
 	}
 
 	private void load(@NonNull final Exchange exchange) {

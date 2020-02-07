@@ -35,7 +35,7 @@ public class LinkButton extends MenuButton {
 		getItems().add(menuItem);
 	}
 
-	Node createGraphic(final Color color) {
+	private Node createGraphic(final Color color) {
 		final Label label = new FluentLabel(Icon.LINK).classes("icon");
 		label.setStyle("link-color: "+Ui.web(color)+";");
 		return label;
