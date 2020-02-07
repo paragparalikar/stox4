@@ -24,17 +24,13 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 	private final FluentComboBox<Exchange> exchangeComboBox = new FluentComboBox<Exchange>().items(Exchange.values()).classes("primary", "inverted").fullWidth();
 
 	public ExplorerTitleBar(@NonNull final String icon, @NonNull final ObservableValue<String> titleValue, @NonNull final EventHandler<ActionEvent> closeEventHandler,
-			@NonNull final SearchableListView<Scrip> listView) {
+			@NonNull final SearchableListView<Scrip> listView, @NonNull final Consumer<Exchange> consumer) {
 		super(icon, titleValue, closeEventHandler);
 		getTitleBar().append(Side.RIGHT, linkButton);
 		appendToggleNode(Icon.FILTER, exchangeComboBox);
 		appendToggleNode(Icon.SEARCH, new SearchBox<Scrip>(listView, this::test).classes("primary"));
-	}
-
-	ExplorerTitleBar exchangeSelectionListener(@NonNull final Consumer<Exchange> consumer) {
 		exchangeComboBox.selectionModel().selectedItemProperty().addListener((o, old, exchange) -> consumer.accept(exchange));
 		exchangeComboBox.select(Exchange.NSE);
-		return this;
 	}
 	
 	ExplorerTitleBar scrip(final Scrip scrip) {

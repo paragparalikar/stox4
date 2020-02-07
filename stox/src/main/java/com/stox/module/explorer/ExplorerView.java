@@ -19,7 +19,7 @@ public class ExplorerView extends ModuleView {
 	public ExplorerView(@NonNull final String icon, @NonNull final ObservableValue<String> titleValue, @NonNull final Context context) {
 		super(context);
 		content(listView);
-		title(titleBar = new ExplorerTitleBar(icon, titleValue, super::onClose, listView).exchangeSelectionListener(this::load));
+		title(titleBar = new ExplorerTitleBar(icon, titleValue, super::onClose, listView, this::load));
 		listView.getSelectionModel().selectedItemProperty().addListener((o,old,scrip) -> titleBar.scrip(scrip));
 	}
 
