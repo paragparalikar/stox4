@@ -25,12 +25,17 @@ public abstract class UiModule implements Module {
 	@Override
 	public void start() {
 		context.getWorkbench().getTitleBar().getMenuBar().newMenuItem(getIcon(), getModuleName(), event -> {
-			final ModuleView view = buildModuleView();
+			final ModuleView view = cache(buildModuleView());
 			final Bounds bounds = context.getWorkbench().add(view).visualBounds();
 			view.initDefaultBounds(bounds.getWidth(), bounds.getHeight());
 		});
 	}
 
+	private ModuleView cache(@NonNull final ModuleView view) {
+		
+		return view;
+	}
+	
 	@Override
 	public void stop() {
 		
