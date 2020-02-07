@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
+import com.stox.fx.fluent.stage.FluentStage;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Icon;
 import com.stox.module.core.CoreModule;
@@ -34,7 +36,8 @@ public class Main extends Application {
 	
 	private final JsonConverter jsonConverter = new JsonConverter();
 	private final FxMessageSource messageSource = new FxMessageSource();
-	private final Workbench workbench = new Workbench(messageSource);
+	private final AtomicReference<FluentStage> stageReference = new AtomicReference<>();
+	private final Workbench workbench = new Workbench(messageSource, stageReference);
 	private final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 	private final Context context = buildContext();
 	private final List<? extends Module> modules = Arrays.asList(new CoreModule(context), new ExplorerModule(context));
@@ -47,7 +50,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage ignored) throws Exception {
-		workbench.onShown(this::onWorkbenchShown).show();
+		stageReference.get().onShown(this::onWorkbenchShown).show();
 	}
 	
 	private void onWorkbenchShown(final WindowEvent event) {
@@ -92,7 +95,7 @@ public class Main extends Application {
 	
 	@Override
 	public void stop() throws Exception {
-		workbench.hide();
+		stageReference.get().hide();
 		modules.forEach(this::stop);
 		scheduledExecutorService.shutdown();
 		scheduledExecutorService.awaitTermination(3, TimeUnit.SECONDS);

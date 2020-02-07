@@ -2,9 +2,6 @@ package com.stox.module.explorer;
 
 import com.stox.Context;
 import com.stox.fx.fluent.scene.control.FluentComboBox;
-import com.stox.fx.fluent.scene.control.FluentToggleButton;
-import com.stox.fx.widget.Icon;
-import com.stox.fx.widget.Ui;
 import com.stox.fx.widget.search.SearchBox;
 import com.stox.fx.widget.search.SearchableListView;
 import com.stox.module.core.model.Exchange;
@@ -13,10 +10,9 @@ import com.stox.workbench.link.LinkButton;
 import com.stox.workbench.module.ModuleView;
 
 import javafx.beans.value.ObservableValue;
-import javafx.geometry.Side;
 import lombok.NonNull;
 
-public class ExplorerView extends ModuleView<ExplorerView> {
+public class ExplorerView extends ModuleView {
 	
 	private final SearchableListView<Scrip> listView = new SearchableListView<>();
 	//private final FluentToggleButton filterButton = new FluentToggleButton(Icon.FILTER).classes("primary","icon").onAction(e -> toggleFilter()));
@@ -42,11 +38,6 @@ public class ExplorerView extends ModuleView<ExplorerView> {
 	
 	private void toggleFilter(){
 		//getTitleBar().add(filterButton.isSelected(), Side.BOTTOM, exchangeComboBox);
-	}
-
-	@Override
-	public ExplorerView getThis() {
-		return this;
 	}
 
 }

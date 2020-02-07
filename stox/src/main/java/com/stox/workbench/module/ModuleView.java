@@ -3,50 +3,58 @@ package com.stox.workbench.module;
 import com.stox.Context;
 import com.stox.fx.fluent.scene.layout.FluentBorderPane;
 import com.stox.fx.fluent.scene.layout.FluentStackPane;
-import com.stox.fx.fluent.scene.layout.IFluentBorderPane;
-import com.stox.fx.widget.DockableArea;
-import com.stox.fx.widget.TitleBar;
+import com.stox.fx.widget.HasNode;
+import com.stox.fx.widget.handler.MovableMouseEventHandler;
+import com.stox.fx.widget.handler.ResizeMouseEventHandler;
 
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 
-public abstract class ModuleView<T extends ModuleView<T>> extends BorderPane implements IFluentBorderPane<T>, DockableArea<T> {
+public abstract class ModuleView implements HasNode<FluentBorderPane>{
 
-	@Getter
+	@Getter(AccessLevel.PROTECTED)
 	private final Context context;
 	@Getter
-	private final TitleBar titleBar;
+	private final ModuleTitleBar titleBar;
 	private final FluentBorderPane container = new FluentBorderPane();
 	private final FluentStackPane root = new FluentStackPane(container);
+	private final FluentBorderPane resizableWrapper = ResizeMouseEventHandler.resizable(new FluentBorderPane());
 
 	public ModuleView(@NonNull final String icon, @NonNull final ObservableValue<String> titleValue, @NonNull final Context context) {
 		this.context = context;
-		container.top(titleBar = buildTitleBar(icon, titleValue));
-		classes("module-view").dockable(titleBar).center(root);
+		titleBar = buildTitleBar(icon, titleValue);
+		container.top(titleBar.getNode());
+		MovableMouseEventHandler.movable(titleBar.getNode(), resizableWrapper);
+		resizableWrapper.classes("module-view").center(root).addHandler(MouseEvent.MOUSE_PRESSED, e -> resizableWrapper.toFront());
 	}
 	
-	protected T content(final Node node) {
+	protected ModuleView content(final Node node) {
 		container.center(node);
-		return getThis();
+		return this;
 	}
 
-	public T initDefaultBounds(final double width, final double height) {
-		width(width / 5).height(height).autosize();
-		return getThis();
+	public ModuleView initDefaultBounds(final double width, final double height) {
+		resizableWrapper.width(width / 5).height(height).autosize();
+		return this;
 	}
 
-	protected TitleBar buildTitleBar(@NonNull final String icon, @NonNull final ObservableValue<String> titleValue) {
+	protected ModuleTitleBar buildTitleBar(@NonNull final String icon, @NonNull final ObservableValue<String> titleValue) {
 		return new ModuleTitleBar(icon, titleValue, this::onClose);
 	}
 
-	protected T onClose(final ActionEvent event) {
-		final Pane pane = Pane.class.cast(getParent());
-		pane.getChildren().remove(this);
-		return getThis();
+	protected void onClose(final ActionEvent event) {
+		final Pane pane = Pane.class.cast(resizableWrapper.getParent());
+		pane.getChildren().remove(resizableWrapper);
+	}
+	
+	@Override
+	public FluentBorderPane getNode() {
+		return resizableWrapper;
 	}
 }

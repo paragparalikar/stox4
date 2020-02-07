@@ -6,12 +6,14 @@ import java.net.URI;
 import com.stox.fx.fluent.scene.control.FluentButton;
 import com.stox.fx.fluent.scene.control.FluentLabel;
 import com.stox.fx.fluent.scene.layout.FluentHBox;
+import com.stox.fx.widget.HasNode;
 import com.stox.fx.widget.Icon;
 
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
 
-public class AuthorContact extends FluentHBox{
+public class AuthorContact implements HasNode<Node>{
 	private static final String EMAIL = "parag.paralikar@gmail.com";
 	private static final String LINKEDIN = "https://www.linkedin.com/in/paragparalikar/";
 
@@ -20,9 +22,9 @@ public class AuthorContact extends FluentHBox{
 	private final FluentButton emailButton = new FluentButton(Icon.ENVELOPE).classes("icon", "primary").focusTraversable(false);
 	private final FluentButton linkedInButton = new FluentButton(Icon.LINKEDIN).classes("icon", "primary").focusTraversable(false);
 	private final FluentHBox buttonsBox = new FluentHBox(phoneLabel, emailButton, linkedInButton).focusTraversable(false);
+	private final FluentHBox container = new FluentHBox().classes("contact-box").children(authorLabel, buttonsBox).focusTraversable(false);
 
 	public AuthorContact() {
-		classes("contact-box").children(authorLabel, buttonsBox).focusTraversable(false);
 		phoneLabel.setTooltip(new Tooltip("+91-9960739342"));
 		emailButton.setTooltip(new Tooltip(EMAIL));
 		emailButton.addEventHandler(ActionEvent.ACTION, event -> {
@@ -38,6 +40,11 @@ public class AuthorContact extends FluentHBox{
 			} catch (Exception e) {
 			}
 		});
+	}
+	
+	@Override
+	public Node getNode() {
+		return container;
 	}
 
 }
