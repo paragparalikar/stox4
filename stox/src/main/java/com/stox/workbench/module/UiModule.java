@@ -58,6 +58,7 @@ public abstract class UiModule<T extends ModuleViewState> implements Module {
 			Ui.fx(()->{
 				context.getWorkbench().add(view);
 				view.getNode().bounds(state.getX()*width, state.getY()*height, state.getWidth()*width, state.getHeight()*height);
+				view.state(state);
 			});
 		});
 	}

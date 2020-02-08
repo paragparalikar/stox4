@@ -1,5 +1,7 @@
 package com.stox.module.explorer;
 
+import java.util.Optional;
+
 import com.stox.Context;
 import com.stox.fx.widget.search.SearchableListView;
 import com.stox.module.core.model.Exchange;
@@ -20,7 +22,7 @@ public class ExplorerView extends ModuleView<ExplorerViewState> {
 		super(context);
 		content(listView);
 		title(titleBar = new ExplorerTitleBar(icon, titleValue, super::onClose, listView, this::load));
-		listView.getSelectionModel().selectedItemProperty().addListener((o,old,scrip) -> titleBar.scrip(scrip));
+		listView.getSelectionModel().selectedItemProperty().addListener((o, old, scrip) -> titleBar.scrip(scrip));
 	}
 
 	private void load(@NonNull final Exchange exchange) {
@@ -29,11 +31,19 @@ public class ExplorerView extends ModuleView<ExplorerViewState> {
 
 	@Override
 	public ExplorerViewState state() {
-		return new ExplorerViewState();
+		final Scrip selectedScrip = listView.getSelectionModel().getSelectedItem();
+		return new ExplorerViewState(null == selectedScrip ? null : selectedScrip.getIsin(), titleBar.exchange(), titleBar.searchVisible(), titleBar.filterVisible());
 	}
 
 	@Override
-	public ModuleView<ExplorerViewState> state(ExplorerViewState state) {
-		return null;
+	public ExplorerView state(@NonNull final ExplorerViewState state) {
+		titleBar.exchange(state.getExchange());
+		titleBar.searchVisible(state.isSearchVisible());
+		titleBar.filterVisible(state.isFilterVisible());
+		Optional.ofNullable(state.getIsin()).ifPresent(isin -> {
+			final Scrip scrip = getContext().getScripRepository().find(isin);
+			listView.getSelectionModel().select(scrip);
+		});
+		return this;
 	}
 }

@@ -16,10 +16,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
+import javafx.scene.control.Toggle;
 import lombok.NonNull;
 
 public class ExplorerTitleBar extends ModuleTitleBar {
 
+	private final Toggle filterToggle;
+	private final Toggle searchToggle;
 	private final LinkButton linkButton = new LinkButton();
 	private final FluentComboBox<Exchange> exchangeComboBox = new FluentComboBox<Exchange>().items(Exchange.values()).classes("primary", "inverted").fullWidth();
 
@@ -27,14 +30,41 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 			@NonNull final SearchableListView<Scrip> listView, @NonNull final Consumer<Exchange> consumer) {
 		super(icon, titleValue, closeEventHandler);
 		getTitleBar().append(Side.RIGHT, linkButton);
-		appendToggleNode(Icon.FILTER, exchangeComboBox);
-		appendToggleNode(Icon.SEARCH, new SearchBox<Scrip>(listView, this::test).classes("primary"));
+		filterToggle = appendToggleNode(Icon.FILTER, exchangeComboBox);
+		searchToggle = appendToggleNode(Icon.SEARCH, new SearchBox<Scrip>(listView, this::test).classes("primary"));
 		exchangeComboBox.selectionModel().selectedItemProperty().addListener((o, old, exchange) -> consumer.accept(exchange));
 		exchangeComboBox.select(Exchange.NSE);
 	}
 	
 	ExplorerTitleBar scrip(final Scrip scrip) {
 		linkButton.getLink().setState(new State(0, scrip, null));
+		return this;
+	}
+	
+	public Exchange exchange() {
+		return exchangeComboBox.getValue();
+	}
+	
+	public ExplorerTitleBar exchange(@NonNull final Exchange exchange) {
+		exchangeComboBox.setValue(exchange);
+		return this;
+	}
+	
+	public boolean searchVisible() {
+		return searchToggle.isSelected();
+	}
+	
+	public ExplorerTitleBar searchVisible(final boolean value) {
+		searchToggle.setSelected(value);
+		return this;
+	}
+	
+	public boolean filterVisible() {
+		return filterToggle.isSelected();
+	}
+	
+	public ExplorerTitleBar filterVisible(final boolean value) {
+		filterToggle.setSelected(value);
 		return this;
 	}
 

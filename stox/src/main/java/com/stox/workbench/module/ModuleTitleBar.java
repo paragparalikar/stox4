@@ -31,7 +31,7 @@ public class ModuleTitleBar implements HasNode<Node> {
 		titleBar.append(Side.RIGHT, closeButton).center(new FluentHBox(graphic, titleLabel, new Spacer()));
 	}
 	
-	protected ModuleTitleBar appendToggleNode(@NonNull final String icon,@NonNull final Node node) {
+	protected FluentToggleButton appendToggleNode(@NonNull final String icon,@NonNull final Node node) {
 		final FluentToggleButton toggleButton = new FluentToggleButton(icon).classes("primary", "icon");
 		titleBar.append(Side.RIGHT, toggleButton);
 		toggleButton.selectedProperty().addListener((o,old,value) -> {
@@ -41,7 +41,7 @@ public class ModuleTitleBar implements HasNode<Node> {
 				titleBar.remove(Side.BOTTOM, node);
 			}
 		});
-		return this;
+		return toggleButton;
 	}
 
 	@Override
