@@ -22,6 +22,7 @@ import com.stox.module.explorer.ExplorerModule;
 import com.stox.util.JsonConverter;
 import com.stox.workbench.Workbench;
 import com.stox.workbench.module.Module;
+import com.stox.workbench.module.ModuleStateRepository;
 
 import javafx.application.Application;
 import javafx.scene.text.Font;
@@ -77,6 +78,7 @@ public class Main extends Application {
 				.exchangeRepository(new ExchangeRepository(home))
 				.scripRepository(new ScripRepository(home))
 				.barRepository(new BarRepository(home))
+				.moduleStateRepository(new ModuleStateRepository(home.resolve(Paths.get("workbench")), jsonConverter))
 				.build();
 	}
 

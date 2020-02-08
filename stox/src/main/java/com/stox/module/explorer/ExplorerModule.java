@@ -2,13 +2,12 @@ package com.stox.module.explorer;
 
 import com.stox.Context;
 import com.stox.fx.widget.Icon;
-import com.stox.workbench.module.ModuleView;
 import com.stox.workbench.module.UiModule;
 
 import javafx.beans.value.ObservableValue;
 import lombok.NonNull;
 
-public class ExplorerModule extends UiModule {
+public class ExplorerModule extends UiModule<ExplorerViewState> {
 
 	public ExplorerModule(@NonNull final Context context) {
 		super(context);
@@ -18,6 +17,11 @@ public class ExplorerModule extends UiModule {
 	protected String getIcon() {
 		return Icon.LIST;
 	}
+	
+	@Override
+	protected String getCode() {
+		return "explorer";
+	}
 
 	@Override
 	protected ObservableValue<String> getModuleName() {
@@ -25,7 +29,7 @@ public class ExplorerModule extends UiModule {
 	}
 
 	@Override
-	protected ModuleView buildModuleView() {
+	protected ExplorerView buildModuleView() {
 		return new ExplorerView(getIcon(), getModuleName(), getContext());
 	}
 

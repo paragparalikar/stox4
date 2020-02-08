@@ -8,6 +8,7 @@ import com.stox.module.core.persistence.ExchangeRepository;
 import com.stox.module.core.persistence.ScripRepository;
 import com.stox.util.JsonConverter;
 import com.stox.workbench.Workbench;
+import com.stox.workbench.module.ModuleStateRepository;
 
 import lombok.Builder;
 import lombok.NonNull;
@@ -41,4 +42,7 @@ public class Context {
 
 	@NonNull
 	private final BarRepository barRepository;
+	
+	@NonNull
+	private final ModuleStateRepository moduleStateRepository;
 }

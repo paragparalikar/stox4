@@ -1,5 +1,7 @@
 package com.stox.util;
 
+import java.lang.reflect.Type;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -16,9 +18,13 @@ public class JsonConverter {
 	public String toJson(@NonNull final Object object) {
 		return gson.toJson(object);
 	}
-	
+
 	public <T> T fromJson(@NonNull final String json, @NonNull final Class<T> type) {
 		return gson.fromJson(json, type);
 	}
-	
+
+	public <T> T fromJson(@NonNull final String json, @NonNull final Type type) {
+		return gson.fromJson(json, type);
+	}
+
 }

@@ -10,7 +10,7 @@ import javafx.beans.value.ObservableValue;
 import lombok.Getter;
 import lombok.NonNull;
 
-public class ExplorerView extends ModuleView {
+public class ExplorerView extends ModuleView<ExplorerViewState> {
 
 	@Getter
 	private final ExplorerTitleBar titleBar;
@@ -25,5 +25,15 @@ public class ExplorerView extends ModuleView {
 
 	private void load(@NonNull final Exchange exchange) {
 		listView.getItems().addAll(getContext().getScripRepository().find(exchange));
+	}
+
+	@Override
+	public ExplorerViewState state() {
+		return new ExplorerViewState();
+	}
+
+	@Override
+	public ModuleView<ExplorerViewState> state(ExplorerViewState state) {
+		return null;
 	}
 }

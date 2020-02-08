@@ -54,7 +54,7 @@ public class Workbench {
 		return scene;
 	}
 
-	public Workbench add(@NonNull final ModuleView moduleView) {
+	public Workbench add(@NonNull final ModuleView<?> moduleView) {
 		snapPane.add(moduleView.getTitleBar().getNode(), moduleView.getNode());
 		return this;
 	}

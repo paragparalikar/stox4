@@ -15,7 +15,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 
-public abstract class ModuleView implements HasNode<FluentBorderPane>{
+public abstract class ModuleView<T extends ModuleViewState> implements HasNode<FluentBorderPane>{
 
 	@Getter(AccessLevel.PROTECTED)
 	private final Context context;
@@ -24,6 +24,10 @@ public abstract class ModuleView implements HasNode<FluentBorderPane>{
 	private final FluentStackPane root = new FluentStackPane(container);
 	private final FluentBorderPane resizableWrapper = ResizeMouseEventHandler.resizable(new FluentBorderPane());
 
+	public abstract T state();
+	
+	public abstract ModuleView<T> state(T state);
+	
 	public abstract ModuleTitleBar getTitleBar();
 	
 	public ModuleView(@NonNull final Context context) {
@@ -31,18 +35,18 @@ public abstract class ModuleView implements HasNode<FluentBorderPane>{
 		resizableWrapper.classes("module-view").center(root).addHandler(MouseEvent.MOUSE_PRESSED, e -> resizableWrapper.toFront());
 	}
 	
-	protected ModuleView title(final ModuleTitleBar titleBar) {
+	protected ModuleView<T> title(final ModuleTitleBar titleBar) {
 		container.top(titleBar.getNode());
 		MovableMouseEventHandler.movable(titleBar.getNode(), resizableWrapper);
 		return this;
 	}
 	
-	protected ModuleView content(final Node node) {
+	protected ModuleView<T> content(final Node node) {
 		container.center(node);
 		return this;
 	}
 
-	public ModuleView initDefaultBounds(final double width, final double height) {
+	public ModuleView<T> initDefaultBounds(final double width, final double height) {
 		resizableWrapper.width(width / 5).height(height).autosize();
 		return this;
 	}
@@ -56,4 +60,6 @@ public abstract class ModuleView implements HasNode<FluentBorderPane>{
 	public FluentBorderPane getNode() {
 		return resizableWrapper;
 	}
+	
+	
 }
