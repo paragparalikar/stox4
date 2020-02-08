@@ -78,7 +78,7 @@ public class Main extends Application {
 				.exchangeRepository(new ExchangeRepository(home))
 				.scripRepository(new ScripRepository(home))
 				.barRepository(new BarRepository(home))
-				.moduleStateRepository(new ModuleStateRepository(home.resolve(Paths.get("workbench")), jsonConverter))
+				.moduleStateRepository(new ModuleStateRepository(home.resolve(Paths.get("workbench"))))
 				.build();
 	}
 

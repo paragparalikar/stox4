@@ -7,7 +7,6 @@ import java.util.Set;
 
 import com.stox.persistence.store.SerializableFileStore;
 import com.stox.persistence.store.Store;
-import com.stox.util.JsonConverter;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +17,6 @@ public class ModuleStateRepository {
 
 	@NonNull
 	private final Path path;
-
-	@NonNull
-	private final JsonConverter jsonConverter;
 
 	private Path resolve(@NonNull final String code) {
 		return path.resolve(Paths.get(String.join(".", "state", code, "ser")));
