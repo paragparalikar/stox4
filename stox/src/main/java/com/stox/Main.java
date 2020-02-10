@@ -11,6 +11,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.stox.fx.fluent.stage.FluentStage;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Icon;
@@ -19,7 +21,6 @@ import com.stox.module.core.persistence.BarRepository;
 import com.stox.module.core.persistence.ExchangeRepository;
 import com.stox.module.core.persistence.ScripRepository;
 import com.stox.module.explorer.ExplorerModule;
-import com.stox.util.JsonConverter;
 import com.stox.workbench.Workbench;
 import com.stox.workbench.module.Module;
 import com.stox.workbench.module.ModuleStateRepository;
@@ -28,6 +29,7 @@ import javafx.application.Application;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import lombok.NonNull;
 
 public class Main extends Application {
 
@@ -35,7 +37,9 @@ public class Main extends Application {
 		launch(args);
 	}
 	
-	private final JsonConverter jsonConverter = new JsonConverter();
+	private final Gson gson = buildGson();
+	private final Path home = Paths.get(System.getProperty("user.home"), ".stox4");
+	private final Config config = buildConfig(home);
 	private final FxMessageSource messageSource = new FxMessageSource();
 	private final AtomicReference<FluentStage> stageReference = new AtomicReference<>();
 	private final Workbench workbench = new Workbench(messageSource, stageReference);
@@ -67,22 +71,28 @@ public class Main extends Application {
 	}
 	
 	private Context buildContext() {
-		final Config config = buildConfig();
-		final Path home = config.getHome();
 		return Context.builder()
+				.gson(gson)
 				.config(config)
 				.workbench(workbench)
-				.jsonConverter(jsonConverter)
 				.messageSource(messageSource)
 				.scheduledExecutorService(scheduledExecutorService)
 				.exchangeRepository(new ExchangeRepository(home))
 				.scripRepository(new ScripRepository(home))
 				.barRepository(new BarRepository(home))
-				.moduleStateRepository(new ModuleStateRepository(home.resolve(Paths.get("workbench"))))
+				.moduleStateRepository(new ModuleStateRepository(gson, home))
 				.build();
 	}
+	
+	private Gson buildGson() {
+		return new GsonBuilder()
+				.enableComplexMapKeySerialization()
+				.serializeNulls()
+				.setPrettyPrinting()
+				.create();
+	}
 
-	private Config buildConfig() {
+	private Config buildConfig(@NonNull final Path home) {
 		final NumberFormat currencyFormat = NumberFormat.getInstance();
 		currencyFormat.setGroupingUsed(true);
 		currencyFormat.setMaximumFractionDigits(2);
@@ -91,7 +101,7 @@ public class Main extends Application {
 				.currencyFormat(currencyFormat)
 				.dateFormat(new SimpleDateFormat("dd-MMM-yyyy"))
 				.dateFormatFull(new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss a"))
-				.home(Paths.get(System.getProperty("user.home"), ".stox"))
+				.home(home)
 				.build();
 	}
 	

@@ -1,13 +1,27 @@
 package com.stox.workbench.module;
 
-import java.io.Serializable;
+import com.google.gson.annotations.SerializedName;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
-public class ModuleViewState implements Serializable{
-	private static final long serialVersionUID = -8278951864894232711L;
+@Accessors(fluent = true)
+public class ModuleViewState{
 
-	private double x, y, width, height;
+	@SerializedName("x")
+	private double x;
+	
+	@SerializedName("y")
+	private double y;
+	
+	@SerializedName("width")
+	private double width;
+	
+	@SerializedName("height")
+	private double height;
+	
+	@SerializedName("state")
+	private String state;
 
 }

@@ -1,22 +1,24 @@
 package com.stox.module.explorer;
 
+import com.google.gson.annotations.SerializedName;
 import com.stox.module.core.model.Exchange;
-import com.stox.workbench.module.ModuleViewState;
 
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Value
-@EqualsAndHashCode(callSuper = true)
-public class ExplorerViewState extends ModuleViewState {
-	private static final long serialVersionUID = 1651026735650177597L;
+@Data
+@Accessors(fluent = true)
+public class ExplorerViewState {
 
-	private final String isin;
+	@SerializedName("isin")
+	private String isin;
 	
-	private final Exchange exchange;
+	@SerializedName("exchange")
+	private Exchange exchange;
 	
-	private final boolean searchVisible;
-	
-	private final boolean filterVisible;
-	
+	@SerializedName("searchVisible")
+	private boolean searchVisible;
+
+	@SerializedName("searchText")
+	private String searchText;
 }

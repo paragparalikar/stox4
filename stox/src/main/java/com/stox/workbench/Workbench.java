@@ -54,13 +54,17 @@ public class Workbench {
 		return scene;
 	}
 
-	public Workbench add(@NonNull final ModuleView<?> moduleView) {
+	public ModuleView add(@NonNull final ModuleView moduleView) {
 		snapPane.add(moduleView.getTitleBar().getNode(), moduleView.getNode());
-		return this;
+		return moduleView;
 	}
 	
+	public ModuleView remove(@NonNull final ModuleView moduleView) {
+		snapPane.getChildren().remove(moduleView.getNode());
+		return moduleView;
+	}
+				
 	public Bounds visualBounds() {
 		return snapPane.getBoundsInLocal();
 	}
-		
 }

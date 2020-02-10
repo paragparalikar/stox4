@@ -1,11 +1,12 @@
 package com.stox.workbench.module;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
 
-import com.stox.persistence.store.SerializableFileStore;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.stox.persistence.store.JsonFileStore;
 import com.stox.persistence.store.Store;
 
 import lombok.NonNull;
@@ -16,30 +17,27 @@ import lombok.SneakyThrows;
 public class ModuleStateRepository {
 
 	@NonNull
+	private final Gson gson;
+	
+	@NonNull
 	private final Path path;
-
+	
 	private Path resolve(@NonNull final String code) {
-		return path.resolve(Paths.get(String.join(".", "state", code, "ser")));
+		return path.resolve(Paths.get(code, "state.json"));
 	}
-
-	private <T extends ModuleViewState> Store<Set<T>> store(@NonNull final String code) {
-		return new SerializableFileStore<Set<T>>(resolve(code));
+	
+	private Store<Set<ModuleViewState>> store(@NonNull final Path path){
+		return new JsonFileStore<>(path, new TypeToken<Set<ModuleViewState>>(){}.getType(), gson);
 	}
 
 	@SneakyThrows
-	public <T extends ModuleViewState> ModuleStateRepository write(@NonNull final String code, @NonNull final Set<T> states) {
-		if (states.isEmpty()) {
-			Files.deleteIfExists(resolve(code));
-		} else {
-			final Store<Set<T>> store = store(code);
-			store.write(states);
-		}
+	public ModuleStateRepository write(@NonNull final String code, @NonNull final Set<ModuleViewState> states) {
+		store(resolve(code)).write(states);
 		return this;
 	}
 
-	public <T extends ModuleViewState> Set<T> read(@NonNull final String code) {
-		final Store<Set<T>> store = store(code);
-		return store.read();
+	public Set<ModuleViewState> read(@NonNull final String code) {
+		return store(resolve(code)).read();
 	}
 
 }

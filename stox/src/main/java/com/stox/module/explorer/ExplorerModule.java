@@ -7,7 +7,7 @@ import com.stox.workbench.module.UiModule;
 import javafx.beans.value.ObservableValue;
 import lombok.NonNull;
 
-public class ExplorerModule extends UiModule<ExplorerViewState> {
+public class ExplorerModule extends UiModule {
 
 	public ExplorerModule(@NonNull final Context context) {
 		super(context);
@@ -30,7 +30,12 @@ public class ExplorerModule extends UiModule<ExplorerViewState> {
 
 	@Override
 	protected ExplorerView buildModuleView() {
-		return new ExplorerView(getIcon(), getModuleName(), getContext());
+		return ExplorerView.builder()
+				.icon(getIcon())
+				.titleValue(getModuleName())
+				.scripRepository(getContext().getScripRepository())
+				.closeConsumer(super::remove)
+				.build();
 	}
 
 }
