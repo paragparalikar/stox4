@@ -12,6 +12,7 @@ import com.stox.util.StringUtil;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import lombok.NonNull;
 
 public class SearchBox<T> implements HasNode<Node>{
 
@@ -21,7 +22,7 @@ public class SearchBox<T> implements HasNode<Node>{
 	private final FluentTextField textField = new FluentTextField().classes("first", "inverted").fullArea().onAction(e -> next());
 	private final FluentHBox container = new FluentHBox(textField, searchButton).classes("box","search-box","primary").fillHeight(true);
 
-	public SearchBox(final Searchable<T> searchable, final BiPredicate<T, String> matcher) {
+	public SearchBox(@NonNull final Searchable<T> searchable, final BiPredicate<T, String> matcher) {
 		this.searchable = searchable;
 		this.matcher = null == matcher ? new DefaultMatcher<>() : matcher;
 		textField.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
@@ -57,7 +58,7 @@ public class SearchBox<T> implements HasNode<Node>{
 		}
 	}
 
-	public SearchBox<T> searchable(final Searchable<T> searchable) {
+	public SearchBox<T> searchable(@NonNull final Searchable<T> searchable) {
 		this.searchable = searchable;
 		return this;
 	}
