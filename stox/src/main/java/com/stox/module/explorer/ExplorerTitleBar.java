@@ -1,5 +1,6 @@
 package com.stox.module.explorer;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import com.stox.fx.fluent.scene.control.FluentComboBox;
@@ -17,56 +18,57 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.control.Toggle;
+import lombok.Builder;
 import lombok.NonNull;
 
 public class ExplorerTitleBar extends ModuleTitleBar {
 
-	private final Toggle filterToggle;
 	private final Toggle searchToggle;
+	private final SearchBox<Scrip> searchBox;
+	private final SearchableListView<Scrip> listView;
 	private final LinkButton linkButton = new LinkButton();
 	private final FluentComboBox<Exchange> exchangeComboBox = new FluentComboBox<Exchange>().items(Exchange.values()).classes("primary", "inverted").fullWidth();
 
-	public ExplorerTitleBar(@NonNull final String icon, @NonNull final ObservableValue<String> titleValue, @NonNull final EventHandler<ActionEvent> closeEventHandler,
-			@NonNull final SearchableListView<Scrip> listView, @NonNull final Consumer<Exchange> consumer) {
+	@Builder
+	public ExplorerTitleBar(
+			@NonNull final String icon, 
+			@NonNull final ObservableValue<String> titleValue, 
+			@NonNull final EventHandler<ActionEvent> closeEventHandler,
+			@NonNull final SearchableListView<Scrip> listView, 
+			@NonNull final Consumer<Exchange> consumer) {
 		super(icon, titleValue, closeEventHandler);
+		this.listView = listView;
 		getTitleBar().append(Side.RIGHT, linkButton);
-		filterToggle = appendToggleNode(Icon.FILTER, exchangeComboBox);
-		searchToggle = appendToggleNode(Icon.SEARCH, new SearchBox<Scrip>(listView, this::test).classes("primary"));
+		getTitleBar().append(Side.BOTTOM, exchangeComboBox);
+		searchToggle = appendToggleNode(Icon.SEARCH, searchBox = new SearchBox<Scrip>(listView, this::test).classes("primary"));
 		exchangeComboBox.selectionModel().selectedItemProperty().addListener((o, old, exchange) -> consumer.accept(exchange));
 		exchangeComboBox.select(Exchange.NSE);
+		listView.getSelectionModel().selectedItemProperty().addListener((o, old, scrip) -> linkButton.getLink().setState(new State(0, scrip, null)));
 	}
 	
-	ExplorerTitleBar scrip(final Scrip scrip) {
-		linkButton.getLink().setState(new State(0, scrip, null));
+	ExplorerViewState state() {
+		final Scrip scrip = listView.getSelectionModel().getSelectedItem();
+		return new ExplorerViewState()
+				.isin(Objects.isNull(scrip) ? null : scrip.getIsin())
+				.exchange(exchangeComboBox.getValue())
+				.searchText(searchBox.getTextField().getText())
+				.searchVisible(searchToggle.isSelected());
+	}
+	
+	ExplorerTitleBar state(@NonNull final ExplorerViewState state) {
+		exchangeComboBox.select(state.exchange());
+		searchToggle.setSelected(state.searchVisible());
+		searchBox.getTextField().setText(state.searchText());
+		listView.getItems().stream()
+			.filter(Objects::nonNull)
+			.filter(scrip -> Objects.equals(scrip.getIsin(), state.isin()))
+			.findFirst().ifPresent(scrip -> {
+				listView.scrollTo(scrip);
+				listView.getSelectionModel().select(scrip);
+			});
 		return this;
 	}
 	
-	public Exchange exchange() {
-		return exchangeComboBox.getValue();
-	}
-	
-	public ExplorerTitleBar exchange(@NonNull final Exchange exchange) {
-		exchangeComboBox.setValue(exchange);
-		return this;
-	}
-	
-	public boolean searchVisible() {
-		return searchToggle.isSelected();
-	}
-	
-	public ExplorerTitleBar searchVisible(final boolean value) {
-		searchToggle.setSelected(value);
-		return this;
-	}
-	
-	public boolean filterVisible() {
-		return filterToggle.isSelected();
-	}
-	
-	public ExplorerTitleBar filterVisible(final boolean value) {
-		filterToggle.setSelected(value);
-		return this;
-	}
 
 	public boolean test(final Scrip scrip, String text) {
 		text = text.trim().toLowerCase();

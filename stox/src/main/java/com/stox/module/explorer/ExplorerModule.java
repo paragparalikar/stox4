@@ -33,8 +33,9 @@ public class ExplorerModule extends UiModule {
 		return ExplorerView.builder()
 				.icon(getIcon())
 				.titleValue(getModuleName())
-				.scripRepository(getContext().getScripRepository())
+				.gson(getContext().getGson())
 				.closeConsumer(super::remove)
+				.scripRepository(getContext().getScripRepository())
 				.build();
 	}
 

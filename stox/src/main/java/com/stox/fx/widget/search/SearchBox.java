@@ -4,14 +4,15 @@ import java.util.function.BiPredicate;
 
 import com.stox.fx.fluent.scene.control.FluentButton;
 import com.stox.fx.fluent.scene.control.FluentTextField;
-import com.stox.fx.fluent.scene.layout.FluentHBox;
+import com.stox.fx.fluent.scene.layout.IFluentHBox;
 import com.stox.fx.widget.Icon;
 import com.stox.util.StringUtil;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 
-public class SearchBox<T> extends FluentHBox {
+public class SearchBox<T> extends HBox implements IFluentHBox<SearchBox<T>> {
 
 	private Searchable<T> searchable;
 	private BiPredicate<T, String> matcher;
@@ -65,5 +66,10 @@ public class SearchBox<T> extends FluentHBox {
 	
 	public FluentTextField getTextField() {
 		return textField;
+	}
+
+	@Override
+	public SearchBox<T> getThis() {
+		return this;
 	}
 }
