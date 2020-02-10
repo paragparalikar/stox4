@@ -4,25 +4,26 @@ import java.util.function.BiPredicate;
 
 import com.stox.fx.fluent.scene.control.FluentButton;
 import com.stox.fx.fluent.scene.control.FluentTextField;
-import com.stox.fx.fluent.scene.layout.IFluentHBox;
+import com.stox.fx.fluent.scene.layout.FluentHBox;
+import com.stox.fx.widget.HasNode;
 import com.stox.fx.widget.Icon;
 import com.stox.util.StringUtil;
 
+import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 
-public class SearchBox<T> extends HBox implements IFluentHBox<SearchBox<T>> {
+public class SearchBox<T> implements HasNode<Node>{
 
 	private Searchable<T> searchable;
 	private BiPredicate<T, String> matcher;
 	private final FluentButton searchButton = new FluentButton(Icon.SEARCH).classes("icon", "last").defaultButton(true);
 	private final FluentTextField textField = new FluentTextField().classes("first", "inverted").fullArea().onAction(e -> next());
+	private final FluentHBox container = new FluentHBox(textField, searchButton).classes("box","search-box","primary").fillHeight(true);
 
 	public SearchBox(final Searchable<T> searchable, final BiPredicate<T, String> matcher) {
 		this.searchable = searchable;
 		this.matcher = null == matcher ? new DefaultMatcher<>() : matcher;
-		children(textField, searchButton).classes("box","search-box").fillHeight(true);
 		textField.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
 			if (KeyCode.ENTER.equals(event.getCode())) {
 				searchButton.fire();
@@ -56,20 +57,27 @@ public class SearchBox<T> extends HBox implements IFluentHBox<SearchBox<T>> {
 		}
 	}
 
-	public void setSearchable(final Searchable<T> searchable) {
+	public SearchBox<T> searchable(final Searchable<T> searchable) {
 		this.searchable = searchable;
+		return this;
 	}
 
-	public void setMatcher(final BiPredicate<T, String> matcher) {
+	public SearchBox<T> matcher(final BiPredicate<T, String> matcher) {
 		this.matcher = null == matcher ? new DefaultMatcher<>() : matcher;
+		return this;
 	}
 	
-	public FluentTextField getTextField() {
-		return textField;
+	public String text() {
+		return textField.getText();
+	}
+	
+	public SearchBox<T> text(final String text){
+		textField.setText(text);
+		return this;
 	}
 
 	@Override
-	public SearchBox<T> getThis() {
-		return this;
+	public Node getNode() {
+		return container;
 	}
 }

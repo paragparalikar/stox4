@@ -38,9 +38,10 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 			@NonNull final Consumer<Exchange> consumer) {
 		super(icon, titleValue, closeEventHandler);
 		this.listView = listView;
+		this.searchBox = new SearchBox<Scrip>(listView, this::test);
 		getTitleBar().append(Side.RIGHT, linkButton);
 		getTitleBar().append(Side.BOTTOM, exchangeComboBox);
-		searchToggle = appendToggleNode(Icon.SEARCH, searchBox = new SearchBox<Scrip>(listView, this::test).classes("primary"));
+		searchToggle = appendToggleNode(Icon.SEARCH, searchBox.getNode());
 		exchangeComboBox.selectionModel().selectedItemProperty().addListener((o, old, exchange) -> consumer.accept(exchange));
 		exchangeComboBox.select(Exchange.NSE);
 		listView.getSelectionModel().selectedItemProperty().addListener((o, old, scrip) -> linkButton.getLink().setState(new State(0, scrip, null)));
@@ -51,14 +52,14 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 		return new ExplorerViewState()
 				.isin(Objects.isNull(scrip) ? null : scrip.getIsin())
 				.exchange(exchangeComboBox.getValue())
-				.searchText(searchBox.getTextField().getText())
+				.searchText(searchBox.text())
 				.searchVisible(searchToggle.isSelected());
 	}
 	
 	ExplorerTitleBar state(@NonNull final ExplorerViewState state) {
 		exchangeComboBox.select(state.exchange());
 		searchToggle.setSelected(state.searchVisible());
-		searchBox.getTextField().setText(state.searchText());
+		searchBox.text(state.searchText());
 		listView.getItems().stream()
 			.filter(Objects::nonNull)
 			.filter(scrip -> Objects.equals(scrip.getIsin(), state.isin()))
