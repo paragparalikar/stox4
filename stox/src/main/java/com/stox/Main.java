@@ -11,8 +11,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.stox.fx.fluent.stage.FluentStage;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Icon;
@@ -21,6 +19,7 @@ import com.stox.module.core.persistence.BarRepository;
 import com.stox.module.core.persistence.ExchangeRepository;
 import com.stox.module.core.persistence.ScripRepository;
 import com.stox.module.explorer.ExplorerModule;
+import com.stox.util.JsonConverter;
 import com.stox.workbench.Workbench;
 import com.stox.workbench.module.Module;
 import com.stox.workbench.module.ModuleStateRepository;
@@ -37,7 +36,7 @@ public class Main extends Application {
 		launch(args);
 	}
 	
-	private final Gson gson = buildGson();
+	private final JsonConverter jsonConverter = new JsonConverter();
 	private final Path home = Paths.get(System.getProperty("user.home"), ".stox4");
 	private final Config config = buildConfig(home);
 	private final FxMessageSource messageSource = new FxMessageSource();
@@ -72,26 +71,18 @@ public class Main extends Application {
 	
 	private Context buildContext() {
 		return Context.builder()
-				.gson(gson)
 				.config(config)
 				.workbench(workbench)
+				.jsonConverter(jsonConverter)
 				.messageSource(messageSource)
 				.scheduledExecutorService(scheduledExecutorService)
 				.exchangeRepository(new ExchangeRepository(home))
 				.scripRepository(new ScripRepository(home))
 				.barRepository(new BarRepository(home))
-				.moduleStateRepository(new ModuleStateRepository(gson, home))
+				.moduleStateRepository(new ModuleStateRepository(home, jsonConverter))
 				.build();
 	}
 	
-	private Gson buildGson() {
-		return new GsonBuilder()
-				.enableComplexMapKeySerialization()
-				.serializeNulls()
-				.setPrettyPrinting()
-				.create();
-	}
-
 	private Config buildConfig(@NonNull final Path home) {
 		final NumberFormat currencyFormat = NumberFormat.getInstance();
 		currencyFormat.setGroupingUsed(true);

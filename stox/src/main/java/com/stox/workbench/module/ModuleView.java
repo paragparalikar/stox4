@@ -1,5 +1,7 @@
 package com.stox.workbench.module;
 
+import java.util.Objects;
+
 import com.stox.fx.fluent.scene.layout.FluentBorderPane;
 import com.stox.fx.fluent.scene.layout.FluentStackPane;
 import com.stox.fx.widget.HasNode;
@@ -11,7 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import lombok.NonNull;
 
-public abstract class ModuleView implements HasNode<FluentBorderPane> {
+public abstract class ModuleView<T extends ModuleViewState> implements HasNode<FluentBorderPane> {
 
 	private final FluentBorderPane container = new FluentBorderPane();
 	private final FluentStackPane root = new FluentStackPane(container);
@@ -19,40 +21,41 @@ public abstract class ModuleView implements HasNode<FluentBorderPane> {
 
 	public abstract ModuleTitleBar getTitleBar();
 
+	public abstract T stop(@NonNull final Bounds bounds);
+
 	public ModuleView() {
 		resizableWrapper.classes("module-view").center(root).addHandler(MouseEvent.MOUSE_PRESSED, e -> resizableWrapper.toFront());
 	}
 
-	protected ModuleView title(@NonNull final ModuleTitleBar titleBar) {
+	protected ModuleView<T> title(@NonNull final ModuleTitleBar titleBar) {
 		container.top(titleBar.getNode());
 		MovableMouseEventHandler.movable(titleBar.getNode(), resizableWrapper);
 		return this;
 	}
 
-	protected ModuleView content(@NonNull final Node node) {
+	protected ModuleView<T> content(@NonNull final Node node) {
 		container.center(node);
 		return this;
 	}
 
-	public ModuleView initDefaultBounds(@NonNull final Bounds bounds) {
-		resizableWrapper.width(bounds.getWidth() / 5).height(bounds.getHeight()).autosize();
+	public ModuleView<T> start(final T state, @NonNull final Bounds bounds) {
+		if (Objects.isNull(state)) {
+			resizableWrapper.width(bounds.getWidth() / 5).height(bounds.getHeight()).autosize();
+		} else {
+			resizableWrapper.bounds(state.x() * bounds.getWidth(),
+					state.y() * bounds.getHeight(),
+					state.width() * bounds.getWidth(),
+					state.height() * bounds.getHeight());
+		}
 		return this;
 	}
 
-	public ModuleView state(@NonNull final ModuleViewState state, @NonNull final Bounds bounds) {
-		resizableWrapper.bounds(state.x() * bounds.getWidth(), 
-				state.y() * bounds.getHeight(), 
-				state.width() * bounds.getWidth(), 
-				state.height() * bounds.getHeight());
-		return this;
-	}
-
-	public ModuleViewState state(@NonNull final Bounds bounds) {
-		return new ModuleViewState()
-				.x(resizableWrapper.x() / bounds.getWidth())
+	public T stop(@NonNull final T state, @NonNull final Bounds bounds) {
+		state.x(resizableWrapper.x() / bounds.getWidth())
 				.y(resizableWrapper.y() / bounds.getHeight())
 				.width(resizableWrapper.width() / bounds.getWidth())
 				.height(resizableWrapper.height() / bounds.getHeight());
+		return state;
 	}
 
 	@Override

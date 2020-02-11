@@ -9,6 +9,7 @@ import com.stox.fx.widget.SnapPane;
 import com.stox.fx.widget.handler.MovableMouseEventHandler;
 import com.stox.fx.widget.handler.ResizeMouseEventHandler;
 import com.stox.workbench.module.ModuleView;
+import com.stox.workbench.module.ModuleViewState;
 
 import javafx.application.Application;
 import javafx.geometry.Bounds;
@@ -54,12 +55,12 @@ public class Workbench {
 		return scene;
 	}
 
-	public ModuleView add(@NonNull final ModuleView moduleView) {
+	public <T extends ModuleViewState> ModuleView<T> add(@NonNull final ModuleView<T> moduleView) {
 		snapPane.add(moduleView.getTitleBar().getNode(), moduleView.getNode());
 		return moduleView;
 	}
 	
-	public ModuleView remove(@NonNull final ModuleView moduleView) {
+	public <T extends ModuleViewState> ModuleView<T> remove(@NonNull final ModuleView<T> moduleView) {
 		snapPane.getChildren().remove(moduleView.getNode());
 		return moduleView;
 	}

@@ -32,7 +32,6 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 		getTitleBar().append(Side.BOTTOM, exchangeComboBox);
 		searchToggle = appendToggleNode(Icon.SEARCH, searchBox.getNode());
 		exchangeComboBox.selectionModel().selectedItemProperty().addListener((o, old, exchange) -> consumer.accept(exchange));
-		exchangeComboBox.select(Exchange.NSE);
 		listView.getSelectionModel().selectedItemProperty().addListener((o, old, scrip) -> linkButton.getLink().setState(new State(0, scrip, null)));
 	}
 	
@@ -45,17 +44,21 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 				.searchVisible(searchToggle.isSelected());
 	}
 	
-	ExplorerTitleBar state(@NonNull final ExplorerViewState state) {
-		exchangeComboBox.select(state.exchange());
-		searchToggle.setSelected(state.searchVisible());
-		searchBox.text(state.searchText());
-		listView.getItems().stream()
-			.filter(Objects::nonNull)
-			.filter(scrip -> Objects.equals(scrip.getIsin(), state.isin()))
-			.findFirst().ifPresent(scrip -> {
-				listView.scrollTo(scrip);
-				listView.getSelectionModel().select(scrip);
-			});
+	ExplorerTitleBar state(final ExplorerViewState state) {
+		if(Objects.isNull(state)) {
+			exchangeComboBox.select(Exchange.NSE);
+		}else {
+			exchangeComboBox.select(state.exchange());
+			searchToggle.setSelected(state.searchVisible());
+			searchBox.text(state.searchText());
+			listView.getItems().stream()
+				.filter(Objects::nonNull)
+				.filter(scrip -> Objects.equals(scrip.getIsin(), state.isin()))
+				.findFirst().ifPresent(scrip -> {
+					listView.scrollTo(scrip);
+					listView.getSelectionModel().select(scrip);
+				});
+		}
 		return this;
 	}
 	

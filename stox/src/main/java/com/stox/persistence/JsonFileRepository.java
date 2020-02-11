@@ -10,8 +10,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.google.gson.Gson;
 import com.stox.persistence.store.JsonFileStore;
+import com.stox.util.JsonConverter;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,7 +29,7 @@ public class JsonFileRepository<I, T> implements Repository<I, T> {
 	private final Class<T> type;
 
 	@NonNull
-	private final Gson gson;
+	private final JsonConverter jsonConverter;
 
 	@NonNull
 	private final Function<T, I> idRetreivalFunction;
@@ -47,13 +47,13 @@ public class JsonFileRepository<I, T> implements Repository<I, T> {
 	@Override
 	public T find(@NonNull final I id) {
 		final Path path = buildPath(id);
-		return Files.exists(path) ? new JsonFileStore<>(path, type, gson).read() : null;
+		return Files.exists(path) ? new JsonFileStore<>(path, type, jsonConverter).read() : null;
 	}
 
 	@Override
 	@SneakyThrows
 	public List<T> findAll() {
-		return Files.list(path).map(filePath -> new JsonFileStore<>(filePath, type, gson).read()).collect(Collectors.toList());
+		return Files.list(path).map(filePath -> new JsonFileStore<>(filePath, type, jsonConverter).read()).collect(Collectors.toList());
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class JsonFileRepository<I, T> implements Repository<I, T> {
 		}
 		final I id = nextIdSupplier.get();
 		idSetterConsumer.accept(id, entity);
-		new JsonFileStore<>(buildPath(id), type, gson).write(entity);
+		new JsonFileStore<>(buildPath(id), type, jsonConverter).write(entity);
 		return id;
 	}
 
@@ -73,7 +73,7 @@ public class JsonFileRepository<I, T> implements Repository<I, T> {
 		if (Objects.isNull(id)) {
 			throw new IllegalArgumentException("Id must NOT be null to update an entity");
 		}
-		new JsonFileStore<>(buildPath(id), type, gson).write(entity);
+		new JsonFileStore<>(buildPath(id), type, jsonConverter).write(entity);
 	}
 
 	@Override

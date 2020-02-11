@@ -20,8 +20,5 @@ public class ModuleViewState{
 	
 	@SerializedName("height")
 	private double height;
-	
-	@SerializedName("state")
-	private String state;
 
 }
