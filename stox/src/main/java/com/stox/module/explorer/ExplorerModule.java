@@ -30,13 +30,7 @@ public class ExplorerModule extends UiModule {
 
 	@Override
 	protected ExplorerView buildModuleView() {
-		return ExplorerView.builder()
-				.icon(getIcon())
-				.titleValue(getModuleName())
-				.gson(getContext().getGson())
-				.closeConsumer(super::remove)
-				.scripRepository(getContext().getScripRepository())
-				.build();
+		return new ExplorerView(getContext().getGson(), getContext().getScripRepository());
 	}
 
 }

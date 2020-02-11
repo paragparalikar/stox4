@@ -20,15 +20,25 @@ import lombok.NonNull;
 
 public class ModuleTitleBar implements HasNode<Node> {
 	
+	final FluentLabel graphic = new FluentLabel().classes("primary", "icon");
+	final FluentLabel titleLabel = new FluentLabel().classes("primary", "title-text").fullHeight();
+	final FluentButton closeButton = new FluentButton(Icon.TIMES).classes("primary", "icon", "hover-danger");
 	@Getter(AccessLevel.PROTECTED)
-	private final TitleBar titleBar = new TitleBar();
-
-	public ModuleTitleBar(@NonNull final String icon, @NonNull final ObservableValue<String> titleValue, @NonNull final EventHandler<ActionEvent> closeEventHandler) {
-		final FluentLabel graphic = new FluentLabel(icon).classes("primary", "icon");
-		final FluentLabel titleLabel = new FluentLabel().classes("primary", "title-text").fullHeight();
-		titleLabel.textProperty().bind(titleValue);
-		final FluentButton closeButton = new FluentButton(Icon.TIMES).classes("primary", "icon", "hover-danger").onAction(closeEventHandler);
-		titleBar.append(Side.RIGHT, closeButton).center(new FluentHBox(graphic, titleLabel, new Spacer()));
+	private final TitleBar titleBar = new TitleBar().append(Side.RIGHT, closeButton).center(new FluentHBox(graphic, titleLabel, new Spacer()));
+	
+	public ModuleTitleBar icon(final String icon) {
+		graphic.text(icon);
+		return this;
+	}
+	
+	public ModuleTitleBar title(@NonNull final ObservableValue<String> text) {
+		titleLabel.textProperty().bind(text);
+		return this;
+	}
+	
+	public ModuleTitleBar closeEventHandler(@NonNull final EventHandler<ActionEvent> closeEventHandler) {
+		closeButton.onAction(closeEventHandler);
+		return this;
 	}
 	
 	protected FluentToggleButton appendToggleNode(@NonNull final String icon,@NonNull final Node node) {

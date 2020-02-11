@@ -13,12 +13,8 @@ import com.stox.workbench.link.Link.State;
 import com.stox.workbench.link.LinkButton;
 import com.stox.workbench.module.ModuleTitleBar;
 
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.control.Toggle;
-import lombok.Builder;
 import lombok.NonNull;
 
 public class ExplorerTitleBar extends ModuleTitleBar {
@@ -29,14 +25,7 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 	private final LinkButton linkButton = new LinkButton();
 	private final FluentComboBox<Exchange> exchangeComboBox = new FluentComboBox<Exchange>().items(Exchange.values()).classes("primary", "inverted").fullWidth();
 
-	@Builder
-	public ExplorerTitleBar(
-			@NonNull final String icon, 
-			@NonNull final ObservableValue<String> titleValue, 
-			@NonNull final EventHandler<ActionEvent> closeEventHandler,
-			@NonNull final SearchableListView<Scrip> listView, 
-			@NonNull final Consumer<Exchange> consumer) {
-		super(icon, titleValue, closeEventHandler);
+	public ExplorerTitleBar(@NonNull final SearchableListView<Scrip> listView, @NonNull final Consumer<Exchange> consumer) {
 		this.listView = listView;
 		this.searchBox = new SearchBox<Scrip>(listView, this::test);
 		getTitleBar().append(Side.RIGHT, linkButton);

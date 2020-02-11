@@ -47,13 +47,18 @@ public abstract class UiModule implements Module {
 	}
 	
 	private void load(@NonNull final ModuleViewState state) {
-		add(buildModuleView()).state(state, context.getWorkbench().visualBounds());
+		add(moduleView(buildModuleView())).state(state, context.getWorkbench().visualBounds());
 	}
 
 	private void menuItem() {
 		context.getWorkbench().getTitleBar().getMenuBar().newMenuItem(getIcon(), getModuleName(), event -> {
-			add(buildModuleView()).initDefaultBounds(context.getWorkbench().visualBounds());
+			add(moduleView(buildModuleView())).initDefaultBounds(context.getWorkbench().visualBounds());
 		});
+	}
+	
+	private ModuleView moduleView(@NonNull final ModuleView view) {
+		view.getTitleBar().icon(getIcon()).title(getModuleName()).closeEventHandler(event -> remove(view));
+		return view;
 	}
 	
 	private ModuleView add(@NonNull final ModuleView moduleView) {

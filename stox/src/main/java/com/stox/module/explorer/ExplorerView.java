@@ -1,7 +1,5 @@
 package com.stox.module.explorer;
 
-import java.util.function.Consumer;
-
 import com.google.gson.Gson;
 import com.stox.fx.widget.search.SearchableListView;
 import com.stox.module.core.model.Exchange;
@@ -11,9 +9,7 @@ import com.stox.util.StringUtil;
 import com.stox.workbench.module.ModuleView;
 import com.stox.workbench.module.ModuleViewState;
 
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -25,23 +21,12 @@ public class ExplorerView extends ModuleView {
 	private final ScripRepository scripRepository;
 	private final SearchableListView<Scrip> listView = new SearchableListView<>();
 
-	@Builder
-	public ExplorerView(
-			@NonNull final Gson gson,
-			@NonNull final String icon, 
-			@NonNull final ScripRepository scripRepository,
-			@NonNull final ObservableValue<String> titleValue,
-			@NonNull final Consumer<ModuleView> closeConsumer) {
-		content(listView);
+	public ExplorerView(@NonNull final Gson gson, @NonNull final ScripRepository scripRepository) {
 		this.gson = gson;
 		this.scripRepository = scripRepository;
-		title(titleBar = ExplorerTitleBar.builder()
-				.icon(icon)
-				.titleValue(titleValue)
-				.closeEventHandler(event -> closeConsumer.accept(this))
-				.listView(listView)
-				.consumer(this::load)
-				.build());
+		
+		content(listView);
+		title(titleBar = new ExplorerTitleBar(listView, this::load));
 	}
 
 	private void load(@NonNull final Exchange exchange) {
