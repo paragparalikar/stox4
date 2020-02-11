@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -41,16 +42,14 @@ public class BarRepository implements BarProvider {
 		}
 	};
 
+	@SneakyThrows
 	public BarRepository(@NonNull final Path home) {
 		this.home = home;
-		try {
-			Runtime.getRuntime().addShutdownHook(new Thread(this::close));
-			for (final BarSpan barSpan : BarSpan.values()) {
-				Files.createDirectories(Paths.get(getPath("", barSpan)));
-			}
-		} catch (final IOException ioException) {
-			throw new RuntimeException(ioException);
-		}
+		Runtime.getRuntime().addShutdownHook(new Thread(this::close));
+		Arrays.stream(BarSpan.values())
+			.map(barSpan -> getPath("",barSpan))
+			.map(Paths::get)
+			.forEach(Uncheck.consumer(Files::createDirectories));
 	}
 	
 	public void close() {

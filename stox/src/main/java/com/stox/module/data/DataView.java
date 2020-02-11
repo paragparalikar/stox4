@@ -9,6 +9,7 @@ import com.stox.fx.fluent.scene.control.FluentButton;
 import com.stox.fx.fluent.scene.control.FluentComboBox;
 import com.stox.fx.fluent.scene.control.FluentListView;
 import com.stox.fx.fluent.scene.control.FluentProgressBar;
+import com.stox.fx.fluent.scene.control.FluentProgressIndicator;
 import com.stox.fx.fluent.scene.layout.FluentBorderPane;
 import com.stox.fx.fluent.scene.layout.FluentHBox;
 import com.stox.fx.widget.FxMessageSource;
@@ -37,7 +38,8 @@ public class DataView extends ModuleView<DataViewState> {
 	private final BarRepository barRepository;
 	private final ScripRepository scripRepository;
 	private final ExchangeRepository exchangeRepository;
-	private final FluentListView<StatusMessage> listView = new FluentListView<StatusMessage>().cellFactory(a -> new StatusMessageListCell());
+	private final FluentProgressIndicator progressIndicator = new FluentProgressIndicator().classes("tiny","primary","inverted", "transparent-background");
+	private final FluentListView<StatusMessage> listView = new FluentListView<StatusMessage>().cellFactory(a -> new StatusMessageListCell(progressIndicator));
 	private final FluentComboBox<Exchange> exchangeComboBox = new FluentComboBox<Exchange>().items(Exchange.values()).select(Exchange.NSE).fullArea().classes("primary","inverted", "first");
 	private final FluentButton actionButton = new FluentButton(Icon.DOWNLOAD).defaultButton(true).classes("primary", "inverted", "icon", "last").onAction(e -> action());
 	private final FluentHBox controlsBox = new FluentHBox(exchangeComboBox, actionButton).fillHeight(true).fullWidth().classes("primary-background", "box", "padded");

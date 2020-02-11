@@ -9,13 +9,15 @@ import com.stox.fx.widget.Ui;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ProgressIndicator;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class StatusMessageListCell extends ListCell<StatusMessage> {
 
 	private FluentLabel graphic;
 	private StatusMessage previousItem;
-	private static ProgressIndicator progressIndicator;
-	private final ChangeListener<String> messageListener = (o,old,value) -> setText(value);
+	private final ProgressIndicator progressIndicator;
+	private final ChangeListener<String> messageListener = (o,old,value) ->  Ui.fx(() -> setText(value));
 	private final ChangeListener<Boolean> successListener = (o,old,value) -> Ui.fx(() -> statusChanged(value));
 
 	@Override
@@ -26,9 +28,7 @@ public class StatusMessageListCell extends ListCell<StatusMessage> {
 			previousItem.success().removeListener(successListener);
 		});
 		if (null == item || empty) {
-			graphicProperty().unbind();
 			setGraphic(null);
-			textProperty().unbind();
 			setText(null);
 		} else {
 			item.message().addListener(messageListener);
@@ -41,10 +41,6 @@ public class StatusMessageListCell extends ListCell<StatusMessage> {
 	
 	private void statusChanged(final Boolean success) {
 		if (null == success) {
-			if (null == progressIndicator) {
-				progressIndicator = new ProgressIndicator();
-				progressIndicator.getStyleClass().addAll("tiny","primary","inverted", "transparent-background");
-			}
 			setGraphic(progressIndicator);
 		} else {
 			if (null == graphic) {
