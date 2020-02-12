@@ -1,29 +1,32 @@
 package com.stox.module.explorer;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import com.stox.fx.widget.Ui;
 import com.stox.fx.widget.search.SearchableListView;
-import com.stox.module.core.event.ScripsChangedEvent;
 import com.stox.module.core.model.Exchange;
 import com.stox.module.core.model.Scrip;
+import com.stox.module.core.model.event.ScripsChangedEvent;
 import com.stox.module.core.persistence.ScripRepository;
+import com.stox.util.EventBus;
 import com.stox.workbench.module.ModuleView;
 
-import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import lombok.Getter;
 import lombok.NonNull;
 
 public class ExplorerView extends ModuleView<ExplorerViewState> {
 
+	private final EventBus eventBus;
 	@Getter
 	private final ExplorerTitleBar titleBar;
 	private final ScripRepository scripRepository;
 	private final SearchableListView<Scrip> listView = new SearchableListView<>();
-	private final EventHandler<ScripsChangedEvent> scripsChangedHandler = this::onScripsChanged;
+	private final Consumer<ScripsChangedEvent> scripsChangedHandler = this::onScripsChanged;
 
-	public ExplorerView(@NonNull final ScripRepository scripRepository) {
+	public ExplorerView(@NonNull final EventBus eventBus, @NonNull final ScripRepository scripRepository) {
+		this.eventBus = eventBus;
 		this.scripRepository = scripRepository;
 		content(listView);
 		title(titleBar = new ExplorerTitleBar(listView, this::load));
@@ -43,13 +46,13 @@ public class ExplorerView extends ModuleView<ExplorerViewState> {
 	public ExplorerView start(ExplorerViewState state, Bounds bounds) {
 		super.start(state, bounds);
 		titleBar.state(state);
-		getNode().getScene().getRoot().addEventHandler(ScripsChangedEvent.TYPE, scripsChangedHandler);
+		eventBus.subscribe(ScripsChangedEvent.class, scripsChangedHandler);
 		return this;
 	}
 	
 	@Override
 	public ExplorerViewState stop(Bounds bounds) {
-		getNode().getScene().getRoot().removeEventHandler(ScripsChangedEvent.TYPE, scripsChangedHandler);
+		eventBus.unsubscribe(ScripsChangedEvent.class, scripsChangedHandler);
 		return stop(titleBar.state(), bounds);
 	}
 	

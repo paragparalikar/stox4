@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 
 import com.stox.module.core.model.Exchange;
 import com.stox.module.core.model.Scrip;
+import com.stox.module.core.model.event.ScripsChangedEvent;
+import com.stox.util.EventBus;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,8 @@ public class ScripRepository {
 
 	@NonNull
 	private final Path home;
+	@NonNull
+	private final EventBus eventBus;
 	private final Map<String, Scrip> isinScripMapping = new HashMap<>();
 	private final Map<Exchange, List<Scrip>> exchangeScripMapping = new HashMap<>();
 	private final Map<Exchange, Map<String, Scrip>> exchangeCodeScripMapping = new HashMap<>();
@@ -82,6 +86,7 @@ public class ScripRepository {
 		exchangeScripMapping.put(exchange, scrips);
 		isinScripMapping.putAll(scrips.stream().collect(Collectors.toMap(Scrip::getIsin, Function.identity())));
 		exchangeCodeScripMapping.put(exchange, scrips.stream().collect(Collectors.toMap(Scrip::getCode, Function.identity())));
+		eventBus.fire(new ScripsChangedEvent(exchange, scrips));
 	}
 
 	public List<Scrip> find(Exchange exchange) {

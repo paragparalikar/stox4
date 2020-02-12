@@ -30,7 +30,8 @@ public class ExplorerModule extends UiModule<ExplorerViewState> {
 
 	@Override
 	protected ExplorerView buildModuleView() {
-		return new ExplorerView(getContext().getScripRepository());
+		return new ExplorerView(getContext().getEventBus(), 
+				getContext().getScripRepository());
 	}
 
 }

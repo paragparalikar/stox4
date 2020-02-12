@@ -6,6 +6,7 @@ import com.stox.fx.widget.FxMessageSource;
 import com.stox.module.core.persistence.BarRepository;
 import com.stox.module.core.persistence.ExchangeRepository;
 import com.stox.module.core.persistence.ScripRepository;
+import com.stox.util.EventBus;
 import com.stox.util.JsonConverter;
 import com.stox.workbench.Workbench;
 import com.stox.workbench.module.ModuleStateRepository;
@@ -21,6 +22,9 @@ public class Context {
 	@NonNull
 	private final Config config;
 	
+	@NonNull
+	private final EventBus eventBus;
+		
 	@NonNull
 	private final Workbench workbench;
 	

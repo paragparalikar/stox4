@@ -20,6 +20,7 @@ import com.stox.module.core.persistence.ExchangeRepository;
 import com.stox.module.core.persistence.ScripRepository;
 import com.stox.module.data.DataModule;
 import com.stox.module.explorer.ExplorerModule;
+import com.stox.util.EventBus;
 import com.stox.util.JsonConverter;
 import com.stox.workbench.Workbench;
 import com.stox.workbench.module.Module;
@@ -37,6 +38,7 @@ public class Main extends Application {
 		launch(args);
 	}
 	
+	private final EventBus eventBus = new EventBus();
 	private final JsonConverter jsonConverter = new JsonConverter();
 	private final Path home = Paths.get(System.getProperty("user.home"), ".stox4");
 	private final Config config = buildConfig(home);
@@ -77,11 +79,12 @@ public class Main extends Application {
 		return Context.builder()
 				.config(config)
 				.workbench(workbench)
+				.eventBus(eventBus)
 				.jsonConverter(jsonConverter)
 				.messageSource(messageSource)
 				.scheduledExecutorService(scheduledExecutorService)
 				.exchangeRepository(new ExchangeRepository(home))
-				.scripRepository(new ScripRepository(home))
+				.scripRepository(new ScripRepository(home, eventBus))
 				.barRepository(new BarRepository(home))
 				.moduleStateRepository(new ModuleStateRepository(home, jsonConverter))
 				.build();
