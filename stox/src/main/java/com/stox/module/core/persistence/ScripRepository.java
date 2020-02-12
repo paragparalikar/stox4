@@ -63,14 +63,19 @@ public class ScripRepository {
 
 	@SneakyThrows
 	public synchronized void save(Exchange exchange, List<Scrip> scrips) {
+		final Path path = getPath(exchange);
+		if(!Files.exists(path)) {
+			Files.createDirectories(path.getParent());
+		}
 		final List<String> lines = scrips.stream().sorted().map(this::format).collect(Collectors.toList());
-		Files.write(getPath(exchange), lines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
+		Files.write(path, lines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
 		cache(exchange, scrips);
 	}
 	
 	@SneakyThrows
 	public Date getLastModifiedDate(Exchange exchange){
-		return new Date(Files.getLastModifiedTime(getPath(exchange)).toMillis());
+		final Path path = getPath(exchange);
+		return Files.exists(path) ? new Date(Files.getLastModifiedTime(path).toMillis()) : null;
 	}
 	
 	private synchronized void cache(Exchange exchange, List<Scrip> scrips){

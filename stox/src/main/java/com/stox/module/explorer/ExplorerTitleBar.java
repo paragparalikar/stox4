@@ -35,6 +35,10 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 		listView.getSelectionModel().selectedItemProperty().addListener((o, old, scrip) -> linkButton.getLink().setState(new State(0, scrip, null)));
 	}
 	
+	Exchange exchange() {
+		return exchangeComboBox.value();
+	}
+	
 	ExplorerViewState state() {
 		final Scrip scrip = listView.getSelectionModel().getSelectedItem();
 		return new ExplorerViewState()

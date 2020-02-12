@@ -35,7 +35,7 @@ public class NseEodBarDownloader implements EodBarDownloader {
 	
 	@Override
 	public List<Bar> download(Date date) throws IOException{
-		final String url = "https://www.nseindia.com/content/historical/EQUITIES/" + bhavcopyDateFormat.format(date) + "bhav.csv.zip";
+		final String url = "https://www1.nseindia.com/content/historical/EQUITIES/" + bhavcopyDateFormat.format(date) + "bhav.csv.zip";
 		final HttpURLConnection connection = init((HttpURLConnection) new URL(url).openConnection());
 		final String rawData = StringUtil.toString(new ZipInputStream(connection.getInputStream()));
 		final List<Bar> bars = new ArrayList<Bar>();

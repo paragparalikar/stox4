@@ -2,63 +2,51 @@ package com.stox.module.data.downloader.scrip;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import com.stox.module.core.model.Exchange;
 import com.stox.module.core.model.Scrip;
 import com.stox.module.core.model.intf.Action;
-import com.stox.module.data.DownloadContext;
-import com.stox.module.data.StatusMessage;
-import com.stox.module.data.downloader.bar.eod.EodBarDownloadAction;
+import com.stox.module.core.persistence.ExchangeRepository;
+import com.stox.module.core.persistence.ScripRepository;
 import com.stox.util.DateUtil;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
 
-@RequiredArgsConstructor
+@Builder
 public class ScripMasterDownloadAction implements Action {
 
-	private StatusMessage message;
-	private final DownloadContext context;
+	private final Exchange exchange;
+	private final ScripRepository scripRepository;
+	private final ExchangeRepository exchangeRepository;
+	private final Runnable before, success, failure;
 
 	@Override
 	public boolean validate() {
-		final Date date = context.getScripRepository().getLastModifiedDate(context.getExchange());
-		return date.before(DateUtil.trim(new Date())) && !context.isCancelled();
+		return Optional.ofNullable(exchangeRepository.readLastDownloadDate(exchange)).orElseGet(() -> new Date(0)).before(DateUtil.trim(new Date()));
 	}
 
 	@Override
 	public void before() {
-		message = new StatusMessage(context.getMessageSource().get("Download scrip master"));
-		context.getMessageCallback().accept(message);
+		Optional.ofNullable(before).ifPresent(Runnable::run);
 	}
 
 	@Override
 	public void execute() throws Throwable {
-		final Exchange exchange = context.getExchange();
 		final ScripMasterDownloaderFactory factory = new ScripMasterDownloaderFactory();
 		final ScripMasterDownloader downloader = factory.create(exchange);
 		final List<Scrip> scrips = downloader.download(exchange);
-		context.getScripRepository().save(exchange, scrips);
+		scripRepository.save(exchange, scrips);
 	}
 
 	@Override
 	public void success() {
-		message.success(true);
+		Optional.ofNullable(success).ifPresent(Runnable::run);
 	}
 
 	@Override
 	public void failure(Throwable throwable) {
-		message.success(false);
-		throwable.printStackTrace();
-	}
-
-	@Override
-	public void after() {
-		context.getAfterCallback().run();
-		if (context.isCancelled()) {
-			context.getTerminationCallback().run();
-		}else{
-			context.getExecutorService().submit(new EodBarDownloadAction(context));
-		}
+		Optional.ofNullable(failure).ifPresent(Runnable::run);
 	}
 
 }

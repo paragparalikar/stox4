@@ -9,8 +9,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -215,6 +215,7 @@ public class BarRepository implements BarProvider {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public long getLastTradingDate(final String isin, final BarSpan barSpan) {
 		final String path = getPath(isin, barSpan);
 		synchronized (path) {
@@ -222,34 +223,28 @@ public class BarRepository implements BarProvider {
 				if (file.length() >= Long.BYTES) {
 					return file.length() + file.readLong() - 6 * Double.BYTES;
 				}
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 			}
-			Calendar calendar = Calendar.getInstance();
-			calendar.add(Calendar.YEAR, -9);
-			return calendar.getTimeInMillis();
+			return new Date(95,0,1).getTime();
 		}
 	}
 
+	@SneakyThrows
 	public void save(final String isin, final BarSpan barSpan, final List<Bar> bars) {
 		final String path = getPath(isin, barSpan);
 		synchronized (path) {
 			try (final RandomAccessFile file = new RandomAccessFile(path, "rw")) {
-				for (final Bar bar : bars) {
-					write(bar, file);
-				}
-			} catch (final IOException ioException) {
-				throw new RuntimeException(ioException);
-			}
+				bars.forEach(Uncheck.consumer(bar -> write(bar, file)));
+			} 
 		}
 	}
 
+	@SneakyThrows
 	public void save(final Bar bar, final BarSpan barSpan) {
 		final String path = getPath(bar.getIsin(), barSpan);
 		synchronized (path) {
 			try (final RandomAccessFile file = new RandomAccessFile(path, "rw")) {
 				write(bar, file);
-			} catch (final IOException ioException) {
-				throw new RuntimeException(ioException);
 			}
 		}
 	}

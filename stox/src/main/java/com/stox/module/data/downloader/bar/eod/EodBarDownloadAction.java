@@ -1,95 +1,74 @@
 package com.stox.module.data.downloader.bar.eod;
 
-import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 
 import com.stox.module.core.model.Bar;
 import com.stox.module.core.model.BarSpan;
 import com.stox.module.core.model.Exchange;
 import com.stox.module.core.model.intf.Action;
-import com.stox.module.data.DownloadContext;
-import com.stox.module.data.StatusMessage;
+import com.stox.module.core.persistence.BarRepository;
+import com.stox.module.core.persistence.ExchangeRepository;
+import com.stox.module.core.persistence.ScripRepository;
 
-import javafx.beans.binding.StringBinding;
-import javafx.beans.value.ObservableValue;
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
 
-@RequiredArgsConstructor
+@Builder
 public class EodBarDownloadAction implements Action {
-	private static final DateFormat DATE_FORMAT = DateFormat.getDateInstance(DateFormat.MEDIUM);
-
-	private StatusMessage message;
-	private final DownloadContext context;
+	
+	private final Date date;
+	private final Exchange exchange;
+	private final ExecutorService executorService;
+	private final BarRepository barRepository;
+	private final ScripRepository scripRepository;
+	private final ExchangeRepository exchangeRepository;
+	private final Runnable before, success, failure;
 
 	@Override
 	public boolean validate() {
-		final Calendar lastDownloadDate = context.getLastDownloadDate();
-		return !context.isCancelled() && Calendar.SATURDAY != lastDownloadDate.get(Calendar.DAY_OF_WEEK)
-				&& Calendar.SUNDAY != lastDownloadDate.get(Calendar.DAY_OF_WEEK);
-	}
-
-	@Override
-	public void before() {
-		final Calendar lastDownloadDate = context.getLastDownloadDate();
-		final ObservableValue<String> textValue = context.getMessageSource().get("Download EOD bars for ");
-		message = new StatusMessage(new StringBinding() {
-			{bind(textValue);}
-			@Override
-			protected String computeValue() {
-				return textValue.getValue() + DATE_FORMAT.format(lastDownloadDate.getTime());
-			}
-		});
-		context.getMessageCallback().accept(message);
-	}
-
-	@Override
-	public void execute() throws Throwable {
-		final Exchange exchange = context.getExchange();
-		final Calendar lastDownloadDate = context.getLastDownloadDate();
-		final EodBarDownloaderFactory eodBarDownloaderFactory = new EodBarDownloaderFactory(context.getScripRepository());
-		final EodBarDownloader eodBarDownloader = eodBarDownloaderFactory.create(exchange);
-		final List<Bar> bars = eodBarDownloader.download(lastDownloadDate.getTime());
-		persist(bars);
+		final Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		return Calendar.SATURDAY != calendar.get(Calendar.DAY_OF_WEEK)
+				&& Calendar.SUNDAY != calendar.get(Calendar.DAY_OF_WEEK);
 	}
 	
-	private void persist(List<Bar> bars) throws InterruptedException{
+	@Override
+	public void before() {
+		Optional.ofNullable(before).ifPresent(Runnable::run);
+	}
+	
+	@Override
+	public void execute() throws Throwable {
+		final EodBarDownloaderFactory eodBarDownloaderFactory = new EodBarDownloaderFactory();
+		final EodBarDownloader eodBarDownloader = eodBarDownloaderFactory.create(exchange, scripRepository);
+		persist(eodBarDownloader.download(date));
+		exchangeRepository.writeLastDownloadDate(exchange, date);
+	}
+	
+	private void persist(final List<Bar> bars) throws InterruptedException {
 		final CountDownLatch latch = new CountDownLatch(bars.size());
-		bars.forEach(bar -> context.getExecutorService().submit(() -> {
-			try{
-				context.getBarRepository().save(bar, BarSpan.D);
-			}finally{
+		bars.forEach(bar -> executorService.submit(() -> {
+			try {
+				barRepository.save(bar, BarSpan.D);
+			} finally {
 				latch.countDown();
 			}
 		}));
 		latch.await();
 	}
-
+	
 	@Override
 	public void success() {
-		final Exchange exchange = context.getExchange();
-		final Calendar lastDownloadDate = context.getLastDownloadDate();
-		context.getExchangeRepository().writeLastDownloadDate(exchange, lastDownloadDate.getTime());
-		message.success(Boolean.TRUE);
+		Optional.ofNullable(success).ifPresent(Runnable::run);
 	}
 
 	@Override
 	public void failure(Throwable throwable) {
-		message.success(Boolean.FALSE);
+		Optional.ofNullable(failure).ifPresent(Runnable::run);
 	}
-
-	@Override
-	public void after() {
-		context.getAfterCallback().run();
-		final Calendar lastDownloadDate = context.getLastDownloadDate();
-		lastDownloadDate.add(Calendar.DATE, 1);
-		if (context.isCancelled() || lastDownloadDate.after(Calendar.getInstance())) {
-			context.getTerminationCallback().run();
-		} else {
-			final EodBarDownloadAction action = new EodBarDownloadAction(context);
-			context.getExecutorService().submit(action);
-		}
-	}
-
+	
 }

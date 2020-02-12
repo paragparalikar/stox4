@@ -4,15 +4,10 @@ import com.stox.module.core.model.Exchange;
 import com.stox.module.core.persistence.ScripRepository;
 
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class EodBarDownloaderFactory {
 	
-	@NonNull 
-	private final ScripRepository scripRepository;
-
-	public EodBarDownloader create(Exchange exchange){
+	public EodBarDownloader create(@NonNull final Exchange exchange, @NonNull final ScripRepository scripRepository){
 		switch(exchange){
 		case NSE :
 			return new NseEodBarDownloader(scripRepository);
