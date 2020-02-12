@@ -111,6 +111,16 @@ public interface IFluentRegion<T extends Region & IFluentRegion<T>> extends IFlu
 	}
 	
 	@Override
+	default <V extends Event> T addFilter(EventType<V> eventType, EventHandler<? super V> eventFilter) {
+		return IFluentNode.super.addFilter(eventType, eventFilter);
+	}
+	
+	@Override
+	default <V extends Event> T addHandler(EventType<V> eventType, EventHandler<? super V> eventHandler) {
+		return IFluentNode.super.addHandler(eventType, eventHandler);
+	}
+	
+	@Override
 	default <V extends Event> T removeFilter(EventType<V> eventType, EventHandler<? super V> eventFilter) {
 		return IFluentNode.super.removeFilter(eventType, eventFilter);
 	}
