@@ -1,7 +1,8 @@
 package com.stox.workbench.link;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.function.Consumer;
 
 import com.stox.module.core.model.BarSpan;
@@ -11,6 +12,8 @@ import javafx.scene.paint.Color;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import lombok.experimental.Accessors;
+import lombok.experimental.Wither;
 
 @RequiredArgsConstructor
 public enum Link {
@@ -19,7 +22,7 @@ public enum Link {
 	
 	private State state;
 	private final Color color;
-	private final Set<Consumer<State>> listeners = new HashSet<>();
+	private final Set<Consumer<State>> listeners = Collections.newSetFromMap(new WeakHashMap<>());
 	
 	public State getState() {
 		return state;
@@ -44,6 +47,8 @@ public enum Link {
 	}
 	
 	@Value
+	@Wither
+	@Accessors(fluent = true)
 	public static class State{
 		
 		private long to;

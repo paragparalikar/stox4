@@ -1,0 +1,205 @@
+.root{
+	lightest: #efefef;
+	lighter: #bcbcbc;
+	light: #aaaaaa; 
+	mid: #808080;
+	dark: #606060;
+	darker: #454545;
+	darkest: #252525;
+}
+.chart-region, .chart-region-toggle-button Rectangle {
+	-fx-fill: success-background-color;
+	-fx-opacity: 0.2;
+}
+
+.control-point {
+	-fx-opacity: 0.1;
+	-fx-fill: primary-background-color;
+}
+
+.control-point:hover {
+	-fx-opacity: 0.35;
+}
+
+.control-point:pressed {
+	-fx-opacity: 1;
+}
+
+.charting-button-bar {
+	-fx-spacing: 1em;
+}
+.unit-type-graphic, .unit-type-graphic Line{
+	-fx-stroke: primary-text-color;
+}
+.charting-button-bar .button, .charting-button-bar .toggle-button {
+	-fx-pref-height: 2em;
+	-fx-min-height: 2em;
+	-fx-max-height: 2em;
+	-fx-pref-width: 2em;
+	-fx-min-width: 2em;
+	-fx-max-width: 2em;
+	-fx-padding: 0;
+}
+.charting-button-bar .toggle-button:selected{
+	-fx-border-width: 1px;
+	-fx-border-color: light;
+}
+.charting-button-bar Line {
+	-fx-stroke: lighter;
+}
+
+.charting-navigation-bar .icon {
+	-fx-pref-width: 3em;
+	-fx-min-width: 3em;
+	-fx-pref-height: 3em;
+	-fx-min-height: 3em;
+	/* -fx-border-radius: 1.5em;
+	-fx-background-radius: 1.5em; */
+	-fx-background-color: light;
+	-fx-opacity: 0.3;
+	-fx-font-size: 2em;
+	-fx-opacity: 0.25;
+	-fx-text-fill: darkest;
+}
+
+.charting-navigation-bar.box {
+	-fx-spacing: 0.25em;
+}
+.charting-navigation-bar.box .first {
+	-fx-border-radius: 0.5em 0 0 0.5em;
+	-fx-background-radius: 0.5em 0 0 0.5em;
+}
+.charting-navigation-bar.box .last {
+	-fx-border-radius: 0 0.5em 0.5em 0;
+	-fx-background-radius: 0 0.5em 0.5em 0;
+}
+.charting-navigation-bar.box .middle {
+	-fx-border-radius: 0 0 0 0;
+	-fx-background-radius: 0 0 0 0;
+}
+
+
+.charting-navigation-bar .icon:hover {
+	-fx-opacity: 1;
+	-fx-background-color: primary-background-color;
+	-fx-text-fill: primary-text-color;
+}
+
+.charting-navigation-bar .icon:pressed {
+	-fx-background-color: derive(primary-background-color, -10%);
+}
+
+.plot-info-pane {
+	-fx-min-width: 25em;
+	-fx-pref-width: 25em;
+	-fx-max-width: 25em;
+}
+.plot-info-pane  .value-label{
+	-fx-padding: 0 0 0 1em;
+}
+
+.bar-info-panel {
+	/* -fx-padding: 0 0 0 2em; */
+	-fx-alignment: center-left;
+	-fx-text-alignment: center-left;
+	-fx-fill-height: true;
+}
+
+.bar-info-panel .label {
+	-fx-text-fill: darker;
+	/* -fx-font-size: 1.2em; */
+	/* -fx-font-style: italic; */
+}
+
+.bar-info-panel .name-label {
+	-fx-min-width: 2em;
+	-fx-pref-width: 2em;
+	-fx-max-width: 2em;
+	-fx-padding: 0 0.3em 0 0.6em;
+}
+
+.bar-info-panel .value-label {
+	-fx-min-width: 4em;
+	-fx-pref-width: 4em;
+	-fx-max-width: 4em;
+	-fx-padding: 0;
+}
+
+.bar-info-panel .date-value-label {
+	-fx-min-width: 7em;
+	-fx-pref-width: 7em;
+	-fx-max-width: 7em;
+}
+
+.bar {
+	-fx-background-color: dark;
+}
+
+.charting-split-pane, .chart, .chart .content {
+	-fx-padding: 0;
+	-fx-background-color: transparent;
+}
+
+.charting-root, .chart .value-axis, .chart .date-axis {
+	-fx-background-color: white;
+}
+
+
+.price-unit {
+	-fx-stroke-width: 1.66px;
+	-fx-stroke-line-cap: round;
+}
+
+.value-axis {
+	-fx-border-width: 0 0 0 1px;
+	-fx-border-color: lighter;
+	-fx-pref-width: 2.4em;
+}
+
+.value-axis .label {
+	-fx-font-size: 0.8em;
+}
+
+.date-axis {
+	-fx-border-width: 1px 0 0 0;
+	-fx-border-color: lighter;
+	-fx-pref-height: 1.2em;
+}
+
+.date-axis .label {
+	-fx-font-size: 0.8em;
+}
+
+.grid Line {
+	-fx-stroke: lightest;
+	-fx-stroke-width: 1px;
+}
+
+.crosshair .horizontal, .crosshair .vertical {
+	-fx-stroke: light;
+	-fx-stroke-width: 1px;
+	-fx-stroke-dash-array: 10 4 4 4;
+	-fx-stroke-dash-offset: 6;
+	-fx-cursor: none;
+}
+
+
+.drawing-chart-button Line{
+	-fx-stroke: primary-text-color;
+}
+.drawing Line{
+	-fx-stroke-width:1px;
+}
+
+.drawing Line:hover{
+	-fx-stroke-width:3px;
+}
+.drawing TextField{
+	-fx-padding:0;
+	-fx-border-width:0.5px;
+	-fx-border-color:darker;
+	-fx-border-insets:0;
+	-fx-background-insets:0;
+	-fx-background-radius:0;
+	-fx-border-radius:0;
+}

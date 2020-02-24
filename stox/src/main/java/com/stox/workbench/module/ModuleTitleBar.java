@@ -1,5 +1,7 @@
 package com.stox.workbench.module;
 
+import java.util.Optional;
+
 import com.stox.fx.fluent.scene.control.FluentButton;
 import com.stox.fx.fluent.scene.control.FluentLabel;
 import com.stox.fx.fluent.scene.control.FluentToggleButton;
@@ -31,8 +33,9 @@ public class ModuleTitleBar implements HasNode<Node> {
 		return this;
 	}
 	
-	public ModuleTitleBar title(@NonNull final ObservableValue<String> text) {
-		titleLabel.textProperty().bind(text);
+	public ModuleTitleBar title(final ObservableValue<String> text) {
+		titleLabel.textProperty().unbind();
+		Optional.ofNullable(text).ifPresent(titleLabel.textProperty()::bind);
 		return this;
 	}
 	

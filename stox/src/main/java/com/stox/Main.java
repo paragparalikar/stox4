@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.stox.fx.fluent.stage.FluentStage;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Icon;
+import com.stox.module.charting.ChartingModule;
 import com.stox.module.core.CoreModule;
 import com.stox.module.core.persistence.BarRepository;
 import com.stox.module.core.persistence.ExchangeRepository;
@@ -50,6 +51,7 @@ public class Main extends Application {
 	private final List<? extends Module> modules = Arrays.asList(
 			new CoreModule(context), 
 			new DataModule(context), 
+			new ChartingModule(context),
 			new ExplorerModule(context));
 
 	@Override

@@ -27,20 +27,30 @@ public abstract class ModuleView<T extends ModuleViewState> implements HasNode<F
 		resizableWrapper.classes("module-view").center(root).addHandler(MouseEvent.MOUSE_PRESSED, e -> resizableWrapper.toFront());
 	}
 
-	protected ModuleView<T> title(@NonNull final ModuleTitleBar titleBar) {
+	public ModuleView<T> title(@NonNull final ModuleTitleBar titleBar) {
 		container.top(titleBar.getNode());
 		MovableMouseEventHandler.movable(titleBar.getNode(), resizableWrapper);
 		return this;
 	}
 
-	protected ModuleView<T> content(@NonNull final Node node) {
+	public ModuleView<T> content(@NonNull final Node node) {
 		container.center(node);
+		return this;
+	}
+	
+	public ModuleView<T> tool(final Node node){
+		container.bottom(node);
+		return this;
+	}
+	
+	protected ModuleView<T> defaultBounds(@NonNull final FluentBorderPane container, @NonNull final Bounds bounds){
+		container.width(bounds.getWidth() / 5).height(bounds.getHeight()).autosize();
 		return this;
 	}
 
 	public ModuleView<T> start(final T state, @NonNull final Bounds bounds) {
 		if (Objects.isNull(state)) {
-			resizableWrapper.width(bounds.getWidth() / 5).height(bounds.getHeight()).autosize();
+			defaultBounds(resizableWrapper, bounds);
 		} else {
 			resizableWrapper.bounds(state.x() * bounds.getWidth(),
 					state.y() * bounds.getHeight(),

@@ -3,9 +3,12 @@ package com.stox.fx.widget;
 import java.util.List;
 
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
+import lombok.NonNull;
 
 public class Ui {
 	
@@ -47,6 +50,12 @@ public class Ui {
 		final javafx.scene.Parent parent = null == node ? null : node.getParent();
 		return null == parent ? null
 				: type.isAssignableFrom(parent.getClass()) ? (T) parent : getParentOfType(type, parent);
+	}
+
+	public static Tooltip tooltip(@NonNull final ObservableValue<String> textValue) {
+		final Tooltip tooltip = new Tooltip();
+		tooltip.textProperty().bind(textValue);
+		return tooltip;
 	}
 	
 }
