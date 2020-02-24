@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
 public class StringUtil {
-	private static final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance();
+	private static final NumberFormat currencyFormat = NumberFormat.getInstance();
 	{
 		currencyFormat.setGroupingUsed(true);
 		currencyFormat.setMaximumFractionDigits(2);

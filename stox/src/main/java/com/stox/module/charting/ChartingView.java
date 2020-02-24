@@ -28,6 +28,8 @@ import com.stox.module.charting.grid.VerticalGrid;
 import com.stox.module.charting.plot.DerivativePlot;
 import com.stox.module.charting.plot.Underlay;
 import com.stox.module.charting.plot.VolumePlot;
+import com.stox.module.charting.tools.ChartingToolBar;
+import com.stox.module.charting.unit.PriceUnitType;
 import com.stox.module.charting.widget.BarInfoPanel;
 import com.stox.module.charting.widget.Crosshair;
 import com.stox.module.core.model.Bar;
@@ -75,7 +77,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 
 	public ChartingView(@NonNull final ExecutorService executorService, @NonNull final FxMessageSource messageSrouce, @NonNull final BarRepository barRepository) {
 		this.messageSource = messageSrouce;
-		title(titleBar).content(root);
+		title(titleBar).content(root).tool(new ChartingToolBar(this, messageSource));
 		primaryChart = new PrimaryChart(configuration, xAxis, volumeYAxis, verticalGrid, barInfoPanel, executorService, barRepository);
 		splitPane.getItems().add(primaryChart.container());
 		primaryChart.add(volumePlot);
@@ -300,6 +302,15 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		updateValueBounds();
 		layoutChartChildren();
 		primaryChart.load(to, barSpan, xAxis);
+	}
+	
+	public PriceUnitType unitType() {
+		return primaryChart.unitType();
+	}
+
+	public ChartingView unitType(final PriceUnitType unitType) {
+		primaryChart.unitType(unitType);
+		return this;
 	}
 
 	@Override

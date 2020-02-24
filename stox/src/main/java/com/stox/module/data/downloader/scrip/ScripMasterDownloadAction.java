@@ -7,7 +7,6 @@ import java.util.Optional;
 import com.stox.module.core.model.Exchange;
 import com.stox.module.core.model.Scrip;
 import com.stox.module.core.model.intf.Action;
-import com.stox.module.core.persistence.ExchangeRepository;
 import com.stox.module.core.persistence.ScripRepository;
 import com.stox.util.DateUtil;
 
@@ -18,12 +17,11 @@ public class ScripMasterDownloadAction implements Action {
 
 	private final Exchange exchange;
 	private final ScripRepository scripRepository;
-	private final ExchangeRepository exchangeRepository;
 	private final Runnable before, success, failure;
 
 	@Override
 	public boolean validate() {
-		return Optional.ofNullable(exchangeRepository.readLastDownloadDate(exchange)).orElseGet(() -> new Date(0)).before(DateUtil.trim(new Date()));
+		return Optional.ofNullable(scripRepository.getLastModifiedDate(exchange)).orElseGet(() -> new Date(0)).before(DateUtil.trim(new Date()));
 	}
 
 	@Override

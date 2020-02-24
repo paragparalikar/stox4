@@ -116,7 +116,6 @@ public class DataView extends ModuleView<DataViewState> {
 		return ScripMasterDownloadAction.builder()
 				.scripRepository(scripRepository)
 				.exchange(exchangeComboBox.getValue())
-				.exchangeRepository(exchangeRepository)
 				.before(() -> Ui.fx(() -> listView.getItems().add(message)))
 				.success(() -> Ui.fx(() -> message.success(Boolean.TRUE)))
 				.failure(() -> Ui.fx(() -> message.success(Boolean.FALSE)))
