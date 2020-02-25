@@ -81,6 +81,16 @@ public class BarRepository implements BarProvider {
 	private long getDate(final long initialDate, final long location) {
 		return initialDate + TimeUnit.DAYS.toMillis((location - Long.BYTES) / BYTES);
 	}
+	
+	@Override
+	public List<Bar> get(String isin, BarSpan barSpan, int count) {
+		return find(isin, barSpan, count);
+	}
+	
+	@Override
+	public List<Bar> get(String isin, BarSpan barSpan, long from, long to) {
+		return find(isin, barSpan, from, to);
+	}
 
 	@SneakyThrows
 	public List<Bar> find(final String isin, final BarSpan barSpan, final long from, final long to) {
@@ -110,11 +120,6 @@ public class BarRepository implements BarProvider {
 			}
 
 		}
-	}
-
-	@Override
-	public List<Bar> get(String isin, BarSpan barSpan, int count) {
-		return find(isin, barSpan, count);
 	}
 
 	@SneakyThrows
@@ -156,10 +161,43 @@ public class BarRepository implements BarProvider {
 
 		}
 	}
+	
+	@SneakyThrows
+	@SuppressWarnings("incomplete-switch")
+	public List<Bar> find(final String isin, final BarSpan barSpan, final long to, int count){
+		final String path = getPath(isin, barSpan);
+		synchronized (path) {
+			final RandomAccessFile file = getFile(path);
+			if (0 == file.length()) {
+				return Collections.emptyList();
+			} else {
+				final List<Bar> bars = new ArrayList<>();
+				final long initialDate = file.readLong();
 
-	@Override
-	public List<Bar> get(String isin, BarSpan barSpan, long from, long to) {
-		return find(isin, barSpan, from, to);
+				switch (barSpan) {
+				case W:
+					count *= 7;
+					break;
+				case M:
+					count *= 31;
+					break;
+				}
+				final long maxLocation = Math.min(getLocation(initialDate, to), file.length() - BYTES);
+				for (long location = maxLocation; location >= Long.BYTES && bars.size() < count; location -= BYTES) {
+					file.seek(location);
+					final Bar bar = readBar(file);
+					if (null != bar) {
+						bar.setIsin(isin);
+						bar.setDate(getDate(initialDate, location));
+						bars.add(bar);
+					}
+				}
+				if (!BarSpan.D.equals(barSpan)) {
+					return barSpan.merge(bars);
+				}
+				return bars;
+			}
+		}
 	}
 
 	private void write(final Bar bar, final RandomAccessFile file) throws IOException {

@@ -77,10 +77,11 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 
 	public ChartingView(@NonNull final ExecutorService executorService, @NonNull final FxMessageSource messageSrouce, @NonNull final BarRepository barRepository) {
 		this.messageSource = messageSrouce;
-		title(titleBar).content(root).tool(new ChartingToolBar(this, messageSource));
+		title(titleBar).content(root);
 		primaryChart = new PrimaryChart(configuration, xAxis, volumeYAxis, verticalGrid, barInfoPanel, executorService, barRepository);
 		splitPane.getItems().add(primaryChart.container());
 		primaryChart.add(volumePlot);
+		tool(new ChartingToolBar(this, messageSource));
 		bind();
 	}
 
