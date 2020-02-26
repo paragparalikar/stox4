@@ -9,7 +9,6 @@ import com.stox.module.charting.axis.horizontal.MutableXAxis;
 import com.stox.module.charting.axis.horizontal.XAxis;
 import com.stox.module.charting.axis.vertical.DelegatingYAxis;
 import com.stox.module.charting.axis.vertical.PrimaryValueAxis;
-import com.stox.module.charting.event.DataChangedEvent;
 import com.stox.module.charting.event.DataRequestEvent;
 import com.stox.module.charting.grid.HorizontalGrid;
 import com.stox.module.charting.grid.VerticalGrid;
@@ -22,7 +21,6 @@ import com.stox.module.core.model.BarSpan;
 import com.stox.module.core.model.Scrip;
 import com.stox.module.core.persistence.BarRepository;
 
-import javafx.event.EventHandler;
 import lombok.Builder;
 import lombok.NonNull;
 
@@ -117,8 +115,4 @@ public class PrimaryChart extends Chart {
 		return primaryPricePlot.models();
 	}
 
-	public PrimaryChart addPrimaryPlotDataChangedEventHandler(EventHandler<DataChangedEvent> eventHandler) {
-		primaryPricePlot.container().addEventHandler(DataChangedEvent.TYPE, eventHandler);
-		return this;
-	}
 }

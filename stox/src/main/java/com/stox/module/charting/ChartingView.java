@@ -20,6 +20,7 @@ import com.stox.module.charting.chart.Chart;
 import com.stox.module.charting.chart.PrimaryChart;
 import com.stox.module.charting.chart.SecondaryChart;
 import com.stox.module.charting.event.ConfigChangedEvent;
+import com.stox.module.charting.event.DataChangedEvent;
 import com.stox.module.charting.event.PanRequestEvent;
 import com.stox.module.charting.event.PlotRemovedEvent;
 import com.stox.module.charting.event.UnderlayChangedEvent;
@@ -99,16 +100,16 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 	}
 
 	private void bind() {
-		final EventHandler<MouseEvent> indexInfoHandler = event -> showIndexInfo(event.getX());
-		splitPane.addEventFilter(MouseEvent.MOUSE_MOVED, indexInfoHandler);
-		splitPane.addEventFilter(MouseEvent.MOUSE_DRAGGED, indexInfoHandler);
-		splitPane.addEventHandler(MouseEvent.MOUSE_PRESSED, this::showContextMenu);
-		splitPane.addEventHandler(UnderlayChangedEvent.TYPE, event -> add(remove(event.plot())));
-		splitPane.addEventHandler(ConfigChangedEvent.TYPE, event -> configChanged(event.plot()));
-		splitPane.addEventHandler(ZoomRequestEvent.TYPE, event -> zoom(event.x(), event.percentage()));
-		splitPane.addEventHandler(PanRequestEvent.TYPE, event -> pan(event.deltaX()));
-		splitPane.addEventHandler(PlotRemovedEvent.TYPE, event -> removeEmptyCharts());
-		primaryChart.addPrimaryPlotDataChangedEventHandler(event -> barDataChanged(event.bars()));
+		splitPane
+			.addFilter(MouseEvent.MOUSE_MOVED, event -> showIndexInfo(event.getX()))
+			.addFilter(MouseEvent.MOUSE_DRAGGED, event -> showIndexInfo(event.getX()))
+			.addHandler(MouseEvent.MOUSE_PRESSED, this::showContextMenu)
+			.addHandler(UnderlayChangedEvent.TYPE, event -> add(remove(event.plot())))
+			.addHandler(ConfigChangedEvent.TYPE, event -> configChanged(event.plot()))
+			.addHandler(ZoomRequestEvent.TYPE, event -> zoom(event.x(), event.percentage()))
+			.addHandler(PanRequestEvent.TYPE, event -> pan(event.deltaX()))
+			.addHandler(PlotRemovedEvent.TYPE, event -> removeEmptyCharts())
+			.addHandler(DataChangedEvent.TYPE, event -> barDataChanged(event.bars()));
 	}
 	
 	public void barDataChanged(final List<Bar> bars) {
@@ -116,8 +117,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		xAxis.setBars(bars);
 		primaryChart.load(scrip, bars);
 		charts.forEach(chart -> chart.load(scrip, bars));
-		updateValueBounds();
-		Ui.fx(() -> layoutChartChildren());
+		redraw();
 	}
 
 	private void updateValueBounds() {
@@ -125,9 +125,14 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		charts.forEach(Chart::updateValueBounds);
 	}
 
-	public void layoutChartChildren() {
+	private void layoutChartChildren() {
 		primaryChart.layoutChartChildren();
 		charts.forEach(Chart::layoutChartChildren);
+	}
+	
+	private void redraw() {
+		updateValueBounds();
+		Ui.fx(() -> layoutChartChildren());
 	}
 
 	private void relayoutCharts() {
@@ -293,15 +298,13 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 	
 	private void zoom(final double x, final int percentage) {
 		xAxis.zoom(0 == x ? xAxis.getUnitWidth() : x, percentage);
-		updateValueBounds();
-		layoutChartChildren();
+		redraw();
 		primaryChart.load(to, barSpan, xAxis);
 	}
 
 	private void pan(final double deltaX) {
 		xAxis.pan(deltaX);
-		updateValueBounds();
-		layoutChartChildren();
+		redraw();
 		primaryChart.load(to, barSpan, xAxis);
 	}
 	
