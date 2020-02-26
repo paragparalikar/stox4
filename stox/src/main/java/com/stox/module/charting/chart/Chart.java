@@ -5,11 +5,14 @@ import java.util.List;
 
 import com.stox.fx.fluent.scene.layout.FluentBorderPane;
 import com.stox.fx.widget.NoLayoutPane;
+import com.stox.fx.widget.Ui;
 import com.stox.module.charting.Configuration;
 import com.stox.module.charting.axis.horizontal.XAxis;
 import com.stox.module.charting.axis.vertical.DelegatingYAxis;
 import com.stox.module.charting.axis.vertical.MutableYAxis;
 import com.stox.module.charting.axis.vertical.ValueAxis;
+import com.stox.module.charting.drawing.Drawing;
+import com.stox.module.charting.drawing.event.DrawingRemoveRequestEvent;
 import com.stox.module.charting.event.PlotRemovedEvent;
 import com.stox.module.charting.event.UpdatableRequestEvent;
 import com.stox.module.charting.plot.DerivativePlot;
@@ -41,6 +44,7 @@ public class Chart {
 	
 	private final VBox plotInfoContainer = new VBox();
 	private final MutableYAxis yAxis = new MutableYAxis();
+	private final List<Drawing> drawings = new ArrayList<>();
 	private final List<DerivativePlot<?>> plots = new ArrayList<>();
 	private final Pane content = new NoLayoutPane().classes("content");
 	private final FluentBorderPane container = new FluentBorderPane(content).classes("chart").child(plotInfoContainer);
@@ -52,6 +56,7 @@ public class Chart {
 			layoutChartChildren();
 		});
 		container.addEventHandler(UpdatableRequestEvent.TYPE, event -> event.updatable().update(xAxis, yAxis));
+		container.addEventHandler(DrawingRemoveRequestEvent.TYPE, event -> remove(event.drawing()));
 		return this;
 	}
 	
@@ -116,6 +121,26 @@ public class Chart {
 		container.fireEvent(new PlotRemovedEvent(plot));
 		return this;
 	}
+	
+	public boolean add(final Drawing drawing) {
+		if (!drawings.contains(drawing)) {
+			Ui.fx(() -> content.getChildren().add(drawing.getNode()));
+			return drawings.add(drawing);
+		}
+		return false;
+	}
+
+	public Chart remove(final Drawing drawing) {
+		drawings.remove(drawing);
+		content.getChildren().remove(drawing.getNode());
+		return this;
+	}
+	
+	public void clearDrawings() {
+		while(0 < drawings.size()) {
+			remove(drawings.get(0));
+		}
+	}
 
 	public Chart updateValueBounds() {
 		yAxis.reset();
@@ -133,6 +158,7 @@ public class Chart {
 			if (0 < content.getWidth() || 0 < content.getHeight()) {
 				volumeYAxis.setDelegate(yAxis);
 				plots.forEach(plot -> plot.layoutChartChildren(xAxis, Underlay.VOLUME.equals(plot.underlay()) ? volumeYAxis : yAxis));
+				drawings.forEach(drawing -> drawing.layoutChartChildren(xAxis, yAxis));
 				valueAxis.layoutChartChildren(yAxis);
 			}
 			return this;

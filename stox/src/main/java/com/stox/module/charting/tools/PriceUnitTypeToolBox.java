@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Function;
 
+import com.stox.fx.fluent.scene.control.FluentRadioButton;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Ui;
 import com.stox.module.charting.ChartingView;
@@ -11,9 +12,6 @@ import com.stox.module.charting.unit.PriceUnitType;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -26,43 +24,42 @@ import lombok.NonNull;
 
 public class PriceUnitTypeToolBox extends HBox implements ChartingToolBox {
 
-	private ChartingView chartingView;
+	private final ChartingView chartingView;
+	private final FxMessageSource messageSource;
 	private final ToggleGroup toggleGroup = new ToggleGroup();
-	
-	public PriceUnitTypeToolBox(@NonNull final FxMessageSource messageSource) {
-		final PriceUnitTypeButtonGraphicFactory factory = new PriceUnitTypeButtonGraphicFactory();
-		Arrays.stream(PriceUnitType.values()).forEach(unitType -> {
-			final ToggleButton radioButton = new RadioButton();
-			radioButton.getStyleClass().remove("radio-button");
-			radioButton.getStyleClass().addAll("toggle-button", "primary","small");
-			radioButton.setGraphic(factory.apply(unitType).getNode());
-			radioButton.setTooltip(Ui.tooltip(messageSource.get(unitType.getName())));
-			radioButton.setToggleGroup(toggleGroup);
-			radioButton.setUserData(unitType);
-			getChildren().add(radioButton);
-			radioButton.selectedProperty().addListener((o, old, value) -> {
-				if (value && null != chartingView) {
-					chartingView.unitType(unitType);
-				}
-			});
-		});
+	private final PriceUnitTypeButtonGraphicFactory factory = new PriceUnitTypeButtonGraphicFactory();
+
+	public PriceUnitTypeToolBox(@NonNull final FxMessageSource messageSource, @NonNull final ChartingView chartingView) {
+		this.chartingView = chartingView;
+		this.messageSource = messageSource;
+		Arrays.stream(PriceUnitType.values()).forEach(this::buildToggle);
 		Ui.box(this);
+		toggleGroup.getToggles().stream()
+			.filter(toggle -> Objects.equals(chartingView.unitType(), toggle.getUserData()))
+			.findFirst()
+			.ifPresent(toggle -> toggle.setSelected(true));
 	}
-	
-	@Override
-	public Node getNode() {
+
+	private PriceUnitTypeToolBox buildToggle(final PriceUnitType priceUnitType) {
+		final FluentRadioButton radioButton = new FluentRadioButton()
+				.removeStyleClass("radio-button")
+				.styleClass("toggle-button", "primary", "small")
+				.graphic(factory.apply(priceUnitType).getNode())
+				.tooltip(Ui.tooltip(messageSource.get(priceUnitType.getName())))
+				.toggleGroup(toggleGroup)
+				.userData(priceUnitType);
+		getChildren().add(radioButton);
+		radioButton.selectedProperty().addListener((o, old, value) -> {
+			if (value && null != chartingView) {
+				chartingView.unitType(priceUnitType);
+			}
+		});
 		return this;
 	}
 
 	@Override
-	public void attach(ChartingView chartingView) {
-		this.chartingView = chartingView;
-		for(Toggle toggle : toggleGroup.getToggles()){
-			if(Objects.equals(chartingView.unitType(), toggle.getUserData())){
-				toggle.setSelected(true);
-				break;
-			}
-		}
+	public Node getNode() {
+		return this;
 	}
 
 }
@@ -70,7 +67,7 @@ public class PriceUnitTypeToolBox extends HBox implements ChartingToolBox {
 interface PriceUnitTypeButtonGraphic {
 
 	Node getNode();
-	
+
 }
 
 class PriceUnitTypeButtonGraphicFactory implements Function<PriceUnitType, PriceUnitTypeButtonGraphic> {
@@ -78,18 +75,18 @@ class PriceUnitTypeButtonGraphicFactory implements Function<PriceUnitType, Price
 	@Override
 	public PriceUnitTypeButtonGraphic apply(@NonNull PriceUnitType unitType) {
 		switch (unitType) {
-		case AREA:
-			return new AreaPriceUnitTypeButtonGraphic();
-		case CANDLE:
-			return new CandlePriceUnitTypeButtonGraphic();
-		case HLC:
-			return new HlcPriceUnitTypeButtonGraphic();
-		case LINE:
-			return new LinePriceUnitTypeButtonGraphic();
-		case OHLC:
-			return new OhlcPriceUnitTypeButtonGraphic();
-		default:
-			throw new IllegalArgumentException("PriceUnitType " + unitType.getName() + " is not yet supported.");
+			case AREA:
+				return new AreaPriceUnitTypeButtonGraphic();
+			case CANDLE:
+				return new CandlePriceUnitTypeButtonGraphic();
+			case HLC:
+				return new HlcPriceUnitTypeButtonGraphic();
+			case LINE:
+				return new LinePriceUnitTypeButtonGraphic();
+			case OHLC:
+				return new OhlcPriceUnitTypeButtonGraphic();
+			default:
+				throw new IllegalArgumentException("PriceUnitType " + unitType.getName() + " is not yet supported.");
 		}
 	}
 

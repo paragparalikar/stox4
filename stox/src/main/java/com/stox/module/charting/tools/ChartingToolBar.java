@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.module.charting.ChartingView;
+import com.stox.module.charting.drawing.DrawingToolBox;
 
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.HBox;
@@ -17,10 +18,10 @@ public class ChartingToolBar extends ToolBar {
 		setMaxWidth(Double.MAX_VALUE);
 		getStyleClass().add("primary");
 		Arrays.asList(
-				new BarSpanToolBox(messageSource), 
-				new PriceUnitTypeToolBox(messageSource))
+				new BarSpanToolBox(messageSource, chartingView), 
+				new PriceUnitTypeToolBox(messageSource, chartingView),
+				new DrawingToolBox(messageSource, chartingView))
 		.forEach(box -> {
-			box.attach(chartingView);
 			getItems().add(box.getNode());
 		});
 	}

@@ -8,7 +8,7 @@ import javafx.scene.input.MouseEvent;
 public abstract class AbstractDrawing implements Drawing {
 
 	protected void bind() {
-		getNode().addEventHandler(MouseEvent.MOUSE_PRESSED, event -> onMousePressed(event));
+		getNode().addEventHandler(MouseEvent.MOUSE_PRESSED, this::onMousePressed);
 	}
 
 	private void onMousePressed(final MouseEvent event) {

@@ -42,7 +42,6 @@ import com.stox.workbench.link.Link.State;
 import com.stox.workbench.module.ModuleView;
 
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
@@ -119,6 +118,11 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		charts.forEach(chart -> chart.load(scrip, bars));
 		redraw();
 	}
+	
+	private void redraw() {
+		updateValueBounds();
+		Ui.fx(() -> layoutChartChildren());
+	}
 
 	private void updateValueBounds() {
 		primaryChart.updateValueBounds();
@@ -130,11 +134,11 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		charts.forEach(Chart::layoutChartChildren);
 	}
 	
-	private void redraw() {
-		updateValueBounds();
-		Ui.fx(() -> layoutChartChildren());
+	public void clearDrawings() {
+		primaryChart.clearDrawings();
+		charts.forEach(Chart::clearDrawings);
 	}
-
+	
 	private void relayoutCharts() {
 		final int size = splitPane.getItems().size();
 		for (int index = 0; index < size - 1; index++) {

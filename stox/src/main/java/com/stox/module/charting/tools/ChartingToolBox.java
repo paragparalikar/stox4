@@ -1,13 +1,11 @@
 package com.stox.module.charting.tools;
 
-import com.stox.module.charting.ChartingView;
+import com.stox.fx.widget.HasNode;
 
 import javafx.scene.Node;
 
-public interface ChartingToolBox {
+public interface ChartingToolBox extends HasNode<Node>{
 
 	Node getNode();
-	
-	void attach(ChartingView chartingView);
-	
+
 }
