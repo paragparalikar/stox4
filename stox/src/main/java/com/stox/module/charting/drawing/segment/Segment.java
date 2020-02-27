@@ -1,5 +1,7 @@
 package com.stox.module.charting.drawing.segment;
 
+import javax.annotation.PostConstruct;
+
 import com.stox.fx.fluent.scene.layout.FluentGroup;
 import com.stox.module.charting.axis.horizontal.XAxis;
 import com.stox.module.charting.axis.vertical.YAxis;
@@ -29,6 +31,11 @@ public abstract class Segment extends AbstractDrawing {
 		bind();
 	}
 
+	@PostConstruct
+	public void postConstruct() {
+		
+	}
+	
 	protected void bind() {
 		super.bind();
 		line.startXProperty().bind(one.centerXProperty());

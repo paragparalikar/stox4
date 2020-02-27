@@ -1,6 +1,7 @@
 package com.stox.workbench.module;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import com.stox.fx.fluent.scene.layout.FluentBorderPane;
 import com.stox.fx.fluent.scene.layout.FluentStackPane;
@@ -61,10 +62,11 @@ public abstract class ModuleView<T extends ModuleViewState> implements HasNode<F
 	}
 
 	public T stop(@NonNull final T state, @NonNull final Bounds bounds) {
-		state.x(resizableWrapper.x() / bounds.getWidth())
+		Optional.ofNullable(bounds).ifPresent(b -> state
+				.x(resizableWrapper.x() / bounds.getWidth())
 				.y(resizableWrapper.y() / bounds.getHeight())
 				.width(resizableWrapper.width() / bounds.getWidth())
-				.height(resizableWrapper.height() / bounds.getHeight());
+				.height(resizableWrapper.height() / bounds.getHeight()));
 		return state;
 	}
 

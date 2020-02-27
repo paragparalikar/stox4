@@ -26,6 +26,7 @@ import com.stox.module.core.model.Scrip;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +46,7 @@ public class Chart {
 	
 	private final VBox plotInfoContainer = new VBox();
 	private final MutableYAxis yAxis = new MutableYAxis();
+	@Getter(AccessLevel.PACKAGE)
 	private final Set<Drawing> drawings = new HashSet<>();
 	private final Set<DerivativePlot<?>> plots = new HashSet<>();
 	private final Pane content = new NoLayoutPane().classes("content");

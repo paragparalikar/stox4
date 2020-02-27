@@ -72,6 +72,7 @@ public abstract class UiModule<T extends ModuleViewState> implements Module {
 	}
 	
 	protected ModuleView<T> remove(@NonNull final ModuleView<T> moduleView) {
+		moduleView.stop(null);
 		views.remove(context.getWorkbench().remove(moduleView));
 		return moduleView;
 	}

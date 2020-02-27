@@ -9,7 +9,5 @@ import javafx.scene.Node;
 
 public interface Drawing extends Updatable, HasNode<Node> {
 
-	int getDrawingId();
-
 	void layoutChartChildren(final XAxis xAxis, final YAxis yAxis);
 }

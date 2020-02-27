@@ -20,6 +20,7 @@ import com.stox.module.charting.axis.vertical.TransformerYAxis;
 import com.stox.module.charting.chart.Chart;
 import com.stox.module.charting.chart.PrimaryChart;
 import com.stox.module.charting.chart.SecondaryChart;
+import com.stox.module.charting.drawing.DrawingRepository;
 import com.stox.module.charting.event.ConfigChangedEvent;
 import com.stox.module.charting.event.DataChangedEvent;
 import com.stox.module.charting.event.PanRequestEvent;
@@ -69,16 +70,18 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 	private final Consumer<State> stateConsumer = this::linkStateChanged;
 	private final ChartingContextMenu contextMenu = new ChartingContextMenu();
 	private final VolumePlot volumePlot = new VolumePlot(configuration, volumeYAxis);
-	@Getter private final ChartingTitleBar titleBar = new ChartingTitleBar(this::linkStateChanged);
+	@Getter
+	private final ChartingTitleBar titleBar = new ChartingTitleBar(this::linkStateChanged);
 	private final FluentSplitPane splitPane = new FluentSplitPane().orientation(Orientation.VERTICAL).classes("charting-split-pane");;
 	private final Crosshair crosshair = new Crosshair(splitPane);
 	private final PanAndZoomMouseHandler panAndZoomMouseHandler = new PanAndZoomMouseHandler(splitPane);
 	private final FluentStackPane root = new FluentStackPane(verticalGrid, splitPane, crosshair.getNode()).classes("charting-root");
 
-	public ChartingView(@NonNull final ExecutorService executorService, @NonNull final FxMessageSource messageSrouce, @NonNull final BarRepository barRepository) {
+	public ChartingView(@NonNull final ExecutorService executorService, @NonNull final FxMessageSource messageSrouce, @NonNull final BarRepository barRepository,
+			@NonNull final DrawingRepository drawingRepository) {
 		this.messageSource = messageSrouce;
 		title(titleBar).content(root);
-		primaryChart = new PrimaryChart(configuration, xAxis, volumeYAxis, verticalGrid, barInfoPanel, executorService, barRepository);
+		primaryChart = new PrimaryChart(configuration, xAxis, volumeYAxis, verticalGrid, barInfoPanel, executorService, barRepository, drawingRepository);
 		splitPane.getItems().add(primaryChart.container());
 		primaryChart.add(volumePlot);
 		tool(new ChartingToolBar(this, messageSource));
@@ -100,17 +103,17 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 
 	private void bind() {
 		splitPane
-			.addFilter(MouseEvent.MOUSE_MOVED, event -> showIndexInfo(event.getX()))
-			.addFilter(MouseEvent.MOUSE_DRAGGED, event -> showIndexInfo(event.getX()))
-			.addHandler(MouseEvent.MOUSE_PRESSED, this::showContextMenu)
-			.addHandler(UnderlayChangedEvent.TYPE, event -> add(remove(event.plot())))
-			.addHandler(ConfigChangedEvent.TYPE, event -> configChanged(event.plot()))
-			.addHandler(ZoomRequestEvent.TYPE, event -> zoom(event.x(), event.percentage()))
-			.addHandler(PanRequestEvent.TYPE, event -> pan(event.deltaX()))
-			.addHandler(PlotRemovedEvent.TYPE, event -> removeEmptyCharts())
-			.addHandler(DataChangedEvent.TYPE, event -> barDataChanged(event.bars()));
+				.addFilter(MouseEvent.MOUSE_MOVED, event -> showIndexInfo(event.getX()))
+				.addFilter(MouseEvent.MOUSE_DRAGGED, event -> showIndexInfo(event.getX()))
+				.addHandler(MouseEvent.MOUSE_PRESSED, this::showContextMenu)
+				.addHandler(UnderlayChangedEvent.TYPE, event -> add(remove(event.plot())))
+				.addHandler(ConfigChangedEvent.TYPE, event -> configChanged(event.plot()))
+				.addHandler(ZoomRequestEvent.TYPE, event -> zoom(event.x(), event.percentage()))
+				.addHandler(PanRequestEvent.TYPE, event -> pan(event.deltaX()))
+				.addHandler(PlotRemovedEvent.TYPE, event -> removeEmptyCharts())
+				.addHandler(DataChangedEvent.TYPE, event -> barDataChanged(event.bars()));
 	}
-	
+
 	public void barDataChanged(final List<Bar> bars) {
 		final Scrip scrip = primaryChart.scrip();
 		xAxis.setBars(bars);
@@ -118,7 +121,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		secondaryCharts.forEach(chart -> chart.load(scrip, bars));
 		redraw();
 	}
-	
+
 	private void redraw() {
 		updateValueBounds();
 		Ui.fx(() -> layoutChartChildren());
@@ -133,26 +136,26 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		primaryChart.layoutChartChildren();
 		secondaryCharts.forEach(Chart::layoutChartChildren);
 	}
-	
+
 	public void clearDrawings() {
 		primaryChart.clearDrawings();
 		secondaryCharts.forEach(Chart::clearDrawings);
 	}
-	
+
 	private void relayoutCharts() {
 		final int size = splitPane.getItems().size();
 		for (int index = 0; index < size - 1; index++) {
 			splitPane.setDividerPosition(index, 1 - ((size - index - 1) * 0.2));
 		}
 	}
-	
+
 	private DerivativePlot<?> remove(final DerivativePlot<?> plot) {
 		primaryChart.remove(plot);
 		secondaryCharts.forEach(chart -> chart.remove(plot));
 		removeEmptyCharts();
 		return plot;
 	}
-	
+
 	private void removeEmptyCharts() {
 		final Iterator<SecondaryChart> secondaryChartIterator = secondaryCharts.iterator();
 		while (secondaryChartIterator.hasNext()) {
@@ -164,7 +167,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 			}
 		}
 	}
-	
+
 	public DerivativePlot<?> add(final DerivativePlot<?> plot) {
 		if (Underlay.PRICE.equals(plot.underlay())) {
 			add(primaryChart, plot);
@@ -183,7 +186,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		}
 		return plot;
 	}
-	
+
 	private void add(Chart chart, DerivativePlot<?> plot) {
 		chart.add(plot);
 		plot.load(primaryChart.bars());
@@ -194,7 +197,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 	public void load(final DerivativePlot<?> plot) {
 		plot.load(primaryChart.bars());
 	}
-	
+
 	private void linkChanged(final Link old, final Link link) {
 		Optional.ofNullable(old).ifPresent(o -> old.remove(stateConsumer));
 		Optional.ofNullable(link).ifPresent(l -> {
@@ -214,7 +217,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 			primaryChart.load(to, this.barSpan, xAxis);
 		});
 	}
-	
+
 	public ChartingView barSpan(final BarSpan barSpan) {
 		if (null != barSpan && !barSpan.equals(this.barSpan)) {
 			unload();
@@ -252,7 +255,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		this.mouseModeHandler.attach();
 		return this;
 	}
-	
+
 	private void showIndexInfo(final double x) {
 		final int index = xAxis.getIndex(x);
 		primaryChart.showIndexInfo(index);
@@ -298,7 +301,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		}
 		return null;
 	}
-	
+
 	private void zoom(final double x, final int percentage) {
 		xAxis.zoom(0 == x ? xAxis.getUnitWidth() : x, percentage);
 		redraw();
@@ -310,7 +313,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		redraw();
 		primaryChart.load(to, barSpan, xAxis);
 	}
-	
+
 	public PriceUnitType unitType() {
 		return primaryChart.unitType();
 	}
@@ -322,6 +325,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 
 	@Override
 	public ChartingViewState stop(Bounds bounds) {
+		unload();
 		return super.stop(new ChartingViewState(), bounds);
 	}
 

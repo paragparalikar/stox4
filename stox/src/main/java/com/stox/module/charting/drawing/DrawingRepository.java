@@ -5,6 +5,12 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.typeadapters.PostConstructAdapterFactory;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
+import com.stox.module.charting.drawing.segment.trend.TrendSegment;
 import com.stox.persistence.store.JsonFileStore;
 import com.stox.util.JsonConverter;
 
@@ -17,8 +23,13 @@ public class DrawingRepository {
 	@NonNull
 	private final Path home;
 	
-	@NonNull
-	private final JsonConverter jsonConverter;
+	private final TypeAdapterFactory drawingTypeAdapterFactory = RuntimeTypeAdapterFactory.of(Drawing.class)
+			.registerSubtype(TrendSegment.class, "segment-trend");
+	private final Gson gson = new GsonBuilder()
+			.registerTypeAdapterFactory(drawingTypeAdapterFactory)
+			.registerTypeAdapterFactory(new PostConstructAdapterFactory())
+			.create();
+	private final JsonConverter jsonConverter = new JsonConverter(gson);
 	
 	private Path path(final String isin) {
 		return home.resolve(Paths.get("chart", "drawings", isin));

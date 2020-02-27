@@ -1,6 +1,7 @@
 package com.stox.module.charting.chart;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 
 import com.stox.module.charting.Configuration;
@@ -9,6 +10,7 @@ import com.stox.module.charting.axis.horizontal.MutableXAxis;
 import com.stox.module.charting.axis.horizontal.XAxis;
 import com.stox.module.charting.axis.vertical.DelegatingYAxis;
 import com.stox.module.charting.axis.vertical.PrimaryValueAxis;
+import com.stox.module.charting.drawing.DrawingRepository;
 import com.stox.module.charting.event.DataRequestEvent;
 import com.stox.module.charting.grid.HorizontalGrid;
 import com.stox.module.charting.grid.VerticalGrid;
@@ -31,16 +33,18 @@ public class PrimaryChart extends Chart {
 	private final BarRepository barRepository;
 	private final ExecutorService executorService;
 	private final PrimaryPricePlot primaryPricePlot;
+	private final DrawingRepository drawingRepository;
 	private final HorizontalGrid horizontalGrid = new HorizontalGrid();
 
 	@Builder
 	public PrimaryChart(@NonNull final Configuration configuration, @NonNull final MutableXAxis xAxis, @NonNull final DelegatingYAxis volumeYAxis,
 			@NonNull final VerticalGrid verticalGrid, @NonNull final BarInfoPanel barInfoPanel, @NonNull final ExecutorService executorService,
-			@NonNull final BarRepository barRepository) {
+			@NonNull final BarRepository barRepository, @NonNull final DrawingRepository drawingRepository) {
 		super(xAxis, configuration, volumeYAxis);
 		this.xAxis = xAxis;
 		this.barRepository = barRepository;
 		this.executorService = executorService;
+		this.drawingRepository = drawingRepository;
 
 		valueAxis(new PrimaryValueAxis(horizontalGrid));
 		container().bottom((dateTimeAxis = new DateTimeAxis(verticalGrid)));
@@ -84,7 +88,14 @@ public class PrimaryChart extends Chart {
 
 	public PrimaryChart scrip(final Scrip scrip) {
 		primaryPricePlot.scrip(scrip);
+		Optional.ofNullable(scrip).ifPresent(s -> drawingRepository.find(scrip.getIsin()).forEach(this::add));
 		return this;
+	}
+	
+	@Override
+	public Chart unload(Scrip scrip) {
+		Optional.ofNullable(scrip).ifPresent(s -> drawingRepository.persist(scrip.getIsin(), drawings()));
+		return super.unload(scrip);
 	}
 
 	@Override
