@@ -10,11 +10,23 @@ import lombok.NonNull;
 
 public class JsonConverter {
 
-	private final Gson gson = new GsonBuilder()
-			.enableComplexMapKeySerialization()
-			.serializeNulls()
-			.setPrettyPrinting()
-			.create();
+	private final Gson gson; 
+	
+	public JsonConverter() {
+		this(new GsonBuilder());
+	}
+	
+	public JsonConverter(final GsonBuilder gsonBuilder) {
+		this(gsonBuilder
+				.enableComplexMapKeySerialization()
+				.serializeNulls()
+				.setPrettyPrinting()
+				.create());
+	}
+	
+	public JsonConverter(@NonNull final Gson gson) {
+		this.gson = gson;
+	}
 	
 	public String toJson(@NonNull final Object object) {
 		return gson.toJson(object);
@@ -32,7 +44,7 @@ public class JsonConverter {
 		return gson.fromJson(json, type);
 	}
 	
-	public Type type(@NonNull final Type raw, @NonNull final Type... parameters) {
+	public static Type type(@NonNull final Type raw, @NonNull final Type... parameters) {
 		return new ParameterizedType() {
 
 			@Override

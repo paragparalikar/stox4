@@ -14,6 +14,15 @@ public class MutableXAxis implements XAxis {
 
 	private List<Bar> bars;
 	private double unitWidth = 10, maxUnitWidth = 50, minUnitWidth = 1, pivotX, width;
+	
+	public MutableXAxisState state() {
+		return new MutableXAxisState()
+				.unitWidth(maxUnitWidth)
+				.maxUnitWidth(maxUnitWidth)
+				.minUnitWidth(minUnitWidth)
+				.pivotX(pivotX)
+				.width(width);
+	}
 
 	public double getX(final int index) {
 		return pivotX - index * unitWidth;
@@ -107,4 +116,5 @@ public class MutableXAxis implements XAxis {
 			}
 		}
 	}
+	
 }

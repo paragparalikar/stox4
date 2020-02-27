@@ -99,8 +99,4 @@ public abstract class Plot<T>{
 		return this;
 	}
 	
-	public Underlay underlay() {
-		return Underlay.NONE;
-	}
-	
 }

@@ -1,7 +1,8 @@
 package com.stox.module.charting.chart;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.stox.fx.fluent.scene.layout.FluentBorderPane;
 import com.stox.fx.widget.NoLayoutPane;
@@ -44,8 +45,8 @@ public class Chart {
 	
 	private final VBox plotInfoContainer = new VBox();
 	private final MutableYAxis yAxis = new MutableYAxis();
-	private final List<Drawing> drawings = new ArrayList<>();
-	private final List<DerivativePlot<?>> plots = new ArrayList<>();
+	private final Set<Drawing> drawings = new HashSet<>();
+	private final Set<DerivativePlot<?>> plots = new HashSet<>();
 	private final Pane content = new NoLayoutPane().classes("content");
 	private final FluentBorderPane container = new FluentBorderPane(content).classes("chart").child(plotInfoContainer);
 
@@ -97,11 +98,10 @@ public class Chart {
 	}
 
 	public Chart add(final DerivativePlot<?> plot) {
-		if (!plots.contains(plot)) {
+		if(plots.add(plot)) {
 			plot.colorProperty().set(COLORS[plots.size()]);
 			content.getChildren().add(plot.container());
 			addPlotInfoPane(plot);
-			plots.add(plot);
 		}
 		return this;
 	}
@@ -137,8 +137,8 @@ public class Chart {
 	}
 	
 	public void clearDrawings() {
-		while(0 < drawings.size()) {
-			remove(drawings.get(0));
+		while(!drawings.isEmpty()) {
+			remove(drawings.iterator().next());
 		}
 	}
 

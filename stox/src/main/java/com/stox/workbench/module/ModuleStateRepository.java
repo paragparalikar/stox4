@@ -28,7 +28,7 @@ public class ModuleStateRepository {
 	}
 
 	private <T extends ModuleViewState> Store<Set<T>> store(@NonNull final Path path, @NonNull final Type stateType) {
-		return new JsonFileStore<>(path, jsonConverter.type(HashSet.class, stateType), jsonConverter);
+		return new JsonFileStore<>(path, JsonConverter.type(HashSet.class, stateType), jsonConverter);
 	}
 
 	@SneakyThrows

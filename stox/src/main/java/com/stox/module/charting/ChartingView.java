@@ -1,10 +1,11 @@
 package com.stox.module.charting;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
@@ -57,15 +58,14 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 	private BarSpan barSpan = BarSpan.D;
 	private ModeMouseHandler mouseModeHandler;
 
-	private final FxMessageSource messageSource;
-
 	private final PrimaryChart primaryChart;
-	private final List<Chart> charts = new ArrayList<>();
+	private final FxMessageSource messageSource;
 	private final MutableXAxis xAxis = new MutableXAxis();
 	private final VerticalGrid verticalGrid = new VerticalGrid();
 	private final BarInfoPanel barInfoPanel = new BarInfoPanel();
 	private final Configuration configuration = new Configuration();
 	private final TransformerYAxis volumeYAxis = new TransformerYAxis();
+	private final Set<SecondaryChart> secondaryCharts = new HashSet<>();
 	private final Consumer<State> stateConsumer = this::linkStateChanged;
 	private final ChartingContextMenu contextMenu = new ChartingContextMenu();
 	private final VolumePlot volumePlot = new VolumePlot(configuration, volumeYAxis);
@@ -115,7 +115,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		final Scrip scrip = primaryChart.scrip();
 		xAxis.setBars(bars);
 		primaryChart.load(scrip, bars);
-		charts.forEach(chart -> chart.load(scrip, bars));
+		secondaryCharts.forEach(chart -> chart.load(scrip, bars));
 		redraw();
 	}
 	
@@ -126,17 +126,17 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 
 	private void updateValueBounds() {
 		primaryChart.updateValueBounds();
-		charts.forEach(Chart::updateValueBounds);
+		secondaryCharts.forEach(Chart::updateValueBounds);
 	}
 
 	private void layoutChartChildren() {
 		primaryChart.layoutChartChildren();
-		charts.forEach(Chart::layoutChartChildren);
+		secondaryCharts.forEach(Chart::layoutChartChildren);
 	}
 	
 	public void clearDrawings() {
 		primaryChart.clearDrawings();
-		charts.forEach(Chart::clearDrawings);
+		secondaryCharts.forEach(Chart::clearDrawings);
 	}
 	
 	private void relayoutCharts() {
@@ -148,18 +148,18 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 	
 	private DerivativePlot<?> remove(final DerivativePlot<?> plot) {
 		primaryChart.remove(plot);
-		charts.forEach(chart -> chart.remove(plot));
+		secondaryCharts.forEach(chart -> chart.remove(plot));
 		removeEmptyCharts();
 		return plot;
 	}
 	
 	private void removeEmptyCharts() {
-		final Iterator<Chart> chartIterator = charts.iterator();
-		while (chartIterator.hasNext()) {
-			final Chart chart = chartIterator.next();
-			if (chart.isEmpty()) {
-				chartIterator.remove();
-				splitPane.getItems().remove(chart.container());
+		final Iterator<SecondaryChart> secondaryChartIterator = secondaryCharts.iterator();
+		while (secondaryChartIterator.hasNext()) {
+			final SecondaryChart secondaryChart = secondaryChartIterator.next();
+			if (secondaryChart.isEmpty()) {
+				secondaryChartIterator.remove();
+				splitPane.getItems().remove(secondaryChart.container());
 				relayoutCharts();
 			}
 		}
@@ -172,12 +172,11 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 			if (primaryChart.contains(volumePlot)) {
 				add(primaryChart, plot);
 			} else {
-				charts.stream().filter(chart -> chart.contains(volumePlot)).findFirst()
-						.ifPresent(chart -> add(chart, plot));
+				secondaryCharts.stream().filter(chart -> chart.contains(volumePlot)).findFirst().ifPresent(chart -> add(chart, plot));
 			}
 		} else {
-			final Chart secondaryChart = new SecondaryChart(configuration, xAxis, volumeYAxis);
-			charts.add(secondaryChart);
+			final SecondaryChart secondaryChart = new SecondaryChart(configuration, xAxis, volumeYAxis);
+			secondaryCharts.add(secondaryChart);
 			splitPane.getItems().add(secondaryChart.container());
 			add(secondaryChart, plot);
 			relayoutCharts();
@@ -230,12 +229,12 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 	public void unload() {
 		final Scrip scrip = primaryChart.scrip();
 		primaryChart.unload(scrip);
-		charts.forEach(chart -> chart.unload(scrip));
+		secondaryCharts.forEach(chart -> chart.unload(scrip));
 	}
 
 	public void reset() {
 		primaryChart.reset();
-		charts.forEach(Chart::reset);
+		secondaryCharts.forEach(Chart::reset);
 		xAxis.setPivotX(primaryChart.content().getWidth() - xAxis.getUnitWidth() * configuration.rightGapBarCountProperty().get());
 	}
 
@@ -257,7 +256,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 	private void showIndexInfo(final double x) {
 		final int index = xAxis.getIndex(x);
 		primaryChart.showIndexInfo(index);
-		charts.forEach(chart -> chart.showIndexInfo(index));
+		secondaryCharts.forEach(chart -> chart.showIndexInfo(index));
 	}
 
 	private void showContextMenu(final MouseEvent event) {
@@ -276,14 +275,14 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 	public Chart chart(final double screenX, final double screenY) {
 		final Point2D point = new Point2D(screenX, screenY);
 		return primaryChart.container().contains(primaryChart.container().screenToLocal(point)) ? primaryChart
-				: charts.stream().filter(chart -> chart.container().contains(chart.container().screenToLocal(point))).findFirst().orElse(null);
+				: secondaryCharts.stream().filter(chart -> chart.container().contains(chart.container().screenToLocal(point))).findFirst().orElse(null);
 	}
 
 	private Chart chart(DerivativePlot<?> plot) {
 		if (primaryChart.contains(plot)) {
 			return primaryChart;
 		}
-		return charts.stream().filter(chart -> chart.contains(plot)).findFirst().orElse(null);
+		return secondaryCharts.stream().filter(chart -> chart.contains(plot)).findFirst().orElse(null);
 	}
 
 	public Date date() {

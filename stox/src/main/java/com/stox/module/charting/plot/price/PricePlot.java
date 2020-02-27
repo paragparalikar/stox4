@@ -2,7 +2,6 @@ package com.stox.module.charting.plot.price;
 
 import com.stox.module.charting.Configuration;
 import com.stox.module.charting.plot.Plot;
-import com.stox.module.charting.plot.Underlay;
 import com.stox.module.charting.unit.Unit;
 import com.stox.module.core.model.Bar;
 import com.stox.module.core.model.Scrip;
@@ -40,11 +39,6 @@ public class PricePlot extends Plot<Bar> {
 	@Override
 	public double min(Bar bar) {
 		return bar.getLow();
-	}
-
-	@Override
-	public Underlay underlay() {
-		return Underlay.PRICE;
 	}
 
 }

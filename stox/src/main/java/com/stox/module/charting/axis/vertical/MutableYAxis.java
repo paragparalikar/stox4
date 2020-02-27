@@ -32,5 +32,15 @@ public class MutableYAxis implements YAxis {
 	public double getMinY() {
 		return height - top;
 	}
+	
+	public MutableYAxisState state() {
+		return new MutableYAxisState()
+				.semilog(semilog)
+				.top(top)
+				.bottom(bottom)
+				.height(height)
+				.min(min)
+				.max(max);
+	}
 
 }
