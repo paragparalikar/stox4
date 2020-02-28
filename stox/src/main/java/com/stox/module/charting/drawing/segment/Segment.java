@@ -2,6 +2,7 @@ package com.stox.module.charting.drawing.segment;
 
 import javax.annotation.PostConstruct;
 
+import com.google.gson.annotations.SerializedName;
 import com.stox.fx.fluent.scene.layout.FluentGroup;
 import com.stox.module.charting.axis.horizontal.XAxis;
 import com.stox.module.charting.axis.vertical.YAxis;
@@ -18,22 +19,27 @@ import lombok.Getter;
 
 public abstract class Segment extends AbstractDrawing {
 
-	private final Line line = new Line();
+	private final transient Line line = new Line();
+	
+	@SerializedName("one")
 	@Getter(AccessLevel.PROTECTED)
 	private final ControlPoint one = new ControlPoint();
+	
+	@SerializedName("two")
 	@Getter(AccessLevel.PROTECTED)
 	private final ControlPoint two = new ControlPoint();
-	private final Group node = new FluentGroup(line, one, two).classes("drawing");
+	
+	private final transient Group node = new FluentGroup(line, one.getNode(), two.getNode()).classes("drawing");
 
 	public Segment() {
-		node.setManaged(false);
-		node.setAutoSizeChildren(false);
-		bind();
+		postConstruct();
 	}
 
 	@PostConstruct
 	public void postConstruct() {
-		
+		node.setManaged(false);
+		node.setAutoSizeChildren(false);
+		bind();
 	}
 	
 	protected void bind() {

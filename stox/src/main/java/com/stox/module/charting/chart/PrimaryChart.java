@@ -66,6 +66,12 @@ public class PrimaryChart extends Chart {
 	public void load(final long to, final BarSpan barSpan, final XAxis xAxis) {
 		primaryPricePlot.container().fireEvent(new DataRequestEvent(to, barSpan, xAxis));
 	}
+		
+	@Override
+	public Chart unload(Scrip scrip) {
+		Optional.ofNullable(scrip).ifPresent(s -> drawingRepository.persist(scrip.getIsin(), drawings()));
+		return super.unload(scrip);
+	}
 
 	@Override
 	public PrimaryChart showIndexInfo(int index) {
@@ -90,12 +96,6 @@ public class PrimaryChart extends Chart {
 		primaryPricePlot.scrip(scrip);
 		Optional.ofNullable(scrip).ifPresent(s -> drawingRepository.find(scrip.getIsin()).forEach(this::add));
 		return this;
-	}
-	
-	@Override
-	public Chart unload(Scrip scrip) {
-		Optional.ofNullable(scrip).ifPresent(s -> drawingRepository.persist(scrip.getIsin(), drawings()));
-		return super.unload(scrip);
 	}
 
 	@Override

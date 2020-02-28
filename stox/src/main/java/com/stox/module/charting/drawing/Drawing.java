@@ -8,6 +8,8 @@ import com.stox.module.charting.axis.vertical.YAxis;
 import javafx.scene.Node;
 
 public interface Drawing extends Updatable, HasNode<Node> {
+	
+	String getType();
 
 	void layoutChartChildren(final XAxis xAxis, final YAxis yAxis);
 }

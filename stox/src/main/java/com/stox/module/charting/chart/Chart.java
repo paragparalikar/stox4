@@ -88,6 +88,7 @@ public class Chart {
 
 	public Chart reset() {
 		plots.forEach(Plot::reset);
+		clearDrawings();
 		return this;
 	}
 	
@@ -124,12 +125,11 @@ public class Chart {
 		return this;
 	}
 	
-	public boolean add(final Drawing drawing) {
-		if (!drawings.contains(drawing)) {
+	public Chart add(final Drawing drawing) {
+		if (drawings.add(drawing)) {
 			Ui.fx(() -> content.getChildren().add(drawing.getNode()));
-			return drawings.add(drawing);
 		}
-		return false;
+		return this;
 	}
 
 	public Chart remove(final Drawing drawing) {
@@ -138,10 +138,11 @@ public class Chart {
 		return this;
 	}
 	
-	public void clearDrawings() {
+	public Chart clearDrawings() {
 		while(!drawings.isEmpty()) {
 			remove(drawings.iterator().next());
 		}
+		return this;
 	}
 
 	public Chart updateValueBounds() {

@@ -1,40 +1,48 @@
 package com.stox.module.charting.drawing;
 
+import javax.annotation.PostConstruct;
+
 import com.google.gson.annotations.SerializedName;
+import com.stox.fx.widget.HasNode;
 import com.stox.module.charting.axis.Updatable;
 import com.stox.module.charting.axis.horizontal.XAxis;
 import com.stox.module.charting.axis.vertical.YAxis;
 import com.stox.module.charting.event.UpdatableRequestEvent;
 
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 
-public class ControlPoint extends Circle implements Updatable, EventHandler<MouseEvent> {
+public class ControlPoint implements Updatable, EventHandler<MouseEvent>, HasNode<Node> {
 
-	@SerializedName("x")
-	private double x;
-
-	@SerializedName("y")
-	private double y;
+	private transient double x, y;
 
 	@SerializedName("location")
 	private final Location location = new Location();
+	
+	private final transient Circle circle = new Circle(); 
 
 	public ControlPoint() {
+		postConstruct();
+	}
+	
+	@PostConstruct
+	public void postConstruct() {
 		build();
 		bind();
 	}
 
 	private void build() {
-		setRadius(5);
-		setManaged(false);
-		getStyleClass().add("control-point");
+		circle.setRadius(5);
+		circle.setManaged(false);
+		circle.getStyleClass().add("control-point");
 	}
 
 	private void bind() {
-		addEventHandler(MouseEvent.MOUSE_PRESSED, this);
-		addEventHandler(MouseEvent.MOUSE_DRAGGED, this);
+		circle.addEventHandler(MouseEvent.MOUSE_PRESSED, this);
+		circle.addEventHandler(MouseEvent.MOUSE_DRAGGED, this);
 	}
 
 	public long getDate() {
@@ -47,13 +55,13 @@ public class ControlPoint extends Circle implements Updatable, EventHandler<Mous
 
 	@Override
 	public void update(final XAxis xAxis, final YAxis yAxis) {
-		location.setDate(xAxis.getDate(getCenterX()));
-		location.setValue(yAxis.getValue(getCenterY()));
+		location.setDate(xAxis.getDate(circle.getCenterX()));
+		location.setValue(yAxis.getValue(circle.getCenterY()));
 	}
 
 	public void layoutChartChildren(final XAxis xAxis, final YAxis yAxis) {
-		setCenterX(xAxis.getX(location.getDate()));
-		setCenterY(yAxis.getY(location.getValue()));
+		circle.setCenterX(xAxis.getX(location.getDate()));
+		circle.setCenterY(yAxis.getY(location.getValue()));
 	}
 
 	@Override
@@ -64,14 +72,43 @@ public class ControlPoint extends Circle implements Updatable, EventHandler<Mous
 				y = event.getY();
 				event.consume();
 			} else if (MouseEvent.MOUSE_DRAGGED.equals(event.getEventType())) {
-				setCenterX(event.getX() + getCenterX() - x);
-				setCenterY(event.getY() + getCenterY() - y);
+				circle.setCenterX(event.getX() + circle.getCenterX() - x);
+				circle.setCenterY(event.getY() + circle.getCenterY() - y);
 				x = event.getX();
 				y = event.getY();
 				event.consume();
-				fireEvent(new UpdatableRequestEvent(this));
+				circle.fireEvent(new UpdatableRequestEvent(this));
 			}
 		}
+	}
+	
+	public double getCenterX() {
+		return circle.getCenterX();
+	}
+	
+	public void setCenterX(final double value) {
+		circle.setCenterX(value);
+	}
+	
+	public ObservableValue<? extends Number> centerXProperty(){
+		return circle.centerXProperty();
+	}
+	
+	public double getCenterY() {
+		return circle.getCenterY();
+	}
+	
+	public void setCenterY(final double value) {
+		circle.setCenterY(value);
+	}
+	
+	public ObservableValue<? extends Number> centerYProperty(){
+		return circle.centerYProperty();
+	}
+	
+	@Override
+	public Node getNode() {
+		return circle;
 	}
 
 }

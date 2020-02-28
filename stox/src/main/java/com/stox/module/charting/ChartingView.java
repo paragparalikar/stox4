@@ -200,10 +200,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 
 	private void linkChanged(final Link old, final Link link) {
 		Optional.ofNullable(old).ifPresent(o -> old.remove(stateConsumer));
-		Optional.ofNullable(link).ifPresent(l -> {
-			link.add(stateConsumer);
-			stateConsumer.accept(link.getState());
-		});
+		Optional.ofNullable(link).ifPresent(l -> link.add(stateConsumer));
 	}
 
 	private void linkStateChanged(final State state) {

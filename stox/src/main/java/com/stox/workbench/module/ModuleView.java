@@ -61,7 +61,7 @@ public abstract class ModuleView<T extends ModuleViewState> implements HasNode<F
 		return this;
 	}
 
-	public T stop(@NonNull final T state, @NonNull final Bounds bounds) {
+	public T stop(@NonNull final T state, final Bounds bounds) {
 		Optional.ofNullable(bounds).ifPresent(b -> state
 				.x(resizableWrapper.x() / bounds.getWidth())
 				.y(resizableWrapper.y() / bounds.getHeight())
