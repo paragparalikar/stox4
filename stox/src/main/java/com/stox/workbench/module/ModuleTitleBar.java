@@ -59,7 +59,7 @@ public class ModuleTitleBar implements HasNode<Node> {
 
 	@Override
 	public Node getNode() {
-		return titleBar	;
+		return titleBar.getNode()	;
 	}
 	
 }

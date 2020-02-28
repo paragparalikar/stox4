@@ -1,36 +1,37 @@
 package com.stox.fx.widget;
 
+import com.stox.fx.fluent.scene.layout.FluentBorderPane;
 import com.stox.fx.fluent.scene.layout.FluentHBox;
 import com.stox.fx.fluent.scene.layout.FluentVBox;
-import com.stox.fx.fluent.scene.layout.IFluentBorderPane;
 
 import javafx.geometry.Side;
 import javafx.scene.Node;
-import javafx.scene.layout.BorderPane;
 import lombok.NonNull;
 
-public class TitleBar extends BorderPane implements IFluentBorderPane<TitleBar> {
+public class TitleBar implements HasNode<Node>{
 
 	private final FluentHBox right = new FluentHBox(), left = new FluentHBox();
 	private final FluentVBox top = new FluentVBox().classes("spaced"), bottom = new FluentVBox().classes("spaced");
+	private final FluentBorderPane container = new FluentBorderPane(null, top, right, bottom, left).classes("primary-background", "title-bar");
 
-	public TitleBar() {
-		classes("primary-background", "title-bar");
+	public TitleBar center(final Node node) {
+		container.center(node);
+		return this;
 	}
-
+	
 	public TitleBar append(@NonNull final Side side, @NonNull final Node node) {
 		switch (side) {
 			case BOTTOM:
-				bottom(bottom.child(0, node));
+				container.bottom(bottom.child(0, node));
 				break;
 			case LEFT:
-				left(left.child(0, node));
+				container.left(left.child(0, node));
 				break;
 			case RIGHT:
-				right(right.child(0, node));
+				container.right(right.child(0, node));
 				break;
 			case TOP:
-				top(top.child(0, node));
+				container.top(top.child(0, node));
 				break;
 			default:
 				break;
@@ -43,25 +44,25 @@ public class TitleBar extends BorderPane implements IFluentBorderPane<TitleBar> 
 			case BOTTOM:
 				bottom.children().remove(node);
 				if (bottom.children().isEmpty()) {
-					bottom(null);
+					container.bottom(null);
 				}
 				break;
 			case LEFT:
 				left.children().remove(node);
 				if (left.children().isEmpty()) {
-					left(null);
+					container.left(null);
 				}
 				break;
 			case RIGHT:
 				right.children().remove(node);
 				if (right.children().isEmpty()) {
-					right(null);
+					container.right(null);
 				}
 				break;
 			case TOP:
 				top.children().remove(node);
 				if (top.children().isEmpty()) {
-					top(null);
+					container.top(null);
 				}
 				break;
 			default:
@@ -71,8 +72,8 @@ public class TitleBar extends BorderPane implements IFluentBorderPane<TitleBar> 
 	}
 
 	@Override
-	public TitleBar getThis() {
-		return this;
+	public Node getNode() {
+		return container;
 	}
 
 }

@@ -38,7 +38,6 @@ public class Workbench {
 		this.titleBar = new WorkbenchTitleBar(messageSource);
 		MovableMouseEventHandler.movable(titleBar.getNode(), stage);
 		stage.style(StageStyle.UNDECORATED)
-			.maximized(Boolean.TRUE)
 			.scene(buildScene())
 			.titleProperty().bind(messageSource.get("product.name","Stox"));
 	}
