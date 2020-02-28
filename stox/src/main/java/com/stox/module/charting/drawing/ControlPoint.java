@@ -6,7 +6,7 @@ import com.stox.module.charting.axis.horizontal.XAxis;
 import com.stox.module.charting.axis.vertical.YAxis;
 import com.stox.module.charting.event.UpdatableRequestEvent;
 
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.DoubleProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -90,7 +90,7 @@ public class ControlPoint implements Updatable, EventHandler<MouseEvent>, HasNod
 		circle.setCenterX(value);
 	}
 	
-	public ObservableValue<? extends Number> centerXProperty(){
+	public DoubleProperty centerXProperty(){
 		return circle.centerXProperty();
 	}
 	
@@ -102,7 +102,7 @@ public class ControlPoint implements Updatable, EventHandler<MouseEvent>, HasNod
 		circle.setCenterY(value);
 	}
 	
-	public ObservableValue<? extends Number> centerYProperty(){
+	public DoubleProperty centerYProperty(){
 		return circle.centerYProperty();
 	}
 	

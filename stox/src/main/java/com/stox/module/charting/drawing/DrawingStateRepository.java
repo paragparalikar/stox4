@@ -14,6 +14,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.typeadapters.PostConstructAdapterFactory;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
+import com.stox.module.charting.drawing.segment.horizontal.HorizontalSegmentState;
 import com.stox.module.charting.drawing.segment.trend.TrendSegmentState;
 import com.stox.persistence.store.JsonFileStore;
 import com.stox.persistence.store.Store;
@@ -31,7 +32,8 @@ public class DrawingStateRepository {
 	private final Type type = JsonConverter.type(HashSet.class, DrawingState.class);
 
 	private final TypeAdapterFactory drawingStateTypeAdapterFactory = RuntimeTypeAdapterFactory.of(DrawingState.class)
-			.registerSubtype(TrendSegmentState.class, TrendSegmentState.TYPE);
+			.registerSubtype(TrendSegmentState.class, TrendSegmentState.TYPE)
+			.registerSubtype(HorizontalSegmentState.class, HorizontalSegmentState.TYPE);
 	private final Gson gson = new GsonBuilder()
 			.registerTypeAdapterFactory(drawingStateTypeAdapterFactory)
 			.registerTypeAdapterFactory(new PostConstructAdapterFactory())
