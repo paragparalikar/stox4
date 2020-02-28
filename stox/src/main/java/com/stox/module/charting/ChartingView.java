@@ -43,6 +43,7 @@ import com.stox.workbench.link.Link;
 import com.stox.workbench.link.Link.State;
 import com.stox.workbench.module.ModuleView;
 
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.geometry.Orientation;
@@ -90,9 +91,10 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 
 	@Override
 	public ModuleView<ChartingViewState> start(ChartingViewState state, Bounds bounds) {
-		linkChanged(null, titleBar.getLinkButton().getLink());
+		super.start(state, bounds);
 		mouseModeHandler(panAndZoomMouseHandler);
-		return super.start(state, bounds);
+		Platform.runLater(() -> linkChanged(null, titleBar.getLinkButton().getLink()));
+		return this;
 	}
 
 	@Override

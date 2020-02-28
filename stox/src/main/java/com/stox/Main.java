@@ -28,6 +28,7 @@ import com.stox.workbench.module.Module;
 import com.stox.workbench.module.ModuleStateRepository;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
