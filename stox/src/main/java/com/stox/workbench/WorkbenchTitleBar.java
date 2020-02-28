@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import lombok.Getter;
+import lombok.NonNull;
 
 public class WorkbenchTitleBar implements HasNode<Node> {
 
@@ -27,10 +28,19 @@ public class WorkbenchTitleBar implements HasNode<Node> {
 		titleBar.getNode().addEventHandler(MouseEvent.MOUSE_PRESSED, this::onMouseEvent);
 	}
 	
+	WorkbenchTitleBar state(@NonNull final WorkbenchState state) {
+		windowControls.state(state);
+		return this;
+	}
+	
 	private void onMouseEvent(MouseEvent event) {
 		if (2 == event.getClickCount() && MouseButton.PRIMARY.equals(event.getButton())) {
 			windowControls.toggleMaximizeRestore(null);
 		}
+	}
+	
+	boolean maximized() {
+		return windowControls.maximized();
 	}
 
 	@Override

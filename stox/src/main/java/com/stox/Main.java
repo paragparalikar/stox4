@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 import com.stox.fx.fluent.stage.FluentStage;
 import com.stox.fx.widget.FxMessageSource;
@@ -24,6 +23,7 @@ import com.stox.module.explorer.ExplorerModule;
 import com.stox.util.EventBus;
 import com.stox.util.JsonConverter;
 import com.stox.workbench.Workbench;
+import com.stox.workbench.WorkbenchStateRepository;
 import com.stox.workbench.module.Module;
 import com.stox.workbench.module.ModuleStateRepository;
 
@@ -44,8 +44,8 @@ public class Main extends Application {
 	private final Path home = Paths.get(System.getProperty("user.home"), ".stox4");
 	private final Config config = buildConfig(home);
 	private final FxMessageSource messageSource = new FxMessageSource();
-	private final AtomicReference<FluentStage> stageReference = new AtomicReference<>();
-	private final Workbench workbench = new Workbench(messageSource, stageReference);
+	private final FluentStage stage = new FluentStage();
+	private final Workbench workbench = new Workbench(messageSource, stage);
 	private final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 	private final Context context = buildContext();
 	private final List<? extends Module> modules = Arrays.asList(
@@ -62,10 +62,11 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage ignored) throws Exception {
-		stageReference.get().onShown(this::onWorkbenchShown).show();
+		stage.onShown(this::onWorkbenchShown).show();
 	}
 	
 	private void onWorkbenchShown(final WindowEvent event) {
+		workbench.state(new WorkbenchStateRepository(home, jsonConverter).read());
 		modules.forEach(this::start);
 	}
 	
@@ -107,7 +108,8 @@ public class Main extends Application {
 	
 	@Override
 	public void stop() throws Exception {
-		stageReference.get().hide();
+		new WorkbenchStateRepository(home, jsonConverter).write(workbench.state());
+		stage.hide();
 		modules.forEach(this::stop);
 		scheduledExecutorService.shutdown();
 		scheduledExecutorService.awaitTermination(3, TimeUnit.SECONDS);

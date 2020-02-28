@@ -15,9 +15,15 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.experimental.Accessors;
 
+@Accessors(fluent = true)
 public class WindowControls implements HasNode<Node>{
 
+	@Getter(AccessLevel.PACKAGE)
 	private boolean maximized;
 	private double x, y, width, height;
 	private final FluentButton minimizeButton = new FluentButton(Icon.WINDOW_MINIMIZE).classes("primary", "icon", "first");
@@ -31,11 +37,21 @@ public class WindowControls implements HasNode<Node>{
 		exitButton.onAction(this::exit).tooltip(Ui.tooltip(language.get("Exit")));
 	}
 	
+	WindowControls state(@NonNull final WorkbenchState state) {
+		x = state.x();
+		y = state.y();
+		width = state.width();
+		height = state.height();
+		maximized = !state.maximized();
+		toggleMaximizeRestore(null);
+		return this;
+	}
+	
 	private void minimize(ActionEvent event) {
 		Stage.class.cast(window()).setIconified(Boolean.TRUE);
 	}
 	
-	void toggleMaximizeRestore(ActionEvent event) {
+	WindowControls toggleMaximizeRestore(ActionEvent event) {
 		final Window window = window();
 		if(maximized) {
 			restore(window);
@@ -46,6 +62,7 @@ public class WindowControls implements HasNode<Node>{
 			restoreButton.text(Icon.WINDOW_RESTORE);
 			maximized = true;
 		}
+		return this;
 	}
 	
 	private void exit(ActionEvent event) {

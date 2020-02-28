@@ -1,6 +1,6 @@
 package com.stox.workbench;
 
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Optional;
 
 import com.stox.fx.fluent.scene.layout.FluentBorderPane;
 import com.stox.fx.fluent.stage.FluentStage;
@@ -16,6 +16,7 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
+import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.Getter;
 import lombok.NonNull;
@@ -24,24 +25,39 @@ public class Workbench {
 
 	@Getter
 	private final WorkbenchTitleBar titleBar;
-	
+
 	@Getter
 	private final WorkbenchInfoBar infoBar;
-	
-	private final SnapPane snapPane = new SnapPane();
-	private final FluentStage stage = new FluentStage();
-	private final FluentBorderPane root = ResizeMouseEventHandler.resizable(new FluentBorderPane(), stage);
 
-	public Workbench(@NonNull final FxMessageSource messageSource, final AtomicReference<FluentStage> stageReference) {
-		stageReference.set(stage);
+	private final Stage stage;
+	private final FluentBorderPane root;
+	private final SnapPane snapPane = new SnapPane();
+
+	public Workbench(@NonNull final FxMessageSource messageSource, @NonNull final FluentStage stage) {
+		this.stage = stage;
 		this.infoBar = new WorkbenchInfoBar(messageSource);
 		this.titleBar = new WorkbenchTitleBar(messageSource);
+		this.root = ResizeMouseEventHandler.resizable(new FluentBorderPane(), stage);
 		MovableMouseEventHandler.movable(titleBar.getNode(), stage);
 		stage.style(StageStyle.UNDECORATED)
-			.scene(buildScene())
-			.titleProperty().bind(messageSource.get("product.name","Stox"));
+				.scene(buildScene())
+				.titleProperty().bind(messageSource.get("product.name", "Stox"));
 	}
 	
+	public WorkbenchState state() {
+		return new WorkbenchState()
+				.x(stage.getX())
+				.y(stage.getY())
+				.width(stage.getWidth())
+				.height(stage.getHeight())
+				.maximized(titleBar.maximized());
+	}
+	
+	public Workbench state(final WorkbenchState state) {
+		Optional.ofNullable(state).ifPresent(titleBar::state);
+		return this;
+	}
+
 	private Scene buildScene() {
 		final Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 		final FluentBorderPane container = new FluentBorderPane().top(titleBar.getNode()).center(snapPane).bottom(infoBar.getNode());
@@ -58,12 +74,12 @@ public class Workbench {
 		snapPane.add(moduleView.getTitleBar().getNode(), moduleView.getNode());
 		return moduleView;
 	}
-	
+
 	public <T extends ModuleViewState> ModuleView<T> remove(@NonNull final ModuleView<T> moduleView) {
 		snapPane.getChildren().remove(moduleView.getNode());
 		return moduleView;
 	}
-				
+
 	public Bounds visualBounds() {
 		return snapPane.getBoundsInLocal();
 	}
