@@ -18,6 +18,7 @@ import com.stox.module.charting.drawing.region.ChartRegionState;
 import com.stox.module.charting.drawing.segment.horizontal.HorizontalSegmentState;
 import com.stox.module.charting.drawing.segment.trend.TrendSegmentState;
 import com.stox.module.charting.drawing.segment.vertical.VerticalSegmentState;
+import com.stox.module.charting.drawing.text.ChartTextState;
 import com.stox.persistence.store.JsonFileStore;
 import com.stox.persistence.store.Store;
 import com.stox.util.JsonConverter;
@@ -37,7 +38,8 @@ public class DrawingStateRepository {
 			.registerSubtype(TrendSegmentState.class, TrendSegmentState.TYPE)
 			.registerSubtype(HorizontalSegmentState.class, HorizontalSegmentState.TYPE)
 			.registerSubtype(VerticalSegmentState.class, VerticalSegmentState.TYPE)
-			.registerSubtype(ChartRegionState.class, ChartRegionState.TYPE);
+			.registerSubtype(ChartRegionState.class, ChartRegionState.TYPE)
+			.registerSubtype(ChartTextState.class, ChartTextState.TYPE);
 	private final Gson gson = new GsonBuilder()
 			.registerTypeAdapterFactory(drawingStateTypeAdapterFactory)
 			.registerTypeAdapterFactory(new PostConstructAdapterFactory())

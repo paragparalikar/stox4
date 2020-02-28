@@ -1,5 +1,7 @@
 package com.stox.module.charting.drawing.region;
 
+import com.stox.fx.widget.FxMessageSource;
+import com.stox.fx.widget.Ui;
 import com.stox.module.charting.ChartingView;
 import com.stox.module.charting.drawing.AbstractDrawingToggleButton;
 import com.stox.module.charting.event.UpdatableRequestEvent;
@@ -8,19 +10,19 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Point2D;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Tooltip;
 import javafx.scene.shape.Rectangle;
+import lombok.NonNull;
 
 public class ChartRegionToggleButton extends AbstractDrawingToggleButton
 		implements  ChangeListener<Boolean> {
 
-	public ChartRegionToggleButton(ChartingView chartingView) {
+	public ChartRegionToggleButton(@NonNull final FxMessageSource messageSource, @NonNull final ChartingView chartingView) {
 		super(chartingView);
 		classes("icon", "primary", "chart-region-toggle-button");
 		setGraphic(new Rectangle(2, 2, 14, 14));
 		setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		selectedProperty().addListener(this);
-		setTooltip(new Tooltip("Region"));
+		setTooltip(Ui.tooltip(messageSource.get("Region")));
 	}
 
 	@Override

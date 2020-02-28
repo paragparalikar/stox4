@@ -7,6 +7,7 @@ import com.stox.module.charting.drawing.region.ChartRegionToggleButton;
 import com.stox.module.charting.drawing.segment.horizontal.HorizontalSegmentToggleButton;
 import com.stox.module.charting.drawing.segment.trend.TrendSegmentToggleButton;
 import com.stox.module.charting.drawing.segment.vertical.VerticalSegmentToggleButton;
+import com.stox.module.charting.drawing.text.ChartTextToggleButton;
 import com.stox.module.charting.tools.ChartingToolBox;
 
 import javafx.scene.Node;
@@ -17,12 +18,12 @@ public class DrawingToolBox extends HBox implements ChartingToolBox {
 	
 	public DrawingToolBox(@NonNull final FxMessageSource messageSource, @NonNull final ChartingView chartingView) {
 		getChildren().addAll(
-				new TrendSegmentToggleButton(chartingView),
-				new HorizontalSegmentToggleButton(chartingView),
-				new VerticalSegmentToggleButton(chartingView),
-				new ChartRegionToggleButton(chartingView),
-//				new ChartTextToggleButton(chartingView),
-				new ClearDrawingsButton(chartingView));
+				new TrendSegmentToggleButton(messageSource, chartingView),
+				new HorizontalSegmentToggleButton(messageSource, chartingView),
+				new VerticalSegmentToggleButton(messageSource, chartingView),
+				new ChartRegionToggleButton(messageSource, chartingView),
+				new ChartTextToggleButton(messageSource, chartingView),
+				new ClearDrawingsButton(messageSource, chartingView));
 		Ui.box(this);
 	}
 	

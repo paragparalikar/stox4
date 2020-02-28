@@ -3,21 +3,23 @@ package com.stox.module.charting.drawing.segment.trend;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+import com.stox.fx.widget.FxMessageSource;
+import com.stox.fx.widget.Ui;
 import com.stox.module.charting.ChartingView;
 import com.stox.module.charting.drawing.segment.SegmentModeMouseEventHandler;
 import com.stox.module.charting.drawing.segment.SegmentToggleButton;
 
 import javafx.geometry.Point2D;
-import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
+import lombok.NonNull;
 
 public class TrendSegmentToggleButton extends SegmentToggleButton<TrendSegment> {
 
-	public TrendSegmentToggleButton(ChartingView chartingView) {
+	public TrendSegmentToggleButton(@NonNull final FxMessageSource messageSource, @NonNull final ChartingView chartingView) {
 		super(chartingView);
 		setGraphic(new Line(2, 14, 14, 2));
-		setTooltip(new Tooltip("Trend Segment"));
+		setTooltip(Ui.tooltip(messageSource.get("Trend Segment")));
 	}
 
 	@Override
