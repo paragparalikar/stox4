@@ -109,7 +109,8 @@ public class ChartText extends AbstractDrawing<ChartTextState> implements EventH
 	public Drawing<ChartTextState> state(ChartTextState state) {
 		Optional.ofNullable(state).ifPresent(value -> {
 			location.state(state.location());
-			text.setText(state.text());  // on fx thread ? 
+			text.setText(state.text());
+			group.getChildren().setAll(text);
 		});
 		return this;
 	}
