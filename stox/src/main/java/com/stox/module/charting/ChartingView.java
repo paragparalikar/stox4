@@ -20,7 +20,7 @@ import com.stox.module.charting.axis.vertical.TransformerYAxis;
 import com.stox.module.charting.chart.Chart;
 import com.stox.module.charting.chart.PrimaryChart;
 import com.stox.module.charting.chart.SecondaryChart;
-import com.stox.module.charting.drawing.DrawingRepository;
+import com.stox.module.charting.drawing.DrawingStateRepository;
 import com.stox.module.charting.event.ConfigChangedEvent;
 import com.stox.module.charting.event.DataChangedEvent;
 import com.stox.module.charting.event.PanRequestEvent;
@@ -78,10 +78,10 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 	private final FluentStackPane root = new FluentStackPane(verticalGrid, splitPane, crosshair.getNode()).classes("charting-root");
 
 	public ChartingView(@NonNull final ExecutorService executorService, @NonNull final FxMessageSource messageSrouce, @NonNull final BarRepository barRepository,
-			@NonNull final DrawingRepository drawingRepository) {
+			@NonNull final DrawingStateRepository drawingStateRepository) {
 		this.messageSource = messageSrouce;
 		title(titleBar).content(root);
-		primaryChart = new PrimaryChart(configuration, xAxis, volumeYAxis, verticalGrid, barInfoPanel, executorService, barRepository, drawingRepository);
+		primaryChart = new PrimaryChart(configuration, xAxis, volumeYAxis, verticalGrid, barInfoPanel, executorService, barRepository, drawingStateRepository);
 		splitPane.getItems().add(primaryChart.container());
 		primaryChart.add(volumePlot);
 		tool(new ChartingToolBar(this, messageSource));

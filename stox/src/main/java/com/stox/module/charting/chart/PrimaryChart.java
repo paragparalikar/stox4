@@ -2,7 +2,9 @@ package com.stox.module.charting.chart;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
+import java.util.stream.Collectors;
 
 import com.stox.module.charting.Configuration;
 import com.stox.module.charting.axis.horizontal.DateTimeAxis;
@@ -10,7 +12,9 @@ import com.stox.module.charting.axis.horizontal.MutableXAxis;
 import com.stox.module.charting.axis.horizontal.XAxis;
 import com.stox.module.charting.axis.vertical.DelegatingYAxis;
 import com.stox.module.charting.axis.vertical.PrimaryValueAxis;
-import com.stox.module.charting.drawing.DrawingRepository;
+import com.stox.module.charting.drawing.Drawing;
+import com.stox.module.charting.drawing.DrawingState;
+import com.stox.module.charting.drawing.DrawingStateRepository;
 import com.stox.module.charting.event.DataRequestEvent;
 import com.stox.module.charting.grid.HorizontalGrid;
 import com.stox.module.charting.grid.VerticalGrid;
@@ -33,18 +37,18 @@ public class PrimaryChart extends Chart {
 	private final BarRepository barRepository;
 	private final ExecutorService executorService;
 	private final PrimaryPricePlot primaryPricePlot;
-	private final DrawingRepository drawingRepository;
+	private final DrawingStateRepository drawingStateRepository;
 	private final HorizontalGrid horizontalGrid = new HorizontalGrid();
 
 	@Builder
 	public PrimaryChart(@NonNull final Configuration configuration, @NonNull final MutableXAxis xAxis, @NonNull final DelegatingYAxis volumeYAxis,
 			@NonNull final VerticalGrid verticalGrid, @NonNull final BarInfoPanel barInfoPanel, @NonNull final ExecutorService executorService,
-			@NonNull final BarRepository barRepository, @NonNull final DrawingRepository drawingRepository) {
+			@NonNull final BarRepository barRepository, @NonNull final DrawingStateRepository drawingStateRepository) {
 		super(xAxis, configuration, volumeYAxis);
 		this.xAxis = xAxis;
 		this.barRepository = barRepository;
 		this.executorService = executorService;
-		this.drawingRepository = drawingRepository;
+		this.drawingStateRepository = drawingStateRepository;
 
 		valueAxis(new PrimaryValueAxis(horizontalGrid));
 		container().bottom((dateTimeAxis = new DateTimeAxis(verticalGrid)));
@@ -66,10 +70,11 @@ public class PrimaryChart extends Chart {
 	public void load(final long to, final BarSpan barSpan, final XAxis xAxis) {
 		primaryPricePlot.container().fireEvent(new DataRequestEvent(to, barSpan, xAxis));
 	}
-		
+
 	@Override
 	public Chart unload(Scrip scrip) {
-		Optional.ofNullable(scrip).ifPresent(s -> drawingRepository.persist(scrip.getIsin(), drawings()));
+		final Set<DrawingState> drawingStates = drawings().stream().map(Drawing::state).collect(Collectors.toSet());
+		Optional.ofNullable(scrip).ifPresent(s -> drawingStateRepository.persist(scrip.getIsin(), drawingStates));
 		return super.unload(scrip);
 	}
 
@@ -94,7 +99,7 @@ public class PrimaryChart extends Chart {
 
 	public PrimaryChart scrip(final Scrip scrip) {
 		primaryPricePlot.scrip(scrip);
-		Optional.ofNullable(scrip).ifPresent(s -> drawingRepository.find(scrip.getIsin()).forEach(this::add));
+		Optional.ofNullable(scrip).ifPresent(s -> drawingStateRepository.find(scrip.getIsin()).stream().map(DrawingState::drawing).forEach(this::add));
 		return this;
 	}
 

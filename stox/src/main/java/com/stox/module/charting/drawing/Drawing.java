@@ -7,9 +7,11 @@ import com.stox.module.charting.axis.vertical.YAxis;
 
 import javafx.scene.Node;
 
-public interface Drawing extends Updatable, HasNode<Node> {
+public interface Drawing<S extends DrawingState> extends Updatable, HasNode<Node> {
 	
-	String getType();
-
+	S state();
+	
+	Drawing<S> state(S state);
+	
 	void layoutChartChildren(final XAxis xAxis, final YAxis yAxis);
 }

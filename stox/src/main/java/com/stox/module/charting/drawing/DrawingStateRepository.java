@@ -1,5 +1,6 @@
 package com.stox.module.charting.drawing;
 
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,8 +14,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapterFactory;
 import com.google.gson.typeadapters.PostConstructAdapterFactory;
 import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
-import com.stox.module.charting.drawing.segment.trend.TrendSegment;
+import com.stox.module.charting.drawing.segment.trend.TrendSegmentState;
 import com.stox.persistence.store.JsonFileStore;
+import com.stox.persistence.store.Store;
 import com.stox.util.JsonConverter;
 
 import lombok.NonNull;
@@ -22,15 +24,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 @RequiredArgsConstructor
-public class DrawingRepository {
+public class DrawingStateRepository {
 
 	@NonNull
 	private final Path home;
+	private final Type type = JsonConverter.type(HashSet.class, DrawingState.class);
 
-	private final TypeAdapterFactory drawingTypeAdapterFactory = RuntimeTypeAdapterFactory.of(Drawing.class)
-			.registerSubtype(TrendSegment.class, TrendSegment.TYPE);
+	private final TypeAdapterFactory drawingStateTypeAdapterFactory = RuntimeTypeAdapterFactory.of(DrawingState.class)
+			.registerSubtype(TrendSegmentState.class, TrendSegmentState.TYPE);
 	private final Gson gson = new GsonBuilder()
-			.registerTypeAdapterFactory(drawingTypeAdapterFactory)
+			.registerTypeAdapterFactory(drawingStateTypeAdapterFactory)
 			.registerTypeAdapterFactory(new PostConstructAdapterFactory())
 			.create();
 	private final JsonConverter jsonConverter = new JsonConverter(gson);
@@ -40,8 +43,8 @@ public class DrawingRepository {
 	}
 
 	@SneakyThrows
-	public DrawingRepository persist(@NonNull final String isin, @NonNull final Set<Drawing> drawings) {
-		if(drawings.isEmpty()) {
+	public DrawingStateRepository persist(@NonNull final String isin, @NonNull final Set<DrawingState> drawings) {
+		if (drawings.isEmpty()) {
 			Files.deleteIfExists(path(isin));
 		} else {
 			new JsonFileStore<>(path(isin), Set.class, jsonConverter).write(drawings);
@@ -49,10 +52,9 @@ public class DrawingRepository {
 		return this;
 	}
 
-	@SuppressWarnings("unchecked")
-	public Set<Drawing> find(@NonNull final String isin) {
-		return (Set<Drawing>) Optional.ofNullable(new JsonFileStore<>(path(isin), JsonConverter.type(HashSet.class, Drawing.class), jsonConverter).read())
-				.orElse(Collections.emptySet());
+	public Set<DrawingState> find(@NonNull final String isin) {
+		final Store<Set<DrawingState>> store = new JsonFileStore<Set<DrawingState>>(path(isin), type, jsonConverter);
+		return Optional.ofNullable(store.read()).orElse(Collections.emptySet());
 	}
 
 }

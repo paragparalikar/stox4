@@ -2,7 +2,7 @@ package com.stox.module.charting;
 
 import com.stox.Context;
 import com.stox.fx.widget.Icon;
-import com.stox.module.charting.drawing.DrawingRepository;
+import com.stox.module.charting.drawing.DrawingStateRepository;
 import com.stox.workbench.module.ModuleView;
 import com.stox.workbench.module.UiModule;
 
@@ -11,11 +11,11 @@ import lombok.NonNull;
 
 public class ChartingModule extends UiModule<ChartingViewState> {
 	
-	private final DrawingRepository drawingRepository;
+	private final DrawingStateRepository drawingStateRepository;
 
 	public ChartingModule(@NonNull final Context context) {
 		super(context);
-		drawingRepository = new DrawingRepository(context.getConfig().getHome());
+		drawingStateRepository = new DrawingStateRepository(context.getConfig().getHome());
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class ChartingModule extends UiModule<ChartingViewState> {
 	@Override
 	protected ModuleView<ChartingViewState> buildModuleView() {
 		final Context context = getContext();
-		return new ChartingView(context.getScheduledExecutorService(), context.getMessageSource(), context.getBarRepository(), drawingRepository);
+		return new ChartingView(context.getScheduledExecutorService(), context.getMessageSource(), context.getBarRepository(), drawingStateRepository);
 	}
 
 }

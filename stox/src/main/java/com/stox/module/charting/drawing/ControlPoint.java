@@ -1,8 +1,5 @@
 package com.stox.module.charting.drawing;
 
-import javax.annotation.PostConstruct;
-
-import com.google.gson.annotations.SerializedName;
 import com.stox.fx.widget.HasNode;
 import com.stox.module.charting.axis.Updatable;
 import com.stox.module.charting.axis.horizontal.XAxis;
@@ -14,26 +11,29 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
+@Accessors(fluent = true)
 public class ControlPoint implements Updatable, EventHandler<MouseEvent>, HasNode<Node> {
 
-	private transient double x, y;
+	private double x, y;
 
-	@SerializedName("location")
+	@Getter
 	private final Location location = new Location();
 	
-	private final transient Circle circle = new Circle(); 
+	private final Circle circle = new Circle(); 
 
 	public ControlPoint() {
-		postConstruct();
-	}
-	
-	@PostConstruct
-	public void postConstruct() {
 		build();
 		bind();
 	}
-
+	
+	public ControlPoint location(final Location location) {
+		this.location.state(location);
+		return this;
+	}
+	
 	private void build() {
 		circle.setRadius(5);
 		circle.setManaged(false);
@@ -46,22 +46,22 @@ public class ControlPoint implements Updatable, EventHandler<MouseEvent>, HasNod
 	}
 
 	public long getDate() {
-		return location.getDate();
+		return location.date();
 	}
 
 	public double getValue() {
-		return location.getValue();
+		return location.value();
 	}
 
 	@Override
 	public void update(final XAxis xAxis, final YAxis yAxis) {
-		location.setDate(xAxis.getDate(circle.getCenterX()));
-		location.setValue(yAxis.getValue(circle.getCenterY()));
+		location.date(xAxis.getDate(circle.getCenterX()));
+		location.value(yAxis.getValue(circle.getCenterY()));
 	}
 
 	public void layoutChartChildren(final XAxis xAxis, final YAxis yAxis) {
-		circle.setCenterX(xAxis.getX(location.getDate()));
-		circle.setCenterY(yAxis.getY(location.getValue()));
+		circle.setCenterX(xAxis.getX(location.date()));
+		circle.setCenterY(yAxis.getY(location.value()));
 	}
 
 	@Override

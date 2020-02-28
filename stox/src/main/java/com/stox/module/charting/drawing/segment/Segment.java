@@ -1,8 +1,7 @@
 package com.stox.module.charting.drawing.segment;
 
-import javax.annotation.PostConstruct;
+import java.util.Optional;
 
-import com.google.gson.annotations.SerializedName;
 import com.stox.fx.fluent.scene.layout.FluentGroup;
 import com.stox.module.charting.axis.horizontal.XAxis;
 import com.stox.module.charting.axis.vertical.YAxis;
@@ -17,26 +16,19 @@ import javafx.scene.shape.Line;
 import lombok.AccessLevel;
 import lombok.Getter;
 
-public abstract class Segment extends AbstractDrawing {
+public abstract class Segment<S extends SegmentState> extends AbstractDrawing<S> {
 
 	private final transient Line line = new Line();
 	
-	@SerializedName("one")
 	@Getter(AccessLevel.PROTECTED)
 	private final ControlPoint one = new ControlPoint();
 	
-	@SerializedName("two")
 	@Getter(AccessLevel.PROTECTED)
 	private final ControlPoint two = new ControlPoint();
 	
-	private final transient Group node = new FluentGroup(line, one.getNode(), two.getNode()).classes("drawing");
+	private final Group node = new FluentGroup(line, one.getNode(), two.getNode()).classes("drawing");
 
 	public Segment() {
-		postConstruct();
-	}
-
-	@PostConstruct
-	public void postConstruct() {
 		node.setManaged(false);
 		node.setAutoSizeChildren(false);
 		bind();
@@ -69,6 +61,19 @@ public abstract class Segment extends AbstractDrawing {
 	public void layoutChartChildren(XAxis xAxis, YAxis yAxis) {
 		one.layoutChartChildren(xAxis, yAxis);
 		two.layoutChartChildren(xAxis, yAxis);
+	}
+	
+	public S fill(S state) {
+		state.one(one.location()).two(two.location());
+		return state;
+	}
+	
+	public Segment<S> state(final S state) {
+		Optional.ofNullable(state).ifPresent(value -> {
+			one.location(state.one());
+			two.location(state.two());
+		});
+		return this;
 	}
 	
 	public abstract void move(final double deltaX, final double deltaY);

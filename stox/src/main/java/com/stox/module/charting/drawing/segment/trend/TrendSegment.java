@@ -3,13 +3,7 @@ package com.stox.module.charting.drawing.segment.trend;
 import com.stox.module.charting.drawing.ControlPoint;
 import com.stox.module.charting.drawing.segment.Segment;
 
-import lombok.Getter;
-
-public class TrendSegment extends Segment {
-	public static final String TYPE = "segment-trend"; 
-	
-	@Getter
-	private String type = TYPE;
+public class TrendSegment extends Segment<TrendSegmentState> {
 
 	@Override
 	public void move(final double xDelta, final double yDelta) {
@@ -25,6 +19,11 @@ public class TrendSegment extends Segment {
 		one.setCenterY(startY);
 		two.setCenterX(endX);
 		two.setCenterY(endY);
+	}
+
+	@Override
+	public TrendSegmentState state() {
+		return fill(new TrendSegmentState());
 	}
 
 }

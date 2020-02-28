@@ -5,7 +5,7 @@ import com.stox.module.charting.drawing.event.DrawingRemoveRequestEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-public abstract class AbstractDrawing implements Drawing {
+public abstract class AbstractDrawing<S extends DrawingState> implements Drawing<S> {
 
 	protected void bind() {
 		getNode().addEventHandler(MouseEvent.MOUSE_PRESSED, this::onMousePressed);
