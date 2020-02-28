@@ -8,10 +8,8 @@ import com.stox.module.charting.axis.vertical.YAxis;
 import com.stox.module.charting.drawing.AbstractDrawing;
 import com.stox.module.charting.drawing.ControlPoint;
 
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,10 +38,6 @@ public abstract class Segment<S extends SegmentState> extends AbstractDrawing<S>
 		line.startYProperty().bind(one.centerYProperty());
 		line.endXProperty().bind(two.centerXProperty());
 		line.endYProperty().bind(two.centerYProperty());
-
-		final EventHandler<MouseEvent> mouseEventHandler = new SegmentMoveMouseEventHandler(this);
-		node.addEventHandler(MouseEvent.MOUSE_PRESSED, mouseEventHandler);
-		node.addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseEventHandler);
 	}
 
 	@Override

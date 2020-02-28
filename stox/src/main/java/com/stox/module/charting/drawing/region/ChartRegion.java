@@ -10,7 +10,6 @@ import com.stox.module.charting.drawing.Drawing;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Rectangle;
 
 public class ChartRegion extends AbstractDrawing<ChartRegionState> {
@@ -31,10 +30,6 @@ public class ChartRegion extends AbstractDrawing<ChartRegionState> {
 		rectangle.yProperty().bind(one.centerYProperty());
 		rectangle.widthProperty().bind(two.centerXProperty().subtract(one.centerXProperty()));
 		rectangle.heightProperty().bind(two.centerYProperty().subtract(one.centerYProperty()));
-
-		final ChartRegionMouseEventHandler chartRegionMouseEventHandler = new ChartRegionMouseEventHandler(this);
-		rectangle.addEventHandler(MouseEvent.MOUSE_PRESSED, chartRegionMouseEventHandler);
-		rectangle.addEventHandler(MouseEvent.MOUSE_DRAGGED, chartRegionMouseEventHandler);
 	}
 
 	@Override

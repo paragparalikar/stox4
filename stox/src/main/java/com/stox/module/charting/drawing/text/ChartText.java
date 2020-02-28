@@ -44,9 +44,6 @@ public class ChartText extends AbstractDrawing<ChartTextState> implements EventH
 		group.setManaged(false);
 		text.setCursor(Cursor.MOVE);
 		text.addEventHandler(MouseEvent.MOUSE_CLICKED, this);
-//		final NodeRelocationDecorator nodeRelocationDecorator = new NodeRelocationDecorator(group);
-//		nodeRelocationDecorator.setMoveCallback(() -> group.fireEvent(new UpdatableRequestEvent(this)));
-//		nodeRelocationDecorator.attach();
 		bind();
 	}
 

@@ -13,5 +13,7 @@ public interface Drawing<S extends DrawingState> extends Updatable, HasNode<Node
 	
 	Drawing<S> state(S state);
 	
+	void move(final double xDelta, final double yDelta);
+	
 	void layoutChartChildren(final XAxis xAxis, final YAxis yAxis);
 }
