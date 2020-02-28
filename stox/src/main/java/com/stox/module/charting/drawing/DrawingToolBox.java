@@ -5,6 +5,7 @@ import com.stox.fx.widget.Ui;
 import com.stox.module.charting.ChartingView;
 import com.stox.module.charting.drawing.segment.horizontal.HorizontalSegmentToggleButton;
 import com.stox.module.charting.drawing.segment.trend.TrendSegmentToggleButton;
+import com.stox.module.charting.drawing.segment.vertical.VerticalSegmentToggleButton;
 import com.stox.module.charting.tools.ChartingToolBox;
 
 import javafx.scene.Node;
@@ -17,7 +18,7 @@ public class DrawingToolBox extends HBox implements ChartingToolBox {
 		getChildren().addAll(
 				new TrendSegmentToggleButton(chartingView),
 				new HorizontalSegmentToggleButton(chartingView),
-//				new VerticalSegmentToggleButton(chartingView),
+				new VerticalSegmentToggleButton(chartingView),
 //				new ChartRegionToggleButton(chartingView),
 //				new ChartTextToggleButton(chartingView),
 				new ClearDrawingsButton(chartingView));
