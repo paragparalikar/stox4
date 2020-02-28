@@ -1,5 +1,7 @@
 package com.stox.module.charting.unit.parent;
 
+import com.stox.fx.widget.NoLayoutPane;
+import com.stox.fx.widget.Ui;
 import com.stox.fx.widget.parent.PolygonParentAdapter;
 import com.stox.module.charting.axis.horizontal.XAxis;
 import com.stox.module.charting.axis.vertical.YAxis;
@@ -25,7 +27,7 @@ public class PolygonUnitParent extends PolygonParentAdapter implements UnitParen
 
 	@Override
 	public void postLayoutChartChildren(final XAxis xAxis, final YAxis yAxis) {
-		final Parent parent = getNode().getParent();
+		final Parent parent = Ui.getParentOfType(NoLayoutPane.class, getNode());
 		final ObservableList<Double> points = getNode().getPoints();
 		if (null != parent && parent instanceof Region && 2 <= points.size()) {
 			final Region region = (Region) parent;
