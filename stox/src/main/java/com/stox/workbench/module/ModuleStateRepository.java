@@ -18,13 +18,13 @@ import lombok.SneakyThrows;
 public class ModuleStateRepository {
 
 	@NonNull
-	private final Path path;
+	private final Path home;
 
 	@NonNull
 	private final JsonConverter jsonConverter;
 
 	private Path resolve(@NonNull final String code) {
-		return path.resolve(Paths.get(code, "state.json"));
+		return home.resolve(Paths.get("workbench",String.join(".", "state", code, "json")));
 	}
 
 	private <T extends ModuleViewState> Store<Set<T>> store(@NonNull final Path path, @NonNull final Type stateType) {

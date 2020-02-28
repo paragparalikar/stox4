@@ -111,7 +111,7 @@ public class SnapPane extends Pane {
 				Math.max(region.minWidth(), region.maxWidth()));
 	}
 
-	private void snap(final IFluentRegion<? extends Region> region) {
+	public void snap(final IFluentRegion<? extends Region> region) {
 		final double x = Math.max(0, snap(region.layoutX(), xSize));
 		final double y = Math.max(0, snap(region.layoutY(), ySize));
 		final double currentWidth = maxWidth(region);

@@ -48,17 +48,11 @@ public abstract class UiModule<T extends ModuleViewState> implements Module {
 	}
 	
 	private void load(@NonNull final Set<T> states) {
-		states.forEach(this::load);
+		states.forEach(this::add);
 	}
 	
-	private void load(@NonNull final T state) {
-		add(moduleView(buildModuleView())).start(state, context.getWorkbench().visualBounds());
-	}
-
 	private void menuItem() {
-		context.getWorkbench().getTitleBar().getMenuBar().newMenuItem(getIcon(), getModuleName(), event -> {
-			add(moduleView(buildModuleView())).start(null, context.getWorkbench().visualBounds());
-		});
+		context.getWorkbench().getTitleBar().getMenuBar().newMenuItem(getIcon(), getModuleName(), event -> add(null));
 	}
 	
 	private ModuleView<T> moduleView(@NonNull final ModuleView<T> view) {
@@ -66,13 +60,13 @@ public abstract class UiModule<T extends ModuleViewState> implements Module {
 		return view;
 	}
 	
-	private ModuleView<T> add(@NonNull final ModuleView<T> moduleView) {
-		views.add(context.getWorkbench().add(moduleView));
+	protected ModuleView<T> add(final T state){
+		final ModuleView<T> moduleView = moduleView(buildModuleView());
+		views.add(context.getWorkbench().add(moduleView, state));
 		return moduleView;
 	}
 	
 	protected ModuleView<T> remove(@NonNull final ModuleView<T> moduleView) {
-		moduleView.stop(null);
 		views.remove(context.getWorkbench().remove(moduleView));
 		return moduleView;
 	}

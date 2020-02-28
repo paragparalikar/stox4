@@ -70,12 +70,15 @@ public class Workbench {
 		return scene;
 	}
 
-	public <T extends ModuleViewState> ModuleView<T> add(@NonNull final ModuleView<T> moduleView) {
+	public <T extends ModuleViewState> ModuleView<T> add(@NonNull final ModuleView<T> moduleView, final T state) {
 		snapPane.add(moduleView.getTitleBar().getNode(), moduleView.getNode());
+		moduleView.start(state, visualBounds());
+		snapPane.snap(moduleView.getNode());
 		return moduleView;
 	}
 
 	public <T extends ModuleViewState> ModuleView<T> remove(@NonNull final ModuleView<T> moduleView) {
+		moduleView.stop(visualBounds());
 		snapPane.getChildren().remove(moduleView.getNode());
 		return moduleView;
 	}
