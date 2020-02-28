@@ -11,11 +11,9 @@ import com.stox.module.charting.drawing.Location;
 import com.stox.module.charting.event.UpdatableRequestEvent;
 
 import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -50,10 +48,10 @@ public class ChartText extends AbstractDrawing<ChartTextState> implements EventH
 	public void edit() {
 		if (null == textField) {
 			textField = new TextField();
+			group.getChildren().setAll(textField);
 			textField.setText(text.getText());
 			textField.addEventHandler(KeyEvent.KEY_PRESSED, textFieldEventHandler);
 			textField.requestFocus();
-			group.getChildren().setAll(textField);
 		}
 	}
 
@@ -81,14 +79,10 @@ public class ChartText extends AbstractDrawing<ChartTextState> implements EventH
 		location.value(yAxis.getValue(group.getLayoutY()));
 	}
 
-	public void move(final double screenX, final double screenY) {
-		final Parent parent = group.getParent();
-		if (null != parent) {
-			final Point2D point = parent.screenToLocal(screenX, screenY);
-			group.setLayoutX(point.getX());
-			group.setLayoutY(point.getY());
-			group.fireEvent(new UpdatableRequestEvent(this));
-		}
+	public void move(final double deltaX, final double deltaY) {
+		group.setLayoutX(group.getLayoutX() + deltaX);
+		group.setLayoutY(group.getLayoutY() + deltaY);
+		group.fireEvent(new UpdatableRequestEvent(this));
 	}
 
 	@Override

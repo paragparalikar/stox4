@@ -7,6 +7,8 @@ import com.stox.module.charting.ModeMouseHandler;
 import com.stox.module.charting.chart.Chart;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
+import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import lombok.RequiredArgsConstructor;
 
@@ -33,7 +35,9 @@ public class ChartTextModeMouseHandler implements ModeMouseHandler, EventHandler
 			chartingView.mouseModeHandler(null);
 			final ChartText chartText = new ChartText();
 			chart.add(chartText);
-			chartText.move(event.getScreenX(), event.getScreenY());
+			final Parent parent = chartText.getNode().getParent();
+			final Point2D endPoint = parent.screenToLocal(event.getScreenX(), event.getScreenY());
+			chartText.move(endPoint.getX(), endPoint.getY());
 			chartText.edit();
 		}
 		Optional.ofNullable(endCallback).ifPresent(Runnable::run);
