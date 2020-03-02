@@ -18,7 +18,7 @@ import com.stox.util.StringUtil;
 
 import javafx.scene.Node;
 
-public class VolumePlot extends DerivativePlot<Double, VolumePlotState> {
+public class VolumePlot extends DerivativePlot<Double> {
 
 	private ValuePlotInfoPane valuePlotInfoPane;
 	private final TransformerYAxis transformerYAxis;
@@ -90,13 +90,4 @@ public class VolumePlot extends DerivativePlot<Double, VolumePlotState> {
 		return Underlay.VOLUME;
 	}
 
-	@Override
-	public VolumePlotState state() {
-		return fill(new VolumePlotState());
-	}
-
-	@Override
-	public void state(VolumePlotState state) {
-		
-	}
 }

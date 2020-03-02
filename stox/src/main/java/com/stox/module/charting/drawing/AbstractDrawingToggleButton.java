@@ -26,7 +26,7 @@ public abstract class AbstractDrawingToggleButton extends FluentToggleButton imp
 		}
 	}
 
-	protected void add(@NonNull final Drawing drawing, final double screenX, final double screenY) {
+	protected void add(@NonNull final Drawing<?> drawing, final double screenX, final double screenY) {
 		final Chart chart = chartingView.chart(screenX, screenY);
 		Optional.ofNullable(chart).ifPresent(c -> chart.add(drawing));
 	}

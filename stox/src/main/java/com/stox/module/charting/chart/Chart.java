@@ -2,9 +2,7 @@ package com.stox.module.charting.chart;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.stox.fx.fluent.scene.layout.FluentBorderPane;
 import com.stox.fx.widget.NoLayoutPane;
@@ -37,7 +35,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(fluent = true)
 @RequiredArgsConstructor
-public abstract class Chart<S extends ChartState> {
+public abstract class Chart {
 	private static final Color[] COLORS = { Color.BLUE, Color.BLUEVIOLET, Color.BROWN, Color.CRIMSON, Color.RED, Color.AQUA, Color.DARKGREEN };
 	
 	private ValueAxis valueAxis;
@@ -50,23 +48,11 @@ public abstract class Chart<S extends ChartState> {
 	private final MutableYAxis yAxis = new MutableYAxis();
 	@Getter(AccessLevel.PACKAGE)
 	private final Set<Drawing<?>> drawings = new HashSet<>();
-	private final Set<DerivativePlot<?,?>> plots = new HashSet<>();
+	private final Set<DerivativePlot<?>> plots = new HashSet<>();
 	private final Pane content = new NoLayoutPane().classes("content");
 	private final FluentBorderPane container = new FluentBorderPane(content).classes("chart").child(plotInfoContainer);
 
-	public abstract S state();
-	
-	public Chart<S> state(S state){
-		Optional.ofNullable(state).ifPresent(value -> yAxis.state(state.mutableYAxisState()));
-		return this;
-	}
-	
-	public S fill(final S state) {
-		state.mutableYAxisState(yAxis.state()).derivativePlotStates(plots.stream().map(Plot::state).collect(Collectors.toSet()));
-		return state;
-	}
-	
-	protected Chart<S> bind() {
+	protected Chart bind() {
 		content.heightProperty().addListener((o, old, value) -> {
 			yAxis.setHeight(value.doubleValue());
 			updateValueBounds();
@@ -77,17 +63,17 @@ public abstract class Chart<S extends ChartState> {
 		return this;
 	}
 	
-	public Chart<S> valueAxis(@NonNull ValueAxis valueAxis) {
+	public Chart valueAxis(@NonNull ValueAxis valueAxis) {
 		container.right(this.valueAxis = valueAxis);
 		return this;
 	}
 	
-	public Chart<S> load(final Scrip scrip, final List<Bar> bars) {
+	public Chart load(final Scrip scrip, final List<Bar> bars) {
 		plots.forEach(plot -> plot.load(bars));
 		return this;
 	}
 
-	public Chart<S> unload(final Scrip scrip) {
+	public Chart unload(final Scrip scrip) {
 		return this;
 	}
 
@@ -95,18 +81,18 @@ public abstract class Chart<S extends ChartState> {
 		return null == scrip ? null : scrip.getIsin();
 	}
 
-	public Chart<S> showIndexInfo(final int index) {
+	public Chart showIndexInfo(final int index) {
 		plots.forEach(plot -> plot.showIndexInfo(index));
 		return this;
 	}
 
-	public Chart<S> reset() {
+	public Chart reset() {
 		plots.forEach(Plot::reset);
 		clearDrawings();
 		return this;
 	}
 	
-	public boolean contains(final Plot<?,?> plot) {
+	public boolean contains(final Plot<?> plot) {
 		return plots.contains(plot);
 	}
 
@@ -114,7 +100,7 @@ public abstract class Chart<S extends ChartState> {
 		return plots.isEmpty();
 	}
 
-	public Chart<S> add(final DerivativePlot<?,?> plot) {
+	public Chart add(final DerivativePlot<?> plot) {
 		if(plots.add(plot)) {
 			plot.colorProperty().set(COLORS[plots.size()]);
 			content.getChildren().add(plot.container());
@@ -123,7 +109,7 @@ public abstract class Chart<S extends ChartState> {
 		return this;
 	}
 
-	private Chart<S> addPlotInfoPane(final DerivativePlot<?,?> plot) {
+	private Chart addPlotInfoPane(final DerivativePlot<?> plot) {
 		final PlotInfoPane plotInfoPane = plot.plotInfoPane();
 		plotInfoPane.addVisibilityEventHandler(event -> plot.container().setVisible(!plot.container().isVisible()));
 		plotInfoContainer.getChildren().add(plotInfoPane.getNode());
@@ -131,7 +117,7 @@ public abstract class Chart<S extends ChartState> {
 		return this;
 	}
 
-	public Chart<S> remove(final DerivativePlot<?,?> plot) {
+	public Chart remove(final DerivativePlot<?> plot) {
 		plots.remove(plot);
 		content.getChildren().remove(plot.container());
 		plotInfoContainer.getChildren().remove(plot.plotInfoPane().getNode());
@@ -139,27 +125,27 @@ public abstract class Chart<S extends ChartState> {
 		return this;
 	}
 	
-	public Chart<S> add(final Drawing<?> drawing) {
+	public Chart add(final Drawing<?> drawing) {
 		if (drawings.add(drawing)) {
 			Ui.fx(() -> content.getChildren().add(drawing.getNode()));
 		}
 		return this;
 	}
 
-	public Chart<S> remove(final Drawing<?> drawing) {
+	public Chart remove(final Drawing<?> drawing) {
 		drawings.remove(drawing);
 		content.getChildren().remove(drawing.getNode());
 		return this;
 	}
 	
-	public Chart<S> clearDrawings() {
+	public Chart clearDrawings() {
 		while(!drawings.isEmpty()) {
 			remove(drawings.iterator().next());
 		}
 		return this;
 	}
 
-	public Chart<S> updateValueBounds() {
+	public Chart updateValueBounds() {
 		yAxis.reset();
 		final int start = xAxis.getClippedStartIndex(), end = xAxis.getClippedEndIndex();
 		plots.forEach(plot -> {
@@ -170,7 +156,7 @@ public abstract class Chart<S extends ChartState> {
 		return this;
 	}
 
-	public Chart<S> layoutChartChildren() {
+	public Chart layoutChartChildren() {
 		synchronized (volumeYAxis) {
 			if (0 < content.getWidth() || 0 < content.getHeight()) {
 				volumeYAxis.setDelegate(yAxis);

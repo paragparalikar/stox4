@@ -15,9 +15,9 @@ public class ConfigChangedEvent extends Event {
 
 	public static final EventType<ConfigChangedEvent> TYPE = new EventType<>("ConfigChangedEvent");
 	
-	private final DerivativePlot<?,?> plot;
+	private final DerivativePlot<?> plot;
 	
-	public ConfigChangedEvent(@NonNull final DerivativePlot<?,?> plot) {
+	public ConfigChangedEvent(@NonNull final DerivativePlot<?> plot) {
 		super(TYPE);
 		this.plot = plot;
 	}

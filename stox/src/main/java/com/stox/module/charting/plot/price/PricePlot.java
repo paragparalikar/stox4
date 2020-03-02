@@ -1,7 +1,5 @@
 package com.stox.module.charting.plot.price;
 
-import java.util.Optional;
-
 import com.stox.module.charting.Configuration;
 import com.stox.module.charting.plot.Plot;
 import com.stox.module.charting.unit.Unit;
@@ -15,7 +13,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(fluent = true)
-public class PricePlot<S extends PricePlotState> extends Plot<Bar, S> {
+public class PricePlot extends Plot<Bar> {
 	
 	private Scrip scrip;
 
@@ -41,24 +39,6 @@ public class PricePlot<S extends PricePlotState> extends Plot<Bar, S> {
 	@Override
 	public double min(Bar bar) {
 		return bar.getLow();
-	}
-	
-	@Override
-	protected S fill(S state) {
-		super.fill(state);
-		Optional.ofNullable(scrip).ifPresent(value -> state.isin(scrip.getIsin()));
-		return state;
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public S state() {
-		return fill((S) new PricePlotState());
-	}
-
-	@Override
-	public void state(S state) {
-		
 	}
 
 }
