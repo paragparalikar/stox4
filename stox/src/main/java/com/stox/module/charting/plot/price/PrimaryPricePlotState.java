@@ -11,8 +11,13 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 @EqualsAndHashCode(callSuper = true)
 public class PrimaryPricePlotState extends PricePlotState {
+	public static final String TYPE = "primary-price";
 
 	@SerializedName("priceUnitType")
 	private PriceUnitType priceUnitType;
+	
+	public PrimaryPricePlotState() {
+		super(TYPE);
+	}
 	
 }

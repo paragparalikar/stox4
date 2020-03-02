@@ -30,7 +30,7 @@ import com.stox.module.core.persistence.BarRepository;
 import lombok.Builder;
 import lombok.NonNull;
 
-public class PrimaryChart extends Chart {
+public class PrimaryChart extends Chart<PrimaryChartState> {
 
 	private final MutableXAxis xAxis;
 	private final DateTimeAxis dateTimeAxis;
@@ -58,6 +58,18 @@ public class PrimaryChart extends Chart {
 		primaryPricePlot.container().toFront();
 		bind();
 	}
+	
+	@Override
+	public PrimaryChartState state() {
+		return fill(new PrimaryChartState()).primaryPricePlotState(primaryPricePlot.state());
+	}
+	
+	@Override
+	public PrimaryChart state(final PrimaryChartState state) {
+		super.state(state);
+		Optional.ofNullable(state).ifPresent(value -> primaryPricePlot.state(state.primaryPricePlotState()));
+		return this;
+	}
 
 	public void unitType(final PriceUnitType unitType) {
 		primaryPricePlot.setPriceUnitType(unitType);
@@ -72,7 +84,7 @@ public class PrimaryChart extends Chart {
 	}
 
 	@Override
-	public Chart unload(Scrip scrip) {
+	public Chart<PrimaryChartState> unload(Scrip scrip) {
 		final Set<DrawingState> drawingStates = drawings().stream().map(Drawing::state).collect(Collectors.toSet());
 		Optional.ofNullable(scrip).ifPresent(s -> drawingStateRepository.persist(scrip.getIsin(), drawingStates));
 		return super.unload(scrip);

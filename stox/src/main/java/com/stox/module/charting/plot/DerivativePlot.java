@@ -12,14 +12,25 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(fluent = true)
 @EqualsAndHashCode(callSuper = true)
-public abstract class DerivativePlot<T> extends Plot<T> {
+public abstract class DerivativePlot<T, S extends DerivativePlotState> extends Plot<T, S> {
 	
 	private Underlay underlay = Underlay.NONE;
+	
+	public abstract void load(final List<Bar> bars);
 
 	public DerivativePlot(Configuration configuration) {
 		super(configuration);
 	}
 
-	public abstract void load(final List<Bar> bars);
+	@Override
+	public void state(S state) {
+		this.underlay = state.underlay();
+	}
+	
+	@Override
+	protected S fill(S state) {
+		super.fill(state).underlay(underlay);
+		return state;
+	}
 
 }

@@ -4,10 +4,12 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import com.stox.fx.fluent.beans.binding.FluentStringBinding;
 import com.stox.fx.fluent.scene.control.FluentSplitPane;
@@ -90,11 +92,35 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 	}
 
 	@Override
-	public ModuleView<ChartingViewState> start(ChartingViewState state, Bounds bounds) {
+	public ModuleView<ChartingViewState> start(final ChartingViewState state, final Bounds bounds) {
 		super.start(state, bounds);
 		mouseModeHandler(panAndZoomMouseHandler);
-		Platform.runLater(() -> linkChanged(null, titleBar.getLinkButton().getLink()));
+		Platform.runLater(() -> {
+			linkChanged(null, titleBar.getLinkButton().getLink());
+			Optional.ofNullable(state).ifPresent(this::state);
+		});
 		return this;
+	}
+
+	private void state(final ChartingViewState state) {
+		this.to = state.to();
+		this.barSpan = Optional.ofNullable(state.barSpan()).orElse(BarSpan.D);
+		xAxis.state(state.mutableXAxisState());
+		primaryChart.state(state.primaryChartState());
+		Optional.ofNullable(state.secondaryChartStates()).ifPresent(states -> {
+			states.forEach(secondaryChartState -> {
+				final SecondaryChart secondaryChart = new SecondaryChart(configuration, xAxis, volumeYAxis);
+				secondaryCharts.add(secondaryChart);
+				splitPane.getItems().add(secondaryChart.container());
+				secondaryChart.state(secondaryChartState);
+				secondaryChartState.derivativePlotStates().forEach(plotState -> {
+					Optional.ofNullable(plotState.plot(configuration)).ifPresent(plot -> {
+						add(secondaryChart, (DerivativePlot<?, ?>) plot);
+					});
+				});
+			});
+			relayoutCharts();
+		});
 	}
 
 	@Override
@@ -151,7 +177,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		}
 	}
 
-	private DerivativePlot<?> remove(final DerivativePlot<?> plot) {
+	private DerivativePlot<?, ?> remove(final DerivativePlot<?, ?> plot) {
 		primaryChart.remove(plot);
 		secondaryCharts.forEach(chart -> chart.remove(plot));
 		removeEmptyCharts();
@@ -170,14 +196,19 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		}
 	}
 
-	public DerivativePlot<?> add(final DerivativePlot<?> plot) {
+	public Chart<?> add(final DerivativePlot<?, ?> plot) {
 		if (Underlay.PRICE.equals(plot.underlay())) {
-			add(primaryChart, plot);
+			return add(primaryChart, plot);
 		} else if (Underlay.VOLUME.equals(plot.underlay())) {
 			if (primaryChart.contains(volumePlot)) {
-				add(primaryChart, plot);
+				return add(primaryChart, plot);
 			} else {
-				secondaryCharts.stream().filter(chart -> chart.contains(volumePlot)).findFirst().ifPresent(chart -> add(chart, plot));
+				return secondaryCharts.stream()
+						.filter(chart -> chart.contains(volumePlot))
+						.findFirst()
+						.filter(Objects::nonNull)
+						.map(chart -> add(chart, plot))
+						.orElse(null);
 			}
 		} else {
 			final SecondaryChart secondaryChart = new SecondaryChart(configuration, xAxis, volumeYAxis);
@@ -185,18 +216,19 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 			splitPane.getItems().add(secondaryChart.container());
 			add(secondaryChart, plot);
 			relayoutCharts();
+			return secondaryChart;
 		}
-		return plot;
 	}
 
-	private void add(Chart chart, DerivativePlot<?> plot) {
+	private Chart<?> add(Chart<?> chart, DerivativePlot<?, ?> plot) {
 		chart.add(plot);
 		plot.load(primaryChart.bars());
 		chart.updateValueBounds();
 		chart.layoutChartChildren();
+		return primaryChart;
 	}
 
-	public void load(final DerivativePlot<?> plot) {
+	public void load(final DerivativePlot<?, ?> plot) {
 		plot.load(primaryChart.bars());
 	}
 
@@ -268,19 +300,19 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		}
 	}
 
-	private void configChanged(final DerivativePlot<?> plot) {
+	private void configChanged(final DerivativePlot<?, ?> plot) {
 		plot.load(primaryChart.bars());
 		plot.updateValueBounds(xAxis.getClippedStartIndex(), xAxis.getClippedEndIndex());
 		Optional.ofNullable(chart(plot)).ifPresent(Chart::layoutChartChildren);
 	}
 
-	public Chart chart(final double screenX, final double screenY) {
+	public Chart<?> chart(final double screenX, final double screenY) {
 		final Point2D point = new Point2D(screenX, screenY);
 		return primaryChart.container().contains(primaryChart.container().screenToLocal(point)) ? primaryChart
 				: secondaryCharts.stream().filter(chart -> chart.container().contains(chart.container().screenToLocal(point))).findFirst().orElse(null);
 	}
 
-	private Chart chart(DerivativePlot<?> plot) {
+	private Chart<?> chart(DerivativePlot<?, ?> plot) {
 		if (primaryChart.contains(plot)) {
 			return primaryChart;
 		}
@@ -324,8 +356,15 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 
 	@Override
 	public ChartingViewState stop(Bounds bounds) {
+		final ChartingViewState chartingViewState = new ChartingViewState()
+				.to(to)
+				.barSpan(barSpan)
+				.mutableXAxisState(xAxis.state())
+				.primaryChartState(primaryChart.state())
+				.secondaryChartStates(secondaryCharts.stream().map(Chart::state)
+				.collect(Collectors.toSet()));
 		unload();
-		return super.stop(new ChartingViewState(), bounds);
+		return super.stop(chartingViewState, bounds);
 	}
 
 }

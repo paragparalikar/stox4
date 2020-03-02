@@ -20,7 +20,7 @@ import lombok.NonNull;
 import lombok.experimental.Accessors;
 
 @Accessors(fluent = true)
-public class PrimaryPricePlot extends PricePlot {
+public class PrimaryPricePlot extends PricePlot<PrimaryPricePlotState> {
 
 	private UnitParent<?> parent;
 	@Getter private PriceUnitType priceUnitType;
@@ -33,6 +33,22 @@ public class PrimaryPricePlot extends PricePlot {
 		this.barInfoPanel = barInfoPanel;
 		parent = new GroupUnitParent(container());
 		priceUnitFactory = new PriceUnitFactory();
+	}
+	
+	@Override
+	protected PrimaryPricePlotState fill(PrimaryPricePlotState state) {
+		return super.fill(state).priceUnitType(priceUnitType);
+	}
+	
+	@Override
+	public PrimaryPricePlotState state() {
+		return fill(new PrimaryPricePlotState());
+	}
+	
+	@Override
+	public void state(PrimaryPricePlotState state) {
+		super.state(state);
+		setPriceUnitType(state.priceUnitType());
 	}
 
 	@Override

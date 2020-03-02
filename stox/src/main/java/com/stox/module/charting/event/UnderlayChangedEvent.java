@@ -15,9 +15,9 @@ public class UnderlayChangedEvent extends Event {
 
 	public static final EventType<UnderlayChangedEvent> TYPE = new EventType<>("UnderlayChangedEvent");
 
-	private final DerivativePlot<?> plot;
+	private final DerivativePlot<?,?> plot;
 	
-	public UnderlayChangedEvent(@NonNull final DerivativePlot<?> plot) {
+	public UnderlayChangedEvent(@NonNull final DerivativePlot<?,?> plot) {
 		super(TYPE);
 		this.plot = plot;
 	}

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.google.gson.annotations.SerializedName;
+import com.stox.module.charting.axis.horizontal.MutableXAxisState;
 import com.stox.module.charting.chart.PrimaryChartState;
 import com.stox.module.charting.chart.SecondaryChartState;
 import com.stox.module.core.model.BarSpan;
@@ -23,6 +24,9 @@ public class ChartingViewState extends ModuleViewState {
 	
 	@SerializedName("barSpan")
 	private BarSpan barSpan;
+	
+	@SerializedName("mutableXAxisState")
+	private MutableXAxisState mutableXAxisState;
 	
 	@SerializedName("primaryChartState")
 	private PrimaryChartState primaryChartState;

@@ -1,6 +1,7 @@
 package com.stox.module.charting.axis.horizontal;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.stox.module.core.model.Bar;
 import com.stox.util.MathUtil;
@@ -15,9 +16,20 @@ public class MutableXAxis implements XAxis {
 	private List<Bar> bars;
 	private double unitWidth = 10, maxUnitWidth = 50, minUnitWidth = 1, pivotX, width;
 	
+	public MutableXAxis state(final MutableXAxisState state) {
+		Optional.ofNullable(state).ifPresent(value -> {
+			this.unitWidth = state.unitWidth();
+			this.maxUnitWidth = state.maxUnitWidth();
+			this.minUnitWidth = state.minUnitWidth();
+			this.pivotX = state.pivotX();
+			this.width = state.width();
+		});
+		return this;
+	}
+	
 	public MutableXAxisState state() {
 		return new MutableXAxisState()
-				.unitWidth(maxUnitWidth)
+				.unitWidth(unitWidth)
 				.maxUnitWidth(maxUnitWidth)
 				.minUnitWidth(minUnitWidth)
 				.pivotX(pivotX)

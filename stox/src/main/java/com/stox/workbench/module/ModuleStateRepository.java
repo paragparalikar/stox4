@@ -1,6 +1,7 @@
 package com.stox.workbench.module;
 
 import java.lang.reflect.Type;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
@@ -33,9 +34,14 @@ public class ModuleStateRepository {
 
 	@SneakyThrows
 	public <T extends ModuleViewState> ModuleStateRepository write(@NonNull final String code, @NonNull final Set<T> states) {
-		final Type type = states.isEmpty() ? Object.class : states.iterator().next().getClass();
-		final Store<Set<T>> store = store(resolve(code), type);
-		store.write(states);
+		final Path path = resolve(code);
+		if(states.isEmpty()) {
+			Files.deleteIfExists(path);
+		} else {
+			final Type type = states.isEmpty() ? Object.class : states.iterator().next().getClass();
+			final Store<Set<T>> store = store(resolve(code), type);
+			store.write(states);
+		}
 		return this;
 	}
 

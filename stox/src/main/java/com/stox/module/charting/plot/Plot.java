@@ -23,7 +23,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(fluent = true)
 @RequiredArgsConstructor
-public abstract class Plot<T>{
+public abstract class Plot<T, S extends PlotState>{
 
 	private final Configuration configuration;
 	private final List<T> models = new ArrayList<>();
@@ -39,13 +39,21 @@ public abstract class Plot<T>{
 
 	public abstract double max(final T model);
 	
+	public abstract S state();
+	
+	public abstract void state(S state);
+	
 	public abstract void showIndexInfo(final int index);
+	
+	protected S fill(final S state) {
+		return state;
+	}
 	
 	protected PlotInfoPane buildPlotInfoPane() {
 		return new SimplePlotInfoPane();
 	}
 	
-	public Plot<T> updateValueBounds(final int start, final int end) {
+	public Plot<T, S> updateValueBounds(final int start, final int end) {
 		synchronized(models){
 			min = Double.MAX_VALUE;
 			max = Double.MIN_VALUE;
@@ -60,13 +68,13 @@ public abstract class Plot<T>{
 		}
 	}
 
-	protected synchronized Plot<T> ensureUnitsSize(final int startIndex, final int endIndex) {
+	protected synchronized Plot<T, S> ensureUnitsSize(final int startIndex, final int endIndex) {
 		final int delta = Math.max(0, endIndex) - Math.max(0, startIndex) + 1;
 		Attachable.ensureSize(units, delta, this::unit);
 		return this;
 	}
 
-	public Plot<T> reset() {
+	public Plot<T, S> reset() {
 		synchronized (models) {
 			models.clear();
 			showIndexInfo(-1);
@@ -74,7 +82,7 @@ public abstract class Plot<T>{
 		}
 	}
 
-	public Plot<T> layoutChartChildren(final XAxis xAxis, final YAxis yAxis) {
+	public Plot<T, S> layoutChartChildren(final XAxis xAxis, final YAxis yAxis) {
 		synchronized (models) {
 			if (!models.isEmpty()) {
 				int unitIndex = 0;
@@ -94,7 +102,7 @@ public abstract class Plot<T>{
 		}
 	}
 
-	protected Plot<T> layoutUnit(final Unit<T> unit, final int index, final T model, final T previousModel, final XAxis xAxis, final YAxis yAxis) {
+	protected Plot<T, S> layoutUnit(final Unit<T> unit, final int index, final T model, final T previousModel, final XAxis xAxis, final YAxis yAxis) {
 		unit.update(index, model, previousModel, xAxis, yAxis);
 		return this;
 	}

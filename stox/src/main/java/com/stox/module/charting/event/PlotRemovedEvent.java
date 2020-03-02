@@ -15,9 +15,9 @@ public class PlotRemovedEvent extends Event {
 
 	public static final EventType<PlotRemovedEvent> TYPE = new EventType<>("PlotRemovedEvent");
 
-	private final DerivativePlot<?> plot;
+	private final DerivativePlot<?,?> plot;
 
-	public PlotRemovedEvent(@NonNull final DerivativePlot<?> plot) {
+	public PlotRemovedEvent(@NonNull final DerivativePlot<?,?> plot) {
 		super(TYPE);
 		this.plot = plot;
 	}

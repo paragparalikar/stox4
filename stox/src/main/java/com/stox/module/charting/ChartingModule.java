@@ -1,8 +1,27 @@
 package com.stox.module.charting;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import com.stox.Context;
 import com.stox.fx.widget.Icon;
+import com.stox.module.charting.chart.ChartState;
+import com.stox.module.charting.chart.PrimaryChartState;
+import com.stox.module.charting.chart.SecondaryChartState;
+import com.stox.module.charting.drawing.DrawingState;
 import com.stox.module.charting.drawing.DrawingStateRepository;
+import com.stox.module.charting.drawing.region.ChartRegionState;
+import com.stox.module.charting.drawing.segment.horizontal.HorizontalSegmentState;
+import com.stox.module.charting.drawing.segment.trend.TrendSegmentState;
+import com.stox.module.charting.drawing.segment.vertical.VerticalSegmentState;
+import com.stox.module.charting.drawing.text.ChartTextState;
+import com.stox.module.charting.plot.DerivativePlotState;
+import com.stox.module.charting.plot.PlotState;
+import com.stox.module.charting.plot.VolumePlotState;
+import com.stox.module.charting.plot.price.PricePlotState;
+import com.stox.module.charting.plot.price.PrimaryPricePlotState;
+import com.stox.util.JsonConverter;
 import com.stox.workbench.module.ModuleView;
 import com.stox.workbench.module.UiModule;
 
@@ -11,11 +30,31 @@ import lombok.NonNull;
 
 public class ChartingModule extends UiModule<ChartingViewState> {
 	
+	private final TypeAdapterFactory plotAdapterFactory = RuntimeTypeAdapterFactory.of(PlotState.class)
+			.registerSubtype(DerivativePlotState.class, DerivativePlotState.TYPE)
+			.registerSubtype(VolumePlotState.class, VolumePlotState.TYPE)
+			.registerSubtype(PricePlotState.class, PricePlotState.TYPE)
+			.registerSubtype(PrimaryPricePlotState.class, PrimaryPricePlotState.TYPE);
+	private final TypeAdapterFactory chartAdapterFactory = RuntimeTypeAdapterFactory.of(ChartState.class)
+			.registerSubtype(SecondaryChartState.class, SecondaryChartState.TYPE)
+			.registerSubtype(PrimaryChartState.class, PrimaryChartState.TYPE);
+	private final TypeAdapterFactory drawingStateTypeAdapterFactory = RuntimeTypeAdapterFactory.of(DrawingState.class)
+			.registerSubtype(TrendSegmentState.class, TrendSegmentState.TYPE)
+			.registerSubtype(HorizontalSegmentState.class, HorizontalSegmentState.TYPE)
+			.registerSubtype(VerticalSegmentState.class, VerticalSegmentState.TYPE)
+			.registerSubtype(ChartRegionState.class, ChartRegionState.TYPE)
+			.registerSubtype(ChartTextState.class, ChartTextState.TYPE);
+	private final Gson gson = new GsonBuilder()
+			.registerTypeAdapterFactory(chartAdapterFactory)
+			.registerTypeAdapterFactory(drawingStateTypeAdapterFactory)
+			.registerTypeAdapterFactory(plotAdapterFactory)
+			.create();
+	private final JsonConverter jsonConverter = new JsonConverter(gson);
 	private final DrawingStateRepository drawingStateRepository;
-
+	
 	public ChartingModule(@NonNull final Context context) {
 		super(context);
-		drawingStateRepository = new DrawingStateRepository(context.getConfig().getHome());
+		drawingStateRepository = new DrawingStateRepository(context.getConfig().getHome(), jsonConverter);
 	}
 
 	@Override

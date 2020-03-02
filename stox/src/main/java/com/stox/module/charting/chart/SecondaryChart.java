@@ -5,7 +5,7 @@ import com.stox.module.charting.axis.horizontal.XAxis;
 import com.stox.module.charting.axis.vertical.DelegatingYAxis;
 import com.stox.module.charting.axis.vertical.ValueAxis;
 
-public class SecondaryChart extends Chart {
+public class SecondaryChart extends Chart<SecondaryChartState> {
 
 	public SecondaryChart(Configuration configuration, XAxis xAxis, final DelegatingYAxis volumeYAxis) {
 		super(xAxis, configuration, volumeYAxis);
@@ -13,6 +13,11 @@ public class SecondaryChart extends Chart {
 		yAxis().setTop(0);
 		yAxis().setBottom(0);
 		bind();
+	}
+
+	@Override
+	public SecondaryChartState state() {
+		return fill(new SecondaryChartState());
 	}
 
 }

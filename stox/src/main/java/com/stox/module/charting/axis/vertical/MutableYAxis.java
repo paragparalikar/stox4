@@ -1,5 +1,7 @@
 package com.stox.module.charting.axis.vertical;
 
+import java.util.Optional;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -31,6 +33,18 @@ public class MutableYAxis implements YAxis {
 
 	public double getMinY() {
 		return height - top;
+	}
+	
+	public MutableYAxis state(final MutableYAxisState state) {
+		Optional.ofNullable(state).ifPresent(value -> {
+			this.semilog = state.semilog();
+			this.top = state.top();
+			this.bottom = state.bottom();
+			this.height = state.height();
+			this.min = state.min();
+			this.max = state.max();
+		});
+		return this;
 	}
 	
 	public MutableYAxisState state() {

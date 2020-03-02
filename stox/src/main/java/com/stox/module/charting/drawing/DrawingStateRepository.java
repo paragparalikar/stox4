@@ -9,16 +9,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapterFactory;
-import com.google.gson.typeadapters.PostConstructAdapterFactory;
-import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
-import com.stox.module.charting.drawing.region.ChartRegionState;
-import com.stox.module.charting.drawing.segment.horizontal.HorizontalSegmentState;
-import com.stox.module.charting.drawing.segment.trend.TrendSegmentState;
-import com.stox.module.charting.drawing.segment.vertical.VerticalSegmentState;
-import com.stox.module.charting.drawing.text.ChartTextState;
 import com.stox.persistence.store.JsonFileStore;
 import com.stox.persistence.store.Store;
 import com.stox.util.JsonConverter;
@@ -32,19 +22,8 @@ public class DrawingStateRepository {
 
 	@NonNull
 	private final Path home;
+	private final JsonConverter jsonConverter;
 	private final Type type = JsonConverter.type(HashSet.class, DrawingState.class);
-
-	private final TypeAdapterFactory drawingStateTypeAdapterFactory = RuntimeTypeAdapterFactory.of(DrawingState.class)
-			.registerSubtype(TrendSegmentState.class, TrendSegmentState.TYPE)
-			.registerSubtype(HorizontalSegmentState.class, HorizontalSegmentState.TYPE)
-			.registerSubtype(VerticalSegmentState.class, VerticalSegmentState.TYPE)
-			.registerSubtype(ChartRegionState.class, ChartRegionState.TYPE)
-			.registerSubtype(ChartTextState.class, ChartTextState.TYPE);
-	private final Gson gson = new GsonBuilder()
-			.registerTypeAdapterFactory(drawingStateTypeAdapterFactory)
-			.registerTypeAdapterFactory(new PostConstructAdapterFactory())
-			.create();
-	private final JsonConverter jsonConverter = new JsonConverter(gson);
 
 	private Path path(final String isin) {
 		return home.resolve(Paths.get("charting", "drawings", isin + ".json"));
