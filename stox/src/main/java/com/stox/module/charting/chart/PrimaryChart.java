@@ -1,6 +1,8 @@
 package com.stox.module.charting.chart;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -68,6 +70,10 @@ public class PrimaryChart extends Chart {
 	}
 
 	public void load(final long to, final BarSpan barSpan, final XAxis xAxis) {
+		final Scrip scrip = scrip();
+		if(drawings().isEmpty() && Objects.nonNull(scrip)) {
+			drawingStateRepository.find(scrip.getIsin()).stream().map(DrawingState::drawing).forEach(this::add);
+		}
 		primaryPricePlot.container().fireEvent(new DataRequestEvent(to, barSpan, xAxis));
 	}
 
@@ -84,6 +90,12 @@ public class PrimaryChart extends Chart {
 		primaryPricePlot.showIndexInfo(index);
 		return this;
 	}
+	
+	@Override
+	public Chart clearDrawings() {
+		Optional.ofNullable(scrip()).ifPresent(scrip -> drawingStateRepository.persist(scrip.getIsin(), Collections.emptySet()));
+		return super.clearDrawings();
+	}
 
 	@Override
 	protected PrimaryChart bind() {
@@ -99,7 +111,6 @@ public class PrimaryChart extends Chart {
 
 	public PrimaryChart scrip(final Scrip scrip) {
 		primaryPricePlot.scrip(scrip);
-		Optional.ofNullable(scrip).ifPresent(s -> drawingStateRepository.find(scrip.getIsin()).stream().map(DrawingState::drawing).forEach(this::add));
 		return this;
 	}
 
