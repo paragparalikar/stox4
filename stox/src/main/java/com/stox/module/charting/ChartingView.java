@@ -247,7 +247,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		Optional.ofNullable(linkState).ifPresent(s -> {
 			unload();
 			reset();
-			this.to = linkState.getLong(CoreConstant.KEY_TO);
+			this.to = linkState.getLong(CoreConstant.KEY_TO, 0l);
 			primaryChart.scrip(scripRepository.find(linkState.get(CoreConstant.KEY_ISIN)));
 			barSpan = Optional.ofNullable(BarSpan.getByShortName(linkState.get(CoreConstant.KEY_BARSPAN))).orElse(barSpan);
 			load();

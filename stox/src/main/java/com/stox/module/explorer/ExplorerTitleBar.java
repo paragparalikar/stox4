@@ -24,26 +24,32 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 	private final SearchBox<Scrip> searchBox;
 	private final SearchableListView<Scrip> listView;
 	private final LinkButton linkButton = new LinkButton();
+	private final Consumer<Exchange> exchangeSelectionConsumer;
 	private final FluentComboBox<Exchange> exchangeComboBox = new FluentComboBox<Exchange>().items(Exchange.values()).classes("primary", "inverted").fullWidth();
 
 	public ExplorerTitleBar(@NonNull final SearchableListView<Scrip> listView, @NonNull final Consumer<Exchange> consumer) {
 		this.listView = listView;
+		this.exchangeSelectionConsumer = consumer;
 		this.searchBox = new SearchBox<Scrip>(listView, this::test);
 		getTitleBar().append(Side.RIGHT, linkButton);
 		getTitleBar().append(Side.BOTTOM, exchangeComboBox);
 		searchToggle = appendToggleNode(Icon.SEARCH, searchBox.getNode());
-		exchangeComboBox.selectionModel().selectedItemProperty().addListener((o, old, exchange) -> consumer.accept(exchange));
-		listView.getSelectionModel().selectedItemProperty().addListener(
-				(o, old, scrip) -> linkButton.getLink().setState(LinkState.builder()
-						.put(CoreConstant.KEY_TO, String.valueOf(0))
-						.put(CoreConstant.KEY_ISIN, null == scrip ? null : scrip.getIsin())
-						.build()));
 	}
 
 	Exchange exchange() {
 		return exchangeComboBox.value();
 	}
 
+	ExplorerTitleBar bind() {
+		exchangeComboBox.selectionModel().selectedItemProperty().addListener((o, old, exchange) -> exchangeSelectionConsumer.accept(exchange));
+		listView.getSelectionModel().selectedItemProperty().addListener(
+				(o, old, scrip) -> linkButton.getLink().setState(LinkState.builder()
+						.put(CoreConstant.KEY_TO, String.valueOf(0))
+						.put(CoreConstant.KEY_ISIN, null == scrip ? null : scrip.getIsin())
+						.build()));
+		return this;
+	}
+	
 	ExplorerViewState state() {
 		final Scrip scrip = listView.getSelectionModel().getSelectedItem();
 		return new ExplorerViewState()

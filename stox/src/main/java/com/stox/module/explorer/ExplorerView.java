@@ -45,8 +45,8 @@ public class ExplorerView extends ModuleView<ExplorerViewState> {
 	@Override
 	public ExplorerView start(ExplorerViewState state, Bounds bounds) {
 		super.start(state, bounds);
-		titleBar.state(state);
 		eventBus.subscribe(ScripsChangedEvent.class, scripsChangedHandler);
+		load(titleBar.state(state).bind().exchange());
 		return this;
 	}
 	

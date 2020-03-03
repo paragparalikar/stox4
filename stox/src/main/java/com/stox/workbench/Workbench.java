@@ -1,5 +1,8 @@
 package com.stox.workbench;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import com.stox.fx.fluent.scene.layout.FluentBorderPane;
@@ -8,6 +11,8 @@ import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.SnapPane;
 import com.stox.fx.widget.handler.MovableMouseEventHandler;
 import com.stox.fx.widget.handler.ResizeMouseEventHandler;
+import com.stox.workbench.link.Link;
+import com.stox.workbench.link.LinkState;
 import com.stox.workbench.module.ModuleView;
 import com.stox.workbench.module.ModuleViewState;
 
@@ -45,12 +50,15 @@ public class Workbench {
 	}
 
 	public WorkbenchState state() {
+		final Map<String,LinkState> linkStates = new HashMap<>();
+		Arrays.stream(Link.values()).forEach(link -> linkStates.put(link.getColor().toString(), link.getState()));
 		return new WorkbenchState()
 				.x(stage.getX())
 				.y(stage.getY())
 				.width(stage.getWidth())
 				.height(stage.getHeight())
-				.maximized(titleBar.maximized());
+				.maximized(titleBar.maximized())
+				.linkStates(linkStates);
 	}
 
 	public Workbench state(final WorkbenchState state) {

@@ -1,11 +1,14 @@
 package com.stox.workbench;
 
+import java.util.Collections;
+import java.util.Optional;
+
 import com.stox.fx.fluent.scene.layout.FluentHBox;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.HasNode;
 import com.stox.fx.widget.Spacer;
 import com.stox.fx.widget.TitleBar;
-import com.stox.workbench.link.PersistentLinkState;
+import com.stox.workbench.link.Link;
 
 import javafx.geometry.Side;
 import javafx.scene.Node;
@@ -30,11 +33,10 @@ public class WorkbenchTitleBar implements HasNode<Node> {
 	
 	WorkbenchTitleBar state(@NonNull final WorkbenchState state) {
 		windowControls.state(state);
-		//state.linkStates().forEach(this::linkState);
+		Optional.ofNullable(state.linkStates()).orElse(Collections.emptyMap()).forEach((color, linkState) -> {
+			Optional.ofNullable(linkState).ifPresent(value -> Optional.ofNullable(Link.link(color)).ifPresent(link -> link.setState(value)));
+		});
 		return this;
-	}
-	
-	private void linkState(@NonNull final String color,@NonNull final PersistentLinkState state) {
 	}
 	
 	private void onMouseEvent(MouseEvent event) {
