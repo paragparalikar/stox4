@@ -2,7 +2,6 @@ package com.stox.module.charting.tools;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.stox.fx.fluent.scene.control.FluentRadioButton;
@@ -74,10 +73,8 @@ public class BarSpanToolBox extends HBox implements ChartingToolBox {
 	}
 
 	private void linkStateChanged(LinkState linkState) {
-		Optional.ofNullable(linkState).ifPresent(value -> {
-			final BarSpan barSpan = BarSpan.getByShortName(linkState.get("barSpan"));
-			toggleGroup.getToggles().stream().filter(toggle -> Objects.equals(toggle.getUserData(), barSpan)).forEach(toggle -> toggle.setSelected(true));
-		});
+		final BarSpan barSpan = chartingView.getBarSpan();
+		toggleGroup.getToggles().stream().filter(toggle -> Objects.equals(toggle.getUserData(), barSpan)).forEach(toggle -> toggle.setSelected(true));
 	}
 
 }

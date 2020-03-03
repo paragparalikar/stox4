@@ -40,6 +40,9 @@ import com.stox.module.core.model.Bar;
 import com.stox.module.core.model.BarSpan;
 import com.stox.module.core.model.Scrip;
 import com.stox.module.core.model.intf.CoreConstant;
+import com.stox.module.core.model.intf.HasBarSpan;
+import com.stox.module.core.model.intf.HasDate;
+import com.stox.module.core.model.intf.HasScrip;
 import com.stox.module.core.persistence.BarRepository;
 import com.stox.module.core.persistence.ScripRepository;
 import com.stox.workbench.link.Link;
@@ -57,9 +60,10 @@ import javafx.stage.Window;
 import lombok.Getter;
 import lombok.NonNull;
 
-public class ChartingView extends ModuleView<ChartingViewState> {
+public class ChartingView extends ModuleView<ChartingViewState> implements HasScrip, HasBarSpan, HasDate{
 
 	private long to;
+	@Getter
 	private BarSpan barSpan = BarSpan.D;
 	private ModeMouseHandler mouseModeHandler;
 
@@ -323,7 +327,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		return secondaryCharts.stream().filter(chart -> chart.contains(plot)).findFirst().orElse(null);
 	}
 
-	public Date date() {
+	public Date getDate() {
 		final double x = contextMenu.getAnchorX();
 		final Point2D point = primaryChart.container().screenToLocal(x, 0);
 		final int index = xAxis.getIndex(point.getX());
@@ -369,6 +373,11 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		 */;
 		unload();
 		return super.stop(chartingViewState, bounds);
+	}
+
+	@Override
+	public Scrip getScrip() {
+		return primaryChart.scrip();
 	}
 
 }

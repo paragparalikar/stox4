@@ -1,6 +1,7 @@
 package com.stox.module.explorer;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.stox.fx.widget.Ui;
@@ -47,6 +48,7 @@ public class ExplorerView extends ModuleView<ExplorerViewState> {
 		super.start(state, bounds);
 		eventBus.subscribe(ScripsChangedEvent.class, scripsChangedHandler);
 		load(titleBar.state(state).bind().exchange());
+		Optional.ofNullable(state).ifPresent(value -> titleBar.select(scripRepository.find(state.isin())));
 		return this;
 	}
 	

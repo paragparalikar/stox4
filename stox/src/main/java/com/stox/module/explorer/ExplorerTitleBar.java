@@ -35,6 +35,16 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 		getTitleBar().append(Side.BOTTOM, exchangeComboBox);
 		searchToggle = appendToggleNode(Icon.SEARCH, searchBox.getNode());
 	}
+	
+	ExplorerTitleBar select(final Scrip scrip) {
+		if(Objects.isNull(scrip)) {
+			listView.getSelectionModel().clearSelection();
+		}else {
+			listView.scrollTo(scrip);
+			listView.getSelectionModel().select(scrip);
+		}
+		return this;
+	}
 
 	Exchange exchange() {
 		return exchangeComboBox.value();
@@ -66,13 +76,6 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 			exchangeComboBox.select(state.exchange());
 			searchToggle.setSelected(state.searchVisible());
 			searchBox.text(state.searchText());
-			listView.getItems().stream()
-					.filter(Objects::nonNull)
-					.filter(scrip -> Objects.equals(scrip.getIsin(), state.isin()))
-					.findFirst().ifPresent(scrip -> {
-						listView.scrollTo(scrip);
-						listView.getSelectionModel().select(scrip);
-					});
 		}
 		return this;
 	}
