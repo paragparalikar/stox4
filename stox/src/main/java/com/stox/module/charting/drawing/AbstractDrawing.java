@@ -11,7 +11,7 @@ public abstract class AbstractDrawing<S extends DrawingState> implements Drawing
 	private double x, y;
 
 	protected void bind() {
-		getNode().addEventFilter(MouseEvent.MOUSE_DRAGGED, this::onMouseDragged);
+		getNode().addEventHandler(MouseEvent.MOUSE_DRAGGED, this::onMouseDragged);
 		getNode().addEventHandler(MouseEvent.MOUSE_PRESSED, this::onMousePressed);
 	}
 
