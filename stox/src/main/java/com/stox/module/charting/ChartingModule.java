@@ -21,7 +21,7 @@ import javafx.beans.value.ObservableValue;
 import lombok.NonNull;
 
 public class ChartingModule extends UiModule<ChartingViewState> {
-	
+
 	private final TypeAdapterFactory drawingStateTypeAdapterFactory = RuntimeTypeAdapterFactory.of(DrawingState.class)
 			.registerSubtype(TrendSegmentState.class, TrendSegmentState.TYPE)
 			.registerSubtype(HorizontalSegmentState.class, HorizontalSegmentState.TYPE)
@@ -33,7 +33,7 @@ public class ChartingModule extends UiModule<ChartingViewState> {
 			.create();
 	private final JsonConverter jsonConverter = new JsonConverter(gson);
 	private final DrawingStateRepository drawingStateRepository;
-	
+
 	public ChartingModule(@NonNull final Context context) {
 		super(context);
 		drawingStateRepository = new DrawingStateRepository(context.getConfig().getHome(), jsonConverter);
@@ -57,7 +57,12 @@ public class ChartingModule extends UiModule<ChartingViewState> {
 	@Override
 	protected ModuleView<ChartingViewState> buildModuleView() {
 		final Context context = getContext();
-		return new ChartingView(context.getScheduledExecutorService(), context.getMessageSource(), context.getBarRepository(), drawingStateRepository);
+		return new ChartingView(
+				context.getScheduledExecutorService(), 
+				context.getMessageSource(), 
+				context.getBarRepository(), 
+				context.getScripRepository(),
+				drawingStateRepository);
 	}
 
 }

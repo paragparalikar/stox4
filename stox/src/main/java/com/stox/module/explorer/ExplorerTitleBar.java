@@ -9,8 +9,9 @@ import com.stox.fx.widget.search.SearchBox;
 import com.stox.fx.widget.search.SearchableListView;
 import com.stox.module.core.model.Exchange;
 import com.stox.module.core.model.Scrip;
-import com.stox.workbench.link.Link.State;
+import com.stox.module.core.model.intf.CoreConstant;
 import com.stox.workbench.link.LinkButton;
+import com.stox.workbench.link.LinkState;
 import com.stox.workbench.module.ModuleTitleBar;
 
 import javafx.geometry.Side;
@@ -32,13 +33,17 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 		getTitleBar().append(Side.BOTTOM, exchangeComboBox);
 		searchToggle = appendToggleNode(Icon.SEARCH, searchBox.getNode());
 		exchangeComboBox.selectionModel().selectedItemProperty().addListener((o, old, exchange) -> consumer.accept(exchange));
-		listView.getSelectionModel().selectedItemProperty().addListener((o, old, scrip) -> linkButton.getLink().setState(new State(0, scrip, null)));
+		listView.getSelectionModel().selectedItemProperty().addListener(
+				(o, old, scrip) -> linkButton.getLink().setState(LinkState.builder()
+						.put(CoreConstant.KEY_TO, String.valueOf(0))
+						.put(CoreConstant.KEY_ISIN, null == scrip ? null : scrip.getIsin())
+						.build()));
 	}
-	
+
 	Exchange exchange() {
 		return exchangeComboBox.value();
 	}
-	
+
 	ExplorerViewState state() {
 		final Scrip scrip = listView.getSelectionModel().getSelectedItem();
 		return new ExplorerViewState()
@@ -47,25 +52,24 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 				.searchText(searchBox.text())
 				.searchVisible(searchToggle.isSelected());
 	}
-	
+
 	ExplorerTitleBar state(final ExplorerViewState state) {
-		if(Objects.isNull(state)) {
+		if (Objects.isNull(state)) {
 			exchangeComboBox.select(Exchange.NSE);
-		}else {
+		} else {
 			exchangeComboBox.select(state.exchange());
 			searchToggle.setSelected(state.searchVisible());
 			searchBox.text(state.searchText());
 			listView.getItems().stream()
-				.filter(Objects::nonNull)
-				.filter(scrip -> Objects.equals(scrip.getIsin(), state.isin()))
-				.findFirst().ifPresent(scrip -> {
-					listView.scrollTo(scrip);
-					listView.getSelectionModel().select(scrip);
-				});
+					.filter(Objects::nonNull)
+					.filter(scrip -> Objects.equals(scrip.getIsin(), state.isin()))
+					.findFirst().ifPresent(scrip -> {
+						listView.scrollTo(scrip);
+						listView.getSelectionModel().select(scrip);
+					});
 		}
 		return this;
 	}
-	
 
 	public boolean test(final Scrip scrip, String text) {
 		text = text.trim().toLowerCase();

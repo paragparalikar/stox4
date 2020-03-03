@@ -43,7 +43,7 @@ public class Workbench {
 				.scene(buildScene())
 				.titleProperty().bind(messageSource.get("product.name", "Stox"));
 	}
-	
+
 	public WorkbenchState state() {
 		return new WorkbenchState()
 				.x(stage.getX())
@@ -52,7 +52,7 @@ public class Workbench {
 				.height(stage.getHeight())
 				.maximized(titleBar.maximized());
 	}
-	
+
 	public Workbench state(final WorkbenchState state) {
 		Optional.ofNullable(state).ifPresent(titleBar::state);
 		return this;

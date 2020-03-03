@@ -1,6 +1,9 @@
 package com.stox.workbench;
 
+import java.util.Map;
+
 import com.google.gson.annotations.SerializedName;
+import com.stox.workbench.link.PersistentLinkState;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -11,17 +14,19 @@ public class WorkbenchState {
 
 	@SerializedName("x")
 	private double x;
-	
+
 	@SerializedName("y")
 	private double y;
-	
+
 	@SerializedName("width")
 	private double width;
-	
+
 	@SerializedName("height")
 	private double height;
 
 	@SerializedName("maximized")
 	private boolean maximized;
-	
+
+	//private Map<String, PersistentLinkState> linkStates;
+
 }

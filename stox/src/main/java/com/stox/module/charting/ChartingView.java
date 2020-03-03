@@ -39,9 +39,11 @@ import com.stox.module.charting.widget.Crosshair;
 import com.stox.module.core.model.Bar;
 import com.stox.module.core.model.BarSpan;
 import com.stox.module.core.model.Scrip;
+import com.stox.module.core.model.intf.CoreConstant;
 import com.stox.module.core.persistence.BarRepository;
+import com.stox.module.core.persistence.ScripRepository;
 import com.stox.workbench.link.Link;
-import com.stox.workbench.link.Link.State;
+import com.stox.workbench.link.LinkState;
 import com.stox.workbench.module.ModuleView;
 
 import javafx.application.Platform;
@@ -63,13 +65,14 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 
 	private final PrimaryChart primaryChart;
 	private final FxMessageSource messageSource;
+	private final ScripRepository scripRepository;
 	private final MutableXAxis xAxis = new MutableXAxis();
 	private final VerticalGrid verticalGrid = new VerticalGrid();
 	private final BarInfoPanel barInfoPanel = new BarInfoPanel();
 	private final Configuration configuration = new Configuration();
 	private final TransformerYAxis volumeYAxis = new TransformerYAxis();
 	private final Set<SecondaryChart> secondaryCharts = new HashSet<>();
-	private final Consumer<State> stateConsumer = this::linkStateChanged;
+	private final Consumer<LinkState> linkStateConsumer = this::linkStateChanged;
 	private final ChartingContextMenu contextMenu = new ChartingContextMenu();
 	private final VolumePlot volumePlot = new VolumePlot(configuration, volumeYAxis);
 	@Getter
@@ -80,8 +83,9 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 	private final FluentStackPane root = new FluentStackPane(verticalGrid, splitPane, crosshair.getNode()).classes("charting-root");
 
 	public ChartingView(@NonNull final ExecutorService executorService, @NonNull final FxMessageSource messageSrouce, @NonNull final BarRepository barRepository,
-			@NonNull final DrawingStateRepository drawingStateRepository) {
+			@NonNull final ScripRepository scripRepository, @NonNull final DrawingStateRepository drawingStateRepository) {
 		this.messageSource = messageSrouce;
+		this.scripRepository = scripRepository;
 		title(titleBar).content(root);
 		primaryChart = new PrimaryChart(configuration, xAxis, volumeYAxis, verticalGrid, barInfoPanel, executorService, barRepository, drawingStateRepository);
 		splitPane.getItems().add(primaryChart.container());
@@ -224,25 +228,29 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 		chart.layoutChartChildren();
 		return primaryChart;
 	}
+	
+	private void load() {
+		updateTitleText();
+		primaryChart.load(to, barSpan, xAxis);
+	}
 
 	public void load(final DerivativePlot<?> plot) {
 		plot.load(primaryChart.bars());
 	}
 
 	private void linkChanged(final Link old, final Link link) {
-		Optional.ofNullable(old).ifPresent(o -> old.remove(stateConsumer));
-		Optional.ofNullable(link).ifPresent(l -> link.add(stateConsumer));
+		Optional.ofNullable(old).ifPresent(o -> old.remove(linkStateConsumer));
+		Optional.ofNullable(link).ifPresent(l -> link.add(linkStateConsumer));
 	}
 
-	private void linkStateChanged(final State state) {
-		Optional.ofNullable(state).ifPresent(s -> {
+	private void linkStateChanged(final LinkState linkState) {
+		Optional.ofNullable(linkState).ifPresent(s -> {
 			unload();
 			reset();
-			this.to = state.to();
-			primaryChart.scrip(state.scrip());
-			barSpan = Optional.ofNullable(state.barSpan()).orElse(barSpan);
-			updateTitleText();
-			primaryChart.load(to, this.barSpan, xAxis);
+			this.to = linkState.getLong(CoreConstant.KEY_TO);
+			primaryChart.scrip(scripRepository.find(linkState.get(CoreConstant.KEY_ISIN)));
+			barSpan = Optional.ofNullable(BarSpan.getByShortName(linkState.get(CoreConstant.KEY_BARSPAN))).orElse(barSpan);
+			load();
 		});
 	}
 
@@ -251,8 +259,7 @@ public class ChartingView extends ModuleView<ChartingViewState> {
 			unload();
 			reset();
 			this.barSpan = barSpan;
-			updateTitleText();
-			primaryChart.load(to, barSpan, xAxis);
+			load();
 		}
 		return this;
 	}

@@ -1,6 +1,8 @@
 package com.stox.module.charting.tools;
 
 import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import com.stox.fx.fluent.scene.control.FluentRadioButton;
@@ -9,11 +11,10 @@ import com.stox.fx.widget.Ui;
 import com.stox.module.charting.ChartingView;
 import com.stox.module.core.model.BarSpan;
 import com.stox.workbench.link.Link;
-import com.stox.workbench.link.Link.State;
 import com.stox.workbench.link.LinkButton;
+import com.stox.workbench.link.LinkState;
 
 import javafx.scene.Node;
-import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -24,19 +25,19 @@ public class BarSpanToolBox extends HBox implements ChartingToolBox {
 	private final ChartingView chartingView;
 	private final FxMessageSource messageSource;
 	private final ToggleGroup toggleGroup = new ToggleGroup();
-	private final Consumer<State> stateConsumer = this::linkStateChanged;
+	private final Consumer<LinkState> linkStateConsumer = this::linkStateChanged;
 
 	public BarSpanToolBox(@NonNull final FxMessageSource messageSource, @NonNull final ChartingView chartingView) {
 		this.chartingView = chartingView;
 		this.messageSource = messageSource;
 		Arrays.asList(BarSpan.values()).forEach(this::buildToggle);
-		
+
 		final LinkButton linkButton = chartingView.getTitleBar().getLinkButton();
 		linkButton.getLinkProperty().addListener((o, old, link) -> linkChanged(old, link));
 		linkChanged(null, linkButton.getLink());
 		Ui.box(this);
 	}
-	
+
 	private BarSpanToolBox buildToggle(final BarSpan barSpan) {
 		final FluentRadioButton radioButton = new FluentRadioButton(barSpan.getShortName())
 				.userData(barSpan)
@@ -64,24 +65,19 @@ public class BarSpanToolBox extends HBox implements ChartingToolBox {
 
 	private void linkChanged(Link old, Link link) {
 		if (null != old) {
-			old.remove(stateConsumer);
+			old.remove(linkStateConsumer);
 		}
 		if (null != link) {
-			link.add(stateConsumer);
-			stateConsumer.accept(link.getState());
+			link.add(linkStateConsumer);
+			linkStateConsumer.accept(link.getState());
 		}
 	}
 
-	private void linkStateChanged(State state) {
-		if (null != state) {
-			for (Toggle toggle : toggleGroup.getToggles()) {
-				final BarSpan barSpan = (BarSpan) toggle.getUserData();
-				if (barSpan.equals(state.barSpan())) {
-					toggle.setSelected(true);
-					break;
-				}
-			}
-		}
+	private void linkStateChanged(LinkState linkState) {
+		Optional.ofNullable(linkState).ifPresent(value -> {
+			final BarSpan barSpan = BarSpan.getByShortName(linkState.get("barSpan"));
+			toggleGroup.getToggles().stream().filter(toggle -> Objects.equals(toggle.getUserData(), barSpan)).forEach(toggle -> toggle.setSelected(true));
+		});
 	}
 
 }
