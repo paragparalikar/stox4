@@ -70,6 +70,8 @@ public abstract class Plot<T>{
 		synchronized (models) {
 			models.clear();
 			showIndexInfo(-1);
+			units.forEach(Unit::detach);
+			units.clear();
 			return this;
 		}
 	}
