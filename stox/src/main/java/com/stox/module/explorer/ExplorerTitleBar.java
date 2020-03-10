@@ -5,8 +5,10 @@ import java.util.function.Consumer;
 
 import com.stox.fx.fluent.scene.control.FluentComboBox;
 import com.stox.fx.widget.Icon;
+import com.stox.fx.widget.search.Scroller;
 import com.stox.fx.widget.search.SearchBox;
 import com.stox.fx.widget.search.SearchableListView;
+import com.stox.fx.widget.search.Selector;
 import com.stox.module.core.model.Exchange;
 import com.stox.module.core.model.Scrip;
 import com.stox.module.core.model.intf.CoreConstant;
@@ -37,12 +39,8 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 	}
 	
 	ExplorerTitleBar select(final Scrip scrip) {
-		if(Objects.isNull(scrip)) {
-			listView.getSelectionModel().clearSelection();
-		}else {
-			listView.scrollTo(scrip);
-			listView.getSelectionModel().select(scrip);
-		}
+		Selector.of(scrip).select(listView.getSelectionModel());
+		Scroller.of(scrip).scroll(listView);
 		return this;
 	}
 

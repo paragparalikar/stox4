@@ -49,12 +49,7 @@ public class ScripRepository {
 	
 	private Scrip parse(Exchange exchange, String line){
 		final String[] tokens = line.split(",");
-		final Scrip scrip = new Scrip();
-		scrip.setExchange(exchange);
-		scrip.setIsin(tokens[0]);
-		scrip.setCode(tokens[1]);
-		scrip.setName(tokens[2]);
-		return scrip;
+		return Scrip.of(tokens[0], tokens[1], tokens[2], exchange);
 	}
 	
 	private String format(Scrip scrip){

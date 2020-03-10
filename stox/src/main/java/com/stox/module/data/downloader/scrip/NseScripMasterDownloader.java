@@ -27,12 +27,7 @@ public class NseScripMasterDownloader implements ScripMasterDownloader {
 
 	private Scrip parse(String line) {
 		final String[] tokens = line.split(",");
-		final Scrip scrip = new Scrip();
-		scrip.setExchange(Exchange.NSE);
-		scrip.setCode(tokens[0]);
-		scrip.setName(tokens[1]);
-		scrip.setIsin(tokens[6]);
-		return scrip;
+		return Scrip.of(tokens[6], tokens[0], tokens[1], Exchange.NSE);
 	}
 	
 

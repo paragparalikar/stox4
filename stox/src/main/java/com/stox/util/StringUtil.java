@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
 public class StringUtil {
+	
+	// TODO get rid of this
 	private static final NumberFormat currencyFormat = NumberFormat.getInstance();
 	{
 		currencyFormat.setGroupingUsed(true);
@@ -19,6 +21,16 @@ public class StringUtil {
 		currencyFormat.setMinimumFractionDigits(0);	
 	}
 
+	public static void requireText(final String text) {
+		requireText(text, "The text must be non null and non empty");
+	}
+	
+	public static void requireText(final String text, final String message) {
+		if(null == text || 0 == text.trim().length()) {
+			throw new IllegalArgumentException(message);
+		}
+	}
+	
 	public static boolean hasText(String text) {
 		return null != text && 0 < text.trim().length();
 	}

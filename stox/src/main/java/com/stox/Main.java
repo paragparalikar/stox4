@@ -20,6 +20,7 @@ import com.stox.module.core.persistence.ExchangeRepository;
 import com.stox.module.core.persistence.ScripRepository;
 import com.stox.module.data.DataModule;
 import com.stox.module.explorer.ExplorerModule;
+import com.stox.module.watchlist.WatchlistModule;
 import com.stox.util.EventBus;
 import com.stox.util.JsonConverter;
 import com.stox.workbench.Workbench;
@@ -51,6 +52,7 @@ public class Main extends Application {
 	private final List<? extends Module> modules = Arrays.asList(
 			new CoreModule(context), 
 			new DataModule(context), 
+			new WatchlistModule(context),
 			new ChartingModule(context),
 			new ExplorerModule(context));
 
