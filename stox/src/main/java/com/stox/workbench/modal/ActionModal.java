@@ -9,7 +9,7 @@ import javafx.scene.control.Labeled;
 public abstract class ActionModal<T extends ActionModal<T>> extends Modal<T> {
 
 	private final FluentButton cancelButton = new FluentButton().cancelButton(true).onAction(e -> hide());
-	private final FluentButton actionButton = new FluentButton().classes("success").defaultButton(true).onAction(e -> action());
+	private final FluentButton actionButton = new FluentButton().classes("action").defaultButton(true).onAction(e -> action());
 	private final FluentHBox buttonBar = new FluentHBox(cancelButton, actionButton).classes("button-bar");
 	
 	protected abstract void action();

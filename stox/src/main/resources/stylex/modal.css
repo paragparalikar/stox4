@@ -1,29 +1,34 @@
-.modal .button-bar{
+.modal .button-bar {
 	-fx-padding: 1em;
 	-fx-spacing: 1em;
 	-fx-alignment: center-right;
 }
-.modal .title-bar, .modal .border{
+
+.modal .title-bar, .modal .border {
 	-fx-background-color: background-color;
 	-fx-text-fill: text-color;
 }
-.modal{
+
+.modal {
 	-fx-background-color: primary-text-color;
 	-fx-text-fill: primary-background-color;
-	-fx-effect: dropshadow( gaussian, rgba(0,0,0,0.6), 10, 0.0 , 10 , 10);
+	-fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 10, 0.0, 10, 10);
 }
-.modal .title-bar, .modal .title-bar .button, .modal .border{
+
+.modal .title-bar, .modal .title-bar .title-text, .modal .title-bar .button,
+	.modal .title-bar .icon, .modal .border, .modal .button-bar .action {
 	background-color: primary-background-color;
 	text-color: primary-text-color;
 }
 
-.modal .content{
+.modal .content {
 	-fx-padding: 1em 1em 0 1em;
 	-fx-alignment: center;
 	-fx-content-display: center;
 }
 
-
-.modal.danger .title-bar, .modal.danger .title-bar .button, .modal.danger .border{
+.modal.danger .title-bar, .modal.danger .title-bar .title-text, .modal.danger .title-bar .button,
+	.modal.danger .title-bar .icon, .modal.danger .border, .modal.danger .button-bar .action
+	{
 	background-color: danger-background-color;
 }

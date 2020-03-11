@@ -3,17 +3,21 @@ package com.stox.module.watchlist.widget;
 import java.util.List;
 import java.util.Optional;
 
+import com.stox.fx.fluent.beans.binding.FluentStringBinding;
 import com.stox.fx.fluent.scene.control.FluentButton;
 import com.stox.fx.fluent.scene.control.FluentComboBox;
 import com.stox.fx.fluent.scene.layout.FluentHBox;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Icon;
 import com.stox.fx.widget.search.Selector;
+import com.stox.module.watchlist.event.WatchlistDeletedEvent;
 import com.stox.module.watchlist.modal.WatchlistEditModal;
 import com.stox.module.watchlist.model.Watchlist;
 import com.stox.module.watchlist.repository.WatchlistRepository;
+import com.stox.workbench.modal.ConfirmationModal;
 
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import lombok.NonNull;
 
@@ -64,7 +68,23 @@ public class WatchlistControlPanel extends FluentHBox{
 	}
 	
 	private void delete(final ActionEvent event) {
-		
+		Optional.ofNullable(watchlist()).ifPresent(watchlist -> {
+			final ObservableValue<String> message = messageSource.get("Are you sure you want to DELETE watchlist");
+			new ConfirmationModal(() -> delete(watchlist))
+				.title(messageSource.get("Please Confirm"))
+				.message(new FluentStringBinding(() -> {
+					return message.getValue() + " - " + watchlist.getName();
+				}, message))
+				.cancelButtonText(messageSource.get("Cancel"))
+				.actionButtonText(messageSource.get("Delete"))
+				.show(this);
+		});
 	}
+	
+	private void delete(final Watchlist watchlist) {
+		watchlistRepository.delete(watchlist.getId());
+		fireEvent(new WatchlistDeletedEvent(watchlist));
+	}
+	
 	
 }

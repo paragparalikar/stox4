@@ -14,8 +14,8 @@ import lombok.NonNull;
 public abstract class Modal<T extends Modal<T>> implements HasNode<Node> {
 
 	private final ModalTitleBar titleBar = new ModalTitleBar();
-	private final FluentBorderPane container = new FluentBorderPane().top(titleBar.getNode()).classes("modal");
-	private final FluentBorderPane node = ResizeMouseEventHandler.resizable(new FluentBorderPane()).center(container).managed(false);
+	private final FluentBorderPane container = new FluentBorderPane().top(titleBar.getNode());
+	private final FluentBorderPane node = ResizeMouseEventHandler.resizable(new FluentBorderPane()).center(container).managed(false).classes("modal");
 
 	protected abstract T getThis();
 	
@@ -51,6 +51,11 @@ public abstract class Modal<T extends Modal<T>> implements HasNode<Node> {
 	
 	protected T tool(final Node node) {
 		container.bottom(node);
+		return getThis();
+	}
+	
+	public T danger() {
+		node.classes("danger");
 		return getThis();
 	}
 	

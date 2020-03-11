@@ -39,6 +39,9 @@ public class WatchlistComboBox extends FluentComboBox<Watchlist> {
 
 	private void deleted(final WatchlistDeletedEvent event) {
 		items().remove(items().stream().filter(item -> Objects.equals(event.watchlist().getId(), item.getId())).findFirst().orElse(null));
+		if(!items().isEmpty()) {
+			select(items().get(0));
+		}
 	}
 
 }
