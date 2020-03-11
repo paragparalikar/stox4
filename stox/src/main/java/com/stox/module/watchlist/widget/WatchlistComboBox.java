@@ -9,16 +9,20 @@ import com.stox.module.watchlist.event.WatchlistUpdatedEvent;
 import com.stox.module.watchlist.model.Watchlist;
 
 import javafx.collections.FXCollections;
+import javafx.scene.Node;
 
 public class WatchlistComboBox extends FluentComboBox<Watchlist> {
 
 	public WatchlistComboBox() {
-		fullArea()
-				.addFilter(WatchlistCreatedEvent.TYPE, this::created)
-				.addFilter(WatchlistUpdatedEvent.TYPE, this::updated)
-				.addFilter(WatchlistDeletedEvent.TYPE, this::deleted);
+		fullArea().sceneProperty().addListener((o,old,scene) -> bind(scene.getRoot()));
 	}
 
+	private void bind(final Node node) {
+		node.addEventHandler(WatchlistCreatedEvent.TYPE, this::created);
+		node.addEventHandler(WatchlistUpdatedEvent.TYPE, this::updated);
+		node.addEventHandler(WatchlistDeletedEvent.TYPE, this::deleted);
+	}
+	
 	private void created(final WatchlistCreatedEvent event) {
 		items().add(event.watchlist());
 		FXCollections.sort(items());

@@ -53,8 +53,11 @@ public class JsonFileRepository<I, T> implements Repository<I, T> {
 	@Override
 	@SneakyThrows
 	public List<T> findAll() {
-		return Files.list(path).filter(Files::isRegularFile).filter(path -> path.getFileName().endsWith("json"))
-				.map(filePath -> new JsonFileStore<>(filePath, type, jsonConverter).read()).collect(Collectors.toList());
+		return Files.list(path).filter(this::isEntityFile).map(filePath -> new JsonFileStore<>(filePath, type, jsonConverter).read()).collect(Collectors.toList());
+	}
+
+	private boolean isEntityFile(final Path path) {
+		return Files.exists(path) && Files.isRegularFile(path) && path.toString().endsWith("json");
 	}
 
 	@Override
