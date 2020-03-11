@@ -2,10 +2,8 @@ package com.stox.workbench.modal;
 
 import com.stox.fx.fluent.scene.control.FluentButton;
 import com.stox.fx.fluent.scene.layout.FluentHBox;
-import com.stox.fx.fluent.scene.layout.FluentVBox;
 
 import javafx.beans.value.ObservableValue;
-import javafx.scene.Node;
 import javafx.scene.control.Labeled;
 
 public abstract class ActionModal<T extends ActionModal<T>> extends Modal<T> {
@@ -13,20 +11,13 @@ public abstract class ActionModal<T extends ActionModal<T>> extends Modal<T> {
 	private final FluentButton cancelButton = new FluentButton().cancelButton(true).onAction(e -> hide());
 	private final FluentButton actionButton = new FluentButton().classes("success").defaultButton(true).onAction(e -> action());
 	private final FluentHBox buttonBar = new FluentHBox(cancelButton, actionButton).classes("button-bar");
-	private final FluentVBox container = new FluentVBox().classes("padded", "content");
 	
 	protected abstract void action();
 	
 	public ActionModal() {
-		super.content(container).tool(buttonBar);
+		tool(buttonBar);
 	}
 	
-	@Override
-	protected T content(Node node) {
-		container.child(node);
-		return getThis();
-	}
-
 	protected T actionButtonText(final ObservableValue<String> value) {
 		return bind(actionButton, value);
 	}

@@ -19,6 +19,8 @@
 
 .modal .content{
 	-fx-padding: 1em 1em 0 1em;
+	-fx-alignment: center;
+	-fx-content-display: center;
 }
 
 
