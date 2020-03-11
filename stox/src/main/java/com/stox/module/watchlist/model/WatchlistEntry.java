@@ -10,9 +10,11 @@ import com.stox.module.core.model.intf.HasId;
 import com.stox.module.core.model.intf.HasScrip;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Data
+@NoArgsConstructor
 public class WatchlistEntry implements HasId<Integer>, HasScrip, HasBarSpan, Comparable<WatchlistEntry>{
 	public static final Comparator<WatchlistEntry> COMPARATOR = (one, two) -> one.scrip.getName().compareToIgnoreCase(two.getScrip().getName());
 

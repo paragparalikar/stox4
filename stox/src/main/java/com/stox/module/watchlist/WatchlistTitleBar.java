@@ -4,9 +4,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import com.stox.fx.fluent.scene.control.FluentButton;
 import com.stox.fx.fluent.scene.control.FluentComboBox;
-import com.stox.fx.fluent.scene.layout.FluentHBox;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Icon;
 import com.stox.fx.widget.search.SearchBox;
@@ -21,6 +19,7 @@ import com.stox.module.watchlist.model.WatchlistEntry;
 import com.stox.module.watchlist.repository.WatchlistEntryRepository;
 import com.stox.module.watchlist.repository.WatchlistRepository;
 import com.stox.module.watchlist.widget.CreateWatchlistButton;
+import com.stox.module.watchlist.widget.WatchlistControlPanel;
 import com.stox.workbench.link.LinkButton;
 import com.stox.workbench.link.LinkState;
 import com.stox.workbench.module.ModuleTitleBar;
@@ -40,11 +39,7 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 	private final SearchBox<WatchlistEntry> searchBox;
 	private final SearchableListView<WatchlistEntry> listView;
 	private final LinkButton linkButton = new LinkButton();
-	private final FluentComboBox<Watchlist> watchlistComboBox = new FluentComboBox<Watchlist>().classes("primary", "inverted", "first").fullArea();
-	private final FluentButton editButton = new FluentButton().text(Icon.EDIT).classes("icon","primary","inverted","middle");
-	private final FluentButton clearButton = new FluentButton().text(Icon.ERASER).classes("icon","primary","inverted","middle");
-	private final FluentButton deleteButton = new FluentButton().text(Icon.TRASH).classes("icon","primary","inverted","last");
-	private final FluentHBox controlPanel = new FluentHBox(watchlistComboBox, editButton, clearButton, deleteButton).fullArea().classes("box");
+	private final WatchlistControlPanel controlPanel;
 	private final FluentComboBox<BarSpan> barSpanComboBox = new FluentComboBox<BarSpan>().items(BarSpan.values()).classes("primary", "inverted").fullWidth();
 
 	public WatchlistTitleBar(
@@ -59,9 +54,9 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 		this.searchBox = new SearchBox<WatchlistEntry>(listView, this::test);
 		getTitleBar().append(Side.RIGHT, linkButton);
 		getTitleBar().append(Side.BOTTOM, barSpanComboBox);
-		getTitleBar().append(Side.BOTTOM, controlPanel);
+		getTitleBar().append(Side.BOTTOM, controlPanel = new WatchlistControlPanel(messageSource));
 		searchToggle = appendToggleNode(Icon.SEARCH, searchBox.getNode());
-		getTitleBar().append(Side.RIGHT, new CreateWatchlistButton(messageSource));
+		getTitleBar().append(Side.RIGHT, new CreateWatchlistButton(messageSource, watchlistRepository));
 	}
 
 	private boolean test(final WatchlistEntry entry, String text) {
@@ -73,15 +68,13 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 	}
 
 	WatchlistTitleBar select(final Watchlist watchlist) {
-		final Watchlist effectiveWatchlist = Optional.ofNullable(watchlist)
-				.orElse(watchlistComboBox.getItems().isEmpty() ? null : watchlistComboBox.getItems().get(0));
-		Selector.of(effectiveWatchlist).select(watchlistComboBox.getSelectionModel());
+		controlPanel.select(watchlist);
 		return this;
 	}
 
 	WatchlistTitleBar bind() {
 		barSpanComboBox.selectionModel().selectedItemProperty().addListener(this::barSpan);
-		watchlistComboBox.selectionModel().selectedItemProperty().addListener(this::watchlist);
+		controlPanel.watchlistChangeListener(this::watchlist);
 		listView.getSelectionModel().selectedItemProperty().addListener(
 				(o, old, entry) -> linkButton.getLink().setState(LinkState.builder()
 						.put(CoreConstant.KEY_TO, String.valueOf(0))
@@ -92,7 +85,7 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 	}
 
 	private void barSpan(final ObservableValue<? extends BarSpan> observable, final BarSpan old, final BarSpan barSpan) {
-		filterChanged(barSpan, watchlistComboBox.value());
+		filterChanged(barSpan, controlPanel.watchlist());
 	}
 
 	private void watchlist(final ObservableValue<? extends Watchlist> observable, final Watchlist old, final Watchlist watchlist) {
@@ -109,7 +102,7 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 	WatchlistViewState state() {
 		return new WatchlistViewState()
 				.barSpan(barSpanComboBox.value())
-				.watchlistId(Optional.ofNullable(watchlistComboBox.value()).map(Watchlist::getId).orElse(null))
+				.watchlistId(Optional.ofNullable(controlPanel.watchlist()).map(Watchlist::getId).orElse(null))
 				.entryId(Optional.ofNullable(listView.getSelectionModel().getSelectedItem()).map(WatchlistEntry::getId).orElse(null))
 				.searchText(searchBox.text())
 				.searchVisible(searchToggle.isSelected());
@@ -121,12 +114,10 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 		searchBox.text(optionalState.map(WatchlistViewState::searchText).orElse(null));
 		searchToggle.setSelected(optionalState.map(WatchlistViewState::searchVisible).orElse(Boolean.FALSE));
 
-		watchlistComboBox.getItems().setAll(watchlistRepository.findAll());
+		controlPanel.watchlists(watchlistRepository.findAll());
 		final Watchlist watchlist = watchlistRepository.find(Optional.ofNullable(state).map(WatchlistViewState::watchlistId).orElse(0));
-		final Watchlist effectiveWatchlist = Optional.ofNullable(watchlist)
-				.orElse(watchlistComboBox.getItems().isEmpty() ? null : watchlistComboBox.getItems().get(0));
-		Selector.of(effectiveWatchlist).select(watchlistComboBox.getSelectionModel());
-		filterChanged(barSpanComboBox.value(), watchlistComboBox.value());
+		controlPanel.select(watchlist);
+		filterChanged(barSpanComboBox.value(), controlPanel.watchlist());
 		
 		final WatchlistEntry entry = watchlistEntryRepository.find(Optional.ofNullable(state).map(WatchlistViewState::entryId).orElse(0));
 		Selector.of(entry).select(listView.getSelectionModel());

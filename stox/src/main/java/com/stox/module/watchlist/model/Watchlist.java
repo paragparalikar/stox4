@@ -6,13 +6,14 @@ import java.util.Objects;
 import com.stox.module.core.model.intf.HasId;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Data
+@NoArgsConstructor
 public class Watchlist implements HasId<Integer>, Comparable<Watchlist>{
 	public static final Comparator<Watchlist> COMPARATOR = (one, two) -> one.name.compareToIgnoreCase(two.name);  
 	
-	@NonNull
 	private Integer id;
 	
 	@NonNull
