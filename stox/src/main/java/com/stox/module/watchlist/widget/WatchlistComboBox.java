@@ -26,6 +26,7 @@ public class WatchlistComboBox extends FluentComboBox<Watchlist> {
 	private void created(final WatchlistCreatedEvent event) {
 		items().add(event.watchlist());
 		FXCollections.sort(items());
+		select(event.watchlist());
 	}
 
 	private void updated(final WatchlistUpdatedEvent event) {
@@ -33,6 +34,7 @@ public class WatchlistComboBox extends FluentComboBox<Watchlist> {
 		items().remove(old);
 		items().add(event.watchlist());
 		FXCollections.sort(items());
+		select(event.watchlist());
 	}
 
 	private void deleted(final WatchlistDeletedEvent event) {

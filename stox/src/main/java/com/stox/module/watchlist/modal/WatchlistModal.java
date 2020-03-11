@@ -4,6 +4,7 @@ import com.stox.fx.fluent.scene.layout.FluentBorderPane;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Icon;
 import com.stox.fx.widget.form.TextFormField;
+import com.stox.module.watchlist.model.Watchlist;
 import com.stox.util.StringUtil;
 import com.stox.workbench.modal.ActionModal;
 
@@ -34,6 +35,11 @@ public abstract class WatchlistModal<T extends WatchlistModal<T>> extends Action
 		}else {
 			nameFormField.error(messageSource.get("Name is required"));
 		}
+	}
+	
+	protected T populate(@NonNull final Watchlist watchlist) {
+		nameFormField.value(watchlist.getName());
+		return getThis();
 	}
 	
 	@Override

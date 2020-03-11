@@ -54,7 +54,7 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 		this.searchBox = new SearchBox<WatchlistEntry>(listView, this::test);
 		getTitleBar().append(Side.RIGHT, linkButton);
 		getTitleBar().append(Side.BOTTOM, barSpanComboBox);
-		getTitleBar().append(Side.BOTTOM, controlPanel = new WatchlistControlPanel(messageSource));
+		getTitleBar().append(Side.BOTTOM, controlPanel = new WatchlistControlPanel(messageSource, watchlistRepository));
 		searchToggle = appendToggleNode(Icon.SEARCH, searchBox.getNode());
 		getTitleBar().append(Side.RIGHT, new CreateWatchlistButton(messageSource, watchlistRepository));
 	}
