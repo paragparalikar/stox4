@@ -12,7 +12,7 @@ import lombok.NonNull;
 public class WatchlistEntryRepository extends CachingRepository<WatchlistEntry> {
 
 	public WatchlistEntryRepository(final Path home, @NonNull final JsonConverter jsonConverter) {
-		super(home.resolve(Paths.get("watchlist-entries")), WatchlistEntry.class, jsonConverter);
+		super(home.resolve(Paths.get("watchlist","entries")), WatchlistEntry.class, jsonConverter);
 	}
 
 }

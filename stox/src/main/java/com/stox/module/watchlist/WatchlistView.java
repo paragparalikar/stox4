@@ -3,6 +3,7 @@ package com.stox.module.watchlist;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.search.SearchableListView;
 import com.stox.module.watchlist.event.FilterChangedEvent;
 import com.stox.module.watchlist.model.WatchlistEntry;
@@ -18,16 +19,15 @@ public class WatchlistView extends ModuleView<WatchlistViewState> {
 
 	@Getter
 	private final WatchlistTitleBar titleBar;
-	private final WatchlistRepository watchlistRepository;
 	private final WatchlistEntryRepository watchlistEntryRepository;
 	private final SearchableListView<WatchlistEntry> listView = new SearchableListView<>();
 	
 	public WatchlistView(
+			@NonNull final FxMessageSource messageSource,
 			@NonNull final WatchlistRepository watchlistRepository, 
 			@NonNull final WatchlistEntryRepository watchlistEntryRepository) {
-		this.watchlistRepository = watchlistRepository;
 		this.watchlistEntryRepository = watchlistEntryRepository;
-		title(titleBar = new WatchlistTitleBar(listView, watchlistRepository, watchlistEntryRepository));
+		title(titleBar = new WatchlistTitleBar(messageSource, listView, watchlistRepository, watchlistEntryRepository));
 		titleBar.getNode().addEventHandler(FilterChangedEvent.TYPE, this::filterChanged);
 		content(listView);
 	}

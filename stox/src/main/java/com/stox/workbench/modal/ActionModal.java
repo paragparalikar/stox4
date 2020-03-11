@@ -22,7 +22,7 @@ public abstract class ActionModal<T extends ActionModal<T>> extends Modal<T> {
 	}
 	
 	@Override
-	public T content(Node node) {
+	protected T content(Node node) {
 		container.children(node, buttonBar);
 		return getThis();
 	}

@@ -41,7 +41,7 @@ public class WatchlistModule extends UiModule<WatchlistViewState> {
 
 	@Override
 	protected WatchlistView buildModuleView() {
-		return new WatchlistView(watchlistRepository, watchlistEntryRepository);
+		return new WatchlistView(getContext().getMessageSource(), watchlistRepository, watchlistEntryRepository);
 	}
 
 }

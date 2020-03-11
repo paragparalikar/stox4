@@ -53,7 +53,7 @@ public class JsonFileRepository<I, T> implements Repository<I, T> {
 	@Override
 	@SneakyThrows
 	public List<T> findAll() {
-		return Files.list(path).map(filePath -> new JsonFileStore<>(filePath, type, jsonConverter).read()).collect(Collectors.toList());
+		return Files.list(path).filter(Files::isRegularFile).map(filePath -> new JsonFileStore<>(filePath, type, jsonConverter).read()).collect(Collectors.toList());
 	}
 
 	@Override

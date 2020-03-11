@@ -1,7 +1,6 @@
 package com.stox.workbench.modal;
 
 import com.stox.fx.fluent.scene.layout.FluentBorderPane;
-import com.stox.fx.fluent.scene.layout.FluentStackPane;
 import com.stox.fx.widget.HasNode;
 import com.stox.fx.widget.handler.MovableMouseEventHandler;
 import com.stox.fx.widget.handler.ResizeMouseEventHandler;
@@ -15,15 +14,15 @@ import lombok.NonNull;
 public abstract class Modal<T extends Modal<T>> implements HasNode<Node> {
 
 	private final ModalTitleBar titleBar = new ModalTitleBar();
-	private final FluentBorderPane container = new FluentBorderPane().top(titleBar.getNode());
-	private final FluentStackPane root = new FluentStackPane(container);
-	private final FluentBorderPane node = ResizeMouseEventHandler.resizable(new FluentBorderPane()).classes("modal").center(root).managed(false);
+	private final FluentBorderPane container = new FluentBorderPane().top(titleBar.getNode()).classes("modal");
+	private final FluentBorderPane node = ResizeMouseEventHandler.resizable(new FluentBorderPane()).center(container).managed(false);
 
 	protected abstract T getThis();
 	
 	public Modal() {
 		MovableMouseEventHandler.movable(titleBar.getNode(), node);
 		titleBar.closeEventHandler(e -> hide());
+		container.height(350).width(500);
 	}
 	
 	public T show(@NonNull final Node caller) {
@@ -36,22 +35,22 @@ public abstract class Modal<T extends Modal<T>> implements HasNode<Node> {
 		return getThis();
 	}
 	
-	public T graphic(final String node) {
+	protected T graphic(final String node) {
 		titleBar.graphic(node);
 		return getThis();
 	}
 	
-	public T title(final ObservableValue<String> titleValue) {
+	protected T title(final ObservableValue<String> titleValue) {
 		titleBar.title(titleValue);
 		return getThis();
 	}
 	
-	public T content(final Node node) {
+	protected T content(final Node node) {
 		container.center(node);
 		return getThis();
 	}
 	
-	public T tool(final Node node) {
+	protected T tool(final Node node) {
 		container.bottom(node);
 		return getThis();
 	}
