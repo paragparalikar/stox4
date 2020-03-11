@@ -4,7 +4,7 @@ import com.stox.fx.fluent.scene.control.FluentTextField;
 
 public class TextFormField extends FormField<String, TextFormField> {
 	
-	private final FluentTextField textField = new FluentTextField().fullArea();
+	private final FluentTextField textField = new FluentTextField().fullWidth();
 	
 	public TextFormField() {
 		widget(textField);

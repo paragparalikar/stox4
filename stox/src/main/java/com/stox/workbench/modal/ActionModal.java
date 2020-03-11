@@ -13,17 +13,17 @@ public abstract class ActionModal<T extends ActionModal<T>> extends Modal<T> {
 	private final FluentButton cancelButton = new FluentButton().cancelButton(true).onAction(e -> hide());
 	private final FluentButton actionButton = new FluentButton().classes("success").defaultButton(true).onAction(e -> action());
 	private final FluentHBox buttonBar = new FluentHBox(cancelButton, actionButton).classes("button-bar");
-	private final FluentVBox container = new FluentVBox(buttonBar).classes("padded");
+	private final FluentVBox container = new FluentVBox().classes("padded", "content");
 	
 	protected abstract void action();
 	
 	public ActionModal() {
-		super.content(container);
+		super.content(container).tool(buttonBar);
 	}
 	
 	@Override
 	protected T content(Node node) {
-		container.children(node, buttonBar);
+		container.child(node);
 		return getThis();
 	}
 

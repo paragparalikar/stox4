@@ -18,9 +18,7 @@ public abstract class WatchlistModal<T extends WatchlistModal<T>> extends Action
 	public WatchlistModal(@NonNull final FxMessageSource messageSource) {
 		this.messageSource = messageSource;
 		graphic(Icon.BOOKMARK)
-			//.title(messageSource.get("Watchlists"))
 			.content(nameFormField.name(messageSource.get("Name")).getNode())
-			//.actionButtonText(messageSource.get("Ok"))
 			.cancelButtonText(messageSource.get("Cancel"));
 	}
 

@@ -15,6 +15,7 @@ import com.stox.fx.widget.handler.MovableMouseEventHandler;
 import com.stox.fx.widget.handler.ResizeMouseEventHandler;
 import com.stox.workbench.link.Link;
 import com.stox.workbench.link.LinkState;
+import com.stox.workbench.modal.Modal;
 import com.stox.workbench.modal.event.ModalHideRequestEvent;
 import com.stox.workbench.modal.event.ModalShowRequestEvent;
 import com.stox.workbench.module.ModuleView;
@@ -101,7 +102,14 @@ public class Workbench {
 	}
 	
 	private void show(final ModalShowRequestEvent event) {
-		rootWrapper.children().addAll(glass, event.modal().getNode());
+		final Bounds bounds = visualBounds();
+		final Modal<?> modal = event.modal();
+		rootWrapper.children().addAll(glass, modal.getNode());
+		modal.getNode().resizeRelocate(
+				(bounds.getWidth() - modal.initialWidth())/2, 
+				(bounds.getHeight() - modal.initialHeight())/2, 
+				modal.initialWidth(), 
+				modal.initialHeight());
 	}
 
 	private void hide(final ModalHideRequestEvent event) {

@@ -22,7 +22,6 @@ public abstract class Modal<T extends Modal<T>> implements HasNode<Node> {
 	public Modal() {
 		MovableMouseEventHandler.movable(titleBar.getNode(), node);
 		titleBar.closeEventHandler(e -> hide());
-		container.height(350).width(500);
 	}
 	
 	public T show(@NonNull final Node caller) {
@@ -60,4 +59,11 @@ public abstract class Modal<T extends Modal<T>> implements HasNode<Node> {
 		return node;
 	}
 	
+	public double initialHeight() {
+		return 300;
+	}
+	
+	public double initialWidth() {
+		return 500;
+	}
 }
