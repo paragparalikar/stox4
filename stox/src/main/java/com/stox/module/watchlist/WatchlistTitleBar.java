@@ -18,7 +18,7 @@ import com.stox.module.watchlist.model.Watchlist;
 import com.stox.module.watchlist.model.WatchlistEntry;
 import com.stox.module.watchlist.repository.WatchlistEntryRepository;
 import com.stox.module.watchlist.repository.WatchlistRepository;
-import com.stox.module.watchlist.widget.CreateWatchlistButton;
+import com.stox.module.watchlist.widget.WatchlistCreateButton;
 import com.stox.module.watchlist.widget.WatchlistControlPanel;
 import com.stox.workbench.link.LinkButton;
 import com.stox.workbench.link.LinkState;
@@ -56,7 +56,7 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 		getTitleBar().append(Side.BOTTOM, barSpanComboBox);
 		getTitleBar().append(Side.BOTTOM, controlPanel = new WatchlistControlPanel(messageSource, watchlistRepository));
 		searchToggle = appendToggleNode(Icon.SEARCH, searchBox.getNode());
-		getTitleBar().append(Side.RIGHT, new CreateWatchlistButton(messageSource, watchlistRepository));
+		getTitleBar().append(Side.RIGHT, new WatchlistCreateButton(messageSource, watchlistRepository));
 	}
 
 	private boolean test(final WatchlistEntry entry, String text) {

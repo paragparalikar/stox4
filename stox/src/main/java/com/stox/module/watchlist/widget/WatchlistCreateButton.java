@@ -10,12 +10,12 @@ import com.stox.module.watchlist.repository.WatchlistRepository;
 import javafx.event.ActionEvent;
 import lombok.NonNull;
 
-public class CreateWatchlistButton extends FluentButton {
+public class WatchlistCreateButton extends FluentButton {
 
 	private final FxMessageSource messageSource;
 	private final WatchlistRepository watchlistRepository;
 	
-	public CreateWatchlistButton(
+	public WatchlistCreateButton(
 			@NonNull final FxMessageSource messageSource,
 			@NonNull final WatchlistRepository watchlistRepository) {
 		super(Icon.PLUS);
