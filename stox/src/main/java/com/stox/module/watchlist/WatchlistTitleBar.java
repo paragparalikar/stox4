@@ -4,7 +4,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import com.stox.fx.fluent.scene.control.FluentButton;
 import com.stox.fx.fluent.scene.control.FluentComboBox;
+import com.stox.fx.fluent.scene.layout.FluentHBox;
 import com.stox.fx.widget.Icon;
 import com.stox.fx.widget.search.SearchBox;
 import com.stox.fx.widget.search.SearchableListView;
@@ -35,7 +37,12 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 	private final SearchBox<WatchlistEntry> searchBox;
 	private final SearchableListView<WatchlistEntry> listView;
 	private final LinkButton linkButton = new LinkButton();
-	private final FluentComboBox<Watchlist> watchlistComboBox = new FluentComboBox<Watchlist>().classes("primary", "inverted").fullWidth();
+	private final FluentButton createButton = new FluentButton().text(Icon.PLUS).classes("icon","success","primary","middle");
+	private final FluentButton editButton = new FluentButton().text(Icon.EDIT).classes("icon","primary","inverted","middle");
+	private final FluentButton clearButton = new FluentButton().text(Icon.ERASER).classes("icon","primary","inverted","middle");
+	private final FluentButton deleteButton = new FluentButton().text(Icon.TRASH).classes("icon","primary","inverted","last");
+	private final FluentComboBox<Watchlist> watchlistComboBox = new FluentComboBox<Watchlist>().classes("primary", "inverted", "first").fullArea();
+	private final FluentHBox controlPanel = new FluentHBox(watchlistComboBox, editButton, clearButton, deleteButton).fullArea().classes("box");
 	private final FluentComboBox<BarSpan> barSpanComboBox = new FluentComboBox<BarSpan>().items(BarSpan.values()).classes("primary", "inverted").fullWidth();
 
 	public WatchlistTitleBar(@NonNull final SearchableListView<WatchlistEntry> listView,
@@ -46,9 +53,10 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 		this.watchlistEntryRepository = watchlistEntryRepository;
 		this.searchBox = new SearchBox<WatchlistEntry>(listView, this::test);
 		getTitleBar().append(Side.RIGHT, linkButton);
-		getTitleBar().append(Side.BOTTOM, watchlistComboBox);
 		getTitleBar().append(Side.BOTTOM, barSpanComboBox);
+		getTitleBar().append(Side.BOTTOM, controlPanel);
 		searchToggle = appendToggleNode(Icon.SEARCH, searchBox.getNode());
+		getTitleBar().append(Side.RIGHT, createButton);
 	}
 
 	private boolean test(final WatchlistEntry entry, String text) {

@@ -18,15 +18,13 @@ public abstract class ModuleView<T extends ModuleViewState> implements HasNode<F
 
 	private final FluentBorderPane container = new FluentBorderPane();
 	private final FluentStackPane root = new FluentStackPane(container);
-	private final FluentBorderPane resizableWrapper = ResizeMouseEventHandler.resizable(new FluentBorderPane());
+	private final FluentBorderPane resizableWrapper = ResizeMouseEventHandler
+			.resizable(new FluentBorderPane()).classes("module-view").center(root)
+			.addHandler(MouseEvent.MOUSE_PRESSED, e -> getNode().toFront());
 
 	public abstract ModuleTitleBar getTitleBar();
 
 	public abstract T stop(@NonNull final Bounds bounds);
-
-	public ModuleView() {
-		resizableWrapper.classes("module-view").center(root).addHandler(MouseEvent.MOUSE_PRESSED, e -> resizableWrapper.toFront());
-	}
 
 	public ModuleView<T> title(@NonNull final ModuleTitleBar titleBar) {
 		container.top(titleBar.getNode());
@@ -38,13 +36,13 @@ public abstract class ModuleView<T extends ModuleViewState> implements HasNode<F
 		container.center(node);
 		return this;
 	}
-	
-	public ModuleView<T> tool(final Node node){
+
+	public ModuleView<T> tool(final Node node) {
 		container.bottom(node);
 		return this;
 	}
-	
-	protected ModuleView<T> defaultBounds(@NonNull final FluentBorderPane container, @NonNull final Bounds bounds){
+
+	protected ModuleView<T> defaultBounds(@NonNull final FluentBorderPane container, @NonNull final Bounds bounds) {
 		container.width(bounds.getWidth() / 5).height(bounds.getHeight()).autosize();
 		return this;
 	}

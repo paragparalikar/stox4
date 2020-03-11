@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.stox.fx.fluent.scene.layout.FluentBorderPane;
+import com.stox.fx.fluent.scene.layout.FluentPane;
+import com.stox.fx.fluent.scene.layout.FluentStackPane;
 import com.stox.fx.fluent.stage.FluentStage;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.SnapPane;
@@ -13,6 +15,8 @@ import com.stox.fx.widget.handler.MovableMouseEventHandler;
 import com.stox.fx.widget.handler.ResizeMouseEventHandler;
 import com.stox.workbench.link.Link;
 import com.stox.workbench.link.LinkState;
+import com.stox.workbench.modal.event.ModalHideRequestEvent;
+import com.stox.workbench.modal.event.ModalShowRequestEvent;
 import com.stox.workbench.module.ModuleView;
 import com.stox.workbench.module.ModuleViewState;
 
@@ -37,6 +41,10 @@ public class Workbench {
 	private final Stage stage;
 	private final FluentBorderPane root;
 	private final SnapPane snapPane = new SnapPane();
+	private final FluentPane glass = new FluentPane().classes("glass");
+	private final FluentStackPane rootWrapper = new FluentStackPane()
+			.addHandler(ModalShowRequestEvent.TYPE, this::show)
+			.addHandler(ModalHideRequestEvent.TYPE, this::hide);
 
 	public Workbench(@NonNull final FxMessageSource messageSource, @NonNull final FluentStage stage) {
 		this.stage = stage;
@@ -44,6 +52,7 @@ public class Workbench {
 		this.titleBar = new WorkbenchTitleBar(messageSource);
 		this.root = ResizeMouseEventHandler.resizable(new FluentBorderPane(), stage);
 		MovableMouseEventHandler.movable(titleBar.getNode(), stage);
+		
 		stage.style(StageStyle.UNDECORATED)
 				.scene(buildScene())
 				.titleProperty().bind(messageSource.get("product.name", "Stox"));
@@ -69,7 +78,7 @@ public class Workbench {
 	private Scene buildScene() {
 		final Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
 		final FluentBorderPane container = new FluentBorderPane().top(titleBar.getNode()).center(snapPane).bottom(infoBar.getNode());
-		final Scene scene = new Scene(root.center(container), bounds.getWidth(), bounds.getHeight());
+		final Scene scene = new Scene(rootWrapper.child(root.center(container)), bounds.getWidth(), bounds.getHeight());
 		Application.setUserAgentStylesheet("stylex/base.css");
 		scene.getStylesheets().addAll("stylex/label.css", "stylex/button.css", "stylex/menu.css", "stylex/scroll-bar.css", "stylex/table-view.css",
 				"stylex/combo-box.css", "stylex/choice-box.css", "stylex/check-box.css", "stylex/text-field.css", "stylex/list-view.css", "stylex/progress-indicator.css",
@@ -90,7 +99,15 @@ public class Workbench {
 		snapPane.getChildren().remove(moduleView.getNode());
 		return moduleView;
 	}
+	
+	private void show(final ModalShowRequestEvent event) {
+		rootWrapper.children().addAll(glass, event.modal().getNode());
+	}
 
+	private void hide(final ModalHideRequestEvent event) {
+		rootWrapper.children().removeAll(glass, event.modal().getNode());
+	}
+	
 	public Bounds visualBounds() {
 		return snapPane.getBoundsInLocal();
 	}

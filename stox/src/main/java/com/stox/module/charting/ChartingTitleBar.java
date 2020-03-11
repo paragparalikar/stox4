@@ -3,7 +3,6 @@ package com.stox.module.charting;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.stox.fx.fluent.beans.binding.FluentStringBinding;
@@ -45,7 +44,7 @@ public class ChartingTitleBar extends ModuleTitleBar {
 		return new FluentStringBinding(() -> title(scrip, barSpanValue), barSpanValue);
 	}
 
-	private String title(@NonNull final Scrip scrip, @NonNull final ObservableValue<String> barSpanValue) {
+	private String title(final Scrip scrip, final ObservableValue<String> barSpanValue) {
 		return String.join(" - ", scrip.getName(), barSpanValue.getValue());
 	}
 
