@@ -28,18 +28,19 @@ public class ModuleTitleBar implements HasNode<Node> {
 	@Getter(AccessLevel.PROTECTED)
 	private final TitleBar titleBar = new TitleBar().append(Side.RIGHT, closeButton).center(new FluentHBox(graphic, titleLabel, new Spacer()));
 	
-	public ModuleTitleBar icon(final String icon) {
+	protected ModuleTitleBar icon(final String icon) {
 		graphic.text(icon);
 		return this;
 	}
 	
-	public ModuleTitleBar title(final ObservableValue<String> text) {
+	protected ModuleTitleBar title(final ObservableValue<String> text) {
 		titleLabel.textProperty().unbind();
+		titleLabel.text(null);
 		Optional.ofNullable(text).ifPresent(titleLabel.textProperty()::bind);
 		return this;
 	}
 	
-	public ModuleTitleBar closeEventHandler(@NonNull final EventHandler<ActionEvent> closeEventHandler) {
+	protected ModuleTitleBar closeEventHandler(@NonNull final EventHandler<ActionEvent> closeEventHandler) {
 		closeButton.onAction(closeEventHandler);
 		return this;
 	}

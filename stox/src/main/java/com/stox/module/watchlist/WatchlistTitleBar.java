@@ -15,6 +15,8 @@ import com.stox.module.core.model.intf.CoreConstant;
 import com.stox.module.watchlist.event.FilterChangedEvent;
 import com.stox.module.watchlist.model.Watchlist;
 import com.stox.module.watchlist.model.WatchlistEntry;
+import com.stox.module.watchlist.repository.WatchlistEntryRepository;
+import com.stox.module.watchlist.repository.WatchlistRepository;
 import com.stox.workbench.link.LinkButton;
 import com.stox.workbench.link.LinkState;
 import com.stox.workbench.module.ModuleTitleBar;
@@ -26,6 +28,9 @@ import lombok.NonNull;
 
 public class WatchlistTitleBar extends ModuleTitleBar {
 
+	private final WatchlistRepository watchlistRepository;
+	private final WatchlistEntryRepository watchlistEntryRepository;
+	
 	private final Toggle searchToggle;
 	private final SearchBox<WatchlistEntry> searchBox;
 	private final SearchableListView<WatchlistEntry> listView;
@@ -33,8 +38,12 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 	private final FluentComboBox<Watchlist> watchlistComboBox = new FluentComboBox<Watchlist>().classes("primary", "inverted").fullWidth();
 	private final FluentComboBox<BarSpan> barSpanComboBox = new FluentComboBox<BarSpan>().items(BarSpan.values()).classes("primary", "inverted").fullWidth();
 
-	public WatchlistTitleBar(@NonNull final SearchableListView<WatchlistEntry> listView) {
+	public WatchlistTitleBar(@NonNull final SearchableListView<WatchlistEntry> listView,
+			@NonNull final WatchlistRepository watchlistRepository,
+			@NonNull final WatchlistEntryRepository watchlistEntryRepository) {
 		this.listView = listView;
+		this.watchlistRepository = watchlistRepository;
+		this.watchlistEntryRepository = watchlistEntryRepository;
 		this.searchBox = new SearchBox<WatchlistEntry>(listView, this::test);
 		getTitleBar().append(Side.RIGHT, linkButton);
 		getTitleBar().append(Side.BOTTOM, watchlistComboBox);
@@ -51,12 +60,9 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 	}
 
 	WatchlistTitleBar select(final Watchlist watchlist) {
-		Selector.of(watchlist).select(watchlistComboBox.getSelectionModel());
-		return this;
-	}
-
-	WatchlistTitleBar select(final WatchlistEntry entry) {
-		Selector.of(entry).select(listView.getSelectionModel());
+		final Watchlist effectiveWatchlist = Optional.ofNullable(watchlist)
+				.orElse(watchlistComboBox.getItems().isEmpty() ? null : watchlistComboBox.getItems().get(0));
+		Selector.of(effectiveWatchlist).select(watchlistComboBox.getSelectionModel());
 		return this;
 	}
 
@@ -101,6 +107,16 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 		barSpanComboBox.select(optionalState.map(WatchlistViewState::barSpan).orElse(BarSpan.D));
 		searchBox.text(optionalState.map(WatchlistViewState::searchText).orElse(null));
 		searchToggle.setSelected(optionalState.map(WatchlistViewState::searchVisible).orElse(Boolean.FALSE));
+
+		watchlistComboBox.getItems().setAll(watchlistRepository.findAll());
+		final Watchlist watchlist = watchlistRepository.find(Optional.ofNullable(state).map(WatchlistViewState::watchlistId).orElse(0));
+		final Watchlist effectiveWatchlist = Optional.ofNullable(watchlist)
+				.orElse(watchlistComboBox.getItems().isEmpty() ? null : watchlistComboBox.getItems().get(0));
+		Selector.of(effectiveWatchlist).select(watchlistComboBox.getSelectionModel());
+		filterChanged(barSpanComboBox.value(), watchlistComboBox.value());
+		
+		final WatchlistEntry entry = watchlistEntryRepository.find(Optional.ofNullable(state).map(WatchlistViewState::entryId).orElse(0));
+		Selector.of(entry).select(listView.getSelectionModel());
 		return this;
 	}
 

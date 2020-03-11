@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
 
-import com.stox.fx.fluent.beans.binding.FluentStringBinding;
 import com.stox.fx.fluent.scene.control.FluentSplitPane;
 import com.stox.fx.fluent.scene.layout.FluentBorderPane;
 import com.stox.fx.fluent.scene.layout.FluentStackPane;
@@ -50,7 +49,6 @@ import com.stox.workbench.link.LinkState;
 import com.stox.workbench.module.ModuleView;
 
 import javafx.application.Platform;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
@@ -66,6 +64,9 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 	@Getter
 	private BarSpan barSpan = BarSpan.D;
 	private ModeMouseHandler mouseModeHandler;
+	
+	@Getter
+	private final ChartingTitleBar titleBar;
 
 	private final PrimaryChart primaryChart;
 	private final FxMessageSource messageSource;
@@ -79,18 +80,20 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 	private final Consumer<LinkState> linkStateConsumer = this::linkStateChanged;
 	private final ChartingContextMenu contextMenu = new ChartingContextMenu();
 	private final VolumePlot volumePlot = new VolumePlot(configuration, volumeYAxis);
-	@Getter
-	private final ChartingTitleBar titleBar = new ChartingTitleBar(this::linkStateChanged);
 	private final FluentSplitPane splitPane = new FluentSplitPane().orientation(Orientation.VERTICAL).classes("charting-split-pane");;
 	private final Crosshair crosshair = new Crosshair(splitPane);
 	private final PanAndZoomMouseHandler panAndZoomMouseHandler = new PanAndZoomMouseHandler(splitPane);
 	private final FluentStackPane root = new FluentStackPane(verticalGrid, splitPane, crosshair.getNode()).classes("charting-root");
 
-	public ChartingView(@NonNull final ExecutorService executorService, @NonNull final FxMessageSource messageSrouce, @NonNull final BarRepository barRepository,
-			@NonNull final ScripRepository scripRepository, @NonNull final DrawingStateRepository drawingStateRepository) {
+	public ChartingView(
+			@NonNull final ExecutorService executorService, 
+			@NonNull final FxMessageSource messageSrouce, 
+			@NonNull final BarRepository barRepository,
+			@NonNull final ScripRepository scripRepository, 
+			@NonNull final DrawingStateRepository drawingStateRepository) {
 		this.messageSource = messageSrouce;
 		this.scripRepository = scripRepository;
-		title(titleBar).content(root);
+		title(titleBar = new ChartingTitleBar(messageSource, this::linkStateChanged)).content(root);
 		primaryChart = new PrimaryChart(configuration, xAxis, volumeYAxis, verticalGrid, barInfoPanel, executorService, barRepository, drawingStateRepository);
 		splitPane.getItems().add(primaryChart.container());
 		primaryChart.add(volumePlot);
@@ -281,11 +284,7 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 	}
 
 	private void updateTitleText() {
-		final Scrip scrip = primaryChart.scrip();
-		final ObservableValue<String> barSpanValue = messageSource.get(barSpan.getName());
-		getTitleBar().title(new FluentStringBinding(() -> {
-			return scrip.getName() + " - " + barSpanValue.getValue();
-		}, barSpanValue));
+		getTitleBar().title(barSpan, primaryChart.scrip());
 	}
 
 	public ChartingView mouseModeHandler(final ModeMouseHandler mouseModeHandler) {

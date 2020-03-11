@@ -1,6 +1,5 @@
 package com.stox.module.watchlist;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,7 +27,7 @@ public class WatchlistView extends ModuleView<WatchlistViewState> {
 			@NonNull final WatchlistEntryRepository watchlistEntryRepository) {
 		this.watchlistRepository = watchlistRepository;
 		this.watchlistEntryRepository = watchlistEntryRepository;
-		title(titleBar = new WatchlistTitleBar(listView));
+		title(titleBar = new WatchlistTitleBar(listView, watchlistRepository, watchlistEntryRepository));
 		titleBar.getNode().addEventHandler(FilterChangedEvent.TYPE, this::filterChanged);
 		content(listView);
 	}
@@ -36,9 +35,7 @@ public class WatchlistView extends ModuleView<WatchlistViewState> {
 	@Override
 	public WatchlistView start(WatchlistViewState state, Bounds bounds) {
 		super.start(state, bounds);
-		titleBar.state(state);
-		titleBar.select(watchlistRepository.find(Optional.ofNullable(state).map(WatchlistViewState::watchlistId).orElse(0)));
-		titleBar.select(watchlistEntryRepository.find(Optional.ofNullable(state).map(WatchlistViewState::entryId).orElse(0)));
+		titleBar.state(state).bind();
 		return this;
 	}
 
