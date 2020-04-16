@@ -18,8 +18,8 @@ import com.stox.module.watchlist.model.Watchlist;
 import com.stox.module.watchlist.model.WatchlistEntry;
 import com.stox.module.watchlist.repository.WatchlistEntryRepository;
 import com.stox.module.watchlist.repository.WatchlistRepository;
-import com.stox.module.watchlist.widget.WatchlistCreateButton;
 import com.stox.module.watchlist.widget.WatchlistControlPanel;
+import com.stox.module.watchlist.widget.WatchlistCreateButton;
 import com.stox.workbench.link.LinkButton;
 import com.stox.workbench.link.LinkState;
 import com.stox.workbench.module.ModuleTitleBar;
@@ -54,7 +54,7 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 		this.searchBox = new SearchBox<WatchlistEntry>(listView, this::test);
 		getTitleBar().append(Side.RIGHT, linkButton);
 		getTitleBar().append(Side.BOTTOM, barSpanComboBox);
-		getTitleBar().append(Side.BOTTOM, controlPanel = new WatchlistControlPanel(messageSource, watchlistRepository));
+		getTitleBar().append(Side.BOTTOM, controlPanel = new WatchlistControlPanel(messageSource, watchlistRepository, watchlistEntryRepository));
 		searchToggle = appendToggleNode(Icon.SEARCH, searchBox.getNode());
 		getTitleBar().append(Side.RIGHT, new WatchlistCreateButton(messageSource, watchlistRepository));
 	}
@@ -114,7 +114,6 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 		searchBox.text(optionalState.map(WatchlistViewState::searchText).orElse(null));
 		searchToggle.setSelected(optionalState.map(WatchlistViewState::searchVisible).orElse(Boolean.FALSE));
 
-		controlPanel.watchlists(watchlistRepository.findAll());
 		final Watchlist watchlist = watchlistRepository.find(Optional.ofNullable(state).map(WatchlistViewState::watchlistId).orElse(0));
 		controlPanel.select(watchlist);
 		filterChanged(barSpanComboBox.value(), controlPanel.watchlist());
