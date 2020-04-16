@@ -12,7 +12,7 @@ import com.stox.module.watchlist.model.Watchlist;
 import com.stox.module.watchlist.repository.WatchlistEntryRepository;
 import com.stox.module.watchlist.repository.WatchlistRepository;
 
-import javafx.beans.value.ChangeListener;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import lombok.NonNull;
 
 public class WatchlistControlPanel extends FluentHBox {
@@ -37,14 +37,9 @@ public class WatchlistControlPanel extends FluentHBox {
 		Selector.of(effectiveWatchlist).select(watchlistComboBox.getSelectionModel());
 		return this;
 	}
-
-	public Watchlist watchlist() {
-		return watchlistComboBox.value();
-	}
-
-	public WatchlistControlPanel watchlistChangeListener(ChangeListener<? super Watchlist> listener) {
-		watchlistComboBox.valueProperty().addListener(listener);
-		return this;
+	
+	public ReadOnlyObjectProperty<Watchlist> watchlistProperty(){
+		return watchlistComboBox.valueProperty();
 	}
 
 }

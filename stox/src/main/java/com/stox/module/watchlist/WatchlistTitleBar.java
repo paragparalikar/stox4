@@ -31,7 +31,6 @@ import lombok.NonNull;
 
 public class WatchlistTitleBar extends ModuleTitleBar {
 
-	private final FxMessageSource messageSource;
 	private final WatchlistRepository watchlistRepository;
 	private final WatchlistEntryRepository watchlistEntryRepository;
 	
@@ -48,7 +47,6 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 			@NonNull final WatchlistRepository watchlistRepository,
 			@NonNull final WatchlistEntryRepository watchlistEntryRepository) {
 		this.listView = listView;
-		this.messageSource = messageSource;
 		this.watchlistRepository = watchlistRepository;
 		this.watchlistEntryRepository = watchlistEntryRepository;
 		this.searchBox = new SearchBox<WatchlistEntry>(listView, this::test);
@@ -74,7 +72,7 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 
 	WatchlistTitleBar bind() {
 		barSpanComboBox.selectionModel().selectedItemProperty().addListener(this::barSpan);
-		controlPanel.watchlistChangeListener(this::watchlist);
+		controlPanel.watchlistProperty().addListener(this::watchlist);
 		listView.getSelectionModel().selectedItemProperty().addListener(
 				(o, old, entry) -> linkButton.getLink().setState(LinkState.builder()
 						.put(CoreConstant.KEY_TO, String.valueOf(0))
@@ -85,7 +83,7 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 	}
 
 	private void barSpan(final ObservableValue<? extends BarSpan> observable, final BarSpan old, final BarSpan barSpan) {
-		filterChanged(barSpan, controlPanel.watchlist());
+		filterChanged(barSpan, controlPanel.watchlistProperty().get());
 	}
 
 	private void watchlist(final ObservableValue<? extends Watchlist> observable, final Watchlist old, final Watchlist watchlist) {
@@ -102,7 +100,7 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 	WatchlistViewState state() {
 		return new WatchlistViewState()
 				.barSpan(barSpanComboBox.value())
-				.watchlistId(Optional.ofNullable(controlPanel.watchlist()).map(Watchlist::getId).orElse(null))
+				.watchlistId(Optional.ofNullable(controlPanel.watchlistProperty().get()).map(Watchlist::getId).orElse(null))
 				.entryId(Optional.ofNullable(listView.getSelectionModel().getSelectedItem()).map(WatchlistEntry::getId).orElse(null))
 				.searchText(searchBox.text())
 				.searchVisible(searchToggle.isSelected());
@@ -116,7 +114,7 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 
 		final Watchlist watchlist = watchlistRepository.find(Optional.ofNullable(state).map(WatchlistViewState::watchlistId).orElse(0));
 		controlPanel.select(watchlist);
-		filterChanged(barSpanComboBox.value(), controlPanel.watchlist());
+		filterChanged(barSpanComboBox.value(), controlPanel.watchlistProperty().get());
 		
 		final WatchlistEntry entry = watchlistEntryRepository.find(Optional.ofNullable(state).map(WatchlistViewState::entryId).orElse(0));
 		Selector.of(entry).select(listView.getSelectionModel());
