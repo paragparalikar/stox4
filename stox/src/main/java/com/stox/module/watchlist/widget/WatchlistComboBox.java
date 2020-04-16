@@ -3,24 +3,27 @@ package com.stox.module.watchlist.widget;
 import java.util.Objects;
 
 import com.stox.fx.fluent.scene.control.FluentComboBox;
+import com.stox.fx.widget.listener.CompositeChangeListener;
+import com.stox.fx.widget.listener.RootBinderSceneChangeListener;
 import com.stox.module.watchlist.event.WatchlistCreatedEvent;
 import com.stox.module.watchlist.event.WatchlistDeletedEvent;
 import com.stox.module.watchlist.event.WatchlistUpdatedEvent;
 import com.stox.module.watchlist.model.Watchlist;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.collections.FXCollections;
-import javafx.scene.Node;
+import javafx.scene.Scene;
 
 public class WatchlistComboBox extends FluentComboBox<Watchlist> {
-
+	
+	private final ChangeListener<Scene> sceneChangeListener = new CompositeChangeListener<>(
+			new RootBinderSceneChangeListener<>(WatchlistCreatedEvent.TYPE, this::created),
+			new RootBinderSceneChangeListener<>(WatchlistUpdatedEvent.TYPE, this::updated),
+			new RootBinderSceneChangeListener<>(WatchlistDeletedEvent.TYPE, this::deleted));
+	
 	public WatchlistComboBox() {
-		fullArea().sceneProperty().addListener((o,old,scene) -> bind(scene.getRoot()));
-	}
-
-	private void bind(final Node node) {
-		node.addEventHandler(WatchlistCreatedEvent.TYPE, this::created);
-		node.addEventHandler(WatchlistUpdatedEvent.TYPE, this::updated);
-		node.addEventHandler(WatchlistDeletedEvent.TYPE, this::deleted);
+		fullArea().sceneProperty().addListener(new WeakChangeListener<>(sceneChangeListener));
 	}
 	
 	private void created(final WatchlistCreatedEvent event) {
