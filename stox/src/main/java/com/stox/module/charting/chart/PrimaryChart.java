@@ -24,6 +24,7 @@ import com.stox.module.charting.plot.price.DataRequestEventHandler;
 import com.stox.module.charting.plot.price.PrimaryPricePlot;
 import com.stox.module.charting.unit.PriceUnitType;
 import com.stox.module.charting.widget.BarInfoPanel;
+import com.stox.module.charting.widget.NavigationBar;
 import com.stox.module.core.model.Bar;
 import com.stox.module.core.model.BarSpan;
 import com.stox.module.core.model.Scrip;
@@ -37,6 +38,7 @@ public class PrimaryChart extends Chart {
 	private final MutableXAxis xAxis;
 	private final DateTimeAxis dateTimeAxis;
 	private final BarRepository barRepository;
+	private final NavigationBar navigationBar;
 	private final ExecutorService executorService;
 	private final PrimaryPricePlot primaryPricePlot;
 	private final DrawingStateRepository drawingStateRepository;
@@ -49,6 +51,7 @@ public class PrimaryChart extends Chart {
 		super(xAxis, configuration, volumeYAxis);
 		this.xAxis = xAxis;
 		this.barRepository = barRepository;
+		this.navigationBar = new NavigationBar(xAxis);
 		this.executorService = executorService;
 		this.drawingStateRepository = drawingStateRepository;
 
@@ -56,7 +59,7 @@ public class PrimaryChart extends Chart {
 		container().bottom((dateTimeAxis = new DateTimeAxis(verticalGrid)));
 		plotInfoContainer().getChildren().add(barInfoPanel);
 		primaryPricePlot = new PrimaryPricePlot(barInfoPanel, configuration);
-		content().getChildren().add(primaryPricePlot.container());
+		content().getChildren().addAll(primaryPricePlot.container(), navigationBar);
 		primaryPricePlot.container().toFront();
 		bind();
 	}
@@ -102,6 +105,8 @@ public class PrimaryChart extends Chart {
 		super.bind();
 		content().widthProperty().addListener((o, old, value) -> xAxis.setWidth(value.doubleValue()));
 		primaryPricePlot.container().addEventHandler(DataRequestEvent.TYPE, new DataRequestEventHandler(primaryPricePlot, barRepository, executorService));
+		navigationBar.layoutXProperty().bind(content().widthProperty().subtract(navigationBar.widthProperty()).divide(2));
+		navigationBar.layoutYProperty().bind(content().heightProperty().subtract(navigationBar.heightProperty()).subtract(50));
 		return this;
 	}
 
