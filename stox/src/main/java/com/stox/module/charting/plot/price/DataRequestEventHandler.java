@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
+import com.stox.fx.widget.Ui;
 import com.stox.module.charting.axis.horizontal.XAxis;
 import com.stox.module.charting.event.DataChangedEvent;
 import com.stox.module.charting.event.DataRequestEvent;
@@ -13,6 +14,7 @@ import com.stox.module.core.model.Scrip;
 import com.stox.module.core.persistence.BarRepository;
 
 import javafx.event.EventHandler;
+import javafx.scene.layout.Pane;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -57,7 +59,7 @@ public class DataRequestEventHandler implements EventHandler<DataRequestEvent> {
 
 	private void doLoad(Scrip scrip, BarSpan barSpan, long to, XAxis xAxis) {
 		try {
-			final List<Bar> bars = load(scrip, barSpan, to);
+			final List<Bar> bars = load(scrip, barSpan, to, xAxis.getUnitWidth());
 			if (equals(scrip, barSpan, to)) {
 				fullyLoaded = bars.isEmpty();
 				if (!fullyLoaded) {
@@ -78,10 +80,11 @@ public class DataRequestEventHandler implements EventHandler<DataRequestEvent> {
 		}
 	}
 
-	private List<Bar> load(Scrip scrip, final BarSpan barSpan, final long to) {
+	private List<Bar> load(Scrip scrip, final BarSpan barSpan, final long to, final double unitWidth) {
 		final List<Bar> models = pricePlot.models();
 		final long effectiveTo = models.isEmpty() ? (0 >= to ? System.currentTimeMillis() : to) : models.get(models.size() - 1).getDate() - barSpan.getMillis();
-		return barRepository.find(scrip.getIsin(), barSpan, effectiveTo, 400);
+		final int count = (int) Math.ceil((Ui.getParentOfType(Pane.class, pricePlot.container()).getWidth() / unitWidth));
+		return barRepository.find(scrip.getIsin(), barSpan, effectiveTo, count);
 	}
 
 	private boolean shouldLoad(int endIndex) {
