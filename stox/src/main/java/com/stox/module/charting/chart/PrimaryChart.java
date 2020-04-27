@@ -30,6 +30,9 @@ import com.stox.module.core.model.BarSpan;
 import com.stox.module.core.model.Scrip;
 import com.stox.module.core.persistence.BarRepository;
 
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
+import javafx.scene.Node;
 import lombok.Builder;
 import lombok.NonNull;
 
@@ -61,6 +64,7 @@ public class PrimaryChart extends Chart {
 		primaryPricePlot = new PrimaryPricePlot(barInfoPanel, configuration);
 		content().getChildren().addAll(primaryPricePlot.container(), navigationBar);
 		primaryPricePlot.container().toFront();
+		navigationBar.toFront();
 		bind();
 	}
 	
@@ -107,6 +111,7 @@ public class PrimaryChart extends Chart {
 		primaryPricePlot.container().addEventHandler(DataRequestEvent.TYPE, new DataRequestEventHandler(primaryPricePlot, barRepository, executorService));
 		navigationBar.layoutXProperty().bind(content().widthProperty().subtract(navigationBar.widthProperty()).divide(2));
 		navigationBar.layoutYProperty().bind(content().heightProperty().subtract(navigationBar.heightProperty()).subtract(50));
+		content().getChildren().addListener((ListChangeListener<Node>)change -> Platform.runLater(() -> navigationBar.toFront()));
 		return this;
 	}
 

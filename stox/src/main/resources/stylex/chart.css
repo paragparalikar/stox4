@@ -51,14 +51,13 @@
 .charting-navigation-bar .icon {
 	-fx-pref-width: 3em;
 	-fx-min-width: 3em;
+	-fx-max-width: 3em;
 	-fx-pref-height: 3em;
 	-fx-min-height: 3em;
-	/* -fx-border-radius: 1.5em;
-	-fx-background-radius: 1.5em; */
+	-fx-max-height: 3em;
 	-fx-background-color: light;
 	-fx-opacity: 0.3;
 	-fx-font-size: 2em;
-	-fx-opacity: 0.25;
 	-fx-text-fill: darkest;
 }
 
