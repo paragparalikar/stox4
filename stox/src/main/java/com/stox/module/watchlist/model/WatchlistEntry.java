@@ -9,12 +9,14 @@ import com.stox.module.core.model.intf.HasBarSpan;
 import com.stox.module.core.model.intf.HasId;
 import com.stox.module.core.model.intf.HasScrip;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class WatchlistEntry implements HasId<Integer>, HasScrip, HasBarSpan, Comparable<WatchlistEntry>{
 	public static final Comparator<WatchlistEntry> COMPARATOR = (one, two) -> one.scrip.getName().compareToIgnoreCase(two.getScrip().getName());
 
@@ -32,6 +34,11 @@ public class WatchlistEntry implements HasId<Integer>, HasScrip, HasBarSpan, Com
 	@Override
 	public int compareTo(WatchlistEntry other) {
 		return Objects.compare(this, other, COMPARATOR);
+	}
+	
+	@Override
+	public String toString() {
+		return scrip.getName();
 	}
 	
 }

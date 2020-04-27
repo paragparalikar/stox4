@@ -57,12 +57,14 @@ public class ChartingModule extends UiModule<ChartingViewState> {
 	@Override
 	protected ModuleView<ChartingViewState> buildModuleView() {
 		final Context context = getContext();
-		return new ChartingView(
+		final ChartingView chartingView = new ChartingView(
 				context.getScheduledExecutorService(), 
 				context.getMessageSource(), 
 				context.getBarRepository(), 
 				context.getScripRepository(),
 				drawingStateRepository);
+		context.getContextMenuConfigurers().forEach(configurer -> configurer.accept(chartingView.getContextMenu(), chartingView));
+		return chartingView;
 	}
 
 }

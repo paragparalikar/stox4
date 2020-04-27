@@ -108,10 +108,10 @@ public class PrimaryChart extends Chart {
 	protected PrimaryChart bind() {
 		super.bind();
 		content().widthProperty().addListener((o, old, value) -> xAxis.setWidth(value.doubleValue()));
-		primaryPricePlot.container().addEventHandler(DataRequestEvent.TYPE, new DataRequestEventHandler(primaryPricePlot, barRepository, executorService));
 		navigationBar.layoutXProperty().bind(content().widthProperty().subtract(navigationBar.widthProperty()).divide(2));
 		navigationBar.layoutYProperty().bind(content().heightProperty().subtract(navigationBar.heightProperty()).subtract(50));
 		content().getChildren().addListener((ListChangeListener<Node>)change -> Platform.runLater(() -> navigationBar.toFront()));
+		primaryPricePlot.container().addEventHandler(DataRequestEvent.TYPE, new DataRequestEventHandler(primaryPricePlot, barRepository, executorService));
 		return this;
 	}
 

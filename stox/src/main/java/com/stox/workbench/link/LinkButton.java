@@ -1,6 +1,11 @@
 package com.stox.workbench.link;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
 
 import com.stox.fx.fluent.scene.control.FluentLabel;
 import com.stox.fx.widget.Icon;
@@ -19,12 +24,13 @@ import javafx.scene.paint.Color;
 public class LinkButton extends MenuButton {
 
 	private final ObjectProperty<Link> linkProperty = new SimpleObjectProperty<>();
+	private final Set<Consumer<LinkState>> linkStateConsumers = Collections.newSetFromMap(new IdentityHashMap<>());
 	
 	public LinkButton() {
 		getStyleClass().add("link-button");
 		setBackground(Background.EMPTY);
 		Arrays.stream(Link.values()).forEach(link -> add(link));
-		linkProperty.addListener((o, old, link) -> setGraphic(createGraphic(link.getColor())));
+		linkProperty.addListener((o, old, link) -> linkChanged(old, link));
 		setLink(Link.GREEN);
 	}
 
@@ -53,6 +59,18 @@ public class LinkButton extends MenuButton {
 	public ObjectProperty<Link> getLinkProperty() {
 		return linkProperty;
 	}
-
 	
+	public LinkButton add(final Consumer<LinkState> linkStateConsumer) {
+		linkStateConsumers.add(linkStateConsumer);
+		Optional.ofNullable(linkProperty.get()).ifPresent(link -> link.add(linkStateConsumer));
+		return this;
+	}
+	
+	private void linkChanged(final Link old, final Link link) {
+		Optional.ofNullable(old).ifPresent(oldLink -> linkStateConsumers.forEach(consumer -> oldLink.remove(consumer)));
+		Optional.ofNullable(link).ifPresent(newLink -> {
+			setGraphic(createGraphic(link.getColor()));
+			linkStateConsumers.forEach(consumer -> newLink.add(consumer));
+		});
+	}
 }

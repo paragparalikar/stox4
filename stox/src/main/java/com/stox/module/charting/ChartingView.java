@@ -44,7 +44,6 @@ import com.stox.module.core.model.intf.HasDate;
 import com.stox.module.core.model.intf.HasScrip;
 import com.stox.module.core.persistence.BarRepository;
 import com.stox.module.core.persistence.ScripRepository;
-import com.stox.workbench.link.Link;
 import com.stox.workbench.link.LinkState;
 import com.stox.workbench.module.ModuleView;
 
@@ -67,6 +66,9 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 	
 	@Getter
 	private final ChartingTitleBar titleBar;
+	
+	@Getter
+	private final ChartingContextMenu contextMenu = new ChartingContextMenu(this);
 
 	private final PrimaryChart primaryChart;
 	private final FxMessageSource messageSource;
@@ -78,7 +80,6 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 	private final TransformerYAxis volumeYAxis = new TransformerYAxis();
 	private final Set<SecondaryChart> secondaryCharts = new HashSet<>();
 	private final Consumer<LinkState> linkStateConsumer = this::linkStateChanged;
-	private final ChartingContextMenu contextMenu = new ChartingContextMenu();
 	private final VolumePlot volumePlot = new VolumePlot(configuration, volumeYAxis);
 	private final FluentSplitPane splitPane = new FluentSplitPane().orientation(Orientation.VERTICAL).classes("charting-split-pane");;
 	private final Crosshair crosshair = new Crosshair(splitPane);
@@ -98,6 +99,7 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 		splitPane.getItems().add(primaryChart.container());
 		primaryChart.add(volumePlot);
 		tool(new ChartingToolBar(this, messageSource));
+		titleBar.getLinkButton().add(linkStateConsumer);
 		bind();
 	}
 
@@ -106,7 +108,7 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 		super.start(state, bounds);
 		mouseModeHandler(panAndZoomMouseHandler);
 		Platform.runLater(() -> {
-			linkChanged(null, titleBar.getLinkButton().getLink());
+			linkStateConsumer.accept(titleBar.getLinkButton().getLink().getState());
 			Optional.ofNullable(state).ifPresent(this::state);
 		});
 		return this;
@@ -243,11 +245,6 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 
 	public void load(final DerivativePlot<?> plot) {
 		plot.load(primaryChart.bars());
-	}
-
-	private void linkChanged(final Link old, final Link link) {
-		Optional.ofNullable(old).ifPresent(o -> old.remove(linkStateConsumer));
-		Optional.ofNullable(link).ifPresent(l -> link.add(linkStateConsumer));
 	}
 
 	private void linkStateChanged(final LinkState linkState) {

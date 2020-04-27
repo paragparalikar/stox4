@@ -24,6 +24,7 @@ import com.stox.workbench.module.ModuleViewState;
 import javafx.application.Application;
 import javafx.geometry.Bounds;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -118,5 +119,9 @@ public class Workbench {
 	
 	public Bounds visualBounds() {
 		return snapPane.getBoundsInLocal();
+	}
+	
+	public Node getRoot() {
+		return root;
 	}
 }

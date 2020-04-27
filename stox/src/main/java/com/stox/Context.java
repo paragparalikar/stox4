@@ -1,6 +1,9 @@
 package com.stox;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.BiConsumer;
 
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.module.core.persistence.BarRepository;
@@ -11,6 +14,7 @@ import com.stox.util.JsonConverter;
 import com.stox.workbench.Workbench;
 import com.stox.workbench.module.ModuleStateRepository;
 
+import javafx.scene.control.ContextMenu;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
@@ -36,6 +40,8 @@ public class Context {
 	
 	@NonNull
 	private final ScheduledExecutorService scheduledExecutorService;
+	
+	private final Set<BiConsumer<ContextMenu,Object>> contextMenuConfigurers = new HashSet<>();
 	
 
 	@NonNull

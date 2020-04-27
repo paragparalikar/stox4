@@ -55,6 +55,21 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 		getTitleBar().append(Side.BOTTOM, controlPanel = new WatchlistControlPanel(messageSource, watchlistRepository, watchlistEntryRepository));
 		searchToggle = appendToggleNode(Icon.SEARCH, searchBox.getNode());
 		getTitleBar().append(Side.RIGHT, new WatchlistCreateButton(messageSource, watchlistRepository));
+		linkButton.add(this::linkState);
+	}
+	
+	private void linkState(final LinkState state) {
+		Optional.ofNullable(state)
+		.map(value -> state.get(CoreConstant.KEY_ISIN))
+		.flatMap(this::find)
+		.filter(Predicate.isEqual(listView.getSelectionModel().getSelectedItem()).negate())
+		.ifPresent(listView.getSelectionModel()::select);
+	}
+	
+	private Optional<WatchlistEntry> find(final String isin) {
+		return listView.getItems().stream()
+				.filter(entry -> Objects.equals(entry.getScrip().getIsin(), isin))
+				.findFirst();
 	}
 
 	private boolean test(final WatchlistEntry entry, String text) {
@@ -68,6 +83,10 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 	WatchlistTitleBar select(final Watchlist watchlist) {
 		controlPanel.select(watchlist);
 		return this;
+	}
+	
+	Watchlist selected() {
+		return controlPanel.watchlistProperty().get();
 	}
 
 	WatchlistTitleBar bind() {
