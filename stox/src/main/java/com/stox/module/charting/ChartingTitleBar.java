@@ -34,14 +34,12 @@ public class ChartingTitleBar extends ModuleTitleBar {
 	}
 
 	ChartingTitleBar title(final BarSpan barSpan, final Scrip scrip) {
-		title(Stream.<Object>of(barSpan, scrip).filter(Objects::isNull).findFirst()
-				.<ObservableValue<String>>map(o -> null).orElseGet(() -> title(scrip, barSpan)));
+		if(Stream.<Object>of(barSpan, scrip).allMatch(Objects::nonNull)) {
+			final ObservableValue<String> barSpanValue = messageSource.get(barSpan.getName());
+			final ObservableValue<String> value = new FluentStringBinding(() -> title(scrip, barSpanValue), barSpanValue);
+			title(value);
+		}
 		return this;
-	}
-
-	private ObservableValue<String> title(final Scrip scrip, final BarSpan barSpan) {
-		final ObservableValue<String> barSpanValue = messageSource.get(barSpan.getName());
-		return new FluentStringBinding(() -> title(scrip, barSpanValue), barSpanValue);
 	}
 
 	private String title(final Scrip scrip, final ObservableValue<String> barSpanValue) {
