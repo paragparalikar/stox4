@@ -1,9 +1,7 @@
 package com.stox.module.explorer;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import com.stox.fx.fluent.scene.control.FluentComboBox;
 import com.stox.fx.widget.Icon;
@@ -38,21 +36,6 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 		getTitleBar().append(Side.RIGHT, linkButton);
 		getTitleBar().append(Side.BOTTOM, exchangeComboBox);
 		searchToggle = appendToggleNode(Icon.SEARCH, searchBox.getNode());
-		linkButton.add(this::linkState);
-	}
-	
-	private void linkState(final LinkState state) {
-		Optional.ofNullable(state)
-		.map(value -> state.get(CoreConstant.KEY_ISIN))
-		.flatMap(this::find)
-		.filter(Predicate.isEqual(listView.getSelectionModel().getSelectedItem()).negate())
-		.ifPresent(listView.getSelectionModel()::select);
-	}
-	
-	private Optional<Scrip> find(final String isin) {
-		return listView.getItems().stream()
-				.filter(scrip -> Objects.equals(scrip.getIsin(), isin))
-				.findFirst();
 	}
 	
 	ExplorerTitleBar select(final Scrip scrip) {
