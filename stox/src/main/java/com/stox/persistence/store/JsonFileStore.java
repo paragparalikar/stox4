@@ -4,7 +4,7 @@ import java.lang.reflect.Type;
 import java.nio.file.Path;
 
 import com.stox.util.JsonConverter;
-import com.stox.util.StringUtil;
+import com.stox.util.Strings;
 
 import lombok.NonNull;
 
@@ -35,7 +35,7 @@ public class JsonFileStore<T> implements Store<T> {
 	@Override
 	public T read() {
 		final String json = textFileStore.read();
-		return StringUtil.hasText(json) ? jsonConverter.fromJson(json, null == type ? clazz : type) : null;
+		return Strings.hasText(json) ? jsonConverter.fromJson(json, null == type ? clazz : type) : null;
 	}
 
 	@Override

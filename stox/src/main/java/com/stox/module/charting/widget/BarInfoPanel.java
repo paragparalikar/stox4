@@ -6,7 +6,7 @@ import java.util.Date;
 
 import com.stox.fx.widget.Spacer;
 import com.stox.module.core.model.Bar;
-import com.stox.util.StringUtil;
+import com.stox.util.Strings;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -57,11 +57,11 @@ public class BarInfoPanel extends HBox {
 			dateValue.setText(null);
 		} else {
 			setVisible(true);
-			openValue.setText(StringUtil.stringValueOf(bar.getOpen()));
-			highValue.setText(StringUtil.stringValueOf(bar.getHigh()));
-			lowValue.setText(StringUtil.stringValueOf(bar.getLow()));
-			closeValue.setText(StringUtil.stringValueOf(bar.getClose()));
-			volumeValue.setText(StringUtil.stringValueOf(bar.getVolume()));
+			openValue.setText(Strings.stringValueOf(bar.getOpen()));
+			highValue.setText(Strings.stringValueOf(bar.getHigh()));
+			lowValue.setText(Strings.stringValueOf(bar.getLow()));
+			closeValue.setText(Strings.stringValueOf(bar.getClose()));
+			volumeValue.setText(Strings.stringValueOf(bar.getVolume()));
 			dateValue.setText(dateFormat.format(new Date(bar.getDate())));
 		}
 	}

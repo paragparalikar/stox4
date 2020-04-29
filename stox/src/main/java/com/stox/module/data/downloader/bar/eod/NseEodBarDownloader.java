@@ -16,7 +16,7 @@ import com.stox.module.core.model.Bar;
 import com.stox.module.core.model.Exchange;
 import com.stox.module.core.model.Scrip;
 import com.stox.module.core.persistence.ScripRepository;
-import com.stox.util.StringUtil;
+import com.stox.util.Strings;
 
 import lombok.NonNull;
 
@@ -37,7 +37,7 @@ public class NseEodBarDownloader implements EodBarDownloader {
 	public List<Bar> download(Date date) throws IOException{
 		final String url = "https://www1.nseindia.com/content/historical/EQUITIES/" + bhavcopyDateFormat.format(date) + "bhav.csv.zip";
 		final HttpURLConnection connection = init((HttpURLConnection) new URL(url).openConnection());
-		final String rawData = StringUtil.toString(new ZipInputStream(connection.getInputStream()));
+		final String rawData = Strings.toString(new ZipInputStream(connection.getInputStream()));
 		final List<Bar> bars = new ArrayList<Bar>();
 		final String[] tokens = rawData.split("\n");
 		for (int index = 1; index < tokens.length; index++) {

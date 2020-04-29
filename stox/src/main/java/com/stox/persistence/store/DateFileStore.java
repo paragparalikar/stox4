@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.text.DateFormat;
 import java.util.Date;
 
-import com.stox.util.StringUtil;
+import com.stox.util.Strings;
 
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -27,7 +27,7 @@ public class DateFileStore implements Store<Date> {
 	@SneakyThrows
 	public Date read() {
 		final String text = textFileStore.read();
-		return StringUtil.hasText(text) ? dateFormat.parse(text) : null;
+		return Strings.hasText(text) ? dateFormat.parse(text) : null;
 	}
 
 	@Override

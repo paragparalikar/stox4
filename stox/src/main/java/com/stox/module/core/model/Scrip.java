@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.stox.util.StringUtil;
+import com.stox.util.Strings;
 
 import lombok.Data;
 
@@ -29,9 +29,9 @@ public class Scrip implements Comparable<Scrip> {
 	private Exchange exchange;
 
 	protected Scrip(final String isin, final String code, final String name, final Exchange exchange) {
-		StringUtil.requireText(isin);
-		StringUtil.requireText(name);
-		StringUtil.requireText(code);
+		Strings.requireText(isin);
+		Strings.requireText(name);
+		Strings.requireText(code);
 		Objects.requireNonNull(exchange);
 		this.isin = isin;
 		this.code = code;

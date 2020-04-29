@@ -1,36 +1,53 @@
 package com.stox.module.watchlist.modal;
 
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.module.watchlist.event.WatchlistCreatedEvent;
 import com.stox.module.watchlist.model.Watchlist;
 import com.stox.module.watchlist.repository.WatchlistRepository;
 
+import javafx.scene.Node;
+import lombok.Builder;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
-public class WatchlistCreateModal extends WatchlistModal<WatchlistCreateModal> {
 
+@Builder
+@RequiredArgsConstructor
+public class WatchlistCreateModal {
+
+	@NonNull
+	private final FxMessageSource messageSource;
+
+	@NonNull
 	private final WatchlistRepository watchlistRepository;
-	
-	public WatchlistCreateModal(
-			@NonNull final FxMessageSource messageSource,
-			@NonNull final WatchlistRepository watchlistRepository) {
-		super(messageSource);
-		this.watchlistRepository = watchlistRepository;
-		actionButtonText(messageSource.get("Create"));
-		title(messageSource.get("Create New Watchlist"));
+
+	public void show(@NonNull final Node caller) {
+		WatchlistModal.builder()
+				.watchlist(new Watchlist())
+				.messageSource(messageSource)
+				.watchlistValidator(this::validate)
+				.watchlistConsumer(watchlist -> save(watchlist, caller))
+				.build()
+				.actionButtonText(messageSource.get("Create"))
+				.title(messageSource.get("Create New Watchlist"))
+				.show(caller);
 	}
 
-	@Override
-	protected void action(@NonNull final String name) {
-		final Watchlist watchlist = new Watchlist();
-		watchlist.setName(name);
+	private Set<String> validate(@NonNull final Watchlist watchlist) {
+		return Optional.of(watchlist.getName())
+			.filter(watchlistRepository::exists)
+			.map(name -> String.format("Watchlist with name %s already exists", name))
+			.map(Collections::singleton)
+			.orElse(Collections.emptySet());
+	}
+
+	private void save(@NonNull final Watchlist watchlist, @NonNull final Node caller) {
 		watchlistRepository.save(watchlist);
-		getNode().fireEvent(new WatchlistCreatedEvent(watchlist));
-	}
-
-	@Override
-	protected WatchlistCreateModal getThis() {
-		return this;
+		caller.fireEvent(new WatchlistCreatedEvent(watchlist));
 	}
 
 }

@@ -6,7 +6,7 @@ import com.stox.fx.widget.Ui;
 import com.stox.module.charting.axis.horizontal.XAxis;
 import com.stox.module.charting.axis.vertical.YAxis;
 import com.stox.module.charting.event.UpdatableRequestEvent;
-import com.stox.util.StringUtil;
+import com.stox.util.Strings;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -51,7 +51,7 @@ public class Crosshair implements HasNode<Node>{
 	public void update(final XAxis xAxis,final YAxis yAxis) {
 		final double height = 16;
 		final double width = xAxis.getWidth();
-		valueLabel.setText(StringUtil.stringValueOf(yAxis.getValue(horizontal.getStartX())));
+		valueLabel.setText(Strings.stringValueOf(yAxis.getValue(horizontal.getStartX())));
 		valueLabel.resizeRelocate(region.getWidth() - width, horizontal.getStartY() - height / 2, width, height);
 	}
 

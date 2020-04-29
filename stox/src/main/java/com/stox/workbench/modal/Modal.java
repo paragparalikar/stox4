@@ -34,22 +34,22 @@ public abstract class Modal<T extends Modal<T>> implements HasNode<Node> {
 		return getThis();
 	}
 	
-	protected T graphic(final String node) {
+	public T graphic(final String node) {
 		titleBar.graphic(node);
 		return getThis();
 	}
 	
-	protected T title(final ObservableValue<String> titleValue) {
+	public T title(final ObservableValue<String> titleValue) {
 		titleBar.title(titleValue);
 		return getThis();
 	}
 	
-	protected T content(final Node node) {
+	public T content(final Node node) {
 		container.center(node);
 		return getThis();
 	}
 	
-	protected T tool(final Node node) {
+	public T tool(final Node node) {
 		container.bottom(node);
 		return getThis();
 	}

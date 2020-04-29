@@ -1,7 +1,7 @@
 package com.stox.module.charting.axis.vertical;
 
 import com.stox.fx.widget.StaticLayoutPane;
-import com.stox.util.StringUtil;
+import com.stox.util.Strings;
 
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
@@ -39,7 +39,7 @@ public class ValueAxis extends StaticLayoutPane {
 
 	protected void tick(Double value, YAxis yAxis) {
 		add(0, yAxis.getY(value) - getLabelHeight() / 2 - getPaddingTop(),
-				new Label(StringUtil.stringValueOf(value)));
+				new Label(Strings.stringValueOf(value)));
 	}
 
 	protected double snap(double value) {

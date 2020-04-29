@@ -14,7 +14,7 @@ import com.stox.module.charting.plot.info.ValuePlotInfoPane;
 import com.stox.module.charting.unit.BarUnit;
 import com.stox.module.charting.unit.Unit;
 import com.stox.module.core.model.Bar;
-import com.stox.util.StringUtil;
+import com.stox.util.Strings;
 
 import javafx.scene.Node;
 
@@ -32,7 +32,7 @@ public class VolumePlot extends DerivativePlot<Double> {
 	@Override
 	public void showIndexInfo(int index) {
 		final List<Double> values = models();
-		valuePlotInfoPane.setValue(index >= 0 && index < values.size() ? StringUtil.stringValueOf(values.get(index)) : null);
+		valuePlotInfoPane.setValue(index >= 0 && index < values.size() ? Strings.stringValueOf(values.get(index)) : null);
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import com.stox.fx.fluent.scene.control.FluentTextField;
 import com.stox.fx.fluent.scene.layout.FluentHBox;
 import com.stox.fx.widget.HasNode;
 import com.stox.fx.widget.Icon;
-import com.stox.util.StringUtil;
+import com.stox.util.Strings;
 
 import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
@@ -36,7 +36,7 @@ public class SearchBox<T> implements HasNode<Node>{
 	
 	private void next() {
 		final String text = textField.getText();
-		if (StringUtil.hasText(text)) {
+		if (Strings.hasText(text)) {
 			boolean found = false;
 			for (int index = searchable.getSelectedIndex() + 1; index < searchable.size(); index++) {
 				if (matcher.test(searchable.get(index), text)) {

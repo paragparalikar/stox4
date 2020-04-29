@@ -18,11 +18,11 @@ public abstract class ActionModal<T extends ActionModal<T>> extends Modal<T> {
 		tool(buttonBar);
 	}
 	
-	protected T actionButtonText(final ObservableValue<String> value) {
+	public T actionButtonText(final ObservableValue<String> value) {
 		return bind(actionButton, value);
 	}
 	
-	protected T cancelButtonText(final ObservableValue<String> value) {
+	public T cancelButtonText(final ObservableValue<String> value) {
 		return bind(cancelButton, value);
 	}
 

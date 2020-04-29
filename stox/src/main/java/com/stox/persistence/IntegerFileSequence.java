@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.util.function.Supplier;
 
 import com.stox.persistence.store.TextFileStore;
-import com.stox.util.StringUtil;
+import com.stox.util.Strings;
 
 import lombok.NonNull;
 
@@ -19,7 +19,7 @@ public class IntegerFileSequence implements Supplier<Integer> {
 	@Override
 	public Integer get() {
 		final String text = textFileStore.read();
-		final Integer id = StringUtil.hasText(text) ? Integer.parseInt(text) + 1 : 1;
+		final Integer id = Strings.hasText(text) ? Integer.parseInt(text) + 1 : 1;
 		textFileStore.write(id.toString());
 		return id;
 	}

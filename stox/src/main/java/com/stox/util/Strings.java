@@ -8,10 +8,11 @@ import java.io.InputStreamReader;
 import java.text.NumberFormat;
 import java.util.StringJoiner;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.zip.ZipInputStream;
 
-public class StringUtil {
+public class Strings {
 	
 	// TODO get rid of this
 	private static final NumberFormat currencyFormat = NumberFormat.getInstance();
@@ -110,4 +111,8 @@ public class StringUtil {
 		return String.valueOf(currencyFormat.format(value) + text);
 	}
 
+	public static Predicate<String> equalsIgnoreCase(final String other){
+		return text -> text == other ? true : (null == text ? false : (text.equalsIgnoreCase(other)));
+	}
+	
 }
