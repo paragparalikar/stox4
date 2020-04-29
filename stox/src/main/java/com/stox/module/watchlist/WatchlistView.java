@@ -14,6 +14,7 @@ import com.stox.module.watchlist.model.Watchlist;
 import com.stox.module.watchlist.model.WatchlistEntry;
 import com.stox.module.watchlist.repository.WatchlistEntryRepository;
 import com.stox.module.watchlist.repository.WatchlistRepository;
+import com.stox.module.watchlist.widget.WatchlistEntryListCell;
 import com.stox.workbench.module.ModuleView;
 
 import javafx.beans.value.ChangeListener;
@@ -40,6 +41,7 @@ public class WatchlistView extends ModuleView<WatchlistViewState> {
 		title(titleBar = new WatchlistTitleBar(messageSource, listView, watchlistRepository, watchlistEntryRepository));
 		titleBar.getNode().addEventHandler(FilterChangedEvent.TYPE, this::filterChanged);
 		getNode().sceneProperty().addListener(new WeakChangeListener<>(sceneChangeListener));
+		listView.setCellFactory(value -> new WatchlistEntryListCell(watchlistEntryRepository));
 		content(listView);
 	}
 	
