@@ -6,6 +6,4 @@ import javafx.scene.Node;
 
 public interface ChartingToolBox extends HasNode<Node>{
 
-	Node getNode();
-
 }

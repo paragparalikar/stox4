@@ -34,7 +34,7 @@ public class CachingRepository<T extends HasId<Integer>> extends SimpleRepositor
 	
 	private List<T> load(){
 		final List<T> entities = super.findAll();
-		cache.putAll(entities.stream().collect(Collectors.toMap(T::getId, Function.identity())));
+		cache.putAll(entities.stream().collect(Collectors.toMap(T::id, Function.identity())));
 		supplier = cache::values;
 		return entities;
 	}
@@ -49,7 +49,7 @@ public class CachingRepository<T extends HasId<Integer>> extends SimpleRepositor
 	@Override
 	public void update(T entity) {
 		super.update(entity);
-		cache.put(entity.getId(), entity);
+		cache.put(entity.id(), entity);
 	}
 
 	@Override

@@ -68,15 +68,15 @@ public class AddToWatchlistMenu extends Menu {
 		final Scrip scrip = scripSupplier.get();
 		final BarSpan barSpan = barSpanSupplier.get();
 		if(Stream.<Object>of(scrip, barSpan).allMatch(Objects::nonNull)
-				&& !watchlistEntryRepository.existsByWatchlistId(scrip.getIsin(), barSpan, watchlist.getId())) {
-			final WatchlistEntry entry = new WatchlistEntry(null, watchlist.getId(), scrip, barSpan);
+				&& !watchlistEntryRepository.existsByWatchlistId(scrip.getIsin(), barSpan, watchlist.id())) {
+			final WatchlistEntry entry = new WatchlistEntry(null, watchlist.id(), scrip, barSpan);
 			watchlistEntryRepository.save(entry);
 			root.fireEvent(new WatchlistEntryCreatedEvent(entry));
 		}
 	}
 	
 	private MenuItem menuItem(final Watchlist watchlist) {
-		final MenuItem item = new MenuItem(watchlist.getName());
+		final MenuItem item = new MenuItem(watchlist.name());
 		item.setUserData(watchlist);
 		item.setOnAction(event -> addTo(watchlist));
 		return item;
@@ -89,9 +89,9 @@ public class AddToWatchlistMenu extends Menu {
 
 	private void updated(final WatchlistUpdatedEvent event) {
 		getItems().stream()
-			.filter(item -> Objects.equals(((Watchlist)item.getUserData()).getId(), event.watchlist().getId()))
+			.filter(item -> Objects.equals(((Watchlist)item.getUserData()).id(), event.watchlist().id()))
 			.findFirst()
-			.ifPresent(item -> item.setText(event.watchlist().getName()));
+			.ifPresent(item -> item.setText(event.watchlist().name()));
 		sort();
 	}
 
@@ -99,7 +99,7 @@ public class AddToWatchlistMenu extends Menu {
 		final Iterator<MenuItem> iterator = getItems().iterator();
 		while(iterator.hasNext()) {
 			final MenuItem item = iterator.next();
-			if(Objects.equals(((Watchlist)item.getUserData()).getId(), event.watchlist().getId())) {
+			if(Objects.equals(((Watchlist)item.getUserData()).id(), event.watchlist().id())) {
 				iterator.remove();
 				break;
 			}

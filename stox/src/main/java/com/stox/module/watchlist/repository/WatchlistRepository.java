@@ -19,7 +19,7 @@ public class WatchlistRepository extends CachingRepository<Watchlist> {
 	
 	public boolean exists(final String name) {
 		return findAll().stream()
-			.map(Watchlist::getName)
+			.map(Watchlist::name)
 			.map(String::trim)
 			.anyMatch(Strings.equalsIgnoreCase(Optional.ofNullable(name)
 					.map(String::trim)

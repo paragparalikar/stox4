@@ -4,6 +4,6 @@ import com.stox.module.core.model.BarSpan;
 
 public interface HasBarSpan {
 
-	public BarSpan getBarSpan();
+	public BarSpan barSpan();
 
 }

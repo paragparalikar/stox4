@@ -40,14 +40,14 @@ public class WatchlistEntryListCell extends ListCell<WatchlistEntry> {
 			setGraphic(null);
 		} else {
 			setGraphic(container);
-			nameLabel.setText(entry.getScrip().getName());
+			nameLabel.setText(entry.scrip().getName());
 		}
 	}
 	
 	private void delete() {
 		final WatchlistEntry watchlistEntry = getItem();
 		if(Objects.nonNull(watchlistEntry)) {
-			watchlistEntryRepository.delete(watchlistEntry.getId());
+			watchlistEntryRepository.delete(watchlistEntry.id());
 			getListView().getItems().remove(watchlistEntry);
 			fireEvent(new WatchlistEntryDeletedEvent(watchlistEntry));
 		}

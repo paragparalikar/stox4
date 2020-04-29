@@ -44,7 +44,7 @@ public class WatchlistModal extends ActionModal<WatchlistModal> {
 	protected void action() {
 		final String name = nameFormField.value();
 		if(Strings.hasText(name)) {
-			watchlist.setName(name);
+			watchlist.name(name);
 			final Set<String> messages = watchlistValidator.apply(watchlist);
 			if (messages.isEmpty()) {
 				watchlistConsumer.accept(watchlist);
@@ -63,7 +63,7 @@ public class WatchlistModal extends ActionModal<WatchlistModal> {
 	}
 
 	private void populate() {
-		nameFormField.value(watchlist.getName());
+		nameFormField.value(watchlist.name());
 	}
 
 	@Override

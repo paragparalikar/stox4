@@ -7,8 +7,8 @@ import com.stox.module.core.model.BarSpan;
 
 public interface BarProvider {
 
-	List<Bar> get(String isin, BarSpan barSpan, int count);
+	List<Bar> bars(String isin, BarSpan barSpan, int count);
 	
-	List<Bar> get(String isin, BarSpan barSpan, long from, long to);
+	List<Bar> bars(String isin, BarSpan barSpan, long from, long to);
 	
 }

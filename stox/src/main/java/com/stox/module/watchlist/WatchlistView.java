@@ -46,9 +46,9 @@ public class WatchlistView extends ModuleView<WatchlistViewState> {
 	}
 	
 	private void watchlistEntryCreated(final WatchlistEntryCreatedEvent event) {
-		final Integer watchlistId = event.getWatchlistEntry().getWatchlistId();
+		final Integer watchlistId = event.getWatchlistEntry().watchlistId();
 		Optional.ofNullable(titleBar.selected())
-			.map(Watchlist::getId)
+			.map(Watchlist::id)
 			.filter(Predicate.isEqual(watchlistId))
 			.ifPresent(id -> {
 				listView.getItems().add(event.getWatchlistEntry());

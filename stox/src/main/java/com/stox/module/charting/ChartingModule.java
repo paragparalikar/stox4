@@ -63,7 +63,7 @@ public class ChartingModule extends UiModule<ChartingViewState> {
 				context.getBarRepository(), 
 				context.getScripRepository(),
 				drawingStateRepository);
-		context.getContextMenuConfigurers().forEach(configurer -> configurer.accept(chartingView.getContextMenu(), chartingView));
+		context.getContextMenuConfigurers().forEach(configurer -> configurer.accept(chartingView.contextMenu(), chartingView));
 		return chartingView;
 	}
 

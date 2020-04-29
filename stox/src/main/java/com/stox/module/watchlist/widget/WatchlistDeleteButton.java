@@ -38,7 +38,7 @@ public class WatchlistDeleteButton extends FluentButton {
 			new ConfirmationModal(() -> delete(watchlist))
 					.title(messageSource.get("Please Confirm"))
 					.message(new FluentStringBinding(() -> {
-						return message.getValue() + " - " + watchlist.getName();
+						return message.getValue() + " - " + watchlist.name();
 					}, message))
 					.cancelButtonText(messageSource.get("Cancel"))
 					.actionButtonText(messageSource.get("Delete"))
@@ -47,7 +47,7 @@ public class WatchlistDeleteButton extends FluentButton {
 	}
 
 	private void delete(final Watchlist watchlist) {
-		watchlistRepository.delete(watchlist.getId());
+		watchlistRepository.delete(watchlist.id());
 		fireEvent(new WatchlistDeletedEvent(watchlist));
 	}
 }

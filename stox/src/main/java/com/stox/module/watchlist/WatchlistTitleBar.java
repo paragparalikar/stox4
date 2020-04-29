@@ -59,7 +59,7 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 
 	private boolean test(final WatchlistEntry entry, String text) {
 		text = text.trim().toLowerCase();
-		final Scrip scrip = null == entry ? null : entry.getScrip();
+		final Scrip scrip = null == entry ? null : entry.scrip();
 		return null != scrip && (scrip.getName().trim().toLowerCase().contains(text) ||
 				scrip.getCode().trim().toLowerCase().contains(text) ||
 				scrip.getIsin().trim().toLowerCase().contains(text));
@@ -81,7 +81,7 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 				(o, old, entry) -> linkButton.getLink().setState(LinkState.builder()
 						.put(CoreConstant.KEY_TO, String.valueOf(0))
 						.put(CoreConstant.KEY_BARSPAN, barSpanComboBox.value().getShortName())
-						.put(CoreConstant.KEY_ISIN, null == entry ? null : entry.getScrip().getIsin())
+						.put(CoreConstant.KEY_ISIN, null == entry ? null : entry.scrip().getIsin())
 						.build()));
 		return this;
 	}
@@ -95,8 +95,8 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 	}
 
 	private void filterChanged(@NonNull final BarSpan barSpan, final Watchlist watchlist) {
-		final Predicate<WatchlistEntry> barSpanPredicate = entry -> Objects.equals(barSpan, entry.getBarSpan());
-		final Predicate<WatchlistEntry> watchlistPredicate = entry -> Objects.equals(entry.getWatchlistId(), watchlist.getId());
+		final Predicate<WatchlistEntry> barSpanPredicate = entry -> Objects.equals(barSpan, entry.barSpan());
+		final Predicate<WatchlistEntry> watchlistPredicate = entry -> Objects.equals(entry.watchlistId(), watchlist.id());
 		final Predicate<WatchlistEntry> effectivePredicate = Optional.ofNullable(watchlist).map(w -> barSpanPredicate.and(watchlistPredicate)).orElse(barSpanPredicate);
 		getNode().fireEvent(new FilterChangedEvent(effectivePredicate));
 	}
@@ -104,8 +104,8 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 	WatchlistViewState state() {
 		return new WatchlistViewState()
 				.barSpan(barSpanComboBox.value())
-				.watchlistId(Optional.ofNullable(controlPanel.watchlistProperty().get()).map(Watchlist::getId).orElse(null))
-				.entryId(Optional.ofNullable(listView.getSelectionModel().getSelectedItem()).map(WatchlistEntry::getId).orElse(null))
+				.watchlistId(Optional.ofNullable(controlPanel.watchlistProperty().get()).map(Watchlist::id).orElse(null))
+				.entryId(Optional.ofNullable(listView.getSelectionModel().getSelectedItem()).map(WatchlistEntry::id).orElse(null))
 				.searchText(searchBox.text())
 				.searchVisible(searchToggle.isSelected());
 	}

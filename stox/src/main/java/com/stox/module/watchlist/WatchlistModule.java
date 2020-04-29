@@ -56,8 +56,8 @@ public class WatchlistModule extends UiModule<WatchlistViewState> {
 	
 	private void configure(@NonNull final ContextMenu contextMenu, @NonNull final Object target) {
 		if(HasScrip.class.isInstance(target) && HasBarSpan.class.isInstance(target)) {
-			final Supplier<Scrip> scripSupplier = () -> HasScrip.class.cast(target).getScrip();
-			final Supplier<BarSpan> barSpanSupplier = () -> HasBarSpan.class.cast(target).getBarSpan();
+			final Supplier<Scrip> scripSupplier = () -> HasScrip.class.cast(target).scrip();
+			final Supplier<BarSpan> barSpanSupplier = () -> HasBarSpan.class.cast(target).barSpan();
 			final Node root = getContext().getWorkbench().getRoot();
 			final AddToWatchlistMenu menu = AddToWatchlistMenu.builder()
 					.root(root)

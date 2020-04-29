@@ -33,7 +33,7 @@ public class WatchlistComboBox extends FluentComboBox<Watchlist> {
 	}
 
 	private void updated(final WatchlistUpdatedEvent event) {
-		final Watchlist old = items().stream().filter(item -> Objects.equals(event.watchlist().getId(), item.getId())).findFirst().orElse(null);
+		final Watchlist old = items().stream().filter(item -> Objects.equals(event.watchlist().id(), item.id())).findFirst().orElse(null);
 		items().remove(old);
 		items().add(event.watchlist());
 		FXCollections.sort(items());
@@ -41,7 +41,7 @@ public class WatchlistComboBox extends FluentComboBox<Watchlist> {
 	}
 
 	private void deleted(final WatchlistDeletedEvent event) {
-		items().remove(items().stream().filter(item -> Objects.equals(event.watchlist().getId(), item.getId())).findFirst().orElse(null));
+		items().remove(items().stream().filter(item -> Objects.equals(event.watchlist().id(), item.id())).findFirst().orElse(null));
 		if(!items().isEmpty()) {
 			select(items().get(0));
 		}

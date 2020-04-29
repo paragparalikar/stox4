@@ -2,8 +2,8 @@ package com.stox.module.core.model.intf;
 
 public interface HasId<T> {
 
-	T getId();
+	T id();
 	
-	void setId(T id);
+	HasId<T> id(T id);
 	
 }

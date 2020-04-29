@@ -31,7 +31,7 @@ public class BarSpanToolBox extends HBox implements ChartingToolBox {
 		this.messageSource = messageSource;
 		Arrays.asList(BarSpan.values()).forEach(this::buildToggle);
 
-		final LinkButton linkButton = chartingView.getTitleBar().getLinkButton();
+		final LinkButton linkButton = chartingView.titleBar().getLinkButton();
 		linkButton.getLinkProperty().addListener((o, old, link) -> linkChanged(old, link));
 		linkChanged(null, linkButton.getLink());
 		Ui.box(this);
@@ -73,7 +73,7 @@ public class BarSpanToolBox extends HBox implements ChartingToolBox {
 	}
 
 	private void linkStateChanged(LinkState linkState) {
-		final BarSpan barSpan = chartingView.getBarSpan();
+		final BarSpan barSpan = chartingView.barSpan();
 		toggleGroup.getToggles().stream().filter(toggle -> Objects.equals(toggle.getUserData(), barSpan)).forEach(toggle -> toggle.setSelected(true));
 	}
 

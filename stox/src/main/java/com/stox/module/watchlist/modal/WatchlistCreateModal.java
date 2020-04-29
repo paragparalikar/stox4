@@ -38,7 +38,7 @@ public class WatchlistCreateModal {
 	}
 
 	private Set<String> validate(@NonNull final Watchlist watchlist) {
-		return Optional.of(watchlist.getName())
+		return Optional.of(watchlist.name())
 			.filter(watchlistRepository::exists)
 			.map(name -> String.format("Watchlist with name %s already exists", name))
 			.map(Collections::singleton)

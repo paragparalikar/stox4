@@ -83,12 +83,12 @@ public class BarRepository implements BarProvider {
 	}
 	
 	@Override
-	public List<Bar> get(String isin, BarSpan barSpan, int count) {
+	public List<Bar> bars(String isin, BarSpan barSpan, int count) {
 		return find(isin, barSpan, count);
 	}
 	
 	@Override
-	public List<Bar> get(String isin, BarSpan barSpan, long from, long to) {
+	public List<Bar> bars(String isin, BarSpan barSpan, long from, long to) {
 		return find(isin, barSpan, from, to);
 	}
 

@@ -45,6 +45,7 @@ import com.stox.module.core.model.intf.HasScrip;
 import com.stox.module.core.persistence.BarRepository;
 import com.stox.module.core.persistence.ScripRepository;
 import com.stox.workbench.link.LinkState;
+import com.stox.workbench.module.ModuleTitleBar;
 import com.stox.workbench.module.ModuleView;
 
 import javafx.application.Platform;
@@ -56,7 +57,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Window;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.experimental.Accessors;
 
+@Accessors(fluent = true)
 public class ChartingView extends ModuleView<ChartingViewState> implements HasScrip, HasBarSpan, HasDate{
 
 	private long to;
@@ -68,6 +71,9 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 	private final ChartingTitleBar titleBar;
 	
 	@Getter
+	private final Configuration configuration = new Configuration();
+	
+	@Getter
 	private final ChartingContextMenu contextMenu = new ChartingContextMenu(this);
 
 	private final PrimaryChart primaryChart;
@@ -76,7 +82,6 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 	private final MutableXAxis xAxis = new MutableXAxis();
 	private final VerticalGrid verticalGrid = new VerticalGrid();
 	private final BarInfoPanel barInfoPanel = new BarInfoPanel();
-	private final Configuration configuration = new Configuration();
 	private final TransformerYAxis volumeYAxis = new TransformerYAxis();
 	private final Set<SecondaryChart> secondaryCharts = new HashSet<>();
 	private final Consumer<LinkState> linkStateConsumer = this::linkStateChanged;
@@ -281,7 +286,7 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 	}
 
 	private void updateTitleText() {
-		getTitleBar().title(barSpan, primaryChart.scrip());
+		titleBar().title(barSpan, primaryChart.scrip());
 	}
 
 	public ChartingView mouseModeHandler(final ModeMouseHandler mouseModeHandler) {
@@ -323,7 +328,7 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 		return secondaryCharts.stream().filter(chart -> chart.contains(plot)).findFirst().orElse(null);
 	}
 
-	public Date getDate() {
+	public Date date() {
 		final double x = contextMenu.getAnchorX();
 		final Point2D point = primaryChart.container().screenToLocal(x, 0);
 		final int index = xAxis.getIndex(point.getX());
@@ -372,8 +377,13 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 	}
 
 	@Override
-	public Scrip getScrip() {
+	public Scrip scrip() {
 		return primaryChart.scrip();
+	}
+
+	@Override
+	public ModuleTitleBar getTitleBar() {
+		return titleBar();
 	}
 
 }

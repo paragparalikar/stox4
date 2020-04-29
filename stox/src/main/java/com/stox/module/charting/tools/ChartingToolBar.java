@@ -5,6 +5,7 @@ import java.util.Arrays;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.module.charting.ChartingView;
 import com.stox.module.charting.drawing.DrawingToolBox;
+import com.stox.module.charting.indicator.IndicatorToolBox;
 
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.HBox;
@@ -20,7 +21,8 @@ public class ChartingToolBar extends ToolBar {
 		Arrays.asList(
 				new BarSpanToolBox(messageSource, chartingView), 
 				new PriceUnitTypeToolBox(messageSource, chartingView),
-				new DrawingToolBox(messageSource, chartingView))
+				new DrawingToolBox(messageSource, chartingView),
+				new IndicatorToolBox(messageSource, chartingView))
 		.forEach(box -> {
 			getItems().add(box.getNode());
 		});
