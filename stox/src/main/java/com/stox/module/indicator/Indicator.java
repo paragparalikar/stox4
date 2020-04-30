@@ -8,7 +8,8 @@ import com.stox.module.core.model.Bar;
 
 public interface Indicator<T, V> {
 	
-	public static final List<Indicator<?,?>> ALL = Arrays.asList(new SimpleMovingAverage());
+	public static final List<Indicator<?,?>> ALL = Arrays.asList(
+			new SimpleMovingAverage(), new RelativeStrengthIndex(), new BollingerBands());
 	
 	public static <I> I ofType(final Class<I> type) {
 		return ALL.stream().filter(type::isInstance).map(type::cast).findFirst().orElse(null);

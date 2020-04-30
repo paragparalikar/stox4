@@ -15,7 +15,8 @@ import com.stox.module.indicator.Indicator;
 import javafx.scene.Group;
 
 public interface ChartIndicator<T, V, P> extends Indicator<T, V> {
-	public static final List<ChartIndicator<?,?,?>> ALL = Arrays.asList(new ChartSimpleMovingAverage());
+	public static final List<ChartIndicator<?,?,?>> ALL = Arrays.asList(
+			new ChartSimpleMovingAverage(), new ChartRelativeStrengthIndex(), new ChartBollingerBands());
 	
 	String name();
 
