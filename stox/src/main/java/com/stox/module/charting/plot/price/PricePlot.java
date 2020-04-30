@@ -33,12 +33,12 @@ public class PricePlot extends Plot<Bar> {
 
 	@Override
 	public double max(Bar bar) {
-		return bar.getHigh();
+		return bar.high();
 	}
 
 	@Override
 	public double min(Bar bar) {
-		return bar.getLow();
+		return bar.low();
 	}
 
 }

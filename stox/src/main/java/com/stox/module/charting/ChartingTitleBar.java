@@ -35,7 +35,7 @@ public class ChartingTitleBar extends ModuleTitleBar {
 
 	ChartingTitleBar title(final BarSpan barSpan, final Scrip scrip) {
 		if(Stream.<Object>of(barSpan, scrip).allMatch(Objects::nonNull)) {
-			final ObservableValue<String> barSpanValue = messageSource.get(barSpan.getName());
+			final ObservableValue<String> barSpanValue = messageSource.get(barSpan.name());
 			final ObservableValue<String> value = new FluentStringBinding(() -> title(scrip, barSpanValue), barSpanValue);
 			title(value);
 		}
@@ -43,7 +43,7 @@ public class ChartingTitleBar extends ModuleTitleBar {
 	}
 
 	private String title(final Scrip scrip, final ObservableValue<String> barSpanValue) {
-		return String.join(" - ", scrip.getName(), barSpanValue.getValue());
+		return String.join(" - ", scrip.name(), barSpanValue.getValue());
 	}
 
 	private void linkChanged(final ObservableValue<? extends Link> observable, final Link old, final Link link) {

@@ -19,7 +19,7 @@ public class SimpleMovingAverage implements Indicator<Config, Double> {
 	}
 
 	@Override
-	public Config buildDefaultConfig() {
+	public Config defaultConfig() {
 		return new Config();
 	}
 
@@ -36,7 +36,7 @@ public class SimpleMovingAverage implements Indicator<Config, Double> {
 	}
 
 	private Double getValue(final int index, final BarValue barValue, List<Double> values, List<Bar> bars) {
-		return values.isEmpty() ? barValue.get(bars.get(index)) : values.get(index);
+		return values.isEmpty() ? barValue.resolve(bars.get(index)) : values.get(index);
 	}
 
 	@Override

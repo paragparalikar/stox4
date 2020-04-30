@@ -53,11 +53,11 @@ public class ScripRepository {
 	}
 	
 	private String format(Scrip scrip){
-		return String.join(",", scrip.getIsin(), scrip.getCode(), scrip.getName());
+		return String.join(",", scrip.isin(), scrip.code(), scrip.name());
 	}
 	
 	private Path getPath(Exchange exchange){
-		return home.resolve(Paths.get("exchanges", exchange.getCode().toLowerCase(), "scrips.csv"));
+		return home.resolve(Paths.get("exchanges", exchange.code().toLowerCase(), "scrips.csv"));
 	}
 
 	@SneakyThrows
@@ -79,8 +79,8 @@ public class ScripRepository {
 	
 	private synchronized void cache(Exchange exchange, List<Scrip> scrips){
 		exchangeScripMapping.put(exchange, scrips);
-		isinScripMapping.putAll(scrips.stream().collect(Collectors.toMap(Scrip::getIsin, Function.identity())));
-		exchangeCodeScripMapping.put(exchange, scrips.stream().collect(Collectors.toMap(Scrip::getCode, Function.identity())));
+		isinScripMapping.putAll(scrips.stream().collect(Collectors.toMap(Scrip::isin, Function.identity())));
+		exchangeCodeScripMapping.put(exchange, scrips.stream().collect(Collectors.toMap(Scrip::code, Function.identity())));
 		eventBus.fire(new ScripsChangedEvent(exchange, scrips));
 	}
 

@@ -42,18 +42,18 @@ public class IndicatorPlot<T, V, P> extends DerivativePlot<V> {
 			@NonNull final ChartIndicator<T, V, P> indicator) {
 		super(configuration);
 		this.indicator = indicator;
-		this.parent = indicator.buildParent(container());
+		this.parent = indicator.parent(container());
 		this.messageSource = messageSource;
-		this.configuration = indicator.buildDefaultConfig();
+		this.configuration = indicator.defaultConfig();
 		build();
 	}
 
 	private void build() {
-		addIns.addAll(indicator.buildAddIns(configuration, parent));
+		addIns.addAll(indicator.addIns(configuration, parent));
 		addIns.forEach(addIn -> container().getChildren().add(addIn.getNode()));
 		addIns.forEach(ChartAddIn::update);
 		parent.bindColorProperty(colorProperty());
-		valuePlotInfoPane.setName(indicator.getName());
+		valuePlotInfoPane.setName(indicator.name());
 		valuePlotInfoPane.bind(colorProperty());
 		editablePlotInfoPane.addEditEventHandler(event -> edit());
 		numberFormat.setMaximumFractionDigits(2);
@@ -68,11 +68,9 @@ public class IndicatorPlot<T, V, P> extends DerivativePlot<V> {
 		container().fireEvent(oldUnderlay.equals(underlay()) ? new ConfigChangedEvent(this) : new UnderlayChangedEvent(this));
 	}
 
-
-
 	@Override
 	public Underlay underlay() {
-		return indicator.getUnderlay(configuration);
+		return indicator.underlay(configuration);
 	}
 
 	@Override
@@ -108,7 +106,7 @@ public class IndicatorPlot<T, V, P> extends DerivativePlot<V> {
 
 	@Override
 	public Unit<V> unit() {
-		return indicator.buildUnit(parent);
+		return indicator.unit(parent);
 	}
 
 	@Override
@@ -139,12 +137,12 @@ public class IndicatorPlot<T, V, P> extends DerivativePlot<V> {
 
 	@Override
 	public double min(V model) {
-		return indicator.getMin(model);
+		return indicator.min(model);
 	}
 
 	@Override
 	public double max(V model) {
-		return indicator.getMax(model);
+		return indicator.max(model);
 	}
 
 }

@@ -12,7 +12,7 @@ public class EodBarDownloaderFactory {
 		case NSE :
 			return new NseEodBarDownloader(scripRepository);
 		default :
-			throw new UnsupportedOperationException("Exchange \""+exchange.getName()+"\" is not suppoerted yet");
+			throw new UnsupportedOperationException("Exchange \""+exchange.name()+"\" is not suppoerted yet");
 		}
 	}
 	

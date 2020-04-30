@@ -67,9 +67,9 @@ public class MutableXAxis implements XAxis {
 	@Override
 	public long getDate(int index) {
 		return null == bars || bars.isEmpty() ? 0
-				: (0 <= index && index < bars.size()) ? bars.get(index).getDate()
-						: (long) MathUtil.praportion(0, index, bars.size() - 1, bars.get(0).getDate(),
-								bars.get(bars.size() - 1).getDate());
+				: (0 <= index && index < bars.size()) ? bars.get(index).date()
+						: (long) MathUtil.praportion(0, index, bars.size() - 1, bars.get(0).date(),
+								bars.get(bars.size() - 1).date());
 	}
 
 	@Override
@@ -86,18 +86,18 @@ public class MutableXAxis implements XAxis {
 	private int getIndex(long date, int startIndex, int endIndex) {
 		final Bar start = bars.get(startIndex);
 		final Bar end = bars.get(endIndex);
-		if (date == start.getDate()) {
+		if (date == start.date()) {
 			return startIndex;
-		} else if (date == end.getDate()) {
+		} else if (date == end.date()) {
 			return endIndex;
-		} else if (date < start.getDate() || date > end.getDate()) {
-			return (int) MathUtil.praportion(start.getDate(), date, end.getDate(), startIndex, endIndex);
+		} else if (date < start.date() || date > end.date()) {
+			return (int) MathUtil.praportion(start.date(), date, end.date(), startIndex, endIndex);
 		} else {
-			final int index = (int) MathUtil.praportion(start.getDate(), date, end.getDate(), startIndex, endIndex);
+			final int index = (int) MathUtil.praportion(start.date(), date, end.date(), startIndex, endIndex);
 			if(index == startIndex || index == endIndex){
 				return index;
 			}
-			final long interpolatedIndexDate = bars.get(index).getDate();
+			final long interpolatedIndexDate = bars.get(index).date();
 			if (interpolatedIndexDate == date) {
 				return index;
 			} else if (interpolatedIndexDate < date) {

@@ -57,12 +57,12 @@ public class BarInfoPanel extends HBox {
 			dateValue.setText(null);
 		} else {
 			setVisible(true);
-			openValue.setText(Strings.stringValueOf(bar.getOpen()));
-			highValue.setText(Strings.stringValueOf(bar.getHigh()));
-			lowValue.setText(Strings.stringValueOf(bar.getLow()));
-			closeValue.setText(Strings.stringValueOf(bar.getClose()));
-			volumeValue.setText(Strings.stringValueOf(bar.getVolume()));
-			dateValue.setText(dateFormat.format(new Date(bar.getDate())));
+			openValue.setText(Strings.stringValueOf(bar.open()));
+			highValue.setText(Strings.stringValueOf(bar.high()));
+			lowValue.setText(Strings.stringValueOf(bar.low()));
+			closeValue.setText(Strings.stringValueOf(bar.close()));
+			volumeValue.setText(Strings.stringValueOf(bar.volume()));
+			dateValue.setText(dateFormat.format(new Date(bar.date())));
 		}
 	}
 

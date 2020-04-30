@@ -22,7 +22,7 @@ public abstract class AbstractChartIndicator<T, V, P> implements ChartIndicator<
 	
 	@Override
 	public String toString() {
-		return getName();
+		return name();
 	}
 
 }

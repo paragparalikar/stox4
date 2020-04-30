@@ -53,7 +53,7 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 		listView.getSelectionModel().selectedItemProperty().addListener(
 				(o, old, scrip) -> linkButton.getLink().setState(LinkState.builder()
 						.put(CoreConstant.KEY_TO, String.valueOf(0))
-						.put(CoreConstant.KEY_ISIN, null == scrip ? null : scrip.getIsin())
+						.put(CoreConstant.KEY_ISIN, null == scrip ? null : scrip.isin())
 						.build()));
 		return this;
 	}
@@ -61,7 +61,7 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 	ExplorerViewState state() {
 		final Scrip scrip = listView.getSelectionModel().getSelectedItem();
 		return new ExplorerViewState()
-				.isin(Objects.isNull(scrip) ? null : scrip.getIsin())
+				.isin(Objects.isNull(scrip) ? null : scrip.isin())
 				.exchange(exchangeComboBox.getValue())
 				.searchText(searchBox.text())
 				.searchVisible(searchToggle.isSelected());
@@ -80,9 +80,9 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 
 	public boolean test(final Scrip scrip, String text) {
 		text = text.trim().toLowerCase();
-		return null != scrip && (scrip.getName().trim().toLowerCase().contains(text) ||
-				scrip.getCode().trim().toLowerCase().contains(text) ||
-				scrip.getIsin().trim().toLowerCase().contains(text));
+		return null != scrip && (scrip.name().trim().toLowerCase().contains(text) ||
+				scrip.code().trim().toLowerCase().contains(text) ||
+				scrip.isin().trim().toLowerCase().contains(text));
 	}
 
 }

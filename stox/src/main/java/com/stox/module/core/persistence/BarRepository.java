@@ -71,7 +71,7 @@ public class BarRepository implements BarProvider {
 
 	private String getPath(final String isin, final BarSpan barSpan) {
 		final BarSpan effectiveBarSpan = barSpan.equals(BarSpan.M) || barSpan.equals(BarSpan.W) ? BarSpan.D : barSpan;
-		return home.resolve(Paths.get("bars",effectiveBarSpan.getShortName(), isin)).toString().intern();
+		return home.resolve(Paths.get("bars",effectiveBarSpan.shortName(), isin)).toString().intern();
 	}
 
 	private long getLocation(final long initialDate, final long date) {
@@ -108,8 +108,8 @@ public class BarRepository implements BarProvider {
 					file.seek(location);
 					final Bar bar = readBar(file);
 					if (null != bar) {
-						bar.setIsin(isin);
-						bar.setDate(getDate(initialDate, location));
+						bar.isin(isin);
+						bar.date(getDate(initialDate, location));
 						bars.add(bar);
 					}
 				}
@@ -148,8 +148,8 @@ public class BarRepository implements BarProvider {
 					file.seek(location);
 					final Bar bar = readBar(file);
 					if (null != bar) {
-						bar.setIsin(isin);
-						bar.setDate(getDate(initialDate, location));
+						bar.isin(isin);
+						bar.date(getDate(initialDate, location));
 						bars.add(bar);
 					}
 				}
@@ -187,8 +187,8 @@ public class BarRepository implements BarProvider {
 					file.seek(location);
 					final Bar bar = readBar(file);
 					if (null != bar) {
-						bar.setIsin(isin);
-						bar.setDate(getDate(initialDate, location));
+						bar.isin(isin);
+						bar.date(getDate(initialDate, location));
 						bars.add(bar);
 					}
 				}
@@ -202,11 +202,11 @@ public class BarRepository implements BarProvider {
 
 	private void write(final Bar bar, final RandomAccessFile file) throws IOException {
 		if (0 == file.length()) {
-			file.writeLong(bar.getDate());
+			file.writeLong(bar.date());
 			writeBar(bar, file);
 		} else {
 			file.seek(0);
-			final long location = getLocation(file.readLong(), bar.getDate());
+			final long location = getLocation(file.readLong(), bar.date());
 			pad(location, file);
 			file.seek(location);
 			writeBar(bar, file);
@@ -223,24 +223,24 @@ public class BarRepository implements BarProvider {
 	}
 
 	private void writeBar(final Bar bar, final RandomAccessFile file) throws IOException {
-		file.writeDouble(bar.getOpen());
-		file.writeDouble(bar.getHigh());
-		file.writeDouble(bar.getLow());
-		file.writeDouble(bar.getClose());
-		file.writeDouble(bar.getPreviousClose());
-		file.writeDouble(bar.getVolume());
+		file.writeDouble(bar.open());
+		file.writeDouble(bar.high());
+		file.writeDouble(bar.low());
+		file.writeDouble(bar.close());
+		file.writeDouble(bar.previousClose());
+		file.writeDouble(bar.volume());
 	}
 
 	private Bar readBar(final RandomAccessFile file) throws IOException {
 		final Bar bar = new Bar();
-		bar.setOpen(file.readDouble());
-		bar.setHigh(file.readDouble());
-		bar.setLow(file.readDouble());
-		bar.setClose(file.readDouble());
-		bar.setPreviousClose(file.readDouble());
-		bar.setVolume(file.readDouble());
-		return 0 >= bar.getOpen() || 0 >= bar.getHigh() || 0 >= bar.getLow() || 0 >= bar.getClose()
-				|| 0 >= bar.getVolume() ? null : bar;
+		bar.open(file.readDouble());
+		bar.high(file.readDouble());
+		bar.low(file.readDouble());
+		bar.close(file.readDouble());
+		bar.previousClose(file.readDouble());
+		bar.volume(file.readDouble());
+		return 0 >= bar.open() || 0 >= bar.high() || 0 >= bar.low() || 0 >= bar.close()
+				|| 0 >= bar.volume() ? null : bar;
 	}
 
 	public void drop(final String isin, final BarSpan barSpan) {
@@ -279,7 +279,7 @@ public class BarRepository implements BarProvider {
 
 	@SneakyThrows
 	public void save(final Bar bar, final BarSpan barSpan) {
-		final String path = getPath(bar.getIsin(), barSpan);
+		final String path = getPath(bar.isin(), barSpan);
 		synchronized (path) {
 			try (final RandomAccessFile file = new RandomAccessFile(path, "rw")) {
 				write(bar, file);

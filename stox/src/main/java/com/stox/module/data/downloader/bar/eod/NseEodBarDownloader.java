@@ -69,14 +69,14 @@ public class NseEodBarDownloader implements EodBarDownloader {
 		final Scrip scrip = scripRepository.find(Exchange.NSE, code);
 		if(null != scrip){
 			final Bar bar = new Bar();
-			bar.setIsin(scrip.getIsin());
-			bar.setDate(date.getTime());
-			bar.setOpen(Double.parseDouble(values[2]));
-			bar.setHigh(Double.parseDouble(values[3]));
-			bar.setLow(Double.parseDouble(values[4]));
-			bar.setClose(Double.parseDouble(values[5]));
-			bar.setPreviousClose(Double.parseDouble(values[7]));
-			bar.setVolume(Double.parseDouble(values[8]));
+			bar.isin(scrip.isin());
+			bar.date(date.getTime());
+			bar.open(Double.parseDouble(values[2]));
+			bar.high(Double.parseDouble(values[3]));
+			bar.low(Double.parseDouble(values[4]));
+			bar.close(Double.parseDouble(values[5]));
+			bar.previousClose(Double.parseDouble(values[7]));
+			bar.volume(Double.parseDouble(values[8]));
 			return bar;
 		}
 		return null;

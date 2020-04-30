@@ -9,7 +9,7 @@ public class ScripMasterDownloaderFactory {
 		case NSE:
 			return new NseScripMasterDownloader();
 		default:
-			throw new UnsupportedOperationException("Exchange \"" + exchange.getName() + "\" is not suppoerted yet");
+			throw new UnsupportedOperationException("Exchange \"" + exchange.name() + "\" is not suppoerted yet");
 		}
 	}
 

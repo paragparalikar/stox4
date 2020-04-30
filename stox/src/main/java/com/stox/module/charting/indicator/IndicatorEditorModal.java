@@ -25,7 +25,9 @@ public class IndicatorEditorModal extends ActionModal<IndicatorEditorModal>{
 
 		autoVBox = new AutoUiBuilder().build(configuration);
 		autoVBox.populateView();
-		content(autoVBox).graphic(Icon.LINE_CHART)
+		title(messageSource.get(chartIndicator.name()))
+			.content(autoVBox)
+			.graphic(Icon.LINE_CHART)
 			.actionButtonText(messageSource.get("Edit"))
 			.cancelButtonText(messageSource.get("Cancel"));
 	}

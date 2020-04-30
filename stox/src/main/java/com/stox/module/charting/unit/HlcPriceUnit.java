@@ -32,14 +32,14 @@ public class HlcPriceUnit implements PriceUnit {
 		final double wickX = Ui.px(x + width / 4);
 		line.setStartX(wickX);
 		line.setEndX(wickX);
-		line.setStartY(yAxis.getY(model.getHigh()));
-		line.setEndY(yAxis.getY(model.getLow()));
+		line.setStartY(yAxis.getY(model.high()));
+		line.setEndY(yAxis.getY(model.low()));
 		close.setStartX(wickX);
 		close.setEndX(wickX + width / 2);
-		final double y = yAxis.getY(model.getClose());
+		final double y = yAxis.getY(model.close());
 		close.setStartY(y);
 		close.setEndY(y);
-		final boolean up = null != previousModel && model.getClose() > previousModel.getClose();
+		final boolean up = null != previousModel && model.close() > previousModel.close();
 		
 		line.strokeProperty().unbind();
 		line.strokeProperty().bind(up ? configuration.upBarColorProperty() : configuration.downBarColorProperty());

@@ -17,21 +17,21 @@ import javafx.scene.Group;
 public interface ChartIndicator<T, V, P> extends Indicator<T, V> {
 	public static final List<ChartIndicator<?,?,?>> ALL = Arrays.asList(new ChartSimpleMovingAverage());
 	
-	String getName();
+	String name();
 
-	UnitParent<P> buildParent(final Group group);
+	UnitParent<P> parent(final Group group);
 
-	Unit<V> buildUnit(final Parent<P> parent);
+	Unit<V> unit(final Parent<P> parent);
 
-	boolean isGroupable();
+	boolean groupable();
 
-	Underlay getUnderlay(final T config);
+	Underlay underlay(final T config);
 
-	List<ChartAddIn<V>> buildAddIns(final T config, final UnitParent<P> parent);
+	List<ChartAddIn<V>> addIns(final T config, final UnitParent<P> parent);
 
-	double getMin(V value);
+	double min(V value);
 
-	double getMax(V value);
+	double max(V value);
 
 	void layoutChartChildren(XAxis xAxis, YAxis yAxis, List<V> models, List<Unit<V>> units, UnitParent<P> parent,
 			IndicatorPlot<T, V, P> plot);

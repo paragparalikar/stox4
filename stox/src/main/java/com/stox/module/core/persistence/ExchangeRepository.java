@@ -18,7 +18,7 @@ public class ExchangeRepository {
 	private final Path path;
 	
 	private Path resolve(@NonNull final Exchange exchange) {
-		return path.resolve(Paths.get("exchanges", exchange.getCode().toLowerCase(),"last-download-date.txt"));
+		return path.resolve(Paths.get("exchanges", exchange.code().toLowerCase(),"last-download-date.txt"));
 	}
 	
 	private Store<Date> store(@NonNull final Path path){

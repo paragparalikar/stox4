@@ -1,10 +1,8 @@
 package com.stox.module.core.model;
 
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-@Getter
 @RequiredArgsConstructor
 public enum BarValue {
 
@@ -13,7 +11,7 @@ public enum BarValue {
 
 	public static BarValue findByName(@NonNull final String name) {
 		for (final BarValue barValue : values()) {
-			if (name.equalsIgnoreCase(barValue.getName())) {
+			if (name.equalsIgnoreCase(barValue.name)) {
 				return barValue;
 			}
 		}
@@ -22,33 +20,33 @@ public enum BarValue {
 
 	private final String name;
 
-	public Double get(final Bar bar) {
+	public Double resolve(final Bar bar) {
 		if (null == bar) {
 			return null;
 		}
 		switch (this) {
 		case CLOSE:
-			return bar.getClose();
+			return bar.close();
 		case HIGH:
-			return bar.getHigh();
+			return bar.high();
 		case LOW:
-			return bar.getLow();
+			return bar.low();
 		case OPEN:
-			return bar.getOpen();
+			return bar.open();
 		case SPREAD:
-			return bar.getHigh() - bar.getLow();
+			return bar.high() - bar.low();
 		case MID:
-			return (bar.getHigh() + bar.getLow()) / 2;
+			return (bar.high() + bar.low()) / 2;
 		case BODY:
-			return Math.abs(bar.getClose() - bar.getOpen());
+			return Math.abs(bar.close() - bar.open());
 		case LWICK:
-			return Math.min(bar.getClose(), bar.getOpen()) - bar.getLow();
+			return Math.min(bar.close(), bar.open()) - bar.low();
 		case UWICK:
-			return bar.getHigh() - Math.max(bar.getOpen(), bar.getClose());
+			return bar.high() - Math.max(bar.open(), bar.close());
 		case VOLUME:
-			return bar.getVolume();
+			return bar.volume();
 		default:
-			return bar.getClose();
+			return bar.close();
 		}
 	}
 	

@@ -17,7 +17,7 @@ public class AreaPriceUnit implements PriceUnit {
 	
 	@Override
 	public void update(int index, Bar model, Bar previousModel, XAxis xAxis, YAxis yAxis) {
-		parent.add(new Point2D(xAxis.getX(index) + xAxis.getUnitWidth(), yAxis.getY(model.getClose())));
+		parent.add(new Point2D(xAxis.getX(index) + xAxis.getUnitWidth(), yAxis.getY(model.close())));
 	}
 
 }

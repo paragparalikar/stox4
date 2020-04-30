@@ -34,7 +34,7 @@ public class DateTimeAxis extends StaticLayoutPane {
 			Date last = null;
 			final int increment = (int) Math.ceil(width / xAxis.getUnitWidth());
 			for (int index = xAxis.getClippedEndIndex(); index >= xAxis.getClippedStartIndex(); index -= increment) {
-				final Date date = new Date(bars.get(index).getDate());
+				final Date date = new Date(bars.get(index).date());
 				final double x = xAxis.getX(index);
 				add(x, 0, new Label(getText(last, date)));
 				last = date;

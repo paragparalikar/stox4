@@ -43,14 +43,14 @@ public class CandlePriceUnit implements PriceUnit {
 		final double wickX = (int)(x + width / 2);
 		wick.setStartX(wickX);
 		wick.setEndX(wickX);
-		wick.setStartY(yAxis.getY(model.getHigh()));
-		wick.setEndY(yAxis.getY(model.getLow()));
+		wick.setStartY(yAxis.getY(model.high()));
+		wick.setEndY(yAxis.getY(model.low()));
 
-		final double bodyTop = yAxis.getY(Math.max(model.getOpen(), model.getClose()));
-		final double bodyHeight = yAxis.getY(Math.min(model.getOpen(), model.getClose())) - bodyTop;
+		final double bodyTop = yAxis.getY(Math.max(model.open(), model.close()));
+		final double bodyHeight = yAxis.getY(Math.min(model.open(), model.close())) - bodyTop;
 		body.resizeRelocate(Ui.px(x + width * 0.2), bodyTop, width * 0.6, bodyHeight);
-		body.setBorder(model.getClose() > model.getOpen() ? configuration.upBarBorder() : configuration.downBarBorder());
-		body.setBackground(model.getClose() > model.getOpen() ? configuration.upBarBackground() : configuration.downBarBackground());
+		body.setBorder(model.close() > model.open() ? configuration.upBarBorder() : configuration.downBarBorder());
+		body.setBackground(model.close() > model.open() ? configuration.upBarBackground() : configuration.downBarBackground());
 	}
 
 }

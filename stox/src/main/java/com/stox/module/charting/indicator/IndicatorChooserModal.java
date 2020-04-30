@@ -19,7 +19,7 @@ public class IndicatorChooserModal extends ActionModal<IndicatorChooserModal>{
 			@NonNull final FxMessageSource messageSource) {
 		this.chartingView = chartingView;
 		this.messageSource = messageSource;
-		content(listView).graphic(Icon.LINE_CHART);
+		title(messageSource.get("Indicators")).content(listView).graphic(Icon.LINE_CHART);
 		listView.getItems().addAll(ChartIndicator.ALL);
 		actionButtonText(messageSource.get("Add"));
 		cancelButtonText(messageSource.get("Cancel"));

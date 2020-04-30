@@ -40,7 +40,7 @@ public class WatchlistEntryListCell extends ListCell<WatchlistEntry> {
 			setGraphic(null);
 		} else {
 			setGraphic(container);
-			nameLabel.setText(entry.scrip().getName());
+			nameLabel.setText(entry.scrip().name());
 		}
 	}
 	

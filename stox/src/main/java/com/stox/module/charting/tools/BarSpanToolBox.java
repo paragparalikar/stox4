@@ -38,9 +38,9 @@ public class BarSpanToolBox extends HBox implements ChartingToolBox {
 	}
 
 	private BarSpanToolBox buildToggle(final BarSpan barSpan) {
-		final FluentRadioButton radioButton = new FluentRadioButton(barSpan.getShortName())
+		final FluentRadioButton radioButton = new FluentRadioButton(barSpan.shortName())
 				.userData(barSpan)
-				.tooltip(Ui.tooltip(messageSource.get(barSpan.getName())))
+				.tooltip(Ui.tooltip(messageSource.get(barSpan.name())))
 				.removeStyleClass("radio-button")
 				.styleClass("toggle-button", "primary", "small")
 				.toggleGroup(toggleGroup);

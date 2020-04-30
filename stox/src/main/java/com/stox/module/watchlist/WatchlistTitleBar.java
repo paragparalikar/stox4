@@ -60,9 +60,9 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 	private boolean test(final WatchlistEntry entry, String text) {
 		text = text.trim().toLowerCase();
 		final Scrip scrip = null == entry ? null : entry.scrip();
-		return null != scrip && (scrip.getName().trim().toLowerCase().contains(text) ||
-				scrip.getCode().trim().toLowerCase().contains(text) ||
-				scrip.getIsin().trim().toLowerCase().contains(text));
+		return null != scrip && (scrip.name().trim().toLowerCase().contains(text) ||
+				scrip.code().trim().toLowerCase().contains(text) ||
+				scrip.isin().trim().toLowerCase().contains(text));
 	}
 
 	WatchlistTitleBar select(final Watchlist watchlist) {
@@ -80,8 +80,8 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 		listView.getSelectionModel().selectedItemProperty().addListener(
 				(o, old, entry) -> linkButton.getLink().setState(LinkState.builder()
 						.put(CoreConstant.KEY_TO, String.valueOf(0))
-						.put(CoreConstant.KEY_BARSPAN, barSpanComboBox.value().getShortName())
-						.put(CoreConstant.KEY_ISIN, null == entry ? null : entry.scrip().getIsin())
+						.put(CoreConstant.KEY_BARSPAN, barSpanComboBox.value().shortName())
+						.put(CoreConstant.KEY_ISIN, null == entry ? null : entry.scrip().isin())
 						.build()));
 		return this;
 	}

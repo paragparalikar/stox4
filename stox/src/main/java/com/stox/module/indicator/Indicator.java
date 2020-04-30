@@ -10,11 +10,11 @@ public interface Indicator<T, V> {
 	
 	public static final List<Indicator<?,?>> ALL = Arrays.asList(new SimpleMovingAverage());
 	
-	public static <I> I get(final Class<I> type) {
+	public static <I> I ofType(final Class<I> type) {
 		return ALL.stream().filter(type::isInstance).map(type::cast).findFirst().orElse(null);
 	}
 
-	T buildDefaultConfig();
+	T defaultConfig();
 
 	V compute(final List<Double> values, final List<Bar> bars, final T config);
 

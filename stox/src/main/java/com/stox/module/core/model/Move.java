@@ -7,19 +7,21 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 
 @RequiredArgsConstructor
+@Accessors(fluent = true)
 public class Move {
 
 	public static List<Move> parse(final List<Bar> bars, final double percentage, final BarValue barValue) {
 		boolean up = true;
 		final List<Move> moves = new ArrayList<>();
 		int lastPivotIndex = bars.size() - 1, pivotIndex = lastPivotIndex;
-		double pivotValue = barValue.get(bars.get(lastPivotIndex));
+		double pivotValue = barValue.resolve(bars.get(lastPivotIndex));
 		double max = pivotValue * (1 + (percentage / 100));
 		double min = pivotValue * (1 - (percentage / 100));
 		for (int index = lastPivotIndex; index >= 0; index--) {
-			final double value = barValue.get(bars.get(index));
+			final double value = barValue.resolve(bars.get(index));
 			if (up) {
 				if (value < min) {
 					up = false;
@@ -69,15 +71,15 @@ public class Move {
 	@Getter
 	private final int startIndex, endIndex;
 
-	public Bar getEnd() {
+	public Bar end() {
 		return bars.isEmpty() ? null : bars.get(bars.size() - 1);
 	}
 
-	public Bar getStart() {
+	public Bar start() {
 		return bars.isEmpty() ? null : bars.get(0);
 	}
 
-	public int getCount() {
+	public int count() {
 		return bars.size();
 	}
 

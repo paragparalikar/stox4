@@ -78,7 +78,7 @@ public abstract class Chart {
 	}
 
 	protected String buildId(final Scrip scrip) {
-		return null == scrip ? null : scrip.getIsin();
+		return null == scrip ? null : scrip.isin();
 	}
 
 	public Chart showIndexInfo(final int index) {

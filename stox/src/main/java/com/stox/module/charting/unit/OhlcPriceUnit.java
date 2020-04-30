@@ -38,23 +38,23 @@ public class OhlcPriceUnit implements PriceUnit {
 		final double wickX = Ui.px(x + width / 2);
 		line.setStartX(wickX);
 		line.setEndX(wickX);
-		line.setStartY(yAxis.getY(model.getHigh()));
-		line.setEndY(yAxis.getY(model.getLow()));
+		line.setStartY(yAxis.getY(model.high()));
+		line.setEndY(yAxis.getY(model.low()));
 
 		open.setStartX(wickX - width / 4);
 		open.setEndX(wickX);
 		close.setStartX(wickX);
 		close.setEndX(wickX + width / 4);
 
-		final double openY = yAxis.getY(model.getOpen());
+		final double openY = yAxis.getY(model.open());
 		open.setStartY(openY);
 		open.setEndY(openY);
 
-		final double closeY = yAxis.getY(model.getClose());
+		final double closeY = yAxis.getY(model.close());
 		close.setStartY(closeY);
 		close.setEndY(closeY);
 
-		final boolean up = null != previousModel && model.getClose() > previousModel.getClose();
+		final boolean up = null != previousModel && model.close() > previousModel.close();
 		final ObjectProperty<Color> colorProperty = up ? configuration.upBarColorProperty() : configuration.downBarColorProperty();
 		line.strokeProperty().unbind();
 		line.strokeProperty().bind(colorProperty);

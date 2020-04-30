@@ -8,27 +8,29 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
+
+@Getter
+@Accessors(fluent = true)
+@RequiredArgsConstructor
 public enum BarSpan implements Serializable, Comparable<BarSpan> {
 
 	M(Calendar.MONTH, 1, "M", "Monthly"), W(Calendar.WEEK_OF_YEAR, 1, "W", "Weekly"), D(Calendar.DATE, 1, "D", "Daily");
 
 	private final int unit;
 	private final int count;
-	private final String name;
 	private final String shortName;
+	@Getter(AccessLevel.NONE)
+	private final String name;
 
-	public static BarSpan getByShortName(final String shortName) {
-		return Arrays.stream(values()).filter(barSpan -> Objects.equals(barSpan.getShortName(), shortName)).findFirst().orElse(null);
+	public static BarSpan byShortName(final String shortName) {
+		return Arrays.stream(values()).filter(barSpan -> Objects.equals(barSpan.shortName(), shortName)).findFirst().orElse(null);
 	}
 
-	BarSpan(final int unit, final int count, final String shortName, final String name) {
-		this.unit = unit;
-		this.count = count;
-		this.name = name;
-		this.shortName = shortName;
-	}
-
-	public long getMillis() {
+	public long millis() {
 		switch (unit) {
 			case Calendar.MINUTE:
 				return 1000 * 60 * count;
@@ -44,25 +46,9 @@ public enum BarSpan implements Serializable, Comparable<BarSpan> {
 		return 0;
 	}
 
-	public int getUnit() {
-		return unit;
-	}
-
-	public int getCount() {
-		return count;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getShortName() {
-		return shortName;
-	}
-
 	@Override
 	public String toString() {
-		return getName();
+		return name;
 	}
 
 	/**
@@ -83,26 +69,26 @@ public enum BarSpan implements Serializable, Comparable<BarSpan> {
 		Bar higherBar = null;
 
 		for (final Bar bar : bars) {
-			calendar.setTimeInMillis(bar.getDate());
-			final int currentIndex = calendar.get(getUnit()) / getCount();
+			calendar.setTimeInMillis(bar.date());
+			final int currentIndex = calendar.get(unit()) / count();
 			if (previousIndex != currentIndex) {
 				higherBar = new Bar();
-				higherBar.setDate(bar.getDate());
-				higherBar.setHigh(Double.MIN_VALUE);
-				higherBar.setLow(Double.MAX_VALUE);
-				higherBar.setClose(bar.getClose());
+				higherBar.date(bar.date());
+				higherBar.high(Double.MIN_VALUE);
+				higherBar.low(Double.MAX_VALUE);
+				higherBar.close(bar.close());
 				higherBars.add(higherBar);
 				previousIndex = currentIndex;
 			}
 
-			if (bar.getHigh() > higherBar.getHigh()) {
-				higherBar.setHigh(bar.getHigh());
+			if (bar.high() > higherBar.high()) {
+				higherBar.high(bar.high());
 			}
-			if (bar.getLow() < higherBar.getLow()) {
-				higherBar.setLow(bar.getLow());
+			if (bar.low() < higherBar.low()) {
+				higherBar.low(bar.low());
 			}
-			higherBar.setOpen(bar.getOpen());
-			higherBar.setVolume(bar.getVolume() + higherBar.getVolume());
+			higherBar.open(bar.open());
+			higherBar.volume(bar.volume() + higherBar.volume());
 		}
 		return higherBars;
 	}

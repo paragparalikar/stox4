@@ -5,11 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import com.stox.util.Strings;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Value;
+import lombok.experimental.Accessors;
 
-import lombok.Data;
-
-@Data
+@Value
+@RequiredArgsConstructor
+@Accessors(fluent = true)
 public class Scrip implements Comparable<Scrip> {
 
 	private static final Map<Exchange, Map<String, Scrip>> CACHE = new EnumMap<>(Exchange.class);
@@ -20,24 +23,17 @@ public class Scrip implements Comparable<Scrip> {
 				.computeIfAbsent(isin, i -> new Scrip(isin, code, name, exchange));
 	}
 
-	private String isin;
+	@NonNull
+	private final String isin;
 
-	private String code;
+	@NonNull
+	private final String code;
 
-	private String name;
+	@NonNull
+	private final String name;
 
-	private Exchange exchange;
-
-	protected Scrip(final String isin, final String code, final String name, final Exchange exchange) {
-		Strings.requireText(isin);
-		Strings.requireText(name);
-		Strings.requireText(code);
-		Objects.requireNonNull(exchange);
-		this.isin = isin;
-		this.code = code;
-		this.name = name;
-		this.exchange = exchange;
-	}
+	@NonNull
+	private final Exchange exchange;
 
 	@Override
 	public int compareTo(Scrip scrip) {

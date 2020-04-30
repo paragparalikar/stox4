@@ -61,7 +61,7 @@ public class VolumePlot extends DerivativePlot<Double> {
 		final List<Double> models = models();
 		synchronized (models) {
 			models.clear();
-			models.addAll(bars.stream().map(bar -> bar.getVolume()).collect(Collectors.toList()));
+			models.addAll(bars.stream().map(bar -> bar.volume()).collect(Collectors.toList()));
 		}
 	}
 

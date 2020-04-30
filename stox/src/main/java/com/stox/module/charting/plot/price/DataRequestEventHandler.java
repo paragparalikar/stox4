@@ -82,9 +82,9 @@ public class DataRequestEventHandler implements EventHandler<DataRequestEvent> {
 
 	private List<Bar> load(Scrip scrip, final BarSpan barSpan, final long to, final double unitWidth) {
 		final List<Bar> models = pricePlot.models();
-		final long effectiveTo = models.isEmpty() ? (0 >= to ? System.currentTimeMillis() : to) : models.get(models.size() - 1).getDate() - barSpan.getMillis();
+		final long effectiveTo = models.isEmpty() ? (0 >= to ? System.currentTimeMillis() : to) : models.get(models.size() - 1).date() - barSpan.millis();
 		final int count = (int) Math.ceil((Ui.getParentOfType(Pane.class, pricePlot.container()).getWidth() / unitWidth));
-		return barRepository.find(scrip.getIsin(), barSpan, effectiveTo, count);
+		return barRepository.find(scrip.isin(), barSpan, effectiveTo, count);
 	}
 
 	private boolean shouldLoad(int endIndex) {

@@ -20,7 +20,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @Accessors(fluent = true)
 public class WatchlistEntry implements HasId<Integer>, HasScrip, HasBarSpan, Comparable<WatchlistEntry>{
-	public static final Comparator<WatchlistEntry> COMPARATOR = (one, two) -> one.scrip.getName().compareToIgnoreCase(two.scrip().getName());
+	public static final Comparator<WatchlistEntry> COMPARATOR = (one, two) -> one.scrip.name().compareToIgnoreCase(two.scrip().name());
 
 	private Integer id;
 	
@@ -40,7 +40,7 @@ public class WatchlistEntry implements HasId<Integer>, HasScrip, HasBarSpan, Com
 	
 	@Override
 	public String toString() {
-		return scrip.getName();
+		return scrip.name();
 	}
 	
 }

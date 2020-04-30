@@ -22,47 +22,47 @@ import lombok.experimental.Delegate;
 public class ChartSimpleMovingAverage extends AbstractChartIndicator<Config, Double, Point2D> {
 
 	@Delegate
-	private final Indicator<Config, Double> indicator = Indicator.get(SimpleMovingAverage.class);
+	private final Indicator<Config, Double> indicator = Indicator.ofType(SimpleMovingAverage.class);
 
 	@Override
-	public UnitParent<Point2D> buildParent(final Group group) {
+	public UnitParent<Point2D> parent(final Group group) {
 		final Polyline line = new Polyline();
 		group.getChildren().add(line);
 		return new PolylineUnitParent(line);
 	}
 
 	@Override
-	public String getName() {
+	public String name() {
 		return "Simple Moving Average";
 	}
 
 	@Override
-	public Unit<Double> buildUnit(final Parent<Point2D> parent) {
+	public Unit<Double> unit(final Parent<Point2D> parent) {
 		return new PointUnit(parent);
 	}
 
 	@Override
-	public List<ChartAddIn<Double>> buildAddIns(final Config config, final UnitParent<Point2D> parent) {
+	public List<ChartAddIn<Double>> addIns(final Config config, final UnitParent<Point2D> parent) {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public boolean isGroupable() {
+	public boolean groupable() {
 		return true;
 	}
 
 	@Override
-	public double getMin(Double value) {
+	public double min(Double value) {
 		return null == value ? Double.MAX_VALUE : value;
 	}
 
 	@Override
-	public double getMax(Double value) {
+	public double max(Double value) {
 		return null == value ? Double.MIN_VALUE : value;
 	}
 
 	@Override
-	public Underlay getUnderlay(final Config config) {
+	public Underlay underlay(final Config config) {
 		switch (config.getBarValue()) {
 		case OPEN:
 		case CLOSE:

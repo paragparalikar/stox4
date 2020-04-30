@@ -79,7 +79,7 @@ public class PrimaryChart extends Chart {
 	public void load(final long to, final BarSpan barSpan, final XAxis xAxis) {
 		final Scrip scrip = scrip();
 		if(drawings().isEmpty() && Objects.nonNull(scrip)) {
-			drawingStateRepository.find(scrip.getIsin()).stream().map(DrawingState::drawing).forEach(this::add);
+			drawingStateRepository.find(scrip.isin()).stream().map(DrawingState::drawing).forEach(this::add);
 		}
 		primaryPricePlot.container().fireEvent(new DataRequestEvent(to, barSpan, xAxis));
 	}
@@ -87,7 +87,7 @@ public class PrimaryChart extends Chart {
 	@Override
 	public Chart unload(Scrip scrip) {
 		final Set<DrawingState> drawingStates = drawings().stream().map(Drawing::state).collect(Collectors.toSet());
-		Optional.ofNullable(scrip).ifPresent(s -> drawingStateRepository.persist(scrip.getIsin(), drawingStates));
+		Optional.ofNullable(scrip).ifPresent(s -> drawingStateRepository.persist(scrip.isin(), drawingStates));
 		return super.unload(scrip);
 	}
 
@@ -100,7 +100,7 @@ public class PrimaryChart extends Chart {
 	
 	@Override
 	public Chart clearDrawings() {
-		Optional.ofNullable(scrip()).ifPresent(scrip -> drawingStateRepository.persist(scrip.getIsin(), Collections.emptySet()));
+		Optional.ofNullable(scrip()).ifPresent(scrip -> drawingStateRepository.persist(scrip.isin(), Collections.emptySet()));
 		return super.clearDrawings();
 	}
 

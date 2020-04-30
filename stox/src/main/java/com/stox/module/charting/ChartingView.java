@@ -258,7 +258,7 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 			reset();
 			this.to = linkState.getLong(CoreConstant.KEY_TO, 0l);
 			primaryChart.scrip(scripRepository.find(linkState.get(CoreConstant.KEY_ISIN)));
-			barSpan = Optional.ofNullable(BarSpan.getByShortName(linkState.get(CoreConstant.KEY_BARSPAN))).orElse(barSpan);
+			barSpan = Optional.ofNullable(BarSpan.byShortName(linkState.get(CoreConstant.KEY_BARSPAN))).orElse(barSpan);
 			load();
 		});
 	}
@@ -336,7 +336,7 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 		if (index >= 0 && index < bars.size()) {
 			final Bar bar = bars.get(index);
 			if (null != bar) {
-				return new Date(bar.getDate());
+				return new Date(bar.date());
 			}
 		}
 		return null;

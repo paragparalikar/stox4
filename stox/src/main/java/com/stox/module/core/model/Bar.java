@@ -1,8 +1,10 @@
 package com.stox.module.core.model;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(fluent = true)
 public class Bar implements Comparable<Bar>{
 
 	private double open;
@@ -24,5 +26,5 @@ public class Bar implements Comparable<Bar>{
 			return 0;
 		}
 	}
-	
+
 }

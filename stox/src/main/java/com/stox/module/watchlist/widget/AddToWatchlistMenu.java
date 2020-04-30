@@ -68,7 +68,7 @@ public class AddToWatchlistMenu extends Menu {
 		final Scrip scrip = scripSupplier.get();
 		final BarSpan barSpan = barSpanSupplier.get();
 		if(Stream.<Object>of(scrip, barSpan).allMatch(Objects::nonNull)
-				&& !watchlistEntryRepository.existsByWatchlistId(scrip.getIsin(), barSpan, watchlist.id())) {
+				&& !watchlistEntryRepository.existsByWatchlistId(scrip.isin(), barSpan, watchlist.id())) {
 			final WatchlistEntry entry = new WatchlistEntry(null, watchlist.id(), scrip, barSpan);
 			watchlistEntryRepository.save(entry);
 			root.fireEvent(new WatchlistEntryCreatedEvent(entry));
