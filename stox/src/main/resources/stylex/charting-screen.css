@@ -1,0 +1,12 @@
+.screen-unit{
+	-fx-background-color:transparent;
+}
+.bearish{
+	-fx-fill: derive(danger-background-color, -30%);
+}
+.bullish{
+	-fx-fill: derive(success-background-color, -30%);
+}
+.neutral{
+	-fx-fill: primary-background-color;
+}

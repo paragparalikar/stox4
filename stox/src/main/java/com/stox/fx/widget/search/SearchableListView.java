@@ -1,8 +1,8 @@
 package com.stox.fx.widget.search;
 
-import javafx.scene.control.ListView;
+import com.stox.fx.fluent.scene.control.FluentListView;
 
-public class SearchableListView<T> extends ListView<T> implements Searchable<T> {
+public class SearchableListView<T> extends FluentListView<T> implements Searchable<T> {
 
 	@Override
 	public int size() {
