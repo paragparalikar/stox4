@@ -41,7 +41,7 @@ public class RelativeStrengthIndex implements Indicator<Config, Double> {
 	}
 
 	private Double getValue(final int index, final BarValue barValue, List<Double> values, List<Bar> bars) {
-		return values.isEmpty() ? barValue.resolve(bars.get(index)) : values.get(index);
+		return null == values || values.isEmpty() ? barValue.resolve(bars.get(index)) : values.get(index);
 	}
 
 	@Override

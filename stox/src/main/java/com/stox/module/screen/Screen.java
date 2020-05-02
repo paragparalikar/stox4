@@ -9,7 +9,7 @@ import lombok.NonNull;
 
 
 public interface Screen<T> {
-	public static final List<Screen<?>> ALL = Arrays.asList(new BullishEntryBarScreen());
+	public static final List<Screen<?>> ALL = Arrays.asList(new BullishEntryBarScreen(), new BullishPriceReversalScreen());
 	
 	public static <T> Screen<T> ofType(@NonNull final Class<Screen<T>> type){
 		return ALL.stream().filter(type::isInstance).map(type::cast).findFirst().orElse(null);
