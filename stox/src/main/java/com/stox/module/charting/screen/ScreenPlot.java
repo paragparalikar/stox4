@@ -3,9 +3,11 @@ package com.stox.module.charting.screen;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.stox.fx.widget.FxMessageSource;
 import com.stox.module.charting.Configuration;
 import com.stox.module.charting.axis.horizontal.XAxis;
 import com.stox.module.charting.axis.vertical.YAxis;
+import com.stox.module.charting.event.ConfigChangedEvent;
 import com.stox.module.charting.plot.DerivativePlot;
 import com.stox.module.charting.plot.Underlay;
 import com.stox.module.charting.plot.info.EditablePlotInfoPane;
@@ -21,34 +23,29 @@ public class ScreenPlot<T> extends DerivativePlot<ScreenMatch> {
 
 	private final Screen<T> screen;
 	private final T configuration;
+	private final FxMessageSource messageSource;
 	private EditablePlotInfoPane editablePlotInfoPane;
 
-	public ScreenPlot(@NonNull final Screen<T> screen, final Configuration chartConfiguration) {
+	public ScreenPlot(
+			@NonNull final Screen<T> screen, 
+			@NonNull final FxMessageSource messageSource,
+			@NonNull final Configuration chartConfiguration) {
 		super(chartConfiguration);
 		this.screen = screen;
+		this.messageSource = messageSource;
 		configuration = screen.defaultConfig();
 		plotInfoPane().setName(screen.name());
 		editablePlotInfoPane.addEditEventHandler(event -> edit());
 	}
 
-	private void edit() {/*
-		final ModalDialogView view = new ModalDialogView();
-		view.setTitleIcon(Icon.FILTER);
-		view.setTitleText("Edit " + screen.getName());
-		view.setPseudoClassState(UiConstant.PSEUDO_CLASS_PRIMARY, true);
-		final AutoView autoView = new AutoView(configuration);
-		view.setContent(autoView);
-		view.setActionButtonText("Edit");
-		final ModalDialogPresenter presenter = new ModalDialogPresenter(view);
-		view.addActionEventHandler(event -> {
-			autoView.updateModel();
-			presenter.hide();
-			getNode().fireEvent(new ConfigChangedEvent(this));
-		});
-
-		presenter.show();
-		presenter.center();
-	*/}
+	private void edit() {
+		new ScreenEditorModal(messageSource, configuration, screen, this::configurationChanged)
+			.show(container());
+	}
+	
+	private void configurationChanged(final Object configuration) {
+		container().fireEvent(new ConfigChangedEvent(this));
+	}
 
 	@Override
 	public Underlay underlay() {
