@@ -55,6 +55,7 @@ public class AddToWatchlistMenu extends Menu {
 		this.watchlistEntryRepository = watchlistEntryRepository;
 		textProperty().bind(messageSource.get("Add to watchlist"));
 		root.sceneProperty().addListener(new WeakChangeListener<>(sceneChangeListener));
+		sceneChangeListener.changed(root.sceneProperty(), root.getScene(), root.getScene());
 		watchlistRepository.findAll().forEach(watchlist -> getItems().add(menuItem(watchlist)));
 		sort();
 	}
