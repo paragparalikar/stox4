@@ -31,11 +31,14 @@ public class DrawingStateRepository {
 
 	@SneakyThrows
 	public DrawingStateRepository persist(@NonNull final String isin, @NonNull final Set<DrawingState> drawings) {
-		if (drawings.isEmpty()) {
-			Files.deleteIfExists(path(isin));
-		} else {
-			new JsonFileStore<>(path(isin), Set.class, jsonConverter).write(drawings);
-		}
+		if (drawings.isEmpty()) remove(isin);
+		else new JsonFileStore<>(path(isin), Set.class, jsonConverter).write(drawings);
+		return this;
+	}
+	
+	@SneakyThrows
+	public DrawingStateRepository remove(@NonNull final String isin) {
+		Files.deleteIfExists(path(isin));
 		return this;
 	}
 

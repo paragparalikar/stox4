@@ -180,8 +180,9 @@ public class ChartingView extends ModuleView<ChartingViewState> implements HasSc
 		secondaryCharts.forEach(Chart::layoutChartChildren);
 	}
 
-	public void clearDrawings() {
+	public void removeDrawings() {
 		primaryChart.clearDrawings();
+		primaryChart.removeDrawings();
 		secondaryCharts.forEach(Chart::clearDrawings);
 	}
 

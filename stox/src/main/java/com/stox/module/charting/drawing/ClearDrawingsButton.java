@@ -24,7 +24,7 @@ public class ClearDrawingsButton extends Button implements EventHandler<ActionEv
 
 	@Override
 	public void handle(ActionEvent event) {
-		chartingView.clearDrawings();
+		chartingView.removeDrawings();
 	}
 
 }

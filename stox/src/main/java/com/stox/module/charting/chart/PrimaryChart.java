@@ -97,11 +97,10 @@ public class PrimaryChart extends Chart {
 		primaryPricePlot.showIndexInfo(index);
 		return this;
 	}
-	
-	@Override
-	public Chart clearDrawings() {
+
+	public PrimaryChart removeDrawings() {
 		Optional.ofNullable(scrip()).ifPresent(scrip -> drawingStateRepository.persist(scrip.isin(), Collections.emptySet()));
-		return super.clearDrawings();
+		return this;
 	}
 
 	@Override
