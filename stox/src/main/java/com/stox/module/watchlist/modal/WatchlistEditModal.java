@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.stox.fx.widget.FxMessageSource;
-import com.stox.module.watchlist.event.WatchlistCreatedEvent;
+import com.stox.module.watchlist.event.WatchlistUpdatedEvent;
 import com.stox.module.watchlist.model.Watchlist;
 import com.stox.module.watchlist.repository.WatchlistRepository;
 import com.stox.util.Strings;
@@ -35,7 +35,7 @@ public class WatchlistEditModal {
 				.watchlistValidator(this::validate)
 				.watchlistConsumer(watchlist -> save(watchlist, caller))
 				.build()
-				.actionButtonText(messageSource.get("Create"))
+				.actionButtonText(messageSource.get("Edit"))
 				.title(messageSource.get("Create New Watchlist"))
 				.show(caller);
 	}
@@ -52,7 +52,7 @@ public class WatchlistEditModal {
 
 	private void save(@NonNull final Watchlist watchlist, @NonNull final Node caller) {
 		watchlistRepository.update(watchlist);
-		caller.fireEvent(new WatchlistCreatedEvent(watchlist));
+		caller.fireEvent(new WatchlistUpdatedEvent(watchlist));
 	}
 
 }
