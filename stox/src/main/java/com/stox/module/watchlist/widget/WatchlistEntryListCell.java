@@ -7,6 +7,7 @@ import com.stox.fx.fluent.scene.control.FluentButton;
 import com.stox.fx.fluent.scene.control.FluentLabel;
 import com.stox.fx.fluent.scene.layout.FluentHBox;
 import com.stox.fx.widget.Icon;
+import com.stox.fx.widget.OrderableListCell;
 import com.stox.fx.widget.Spacer;
 import com.stox.module.watchlist.event.WatchlistEntryDeletedEvent;
 import com.stox.module.watchlist.model.WatchlistEntry;
@@ -15,11 +16,10 @@ import com.stox.module.watchlist.repository.WatchlistEntryRepository;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
 import lombok.NonNull;
 
-public class WatchlistEntryListCell extends ListCell<WatchlistEntry> {
+public class WatchlistEntryListCell extends OrderableListCell<WatchlistEntry> {
 
 	private final Button deleteButton = new FluentButton(Icon.TRASH).onAction(event -> delete()).classes("icon", "danger", "inverted");
 	private final HBox buttonsBar = new FluentHBox(deleteButton);

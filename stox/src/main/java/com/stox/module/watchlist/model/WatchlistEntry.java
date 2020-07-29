@@ -1,5 +1,6 @@
 package com.stox.module.watchlist.model;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -19,7 +20,8 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(fluent = true)
-public class WatchlistEntry implements HasId<Integer>, HasScrip, HasBarSpan, Comparable<WatchlistEntry>{
+public class WatchlistEntry implements HasId<Integer>, HasScrip, HasBarSpan, Comparable<WatchlistEntry>, Serializable{
+	private static final long serialVersionUID = 1L;
 	public static final Comparator<WatchlistEntry> COMPARATOR = (one, two) -> one.scrip.name().compareToIgnoreCase(two.scrip().name());
 
 	private Integer id;

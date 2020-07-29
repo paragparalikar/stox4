@@ -22,7 +22,7 @@
     -fx-font-size: 0.85em;
 }
 
-.auto-widget{
+.auto-widget {
 	-fx-pref-width: 10em;
 	-fx-max-width: 10em;
 	-fx-min-width: 10em;

@@ -11,6 +11,11 @@
 	-fx-border-color: derive(background-color, -8%);
 }
 
+.list-view .cell.dnd:filled {
+	-fx-border-width: 2px 0 1px 0;
+	-fx-border-color: primary-background-color transparent derive(background-color, -8%) transparent;
+}
+
 .list-view .cell:filled:selected,
 .list-view .cell:filled:focused{
 	-fx-background-color: derive(background-color, -8%);

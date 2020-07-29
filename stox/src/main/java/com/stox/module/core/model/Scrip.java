@@ -1,5 +1,6 @@
 package com.stox.module.core.model;
 
+import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,8 @@ import lombok.experimental.Accessors;
 @Value
 @RequiredArgsConstructor
 @Accessors(fluent = true)
-public class Scrip implements Comparable<Scrip> {
+public class Scrip implements Comparable<Scrip>, Serializable {
+	private static final long serialVersionUID = 1L;
 
 	private static final Map<Exchange, Map<String, Scrip>> CACHE = new EnumMap<>(Exchange.class);
 
