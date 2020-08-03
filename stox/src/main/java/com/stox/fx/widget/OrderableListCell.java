@@ -1,10 +1,9 @@
 package com.stox.fx.widget;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javafx.collections.FXCollections;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ListCell;
 import javafx.scene.input.ClipboardContent;
@@ -67,9 +66,11 @@ public class OrderableListCell<T> extends ListCell<T> {
 		if (isEligibleForDnd(event)) {
 			final String text = (String) event.getDragboard().getContent(DataFormat.PLAIN_TEXT);
 			final int sourceIndex = Integer.parseInt(text);
-			final List<T> items = getListView().getItems();
+			final List<T> items = new ArrayList<>(getListView().getItems());
 			final int currentIndex = items.indexOf(getItem());
 			items.add(currentIndex, items.remove(sourceIndex));
+			getListView().getItems().setAll(items);
+			getListView().getSelectionModel().select(currentIndex);
 			event.setDropCompleted(true);
 		}
 		event.consume();

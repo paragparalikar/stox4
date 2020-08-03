@@ -30,8 +30,10 @@ public enum Link {
 	}
 	
 	public void setState(@NonNull LinkState linkState) {
-		this.state = linkState;
-		listeners.forEach(listener -> listener.accept(linkState));
+		if(!Objects.equals(state, linkState)) {
+			this.state = linkState;
+			listeners.forEach(listener -> listener.accept(linkState));
+		}
 	}
 	
 	public Color getColor() {

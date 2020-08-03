@@ -77,13 +77,17 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 	WatchlistTitleBar bind() {
 		barSpanComboBox.selectionModel().selectedItemProperty().addListener(this::barSpan);
 		controlPanel.watchlistProperty().addListener(this::watchlist);
-		listView.getSelectionModel().selectedItemProperty().addListener(
-				(o, old, entry) -> linkButton.getLink().setState(LinkState.builder()
-						.put(CoreConstant.KEY_TO, String.valueOf(0))
-						.put(CoreConstant.KEY_BARSPAN, barSpanComboBox.value().shortName())
-						.put(CoreConstant.KEY_ISIN, null == entry ? null : entry.scrip().isin())
-						.build()));
+		listView.getSelectionModel().selectedItemProperty().addListener(this::watchlistSelectionChanged);
 		return this;
+	}
+	
+	private void watchlistSelectionChanged(final ObservableValue<? extends WatchlistEntry> observableValue, 
+			final WatchlistEntry oldValue, final WatchlistEntry newValue) {
+		Optional.ofNullable(newValue).ifPresent(watchlistEntry -> linkButton.getLink().setState(LinkState.builder()
+				.put(CoreConstant.KEY_TO, String.valueOf(0))
+				.put(CoreConstant.KEY_BARSPAN, barSpanComboBox.value().shortName())
+				.put(CoreConstant.KEY_ISIN, watchlistEntry.scrip().isin())
+				.build()));
 	}
 
 	private void barSpan(final ObservableValue<? extends BarSpan> observable, final BarSpan old, final BarSpan barSpan) {

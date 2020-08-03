@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class LinkState{
 	
 	public static LinkState.Builder builder() {
@@ -35,7 +38,7 @@ public class LinkState{
 	private final Map<String, String> properties;
 	
 	public LinkState(final Map<String, String> properties) {
-		this.properties = Collections.unmodifiableMap(new HashMap<>(Optional.ofNullable(properties).orElse(Collections.emptyMap())));
+		this.properties = Optional.ofNullable(properties).orElse(Collections.emptyMap());
 	}
 	
 	public String get(final String key) {
