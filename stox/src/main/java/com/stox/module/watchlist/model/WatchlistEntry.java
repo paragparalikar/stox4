@@ -22,9 +22,13 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 public class WatchlistEntry implements HasId<Integer>, HasScrip, HasBarSpan, Comparable<WatchlistEntry>, Serializable{
 	private static final long serialVersionUID = 1L;
-	public static final Comparator<WatchlistEntry> COMPARATOR = (one, two) -> one.scrip.name().compareToIgnoreCase(two.scrip().name());
-
+	public static final Comparator<WatchlistEntry> COMPARATOR_NAME = (one, two) -> one.scrip.name().compareToIgnoreCase(two.scrip().name());
+	public static final Comparator<WatchlistEntry> COMPARATOR_INDEX = (one, two) -> Objects.compare(one.index(), two.index(), Comparator.naturalOrder());
+	public static final Comparator<WatchlistEntry> COMPARATOR_COMPOSITE = COMPARATOR_INDEX.thenComparing(COMPARATOR_NAME);
+	
 	private Integer id;
+	
+	private Integer index;
 	
 	@NonNull
 	private Integer watchlistId;
@@ -37,7 +41,7 @@ public class WatchlistEntry implements HasId<Integer>, HasScrip, HasBarSpan, Com
 
 	@Override
 	public int compareTo(WatchlistEntry other) {
-		return Objects.compare(this, other, COMPARATOR);
+		return Objects.compare(this, other, COMPARATOR_COMPOSITE);
 	}
 	
 	@Override

@@ -1,7 +1,7 @@
 package com.stox.module.watchlist;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -69,8 +69,8 @@ public class WatchlistView extends ModuleView<WatchlistViewState> {
 	}
 
 	private void filterChanged(final FilterChangedEvent event) {
-		final Set<WatchlistEntry> entries = watchlistEntryRepository.findAll().stream()
-			.filter(event.predicate()).collect(Collectors.toSet());
+		final List<WatchlistEntry> entries = watchlistEntryRepository.findAll().stream()
+			.filter(event.predicate()).sorted().collect(Collectors.toList());
 		listView.getItems().setAll(entries);
 	}
 	

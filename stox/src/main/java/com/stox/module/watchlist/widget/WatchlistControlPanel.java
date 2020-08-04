@@ -1,5 +1,7 @@
 package com.stox.module.watchlist.widget;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -23,7 +25,10 @@ public class WatchlistControlPanel extends FluentHBox {
 			@NonNull final FxMessageSource messageSource,
 			@NonNull final WatchlistRepository watchlistRepository,
 			@NonNull final WatchlistEntryRepository watchlistEntryRepository) {
-		watchlistComboBox.items(watchlistRepository.findAll());
+		final List<Watchlist> watchlists = watchlistRepository.findAll();
+		watchlists.sort(Comparator.naturalOrder());
+		watchlistComboBox.items(watchlists);
+		
 		final Supplier<Watchlist> watchlistSupplier = watchlistComboBox::value;
 		final FluentButton editButton = new WatchlistEditButton(messageSource, watchlistSupplier, watchlistRepository).classes("icon", "primary", "inverted", "middle");
 		final FluentButton clearButton = new WatchlistClearButton(messageSource, watchlistSupplier, watchlistEntryRepository).classes("icon", "primary", "inverted", "middle");

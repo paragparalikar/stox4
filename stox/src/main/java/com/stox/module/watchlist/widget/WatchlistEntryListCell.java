@@ -2,6 +2,7 @@ package com.stox.module.watchlist.widget;
 
 
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 import com.stox.fx.fluent.scene.control.FluentButton;
 import com.stox.fx.fluent.scene.control.FluentLabel;
@@ -13,9 +14,12 @@ import com.stox.module.watchlist.event.WatchlistEntryDeletedEvent;
 import com.stox.module.watchlist.model.WatchlistEntry;
 import com.stox.module.watchlist.repository.WatchlistEntryRepository;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
+import javafx.scene.input.DragEvent;
 import javafx.scene.layout.HBox;
 import lombok.NonNull;
 
@@ -31,6 +35,15 @@ public class WatchlistEntryListCell extends OrderableListCell<WatchlistEntry> {
 	public WatchlistEntryListCell(@NonNull final WatchlistEntryRepository watchlistEntryRepository) {
 		this.watchlistEntryRepository = watchlistEntryRepository;
 		setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+		setOnDragDone(this::onDragDone);
+	}
+	
+	private void onDragDone(final DragEvent event) {
+		final ObservableList<WatchlistEntry> entries = getListView().getItems();
+		IntStream.range(0, entries.size())
+			.mapToObj(index -> entries.get(index).index(index))
+			.forEach(watchlistEntryRepository::update);
+		FXCollections.sort(entries);
 	}
 	
 	@Override
