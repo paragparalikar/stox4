@@ -4,11 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.module.core.persistence.BarRepository;
 import com.stox.module.core.persistence.ExchangeRepository;
 import com.stox.module.core.persistence.ScripRepository;
+import com.stox.module.core.widget.supplier.scrip.ScripsSupplierView;
 import com.stox.util.EventBus;
 import com.stox.util.JsonConverter;
 import com.stox.workbench.Workbench;
@@ -42,6 +44,7 @@ public class Context {
 	private final ScheduledExecutorService scheduledExecutorService;
 	
 	private final Set<BiConsumer<ContextMenu,Object>> contextMenuConfigurers = new HashSet<>();
+	private final Set<Supplier<ScripsSupplierView>> scripsSupplierViewSuppliers = new HashSet<>();
 	
 
 	@NonNull
