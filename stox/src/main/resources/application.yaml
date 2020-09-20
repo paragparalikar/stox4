@@ -1,0 +1,5 @@
+com:
+  stox:
+    home: ${user.home}/.stox4
+    date-format: dd-MMM-yyyy
+    date-format-full: dd-MMM-yyyy hh:mm:ss a

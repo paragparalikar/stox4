@@ -27,7 +27,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Screen;
-import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.Getter;
 import lombok.NonNull;
@@ -40,16 +39,15 @@ public class Workbench {
 	@Getter
 	private final WorkbenchInfoBar infoBar;
 
-	private final Stage stage;
 	private final FluentBorderPane root;
 	private final SnapPane snapPane = new SnapPane();
+	private final FluentStage stage = new FluentStage();
 	private final FluentPane glass = new FluentPane().classes("glass");
 	private final FluentStackPane rootWrapper = new FluentStackPane()
 			.addHandler(ModalShowRequestEvent.TYPE, this::show)
 			.addHandler(ModalHideRequestEvent.TYPE, this::hide);
 
-	public Workbench(@NonNull final FxMessageSource messageSource, @NonNull final FluentStage stage) {
-		this.stage = stage;
+	public Workbench(@NonNull final FxMessageSource messageSource) {
 		this.infoBar = new WorkbenchInfoBar(messageSource);
 		this.titleBar = new WorkbenchTitleBar(messageSource);
 		this.root = ResizeMouseEventHandler.resizable(new FluentBorderPane(), stage);
@@ -59,6 +57,9 @@ public class Workbench {
 				.scene(buildScene())
 				.titleProperty().bind(messageSource.get("product.name", "Stox"));
 	}
+	
+	public void show() { stage.show(); }
+	public void hide() { stage.hide(); }
 
 	public WorkbenchState state() {
 		final Map<String,LinkState> linkStates = new HashMap<>();
