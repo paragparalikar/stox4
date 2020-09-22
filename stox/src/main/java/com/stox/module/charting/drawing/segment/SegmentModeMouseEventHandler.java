@@ -12,7 +12,7 @@ import javafx.scene.input.MouseEvent;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public abstract class SegmentModeMouseEventHandler<T extends Segment> implements EventHandler<MouseEvent> {
+public abstract class SegmentModeMouseEventHandler<T extends Segment<?>> implements EventHandler<MouseEvent> {
 
 	private double x;
 	private double y;

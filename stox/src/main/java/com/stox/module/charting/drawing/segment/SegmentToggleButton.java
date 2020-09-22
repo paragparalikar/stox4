@@ -13,7 +13,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.input.MouseEvent;
 
-public abstract class SegmentToggleButton<T extends Segment> extends AbstractDrawingToggleButton {
+public abstract class SegmentToggleButton<T extends Segment<?>> extends AbstractDrawingToggleButton {
 
 	public SegmentToggleButton(ChartingView chartingView) {
 		super(chartingView);

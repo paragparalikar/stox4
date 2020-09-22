@@ -4,7 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
-import com.stox.util.Uncheck;
+import com.stox.util.function.ThrowingConsumer;
 
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -16,7 +16,7 @@ public class TextFileStore implements Store<String>  {
 	@SneakyThrows
 	public TextFileStore(@NonNull final Path path) {
 		this.path = path;
-		Optional.ofNullable(path.getParent()).ifPresent(Uncheck.consumer(Files::createDirectories));
+		Optional.ofNullable(path.getParent()).ifPresent(ThrowingConsumer.from(Files::createDirectories));
 	}
 
 	@Override
