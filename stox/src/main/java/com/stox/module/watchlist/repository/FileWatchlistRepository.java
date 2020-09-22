@@ -128,24 +128,18 @@ public class FileWatchlistRepository implements WatchlistRepository{
 
 	private Supplier<List<WatchlistEntry>> supplier(final Watchlist watchlist, final BarSpan barSpan, final Path path){
 		return () -> {
-			final List<WatchlistEntry> delegate = load(watchlist, barSpan, path);
+			final List<WatchlistEntry> delegate = new ArrayList<>();
 			final ListenableList<WatchlistEntry> list = new ListenableList<>(delegate);
-			final PersistenceListener<WatchlistEntry> listener = new PersistenceListener<>(path, this::format);
+			final PersistenceListener<WatchlistEntry> listener = 
+					PersistenceListener.<WatchlistEntry>builder()
+						.path(path)
+						.delegate(delegate)
+						.formatter(this::format)
+						.parser((index, text) -> parse(index, text, barSpan, watchlist))
+						.build();
 			list.addListener(listener);
 			return list;
 		};
-	}
-	
-	@SneakyThrows
-	private List<WatchlistEntry> load(final Watchlist watchlist, final BarSpan barSpan, final Path path){
-		final List<WatchlistEntry> list = new ArrayList<>();
-		if(Files.exists(path)) {
-			final List<String> lines = Files.readAllLines(path);
-			for(int index = 0; index < lines.size(); index++) {
-				list.add(parse(index, lines.get(index), barSpan, watchlist));
-			}
-		}
-		return list;
 	}
 	
 	private String format(WatchlistEntry entry) {

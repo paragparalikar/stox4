@@ -8,6 +8,7 @@ import com.stox.fx.fluent.beans.binding.FluentStringBinding;
 import com.stox.fx.fluent.scene.control.FluentButton;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Icon;
+import com.stox.module.watchlist.event.WatchlistClearedEvent;
 import com.stox.module.watchlist.model.Watchlist;
 import com.stox.workbench.modal.ConfirmationModal;
 
@@ -42,6 +43,7 @@ public class WatchlistClearButton extends FluentButton{
 	
 	private void clear(final Watchlist watchlist) {
 		watchlist.entries().values().forEach(Collection::clear);
+		fireEvent(new WatchlistClearedEvent(watchlist));
 	}
 	
 }

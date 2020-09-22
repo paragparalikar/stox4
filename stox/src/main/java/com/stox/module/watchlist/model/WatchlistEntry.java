@@ -11,6 +11,7 @@ import com.stox.module.core.model.intf.HasScrip;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -19,6 +20,7 @@ import lombok.experimental.Accessors;
 @Builder
 @ToString(of = "scrip")
 @Accessors(fluent = true)
+@EqualsAndHashCode(exclude = "watchlist")
 public class WatchlistEntry implements HasScrip, HasBarSpan, Comparable<WatchlistEntry>, Serializable{
 	private static final long serialVersionUID = 1L;
 	public static final Comparator<WatchlistEntry> COMPARATOR_NAME = (one, two) -> one.scrip.name().compareToIgnoreCase(two.scrip().name());

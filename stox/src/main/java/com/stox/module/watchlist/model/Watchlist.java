@@ -12,6 +12,7 @@ import com.stox.module.core.model.Scrip;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -21,6 +22,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(fluent = true)
+@EqualsAndHashCode(of = "name")
 public class Watchlist implements Comparable<Watchlist>, Cloneable{
 	public static final Comparator<Watchlist> COMPARATOR = (one, two) -> one.name.compareToIgnoreCase(two.name);  
 	

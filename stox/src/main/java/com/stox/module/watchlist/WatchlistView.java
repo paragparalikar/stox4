@@ -4,8 +4,10 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import com.stox.fx.widget.FxMessageSource;
+import com.stox.fx.widget.listener.CompositeChangeListener;
 import com.stox.fx.widget.listener.RootBinderSceneChangeListener;
 import com.stox.fx.widget.search.SearchableListView;
+import com.stox.module.watchlist.event.WatchlistClearedEvent;
 import com.stox.module.watchlist.event.WatchlistEntryCreatedEvent;
 import com.stox.module.watchlist.model.WatchlistEntry;
 import com.stox.module.watchlist.repository.WatchlistRepository;
@@ -25,7 +27,9 @@ public class WatchlistView extends ModuleView<WatchlistViewState> {
 	@Getter
 	private final WatchlistTitleBar titleBar;
 	private final SearchableListView<WatchlistEntry> listView = new SearchableListView<>();
-	private final ChangeListener<Scene> sceneChangeListener = new RootBinderSceneChangeListener<>(WatchlistEntryCreatedEvent.TYPE, this::watchlistEntryCreated);
+	private final ChangeListener<Scene> sceneChangeListener = new CompositeChangeListener<>(
+			new RootBinderSceneChangeListener<>(WatchlistClearedEvent.TYPE, this::watchlistCleared),
+			new RootBinderSceneChangeListener<>(WatchlistEntryCreatedEvent.TYPE, this::watchlistEntryCreated));
 	
 	public WatchlistView(
 			@NonNull final FxMessageSource messageSource,
@@ -34,6 +38,14 @@ public class WatchlistView extends ModuleView<WatchlistViewState> {
 		getNode().sceneProperty().addListener(new WeakChangeListener<>(sceneChangeListener));
 		listView.setCellFactory(value -> new WatchlistEntryListCell());
 		content(listView);
+	}
+	
+	private void watchlistCleared(final WatchlistClearedEvent event) {
+		Optional.ofNullable(titleBar.selected())
+			.filter(Predicate.isEqual(event.watchlist()))
+			.ifPresent(id -> {
+				listView.getItems().clear();
+			});
 	}
 	
 	private void watchlistEntryCreated(final WatchlistEntryCreatedEvent event) {

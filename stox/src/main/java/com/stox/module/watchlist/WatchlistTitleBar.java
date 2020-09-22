@@ -1,5 +1,7 @@
 package com.stox.module.watchlist;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -95,7 +97,11 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 	}
 
 	private void filterChanged(@NonNull final BarSpan barSpan, final Watchlist watchlist) {
-		listView.getItems().setAll(watchlist.entries().get(barSpan));
+		final List<WatchlistEntry> watchlistEntries = Optional.ofNullable(watchlist)
+			.map(Watchlist::entries)
+			.map(entries -> entries.get(barSpan))
+			.orElse(Collections.emptyList());
+		listView.getItems().setAll(watchlistEntries);
 	}
 
 	WatchlistViewState state() {

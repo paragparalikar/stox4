@@ -8,12 +8,10 @@ import java.util.Objects;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.Value;
 import lombok.experimental.Accessors;
 
 @Value
-@ToString(of = "name")
 @RequiredArgsConstructor
 @Accessors(fluent = true)
 public class Scrip implements Comparable<Scrip>, Serializable {
@@ -42,6 +40,11 @@ public class Scrip implements Comparable<Scrip>, Serializable {
 	@Override
 	public int compareTo(Scrip scrip) {
 		return Objects.compare(name, scrip.name, (one, two) -> one.compareToIgnoreCase(two));
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 
 }

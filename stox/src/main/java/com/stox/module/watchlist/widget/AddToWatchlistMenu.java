@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.listener.CompositeChangeListener;
@@ -64,7 +63,7 @@ public class AddToWatchlistMenu extends Menu {
 	private void addTo(final Watchlist watchlist) {
 		final Scrip scrip = scripSupplier.get();
 		final BarSpan barSpan = barSpanSupplier.get();
-		if(Stream.<Object>of(scrip, barSpan).allMatch(Objects::nonNull) && !watchlist.contains(scrip.isin(), barSpan)) {
+		if(null != scrip && null != barSpan && !watchlist.contains(scrip.isin(), barSpan)) {
 			final WatchlistEntry entry = WatchlistEntry.builder()
 					.scrip(scrip)
 					.barSpan(barSpan)
