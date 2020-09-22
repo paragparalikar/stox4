@@ -1,29 +1,23 @@
 package com.stox.module.watchlist.repository;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Optional;
+import java.util.List;
 
 import com.stox.module.watchlist.model.Watchlist;
-import com.stox.persistence.CachingRepository;
-import com.stox.util.JsonConverter;
-import com.stox.util.Strings;
 
-import lombok.NonNull;
-
-public class WatchlistRepository extends CachingRepository<Watchlist> {
-
-	public WatchlistRepository(final Path home, @NonNull final JsonConverter jsonConverter) {
-		super(home.resolve(Paths.get("watchlist")), Watchlist.class, jsonConverter);
-	}
+public interface WatchlistRepository {
 	
-	public boolean exists(final String name) {
-		return findAll().stream()
-			.map(Watchlist::name)
-			.map(String::trim)
-			.anyMatch(Strings.equalsIgnoreCase(Optional.ofNullable(name)
-					.map(String::trim)
-					.orElse(null)));
-	}
+	List<Watchlist> findAll();
+	
+	Watchlist get(String name);
+	
+	boolean exists(String name);
+	
+	void delete(String name);
+	
+	Watchlist save(Watchlist watchlist);
+	
+	Watchlist clear(Watchlist watchlist);
+	
+	Watchlist rename(Watchlist watchlist, String newName);
 
 }

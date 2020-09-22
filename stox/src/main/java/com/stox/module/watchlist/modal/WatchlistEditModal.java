@@ -51,7 +51,7 @@ public class WatchlistEditModal {
 	}
 
 	private void save(@NonNull final Watchlist watchlist, @NonNull final Node caller) {
-		watchlistRepository.update(watchlist);
+		watchlistRepository.rename(this.watchlist, watchlist.name());
 		caller.fireEvent(new WatchlistUpdatedEvent(watchlist));
 	}
 

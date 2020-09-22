@@ -17,7 +17,6 @@ import com.stox.module.watchlist.event.WatchlistEntryCreatedEvent;
 import com.stox.module.watchlist.event.WatchlistUpdatedEvent;
 import com.stox.module.watchlist.model.Watchlist;
 import com.stox.module.watchlist.model.WatchlistEntry;
-import com.stox.module.watchlist.repository.WatchlistEntryRepository;
 import com.stox.module.watchlist.repository.WatchlistRepository;
 
 import javafx.beans.value.ChangeListener;
@@ -35,7 +34,6 @@ public class AddToWatchlistMenu extends Menu {
 	private final Node root;
 	private final Supplier<Scrip> scripSupplier;
 	private final Supplier<BarSpan> barSpanSupplier;
-	private final WatchlistEntryRepository watchlistEntryRepository;
 	private final ChangeListener<Scene> sceneChangeListener = new CompositeChangeListener<>(
 			new RootBinderSceneChangeListener<>(WatchlistCreatedEvent.TYPE, this::created),
 			new RootBinderSceneChangeListener<>(WatchlistUpdatedEvent.TYPE, this::updated),
@@ -47,12 +45,10 @@ public class AddToWatchlistMenu extends Menu {
 			@NonNull final FxMessageSource messageSource,
 			@NonNull final Supplier<Scrip> scripSupplier,
 			@NonNull final Supplier<BarSpan> barSpanSupplier,
-			@NonNull final WatchlistRepository watchlistRepository, 
-			@NonNull final WatchlistEntryRepository watchlistEntryRepository) {
+			@NonNull final WatchlistRepository watchlistRepository) {
 		this.root = root;
 		this.scripSupplier = scripSupplier;
 		this.barSpanSupplier = barSpanSupplier;
-		this.watchlistEntryRepository = watchlistEntryRepository;
 		textProperty().bind(messageSource.get("Add to watchlist"));
 		root.sceneProperty().addListener(new WeakChangeListener<>(sceneChangeListener));
 		sceneChangeListener.changed(root.sceneProperty(), root.getScene(), root.getScene());
@@ -68,11 +64,14 @@ public class AddToWatchlistMenu extends Menu {
 	private void addTo(final Watchlist watchlist) {
 		final Scrip scrip = scripSupplier.get();
 		final BarSpan barSpan = barSpanSupplier.get();
-		if(Stream.<Object>of(scrip, barSpan).allMatch(Objects::nonNull)
-				&& !watchlistEntryRepository.existsByWatchlistId(scrip.isin(), barSpan, watchlist.id())) {
-			final WatchlistEntry entry = new WatchlistEntry(null, null, watchlist.id(), scrip, barSpan);
-			watchlistEntryRepository.save(entry);
-			root.fireEvent(new WatchlistEntryCreatedEvent(entry));
+		if(Stream.<Object>of(scrip, barSpan).allMatch(Objects::nonNull) && !watchlist.contains(scrip.isin(), barSpan)) {
+			final WatchlistEntry entry = WatchlistEntry.builder()
+					.scrip(scrip)
+					.barSpan(barSpan)
+					.watchlist(watchlist)
+					.build();
+			watchlist.put(entry);
+			root.fireEvent(new WatchlistEntryCreatedEvent(watchlist, entry));
 		}
 	}
 	
@@ -90,7 +89,7 @@ public class AddToWatchlistMenu extends Menu {
 
 	private void updated(final WatchlistUpdatedEvent event) {
 		getItems().stream()
-			.filter(item -> Objects.equals(((Watchlist)item.getUserData()).id(), event.watchlist().id()))
+			.filter(item -> Objects.equals(((Watchlist)item.getUserData()).name(), event.watchlist().name()))
 			.findFirst()
 			.ifPresent(item -> item.setText(event.watchlist().name()));
 		sort();
@@ -100,7 +99,7 @@ public class AddToWatchlistMenu extends Menu {
 		final Iterator<MenuItem> iterator = getItems().iterator();
 		while(iterator.hasNext()) {
 			final MenuItem item = iterator.next();
-			if(Objects.equals(((Watchlist)item.getUserData()).id(), event.watchlist().id())) {
+			if(Objects.equals(((Watchlist)item.getUserData()).name(), event.watchlist().name())) {
 				iterator.remove();
 				break;
 			}

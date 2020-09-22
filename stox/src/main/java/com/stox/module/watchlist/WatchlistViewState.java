@@ -13,14 +13,14 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 public class WatchlistViewState extends ModuleViewState {
 
-	@SerializedName("entryId")
-	private Integer entryId;
+	@SerializedName("name")
+	private String name;
 	
-	@SerializedName("watchlistId")
-	private Integer watchlistId;
+	@SerializedName("isin")
+	private String isin;
 	
 	@SerializedName("barSpan")
-	private BarSpan barSpan = BarSpan.D;
+	private BarSpan barSpan;
 	
 	@SerializedName("searchVisible")
 	private boolean searchVisible;
