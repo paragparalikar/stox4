@@ -15,7 +15,7 @@ import com.stox.module.core.model.Scrip;
 import com.stox.module.core.persistence.ScripRepository;
 import com.stox.module.watchlist.model.Watchlist;
 import com.stox.module.watchlist.model.WatchlistEntry;
-import com.stox.persistence.PersistenceListener;
+import com.stox.persistence.FilePersistenceListener;
 import com.stox.util.DeleteFileVisitor;
 import com.stox.util.Strings;
 import com.stox.util.collection.lazy.LazyList;
@@ -130,8 +130,8 @@ public class FileWatchlistRepository implements WatchlistRepository{
 		return () -> {
 			final List<WatchlistEntry> delegate = new ArrayList<>();
 			final ListenableList<WatchlistEntry> list = new ListenableList<>(delegate);
-			final PersistenceListener<WatchlistEntry> listener = 
-					PersistenceListener.<WatchlistEntry>builder()
+			final FilePersistenceListener<WatchlistEntry> listener = 
+					FilePersistenceListener.<WatchlistEntry>builder()
 						.path(path)
 						.delegate(delegate)
 						.formatter(this::format)

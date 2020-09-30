@@ -29,7 +29,7 @@ import lombok.Synchronized;
 
 @Builder
 @AllArgsConstructor
-public class PersistenceListener<E> implements Listener<E> {
+public class FilePersistenceListener<E> implements Listener<E> {
 	
 	@NonNull private final Path path;
 	@NonNull private final Collection<E> delegate;
