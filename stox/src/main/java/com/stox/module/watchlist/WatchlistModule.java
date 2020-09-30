@@ -9,10 +9,9 @@ import com.stox.module.core.model.BarSpan;
 import com.stox.module.core.model.Scrip;
 import com.stox.module.core.model.intf.HasBarSpan;
 import com.stox.module.core.model.intf.HasScrip;
-import com.stox.module.watchlist.repository.WatchlistEntryRepository;
+import com.stox.module.watchlist.repository.FileWatchlistRepository;
 import com.stox.module.watchlist.repository.WatchlistRepository;
 import com.stox.module.watchlist.widget.AddToWatchlistMenu;
-import com.stox.util.JsonConverter;
 import com.stox.workbench.module.UiModule;
 
 import javafx.beans.value.ObservableValue;
@@ -23,14 +22,11 @@ import lombok.NonNull;
 public class WatchlistModule extends UiModule<WatchlistViewState> {
 
 	private final WatchlistRepository watchlistRepository;
-	private final WatchlistEntryRepository watchlistEntryRepository;
 	
 	public WatchlistModule(Context context) {
 		super(context);
 		final Path home = context.getConfig().getHome();
-		final JsonConverter jsonConverter = context.getJsonConverter();
-		this.watchlistRepository = new WatchlistRepository(home, jsonConverter);
-		this.watchlistEntryRepository = new WatchlistEntryRepository(home, jsonConverter);
+		this.watchlistRepository = new FileWatchlistRepository(home, context.getScripRepository());
 		context.getContextMenuConfigurers().add(this::configure);
 	}
 	
@@ -51,7 +47,7 @@ public class WatchlistModule extends UiModule<WatchlistViewState> {
 
 	@Override
 	protected WatchlistView buildModuleView() {
-		return new WatchlistView(getContext().getMessageSource(), watchlistRepository, watchlistEntryRepository);
+		return new WatchlistView(getContext().getMessageSource(), watchlistRepository);
 	}
 	
 	private void configure(@NonNull final ContextMenu contextMenu, @NonNull final Object target) {
@@ -65,7 +61,6 @@ public class WatchlistModule extends UiModule<WatchlistViewState> {
 					.barSpanSupplier(barSpanSupplier)
 					.watchlistRepository(watchlistRepository)
 					.messageSource(getContext().getMessageSource())
-					.watchlistEntryRepository(watchlistEntryRepository)
 					.build();
 			contextMenu.getItems().add(menu);
 		}

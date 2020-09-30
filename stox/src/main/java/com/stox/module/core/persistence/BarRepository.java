@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import com.stox.module.core.model.Bar;
 import com.stox.module.core.model.BarSpan;
 import com.stox.module.core.model.intf.BarProvider;
-import com.stox.util.Uncheck;
+import com.stox.util.function.ThrowingConsumer;
 
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -35,7 +35,7 @@ public class BarRepository implements BarProvider {
 
 		protected boolean removeEldestEntry(Map.Entry<String, RandomAccessFile> eldest) {
 			if (size() > 10) {
-				Optional.ofNullable(eldest.getValue()).ifPresent(Uncheck.consumer(RandomAccessFile::close));
+				Optional.ofNullable(eldest.getValue()).ifPresent(ThrowingConsumer.from(RandomAccessFile::close));
 				return true;
 			}
 			return false;
@@ -49,11 +49,11 @@ public class BarRepository implements BarProvider {
 		Arrays.stream(BarSpan.values())
 			.map(barSpan -> getPath("",barSpan))
 			.map(Paths::get)
-			.forEach(Uncheck.consumer(Files::createDirectories));
+			.forEach(ThrowingConsumer.from(Files::createDirectories));
 	}
 	
 	public void close() {
-		fileCache.values().forEach(Uncheck.consumer(RandomAccessFile::close));
+		fileCache.values().forEach(ThrowingConsumer.from(RandomAccessFile::close));
 	}
 
 	private RandomAccessFile getFile(String path) throws IOException {
@@ -272,7 +272,7 @@ public class BarRepository implements BarProvider {
 		final String path = getPath(isin, barSpan);
 		synchronized (path) {
 			try (final RandomAccessFile file = new RandomAccessFile(path, "rw")) {
-				bars.forEach(Uncheck.consumer(bar -> write(bar, file)));
+				bars.forEach(ThrowingConsumer.from(bar -> write(bar, file)));
 			} 
 		}
 	}

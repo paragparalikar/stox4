@@ -14,9 +14,9 @@ public class DrawingRemoveRequestEvent extends Event {
 
 	public static final EventType<DrawingRemoveRequestEvent> TYPE = new EventType<>("DrawingRemoveRequestEvent");
 	
-	private final Drawing drawing;
+	private final Drawing<?> drawing;
 	
-	public DrawingRemoveRequestEvent(final Drawing drawing) {
+	public DrawingRemoveRequestEvent(final Drawing<?> drawing) {
 		super(TYPE);
 		this.drawing = drawing;
 	}

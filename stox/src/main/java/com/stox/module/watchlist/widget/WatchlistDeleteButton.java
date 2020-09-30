@@ -47,7 +47,7 @@ public class WatchlistDeleteButton extends FluentButton {
 	}
 
 	private void delete(final Watchlist watchlist) {
-		watchlistRepository.delete(watchlist.id());
+		watchlistRepository.delete(watchlist.name());
 		fireEvent(new WatchlistDeletedEvent(watchlist));
 	}
 }

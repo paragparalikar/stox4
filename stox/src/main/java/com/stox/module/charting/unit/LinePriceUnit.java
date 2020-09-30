@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 public class LinePriceUnit implements PriceUnit {
 
 	private final Parent<Point2D> parent;
+	
+	@SuppressWarnings("unused")
 	private final Configuration configuration;
 
 	@Override

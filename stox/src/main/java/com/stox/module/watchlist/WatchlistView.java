@@ -1,18 +1,15 @@
 package com.stox.module.watchlist;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import com.stox.fx.widget.FxMessageSource;
+import com.stox.fx.widget.listener.CompositeChangeListener;
 import com.stox.fx.widget.listener.RootBinderSceneChangeListener;
 import com.stox.fx.widget.search.SearchableListView;
-import com.stox.module.watchlist.event.FilterChangedEvent;
+import com.stox.module.watchlist.event.WatchlistClearedEvent;
 import com.stox.module.watchlist.event.WatchlistEntryCreatedEvent;
-import com.stox.module.watchlist.model.Watchlist;
 import com.stox.module.watchlist.model.WatchlistEntry;
-import com.stox.module.watchlist.repository.WatchlistEntryRepository;
 import com.stox.module.watchlist.repository.WatchlistRepository;
 import com.stox.module.watchlist.widget.WatchlistEntryListCell;
 import com.stox.workbench.module.ModuleView;
@@ -29,29 +26,33 @@ public class WatchlistView extends ModuleView<WatchlistViewState> {
 
 	@Getter
 	private final WatchlistTitleBar titleBar;
-	private final WatchlistEntryRepository watchlistEntryRepository;
 	private final SearchableListView<WatchlistEntry> listView = new SearchableListView<>();
-	private final ChangeListener<Scene> sceneChangeListener = new RootBinderSceneChangeListener<>(WatchlistEntryCreatedEvent.TYPE, this::watchlistEntryCreated);
+	private final ChangeListener<Scene> sceneChangeListener = new CompositeChangeListener<>(
+			new RootBinderSceneChangeListener<>(WatchlistClearedEvent.TYPE, this::watchlistCleared),
+			new RootBinderSceneChangeListener<>(WatchlistEntryCreatedEvent.TYPE, this::watchlistEntryCreated));
 	
 	public WatchlistView(
 			@NonNull final FxMessageSource messageSource,
-			@NonNull final WatchlistRepository watchlistRepository, 
-			@NonNull final WatchlistEntryRepository watchlistEntryRepository) {
-		this.watchlistEntryRepository = watchlistEntryRepository;
-		title(titleBar = new WatchlistTitleBar(messageSource, listView, watchlistRepository, watchlistEntryRepository));
-		titleBar.getNode().addEventHandler(FilterChangedEvent.TYPE, this::filterChanged);
+			@NonNull final WatchlistRepository watchlistRepository) {
+		title(titleBar = new WatchlistTitleBar(messageSource, listView, watchlistRepository));
 		getNode().sceneProperty().addListener(new WeakChangeListener<>(sceneChangeListener));
-		listView.setCellFactory(value -> new WatchlistEntryListCell(watchlistEntryRepository));
+		listView.setCellFactory(value -> new WatchlistEntryListCell());
 		content(listView);
 	}
 	
-	private void watchlistEntryCreated(final WatchlistEntryCreatedEvent event) {
-		final Integer watchlistId = event.getWatchlistEntry().watchlistId();
+	private void watchlistCleared(final WatchlistClearedEvent event) {
 		Optional.ofNullable(titleBar.selected())
-			.map(Watchlist::id)
-			.filter(Predicate.isEqual(watchlistId))
+			.filter(Predicate.isEqual(event.watchlist()))
 			.ifPresent(id -> {
-				listView.getItems().add(event.getWatchlistEntry());
+				listView.getItems().clear();
+			});
+	}
+	
+	private void watchlistEntryCreated(final WatchlistEntryCreatedEvent event) {
+		Optional.ofNullable(titleBar.selected())
+			.filter(Predicate.isEqual(event.watchlist()))
+			.ifPresent(id -> {
+				listView.getItems().add(event.watchlistEntry());
 				FXCollections.sort(listView.getItems());
 			});
 	}
@@ -59,19 +60,14 @@ public class WatchlistView extends ModuleView<WatchlistViewState> {
 	@Override
 	public WatchlistView start(WatchlistViewState state, Bounds bounds) {
 		super.start(state, bounds);
-		titleBar.state(state).bind();
+		Optional.ofNullable(state).ifPresent(titleBar::state);
+		titleBar.bind();
 		return this;
 	}
 
 	@Override
 	public WatchlistViewState stop(Bounds bounds) {
 		return stop(titleBar.state(), bounds);
-	}
-
-	private void filterChanged(final FilterChangedEvent event) {
-		final List<WatchlistEntry> entries = watchlistEntryRepository.findAll().stream()
-			.filter(event.predicate()).sorted().collect(Collectors.toList());
-		listView.getItems().setAll(entries);
 	}
 	
 }

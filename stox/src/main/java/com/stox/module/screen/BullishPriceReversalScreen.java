@@ -3,7 +3,6 @@ package com.stox.module.screen;
 import java.util.List;
 
 import com.stox.module.core.model.Bar;
-import com.stox.module.core.model.BarValue;
 import com.stox.module.indicator.Indicator;
 import com.stox.module.indicator.RelativeStrengthIndex;
 import com.stox.module.screen.BullishPriceReversalScreen.Config;

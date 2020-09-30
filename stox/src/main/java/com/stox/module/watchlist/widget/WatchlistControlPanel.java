@@ -11,7 +11,6 @@ import com.stox.fx.fluent.scene.layout.FluentHBox;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.search.Selector;
 import com.stox.module.watchlist.model.Watchlist;
-import com.stox.module.watchlist.repository.WatchlistEntryRepository;
 import com.stox.module.watchlist.repository.WatchlistRepository;
 
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -23,15 +22,15 @@ public class WatchlistControlPanel extends FluentHBox {
 
 	public WatchlistControlPanel(
 			@NonNull final FxMessageSource messageSource,
-			@NonNull final WatchlistRepository watchlistRepository,
-			@NonNull final WatchlistEntryRepository watchlistEntryRepository) {
+			@NonNull final WatchlistRepository watchlistRepository) {
+		
 		final List<Watchlist> watchlists = watchlistRepository.findAll();
 		watchlists.sort(Comparator.naturalOrder());
 		watchlistComboBox.items(watchlists);
 		
 		final Supplier<Watchlist> watchlistSupplier = watchlistComboBox::value;
 		final FluentButton editButton = new WatchlistEditButton(messageSource, watchlistSupplier, watchlistRepository).classes("icon", "primary", "inverted", "middle");
-		final FluentButton clearButton = new WatchlistClearButton(messageSource, watchlistSupplier, watchlistEntryRepository).classes("icon", "primary", "inverted", "middle");
+		final FluentButton clearButton = new WatchlistClearButton(messageSource, watchlistSupplier).classes("icon", "primary", "inverted", "middle");
 		final FluentButton deleteButton = new WatchlistDeleteButton(messageSource, watchlistSupplier, watchlistRepository).classes("icon", "primary", "inverted", "last");
 		children(watchlistComboBox, editButton, clearButton, deleteButton).fullArea().classes("box");
 	}

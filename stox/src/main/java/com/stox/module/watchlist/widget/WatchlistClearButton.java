@@ -1,5 +1,6 @@
 package com.stox.module.watchlist.widget;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -7,8 +8,8 @@ import com.stox.fx.fluent.beans.binding.FluentStringBinding;
 import com.stox.fx.fluent.scene.control.FluentButton;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Icon;
+import com.stox.module.watchlist.event.WatchlistClearedEvent;
 import com.stox.module.watchlist.model.Watchlist;
-import com.stox.module.watchlist.repository.WatchlistEntryRepository;
 import com.stox.workbench.modal.ConfirmationModal;
 
 import javafx.beans.value.ObservableValue;
@@ -17,15 +18,12 @@ public class WatchlistClearButton extends FluentButton{
 	
 	private final FxMessageSource messageSource;
 	private final Supplier<Watchlist> watchlistSupplier;
-	private final WatchlistEntryRepository watchlistEntryRepository;
 	
 	public WatchlistClearButton(
 			final FxMessageSource messageSource,
-			final Supplier<Watchlist> watchlistSupplier, 
-			final WatchlistEntryRepository watchlistEntryRepository) {
+			final Supplier<Watchlist> watchlistSupplier) {
 		this.messageSource = messageSource;
 		this.watchlistSupplier = watchlistSupplier;
-		this.watchlistEntryRepository = watchlistEntryRepository;
 		onAction(event -> confirm()).text(Icon.ERASER);
 	}
 
@@ -44,7 +42,8 @@ public class WatchlistClearButton extends FluentButton{
 	}
 	
 	private void clear(final Watchlist watchlist) {
-		watchlistEntryRepository.deleteByWatchlistId(watchlist.id());
+		watchlist.entries().values().forEach(Collection::clear);
+		fireEvent(new WatchlistClearedEvent(watchlist));
 	}
 	
 }

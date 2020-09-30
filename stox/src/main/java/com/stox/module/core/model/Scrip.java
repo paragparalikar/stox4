@@ -41,7 +41,8 @@ public class Scrip implements Comparable<Scrip>, Serializable {
 	public int compareTo(Scrip scrip) {
 		return Objects.compare(name, scrip.name, (one, two) -> one.compareToIgnoreCase(two));
 	}
-
+	
+	@Override
 	public String toString() {
 		return name;
 	}
