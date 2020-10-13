@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.stox.module.core.model.BarSpan;
+import com.stox.module.core.model.Exchange;
 import com.stox.module.core.model.Scrip;
 import com.stox.module.core.persistence.ScripRepository;
 import com.stox.module.watchlist.model.Watchlist;
@@ -148,7 +149,8 @@ public class FileWatchlistRepository implements WatchlistRepository{
 	
 	private WatchlistEntry parse(final int index, final String text, 
 			final BarSpan barSpan, final Watchlist watchlist) {
-		final Scrip scrip = scripRepository.find(text);
+		final Scrip scrip = Optional.ofNullable(scripRepository.find(text))
+				.orElseGet(() -> Scrip.of(text, text, "* " + text + "(Delisted)", Exchange.NSE));
 		return WatchlistEntry.builder()
 				.scrip(scrip)
 				.index(index)
