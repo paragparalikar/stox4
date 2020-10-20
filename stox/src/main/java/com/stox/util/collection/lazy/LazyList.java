@@ -1,6 +1,7 @@
 package com.stox.util.collection.lazy;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.function.Supplier;
@@ -64,6 +65,11 @@ public class LazyList<E> extends LazyCollection<E> implements List<E> {
 	@Override
 	public List<E> subList(int fromIndex, int toIndex) {
 		return delegate().subList(fromIndex, toIndex);
+	}
+	
+	@Override
+	public void sort(Comparator<? super E> c) {
+		delegate().sort(c);
 	}
 
 }
