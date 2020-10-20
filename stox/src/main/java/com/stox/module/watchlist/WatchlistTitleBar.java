@@ -1,6 +1,7 @@
 package com.stox.module.watchlist;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -101,6 +102,8 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 			.map(Watchlist::entries)
 			.map(entries -> entries.get(barSpan))
 			.orElse(Collections.emptyList());
+		watchlistEntries.sort(Comparator.naturalOrder());
+		listView.setUserData(watchlist);
 		listView.getItems().setAll(watchlistEntries);
 	}
 
