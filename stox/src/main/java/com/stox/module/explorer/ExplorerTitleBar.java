@@ -56,12 +56,17 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 
 	ExplorerTitleBar bind() {
 		exchangeComboBox.selectionModel().selectedItemProperty().addListener((o, old, exchange) -> exchangeSelectionConsumer.accept(exchange));
-		listView.getSelectionModel().selectedItemProperty().addListener(
-				(o, old, scrip) -> linkButton.getLink().setState(LinkState.builder()
-						.put(CoreConstant.KEY_TO, String.valueOf(0))
-						.put(CoreConstant.KEY_ISIN, null == scrip ? null : scrip.isin())
-						.build()));
+		listView.getSelectionModel().selectedItemProperty().addListener(this::scripSelectionChanged);
 		return this;
+	}
+	
+	private void scripSelectionChanged(final ObservableValue<? extends Scrip> observable, final Scrip old, final Scrip scrip) {
+		if(null != scrip) {
+			linkButton.getLink().setState(LinkState.builder()
+					.put(CoreConstant.KEY_TO, String.valueOf(0))
+					.put(CoreConstant.KEY_ISIN, scrip.isin())
+					.build());
+		}
 	}
 	
 	ExplorerViewState state() {

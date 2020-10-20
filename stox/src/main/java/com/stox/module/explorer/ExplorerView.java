@@ -42,7 +42,14 @@ public class ExplorerView extends ModuleView<ExplorerViewState> {
 	private void onScripsChanged(final ScripsChangedEvent event) {
 		if(Objects.equals(titleBar.exchange(), event.exchange())) {
 			final List<Scrip> scrips = event.scrips().stream().sorted().collect(Collectors.toList());
-			Ui.fx(() -> listView.getItems().setAll(scrips));
+			Ui.fx(() -> {
+				final Scrip scrip = listView.selectionModel().getSelectedItem();
+				listView.getItems().setAll(scrips);
+				listView.selectionModel().clearSelection();
+				if(null != scrip) {
+					listView.selectionModel().select(scrip);
+				}
+			});
 		}
 	}
 	
