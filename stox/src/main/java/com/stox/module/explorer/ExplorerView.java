@@ -1,8 +1,10 @@
 package com.stox.module.explorer;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import com.stox.fx.widget.Ui;
 import com.stox.fx.widget.search.SearchableListView;
@@ -39,7 +41,8 @@ public class ExplorerView extends ModuleView<ExplorerViewState> {
 	
 	private void onScripsChanged(final ScripsChangedEvent event) {
 		if(Objects.equals(titleBar.exchange(), event.exchange())) {
-			Ui.fx(() -> listView.getItems().setAll(event.scrips()));
+			final List<Scrip> scrips = event.scrips().stream().sorted().collect(Collectors.toList());
+			Ui.fx(() -> listView.getItems().setAll(scrips));
 		}
 	}
 	
