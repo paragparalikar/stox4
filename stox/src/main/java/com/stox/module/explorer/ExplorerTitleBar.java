@@ -16,6 +16,7 @@ import com.stox.workbench.link.LinkButton;
 import com.stox.workbench.link.LinkState;
 import com.stox.workbench.module.ModuleTitleBar;
 
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Side;
 import javafx.scene.control.Toggle;
 import lombok.NonNull;
@@ -36,6 +37,11 @@ public class ExplorerTitleBar extends ModuleTitleBar {
 		getTitleBar().append(Side.RIGHT, linkButton);
 		getTitleBar().append(Side.BOTTOM, exchangeComboBox);
 		searchToggle = appendToggleNode(Icon.SEARCH, searchBox.getNode());
+		searchToggle.selectedProperty().addListener(this::searchToggleSelected);
+	}
+	
+	private void searchToggleSelected(final ObservableValue<? extends Boolean> observable, final Boolean old, final Boolean value) {
+		if(value) searchBox.clear().focus();
 	}
 	
 	ExplorerTitleBar select(final Scrip scrip) {

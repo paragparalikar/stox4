@@ -72,6 +72,16 @@ public class SearchBox<T> implements HasNode<Node>{
 		return textField.getText();
 	}
 	
+	public SearchBox<T> clear() {
+		textField.clear();
+		return this;
+	}
+	
+	public SearchBox<T> focus(){
+		textField.requestFocus();
+		return this;
+	}
+	
 	public SearchBox<T> text(final String text){
 		textField.setText(text);
 		return this;

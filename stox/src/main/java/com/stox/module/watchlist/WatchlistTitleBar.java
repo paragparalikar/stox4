@@ -52,7 +52,12 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 		getTitleBar().append(Side.BOTTOM, barSpanComboBox);
 		getTitleBar().append(Side.BOTTOM, controlPanel = new WatchlistControlPanel(messageSource, watchlistRepository));
 		searchToggle = appendToggleNode(Icon.SEARCH, searchBox.getNode());
+		searchToggle.selectedProperty().addListener(this::searchToggleSelected);
 		getTitleBar().append(Side.RIGHT, new WatchlistCreateButton(messageSource, watchlistRepository));
+	}
+	
+	private void searchToggleSelected(final ObservableValue<? extends Boolean> observable, final Boolean old, final Boolean value) {
+		if(value) searchBox.clear().focus();
 	}
 
 	private boolean test(final WatchlistEntry entry, String text) {
