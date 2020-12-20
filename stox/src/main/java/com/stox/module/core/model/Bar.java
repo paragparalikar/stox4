@@ -1,5 +1,7 @@
 package com.stox.module.core.model;
 
+import com.stox.util.MathUtil;
+
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -27,4 +29,13 @@ public class Bar implements Comparable<Bar>{
 		}
 	}
 
+	public void apply(final double factor) {
+		open = MathUtil.round(open / factor, 0.05);
+		high = MathUtil.round(high / factor, 0.05);
+		low = MathUtil.round(low / factor, 0.05);
+		close = MathUtil.round(close / factor, 0.05);
+		previousClose = MathUtil.round(previousClose / factor, 0.05);
+		volume = Math.ceil(volume * factor);
+	}
+	
 }

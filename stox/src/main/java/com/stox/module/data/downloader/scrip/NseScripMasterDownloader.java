@@ -30,5 +30,4 @@ public class NseScripMasterDownloader implements ScripMasterDownloader {
 		return Scrip.of(tokens[6], tokens[0], tokens[1], Exchange.NSE);
 	}
 	
-
 }

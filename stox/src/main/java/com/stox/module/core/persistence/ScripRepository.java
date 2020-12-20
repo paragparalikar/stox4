@@ -79,8 +79,8 @@ public class ScripRepository {
 	
 	private synchronized void cache(Exchange exchange, List<Scrip> scrips){
 		exchangeScripMapping.put(exchange, scrips);
-		isinScripMapping.putAll(scrips.stream().collect(Collectors.toMap(Scrip::isin, Function.identity())));
-		exchangeCodeScripMapping.put(exchange, scrips.stream().collect(Collectors.toMap(Scrip::code, Function.identity())));
+		isinScripMapping.putAll(scrips.stream().distinct().collect(Collectors.toMap(Scrip::isin, Function.identity())));
+		exchangeCodeScripMapping.put(exchange, scrips.stream().distinct().collect(Collectors.toMap(Scrip::code, Function.identity())));
 		eventBus.fire(new ScripsChangedEvent(exchange, scrips));
 	}
 

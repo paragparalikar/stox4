@@ -32,6 +32,14 @@ public class Strings {
 		}
 	}
 	
+	public static String quote(String text) {
+		return "\"" + text + "\"";
+	}
+	
+	public static String unquote(String text) {
+		return text.replaceAll("\"", "");
+	}
+	
 	public static boolean hasText(String text) {
 		return null != text && 0 < text.trim().length();
 	}

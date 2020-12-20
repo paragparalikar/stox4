@@ -27,5 +27,18 @@ public class MathUtil {
 		final double multiple = Math.pow(10, decimalPlaces);
 		return Math.floor(value * multiple) / multiple;
 	}
+	
+	public static double round(final double value, final double fraction) {
+		final double multiple = 1/fraction;
+		final double ceil = Math.ceil(value * multiple) / multiple;
+		final double floor = Math.floor(value * multiple) / multiple;
+		return ceil - value < value - floor ? ceil : floor;
+	}
+
+	public static int round(final double value) {
+		final double ceil = Math.ceil(value);
+		final double floor = Math.floor(value);
+		return (int) (ceil - value < value - floor ? ceil : floor);
+	}
 
 }

@@ -44,6 +44,7 @@ public class ScripMasterDownloadAction implements Action {
 
 	@Override
 	public void failure(Throwable throwable) {
+		throwable.printStackTrace();
 		Optional.ofNullable(failure).ifPresent(Runnable::run);
 	}
 
