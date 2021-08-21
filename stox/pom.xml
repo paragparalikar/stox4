@@ -29,13 +29,6 @@
 			<artifactId>lombok</artifactId>
 			<version>${lombok.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>javafx</artifactId>
-			<version>${javafx.version}</version>
-			<systemPath>${java.home}/lib/ext/jfxrt.jar</systemPath>
-			<scope>system</scope>
-		</dependency>
 	</dependencies>
 
 	<build>
