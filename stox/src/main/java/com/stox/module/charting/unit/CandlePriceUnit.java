@@ -40,7 +40,7 @@ public class CandlePriceUnit implements PriceUnit {
 	public void update(int index, Bar model, Bar previousModel, XAxis xAxis, YAxis yAxis) {
 		final double x = xAxis.getX(index);
 		final double width = xAxis.getUnitWidth();
-		final double wickX = (int)(x + width / 2);
+		final double wickX = (x + width / 2);
 		wick.setStartX(wickX);
 		wick.setEndX(wickX);
 		wick.setStartY(yAxis.getY(model.high()));
