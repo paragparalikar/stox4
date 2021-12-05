@@ -23,10 +23,6 @@ public class RateOfChange implements Indicator<Config, Double> {
 		return new Config();
 	}
 
-	private Double getValue(final int index, final BarValue barValue, List<Double> values, List<Bar> bars) {
-		return values.isEmpty() ? barValue.resolve(bars.get(index)) : values.get(index);
-	}
-
 	private Double compute(int index, int span, BarValue barValue, List<Double> values, List<Bar> bars) {
 		final Double previousValue = getValue(index + span, barValue, values, bars);
 		final Double value = getValue(index, barValue, values, bars);

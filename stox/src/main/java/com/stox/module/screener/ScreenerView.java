@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.function.Supplier;
 
 import com.stox.fx.fluent.scene.control.FluentProgressBar;
-import com.stox.fx.fluent.scene.layout.FluentVBox;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.search.SearchableListView;
 import com.stox.module.core.model.Scrip;

@@ -26,10 +26,6 @@ public class StandardDeviation implements Indicator<Config, Double> {
 		return new Config();
 	}
 
-	private Double getValue(final int index, final BarValue barValue, List<Double> values, List<Bar> bars) {
-		return values.isEmpty() ? barValue.resolve(bars.get(index)) : values.get(index);
-	}
-
 	private Double compute(int index, int span, BarValue barValue, List<Double> values, List<Bar> bars, boolean normalize) {
 		double sum = 0;
 		for (int i = index; i < index + span; i++) {

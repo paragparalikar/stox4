@@ -35,10 +35,6 @@ public class SimpleMovingAverage implements Indicator<Config, Double> {
 		return null;
 	}
 
-	private Double getValue(final int index, final BarValue barValue, List<Double> values, List<Bar> bars) {
-		return values.isEmpty() ? barValue.resolve(bars.get(index)) : values.get(index);
-	}
-
 	@Override
 	public List<Double> computeAll(List<Double> values, List<Bar> bars, Config config) {
 		if (config.getSpan() <= values.size() || config.getSpan() <= bars.size()) {

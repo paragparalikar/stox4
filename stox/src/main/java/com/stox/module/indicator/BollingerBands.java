@@ -26,10 +26,6 @@ public class BollingerBands implements Indicator<Config, Channel>{
 	public Config defaultConfig() {
 		return new Config();
 	}
-	
-	private Double getValue(final int index, final BarValue barValue, List<Double> values, List<Bar> bars) {
-		return values.isEmpty() ? barValue.resolve(bars.get(index)) : values.get(index);
-	}
 
 	private Channel compute(int index, int span, BarValue barValue, List<Double> values, List<Bar> bars, Config config) {
 		double sum = 0;

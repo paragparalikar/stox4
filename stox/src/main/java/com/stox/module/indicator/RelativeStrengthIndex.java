@@ -40,10 +40,6 @@ public class RelativeStrengthIndex implements Indicator<Config, Double> {
 		return 100 - (100 / (1 + (gainSum / lossSum)));
 	}
 
-	private Double getValue(final int index, final BarValue barValue, List<Double> values, List<Bar> bars) {
-		return null == values || values.isEmpty() ? barValue.resolve(bars.get(index)) : values.get(index);
-	}
-
 	@Override
 	public List<Double> computeAll(List<Double> values, List<Bar> bars, Config config) {
 		final int span = config.getSpan();

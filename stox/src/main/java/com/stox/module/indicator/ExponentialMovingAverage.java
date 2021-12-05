@@ -24,10 +24,6 @@ public class ExponentialMovingAverage implements Indicator<Config, Double> {
 	public Config defaultConfig() {
 		return new Config();
 	}
-	
-	private Double getValue(final int index, final BarValue barValue, List<Double> values, List<Bar> bars) {
-		return values.isEmpty() ? barValue.resolve(bars.get(index)) : values.get(index);
-	}
 
 	@Override
 	public Double compute(List<Double> values, List<Bar> bars, Config config) {

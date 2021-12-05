@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.stox.module.core.model.Bar;
+import com.stox.module.core.model.BarValue;
 
 
 public interface Indicator<T, V> {
@@ -17,6 +18,10 @@ public interface Indicator<T, V> {
 		return ALL.stream().filter(type::isInstance).map(type::cast).findFirst().orElse(null);
 	}
 
+	public default Double getValue(final int index, final BarValue barValue, List<Double> values, List<Bar> bars) {
+		return values.isEmpty() ? barValue.resolve(bars.get(index)) : values.get(index);
+	}
+	
 	T defaultConfig();
 
 	V compute(final List<Double> values, final List<Bar> bars, final T config);
