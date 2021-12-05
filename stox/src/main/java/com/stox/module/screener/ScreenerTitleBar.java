@@ -10,9 +10,11 @@ import com.stox.fx.widget.Icon;
 import com.stox.fx.widget.search.SearchBox;
 import com.stox.fx.widget.search.SearchableListView;
 import com.stox.module.core.model.Scrip;
+import com.stox.module.core.model.intf.CoreConstant;
 import com.stox.module.core.widget.supplier.scrip.ScripsSupplierView;
 import com.stox.module.screener.modal.ScreenerConfigEditorModal;
 import com.stox.workbench.link.LinkButton;
+import com.stox.workbench.link.LinkState;
 import com.stox.workbench.module.ModuleTitleBar;
 
 import javafx.beans.value.ObservableValue;
@@ -48,10 +50,20 @@ public class ScreenerTitleBar extends ModuleTitleBar {
 		getTitleBar().append(Side.RIGHT, configButton);
 		searchToggle = appendToggleNode(Icon.SEARCH, searchBox.getNode());
 		searchToggle.selectedProperty().addListener(this::searchToggleSelected);
+		listView.getSelectionModel().selectedItemProperty().addListener(this::scripSelectionChanged);
 	}
 	
 	private void searchToggleSelected(final ObservableValue<? extends Boolean> observable, final Boolean old, final Boolean value) {
 		if(value) searchBox.clear().focus();
+	}
+	
+	private void scripSelectionChanged(final ObservableValue<? extends Scrip> observable, final Scrip old, final Scrip scrip) {
+		if(null != scrip) {
+			linkButton.getLink().setState(LinkState.builder()
+					.put(CoreConstant.KEY_TO, String.valueOf(0))
+					.put(CoreConstant.KEY_ISIN, scrip.isin())
+					.build());
+		}
 	}
 
 	private void configEditor() {

@@ -11,7 +11,7 @@ public interface Indicator<T, V> {
 	public static final List<Indicator<?,?>> ALL = Arrays.asList(
 			new SimpleMovingAverage(), new RelativeStrengthIndex(), new BollingerBands(),
 			new DecisionIndicator(), new RateOfChange(), new StandardDeviation(),
-			new TrueVolatility(), new ZigZagIndicator());
+			new TrueVolatility(), new ZigZagIndicator(), new ExponentialMovingAverage());
 	
 	public static <I> I ofType(final Class<I> type) {
 		return ALL.stream().filter(type::isInstance).map(type::cast).findFirst().orElse(null);

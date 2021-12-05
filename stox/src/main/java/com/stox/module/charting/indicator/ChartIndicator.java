@@ -18,7 +18,7 @@ public interface ChartIndicator<T, V, P> extends Indicator<T, V> {
 	public static final List<ChartIndicator<?,?,?>> ALL = Arrays.asList(
 			new ChartSimpleMovingAverage(), new ChartRelativeStrengthIndex(), new ChartBollingerBands(),
 			new ChartDecision(), new ChartRateOfChange(), new ChartStandardDeviation(), 
-			new ChartTrueVolatility(), new ChartZigZagIndicator());
+			new ChartTrueVolatility(), new ChartZigZagIndicator(), new ChartExponentialMovingAverage());
 	
 	String name();
 
