@@ -127,38 +127,41 @@ public class BarRepository implements BarProvider {
 	public List<Bar> find(final String isin, final BarSpan barSpan, int count) {
 		final String path = getPath(isin, barSpan);
 		synchronized (path) {
-			final RandomAccessFile file = getFile(path);
-			if (0 == file.length()) {
-				return Collections.emptyList();
-			} else {
-				final List<Bar> bars = new ArrayList<>();
-				final long initialDate = file.readLong();
+			try {
+				final RandomAccessFile file = getFile(path);
+				if (0 == file.length()) {
+					return Collections.emptyList();
+				} else {
+					final List<Bar> bars = new ArrayList<>();
+					final long initialDate = file.readLong();
 
-				switch (barSpan) {
-				case W:
-					count *= 7;
-					break;
-				case M:
-					count *= 31;
-					break;
-				}
-
-				for (long location = file.length() - BYTES; location >= Long.BYTES
-						&& bars.size() < count; location -= BYTES) {
-					file.seek(location);
-					final Bar bar = readBar(file);
-					if (null != bar) {
-						bar.isin(isin);
-						bar.date(getDate(initialDate, location));
-						bars.add(bar);
+					switch (barSpan) {
+					case W:
+						count *= 7;
+						break;
+					case M:
+						count *= 31;
+						break;
 					}
-				}
-				if (!BarSpan.D.equals(barSpan)) {
-					return barSpan.merge(bars);
-				}
-				return bars;
-			}
 
+					for (long location = file.length() - BYTES; location >= Long.BYTES
+							&& bars.size() < count; location -= BYTES) {
+						file.seek(location);
+						final Bar bar = readBar(file);
+						if (null != bar) {
+							bar.isin(isin);
+							bar.date(getDate(initialDate, location));
+							bars.add(bar);
+						}
+					}
+					if (!BarSpan.D.equals(barSpan)) {
+						return barSpan.merge(bars);
+					}
+					return bars;
+				}
+			} catch(FileNotFoundException e) {
+				return Collections.emptyList();
+			}
 		}
 	}
 	

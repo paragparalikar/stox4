@@ -30,7 +30,10 @@ public class ScreenerModule extends UiModule<ScreenerViewState> {
 
 	@Override
 	protected ModuleView<ScreenerViewState> buildModuleView() {
-		return new ScreenerView(getContext().getMessageSource(), getContext().getScripsSupplierViewSuppliers());
+		return new ScreenerView(
+				getContext().getMessageSource(), 
+				getContext().getBarRepository(),
+				getContext().getScripsSupplierViewSuppliers());
 	}
 
 }
