@@ -45,7 +45,6 @@ public class RankerConfigEditorModal extends ActionModal<RankerConfigEditorModal
 	
 	@Override
 	protected void action() {
-
 	}
 
 	@Override

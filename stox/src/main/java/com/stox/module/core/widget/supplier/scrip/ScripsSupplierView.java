@@ -10,5 +10,5 @@ import com.stox.module.core.model.intf.HasName;
 import javafx.scene.Node;
 
 public interface ScripsSupplierView extends HasName, HasNode<Node>, Supplier<Collection<Scrip>>{
-
+	
 }

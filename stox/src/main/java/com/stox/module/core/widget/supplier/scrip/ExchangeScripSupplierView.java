@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class ExchangeScripSupplierView implements ScripsSupplierView {
 
 	@NonNull private final ScripRepository scripRespository;
-	private FluentListView<Exchange> exchangeListView = new FluentListView<Exchange>()
+	private final FluentListView<Exchange> exchangeListView = new FluentListView<Exchange>()
 			.items(Exchange.values()).multipleSelectionMode().select(Exchange.NSE);
 	
 	@Override

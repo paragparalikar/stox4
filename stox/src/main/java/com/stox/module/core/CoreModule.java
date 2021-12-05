@@ -2,6 +2,7 @@ package com.stox.module.core;
 
 import com.stox.Context;
 import com.stox.module.core.widget.supplier.scrip.ExchangeScripSupplierView;
+import com.stox.module.core.widget.supplier.scrip.ScripsSupplierView;
 import com.stox.workbench.module.Module;
 
 import lombok.NonNull;
@@ -16,7 +17,7 @@ public class CoreModule implements Module {
 	@Override
 	public void start() {
 		context.getScheduledExecutorService().submit(context.getScripRepository()::init);
-		context.getScripsSupplierViewSuppliers().add(() -> new ExchangeScripSupplierView(context.getScripRepository()));
+		context.getScripsSupplierViewSuppliers().add(() -> (ScripsSupplierView) new ExchangeScripSupplierView(context.getScripRepository()));
 	}
 
 	@Override
