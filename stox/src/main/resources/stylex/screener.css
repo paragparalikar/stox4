@@ -1,0 +1,5 @@
+.screener-modal {
+	-fx-pref-width: 700px;
+	-fx-pref-height: 600px;
+	-fx-background-color: primary-text-color;
+}
