@@ -1,6 +1,7 @@
 package com.stox.module.screener;
 
 import com.stox.Context;
+import com.stox.fx.widget.Icon;
 import com.stox.workbench.module.ModuleView;
 import com.stox.workbench.module.UiModule;
 
@@ -10,31 +11,26 @@ public class ScreenerModule extends UiModule<ScreenerViewState> {
 
 	public ScreenerModule(Context context) {
 		super(context);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	protected String getIcon() {
-		// TODO Auto-generated method stub
-		return null;
+		return Icon.FILTER;
 	}
 
 	@Override
 	protected String getCode() {
-		// TODO Auto-generated method stub
-		return null;
+		return "screener";
 	}
 
 	@Override
 	protected ObservableValue<String> getModuleName() {
-		// TODO Auto-generated method stub
-		return null;
+		return getContext().getMessageSource().get("Screener");
 	}
 
 	@Override
 	protected ModuleView<ScreenerViewState> buildModuleView() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ScreenerView(getContext().getMessageSource(), getContext().getScripsSupplierViewSuppliers());
 	}
 
 }

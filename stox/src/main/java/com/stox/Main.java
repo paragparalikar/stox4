@@ -21,6 +21,7 @@ import com.stox.module.core.persistence.ScripRepository;
 import com.stox.module.data.DataModule;
 import com.stox.module.explorer.ExplorerModule;
 import com.stox.module.ranker.RankerModule;
+import com.stox.module.screener.ScreenerModule;
 import com.stox.module.watchlist.WatchlistModule;
 import com.stox.util.EventBus;
 import com.stox.util.JsonConverter;
@@ -56,6 +57,7 @@ public class Main extends Application {
 			new WatchlistModule(context),
 			new ChartingModule(context),
 			new ExplorerModule(context),
+			new ScreenerModule(context),
 			new RankerModule(context));
 
 	@Override
