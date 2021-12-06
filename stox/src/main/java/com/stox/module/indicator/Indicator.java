@@ -10,9 +10,10 @@ import com.stox.module.core.model.BarValue;
 public interface Indicator<T, V> {
 	
 	public static final List<Indicator<?,?>> ALL = Arrays.asList(
+			new Stochastics(), new ExponentialMovingAverage(),
 			new SimpleMovingAverage(), new RelativeStrengthIndex(), new BollingerBands(),
 			new DecisionIndicator(), new RateOfChange(), new StandardDeviation(),
-			new TrueVolatility(), new ZigZagIndicator(), new ExponentialMovingAverage());
+			new TrueVolatility(), new ZigZagIndicator());
 	
 	public static <I> I ofType(final Class<I> type) {
 		return ALL.stream().filter(type::isInstance).map(type::cast).findFirst().orElse(null);
