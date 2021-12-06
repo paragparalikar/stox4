@@ -9,6 +9,7 @@ import com.stox.module.indicator.ExponentialMovingAverage;
 import com.stox.module.indicator.Indicator;
 import com.stox.module.indicator.SimpleMovingAverage;
 import com.stox.module.indicator.Stochastics;
+import com.stox.module.indicator.model.MultiValue;
 import com.stox.module.screen.BhedaScreen.Config;
 
 import lombok.Data;
@@ -27,6 +28,11 @@ public class BhedaScreen implements Screen<Config> {
 		private int stochastics1KSpan = 14;
 		private int stochastics1KSmoothing = 3;
 		private int stochastics1DSpan = 3;
+		private double stochastics1Max = 30;
+		private int stochastics2KSpan = 7;
+		private int stochastics2KSmoothing = 3;
+		private int stochastics2DSpan = 2;
+		private double stochastics2Max = 30;
 	}
 
 	@Override
@@ -80,7 +86,25 @@ public class BhedaScreen implements Screen<Config> {
 			return false;
 		}
 		
+		final Stochastics.Config stoConfig = stoch.defaultConfig();
+		stoConfig.setBarValue(BarValue.CLOSE);
+		stoConfig.setKSpan(config.getStochastics2KSpan());
+		stoConfig.setKSmoothing(config.getStochastics2KSmoothing());
+		stoConfig.setDSpan(config.getStochastics2DSpan());
+		final MultiValue sto2Value = stoch.compute(Collections.emptyList(), bars, stoConfig);
 		
+		if(sto2Value.getValues()[0] > config.getStochastics2Max() || sto2Value.getValues()[1] > config.getStochastics2Max()) {
+			return false;
+		}
+		
+		stoConfig.setKSpan(config.getStochastics1KSpan());
+		stoConfig.setKSmoothing(config.getStochastics1KSmoothing());
+		stoConfig.setDSpan(config.getStochastics1DSpan());
+		final MultiValue sto1Value = stoch.compute(Collections.emptyList(), bars, stoConfig);
+		
+		if(sto1Value.getValues()[0] > config.getStochastics1Max() || sto1Value.getValues()[1] > config.getStochastics1Max()) {
+			return false;
+		}
 		
 		return true;
 	}
