@@ -37,9 +37,9 @@ public class SimpleMovingAverage implements Indicator<Config, Double> {
 
 	@Override
 	public List<Double> computeAll(List<Double> values, List<Bar> bars, Config config) {
-		if (config.getSpan() <= values.size() || config.getSpan() <= bars.size()) {
+		final int size = Math.max(values.size(), bars.size());
+		if (config.getSpan() <= size) {
 			double sum = 0;
-			final int size = Math.max(values.size(), bars.size());
 			final List<Double> results = new ArrayList<>(size);
 			for (int index = size - 1; index >= 0; index--) {
 				final Double value = getValue(index, config.getBarValue(), values, bars);
@@ -49,13 +49,9 @@ public class SimpleMovingAverage implements Indicator<Config, Double> {
 					sum += value;
 					if (index < size - config.getSpan()) {
 						final Double pastValue = getValue(index + config.getSpan(), config.getBarValue(), values, bars);
-						if (null != pastValue) {
-							sum -= pastValue;
-							results.add(sum / config.getSpan());
-						}
-					} else {
-						results.add(null);
-					}
+						if (null != pastValue) sum -= pastValue;
+					} 
+					results.add(sum / config.getSpan());
 				}
 			}
 			Collections.reverse(results);

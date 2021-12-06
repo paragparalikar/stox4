@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polyline;
 
 public class MultiValueUnitParent implements UnitParent<List<Point2D>>  {
-	private static final Color[] COLORS = new Color[] {Color.ORANGE, Color.BLUE, Color.GREEN};
+	private static final Color[] COLORS = new Color[] {Color.BLUE, Color.ORANGE, Color.GREEN};
 	
 	private final Group group;
 	private final List<Polyline> polylines = new ArrayList<>();

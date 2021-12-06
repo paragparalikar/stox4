@@ -8,6 +8,7 @@ import com.stox.module.core.model.Bar;
 import com.stox.module.core.model.BarValue;
 import com.stox.module.indicator.Stochastics.Config;
 import com.stox.module.indicator.model.MultiValue;
+import com.stox.util.MathUtil;
 
 import lombok.Data;
 
@@ -28,7 +29,15 @@ public class Stochastics implements Indicator<Config, MultiValue> {
 	
 	@Override
 	public MultiValue compute(List<Double> values, List<Bar> bars, Config config) {
-		
+		final int size = Math.max(values.size(), bars.size());
+		final int minSize = config.getKSpan() + config.getKSmoothing() + config.getDSpan();
+		if(size >= minSize) {
+			return computeAll(
+					values.subList(0, MathUtil.limit(0, minSize, values.size())), 
+					bars.subList(0, MathUtil.limit(0, minSize, bars.size())), 
+					config)
+				.get(0);
+		}
 		return null;
 	}
 
