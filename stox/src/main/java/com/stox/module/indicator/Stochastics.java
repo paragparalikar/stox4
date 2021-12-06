@@ -43,31 +43,34 @@ public class Stochastics implements Indicator<Config, MultiValue> {
 			final List<Double> kValues = new ArrayList<>(size - config.getKSpan());
 			final List<Double> kSmoothValues = new ArrayList<>(size - (config.getKSpan() + config.getKSmoothing()));
 			for(int index = size - 1; index >= 0; index--) {
-				
-				if(index < size - config.getKSpan()) {
+				MultiValue result = null;
+				if(index <= size - config.getKSpan()) {
 					final double k = compute(index, values, bars, config);
 					kValues.add(k);
 					kSum += k;
 				}
 				
 				double kSmooth = 0;
-				if(index < size - (config.getKSpan() + config.getKSmoothing())) {
-					final double pastKValue = kValues.get(kValues.size() - (config.getKSmoothing() + 1));
-					kSum -= pastKValue;
+				if(kValues.size() >= config.getKSmoothing()) {
+					if(kValues.size() > config.getKSmoothing()) {
+						final double pastKValue = kValues.get(kValues.size() - (config.getKSmoothing() + 1));
+						kSum -= pastKValue;
+					}
 					kSmooth = kSum / config.getKSmoothing();
 					kSmoothValues.add(kSmooth);
 					kSmoothSum += kSmooth;
 				}
 				
-				if(index < size - minSize) {
-					final double pastKSmoothValue = kSmoothValues.get(kSmoothValues.size() - (config.getDSpan() + 1));
-					kSmoothSum -= pastKSmoothValue;
+				if(kSmoothValues.size() >= config.getDSpan()) {
+					if(kSmoothValues.size() > config.getDSpan()) {
+						final double pastKSmooth = kSmoothValues.get(kSmoothValues.size() - (config.getDSpan() + 1));
+						kSmoothSum -= pastKSmooth;
+					}
 					final double dValue = kSmoothSum / config.getDSpan();
-					final MultiValue result = new MultiValue(new double[] {kSmooth, dValue});
-					results.add(result);
-				} else {
-					results.add(null);
+					result = new MultiValue(new double[] {kSmooth, dValue});
 				}
+				
+				results.add(result);
 			}
 			Collections.reverse(results);
 			return results;
