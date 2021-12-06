@@ -7,13 +7,12 @@ import java.util.List;
 import com.stox.module.core.model.Bar;
 import com.stox.module.core.model.BarValue;
 import com.stox.module.indicator.ExponentialMovingAverage.Config;
+import com.stox.util.MathUtil;
 
 import lombok.Data;
 
 public class ExponentialMovingAverage implements Indicator<Config, Double> {
 
-	private final SimpleMovingAverage sma = new SimpleMovingAverage();
-	
 	@Data
 	public static class Config {
 		private int span = 100;
@@ -27,50 +26,54 @@ public class ExponentialMovingAverage implements Indicator<Config, Double> {
 
 	@Override
 	public Double compute(List<Double> values, List<Bar> bars, Config config) {
-		if (config.getSpan() <= values.size() || config.getSpan() <= bars.size()) {
-			final SimpleMovingAverage.Config smaConfig = sma.defaultConfig();
-			smaConfig.setSpan(config.getSpan());
-			smaConfig.setBarValue(config.getBarValue());
-			double ema = sma.compute(values, bars, smaConfig); // SMA is initial EMA
-			final double k = 2/(config.getSpan() + 1);
-			
-			for (int index = config.getSpan() - 1; index >= 0; index--) {
-				final Double value = getValue(index, config.getBarValue(), values, bars);
-				ema = value * k + ema * (1 - k);
-			}
-			
-			return ema;
+		final int size = Math.max(values.size(), bars.size());
+		if (config.getSpan() <= size) {
+			return computeAll(
+					values.subList(0, MathUtil.limit(0, config.getSpan(), values.size())),
+					bars.subList(0, MathUtil.limit(0, config.getSpan(), bars.size())),
+					config)
+				.get(0);
 		}
 		return null;
 	}
-
+	
 	@Override
 	public List<Double> computeAll(List<Double> values, List<Bar> bars, Config config) {
-		if (config.getSpan() <= values.size() || config.getSpan() <= bars.size()) {
-			final SimpleMovingAverage.Config smaConfig = sma.defaultConfig();
-			smaConfig.setSpan(config.getSpan());
-			smaConfig.setBarValue(config.getBarValue());
-			double ema = sma.compute(
-					values.subList(Math.max(0, values.size() - config.getSpan()), values.size()), 
-					bars.subList(Math.max(0, bars.size() - config.getSpan()), bars.size()), 
-					smaConfig); // SMA is initial EMA
+		final int size = Math.max(values.size(), bars.size());
+		if (config.getSpan() <= size) {
+			double sum = 0;
 			final double k = 2d/(double)(config.getSpan() + 1);
-			final int size = Math.max(values.size(), bars.size());
-			
-			final List<Double> results = new ArrayList<>(size);
+			final List<Double> smaValues = new ArrayList<>(size);
+			final List<Double> emaValues = new ArrayList<>(size);
 			for (int index = size - 1; index >= 0; index--) {
 				final Double value = getValue(index, config.getBarValue(), values, bars);
-				if(null == value) {
-					results.add(null);
+				if (null == value) {
+					smaValues.add(null);
+					emaValues.add(null);
 				} else {
-					ema = (value * k) + (ema * ( 1 - k));
-					results.add(ema);
+					sum += value;
+					Double result = null;
+					if(index <= size - config.getSpan()) {
+						if (index < size - config.getSpan()) {
+							final Double pastValue = getValue(index + config.getSpan(), config.getBarValue(), values, bars);
+							if (null != pastValue) sum -= pastValue;
+						} 
+						final double sma = sum / config.getSpan();
+						smaValues.add(sma);
+						double ema = sma;
+						for(int emaIndex = index + config.getSpan() - 1; emaIndex >= index; emaIndex--) {
+							final Double emaIndexBarValue = getValue(emaIndex, config.getBarValue(), values, bars);
+							ema = (emaIndexBarValue * k) + (ema * ( 1 - k));
+						}
+						result = ema;
+					}
+					emaValues.add(result);
 				}
 			}
-			Collections.reverse(results);
-			return results;
+			Collections.reverse(emaValues);
+			return emaValues;
 		}
 		return Collections.emptyList();
 	}
-	
+
 }
