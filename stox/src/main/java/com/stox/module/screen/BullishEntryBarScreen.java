@@ -13,8 +13,8 @@ public class BullishEntryBarScreen implements Screen<Config> {
 	@Getter
 	@Setter
 	public static class Config {
-		private int overboughtSpan = 5;
-		private double overboughtMaxPercentageRise = 15;
+		private int turnoverAverageSpan = 14;
+		private long minimumAverageTurnover = 50_00_000;
 	}
 	
 	@Override
@@ -39,7 +39,7 @@ public class BullishEntryBarScreen implements Screen<Config> {
 
 	@Override
 	public int minBarCount(Config config) {
-		return 3 + config.getOverboughtSpan();
+		return 3 + config.getTurnoverAverageSpan();
 	}
 
 	@Override
@@ -67,8 +67,16 @@ public class BullishEntryBarScreen implements Screen<Config> {
 			return false;
 		}
 		
-		// Current, previous and previous to previous bars must have turnover above ????
-		
+		// Average turnover 
+		long turnoverSum = 0;
+		for(int index = 0; index < config.getTurnoverAverageSpan(); index++) {
+			final Bar b = bars.get(index);
+			turnoverSum += b.volume() * b.close();
+		}
+		final long averageTurnover = turnoverSum / config.getTurnoverAverageSpan();
+		if(averageTurnover < config.getMinimumAverageTurnover()) {
+			return false;
+		}
 		
 		
 		// --------------------------- Eliminate overbought or high risk/reward ratio stocks ---------------------------
@@ -77,21 +85,6 @@ public class BullishEntryBarScreen implements Screen<Config> {
 		if(one.close() > two.high()){
 			return false;
 		}
-			
-		// Price must not have risen above 10???? % in last n???? bars
-		/*double min = Double.MAX_VALUE;
-		for(int index = 0; index < config.getOverboughtSpan(); index++){
-			min = Math.min(min, bars.get(index).getLow());
-		}
-		if((bar.getClose()-min)*100/min > config.getOverboughtMaxPercentageRise()){
-			return false;
-		}*/
-		
-		// --------------------------- Eliminate buying climaxes or too much resistance to rise ---------------------------
-		
-		// Current bar volume must be lower than m??? times the average volume of last n???? bars
-		
-		// Current bar spread must be lower than m??? times the average spread of last n???? bars
 		
 		return true;						
 	}
