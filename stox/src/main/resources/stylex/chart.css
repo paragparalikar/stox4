@@ -134,6 +134,11 @@
 	-fx-background-color: dark;
 }
 
+.candle-wick{
+	-fx-stroke-width: 1px;
+	-fx-stroke: black;
+}
+
 .charting-split-pane, .chart, .chart .content {
 	-fx-padding: 0;
 	-fx-background-color: transparent;

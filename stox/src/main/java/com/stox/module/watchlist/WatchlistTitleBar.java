@@ -138,6 +138,8 @@ public class WatchlistTitleBar extends ModuleTitleBar {
 							Selector.of(entry).select(listView.getSelectionModel());
 						});
 			}
+		} else {
+			controlPanel.select(null);
 		}
 		return this;
 	}

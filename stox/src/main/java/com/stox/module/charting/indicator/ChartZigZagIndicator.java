@@ -47,20 +47,7 @@ public class ChartZigZagIndicator extends AbstractChartIndicator<Config, Move, P
 
 	@Override
 	public Underlay underlay(Config config) {
-		switch (config.getBarValue()) {
-		case OPEN:
-		case CLOSE:
-		case HIGH:
-		case LOW:
-		case MID:
-			return Underlay.PRICE;
-		case SPREAD:
-			return Underlay.NONE;
-		case VOLUME:
-			return Underlay.VOLUME;
-		default:
-			throw new IllegalArgumentException("Underlay " + config.getBarValue().name() + " is not supported.");
-		}
+		return Underlay.PRICE;
 	}
 
 	@Override

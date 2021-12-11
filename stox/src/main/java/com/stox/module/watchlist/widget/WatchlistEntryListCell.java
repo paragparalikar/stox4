@@ -36,6 +36,10 @@ public class WatchlistEntryListCell extends OrderableListCell<WatchlistEntry> {
 	public WatchlistEntryListCell() {
 		setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 		setOnDragDone(this::onDragDone);
+		
+		nameLabel.setPrefWidth(150);
+		nameLabel.setMaxWidth(150);
+		nameLabel.setMinWidth(150);
 	}
 	
 	private void onDragDone(final DragEvent event) {

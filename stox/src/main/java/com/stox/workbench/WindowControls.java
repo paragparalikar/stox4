@@ -42,8 +42,9 @@ public class WindowControls implements HasNode<Node>{
 		y = state.y();
 		width = state.width();
 		height = state.height();
-		maximized = !state.maximized();
+		maximized = state.maximized();
 		toggleMaximizeRestore(null);
+		maximized = state.maximized();
 		return this;
 	}
 	
@@ -90,7 +91,7 @@ public class WindowControls implements HasNode<Node>{
 	}
 	
 	private Screen screen() {
-		final Point2D point = new Point2D(x + width/2, y + height/2);
+		final Point2D point = new Point2D(x, y);
 		return Screen.getScreens().stream()
 				.filter(s -> s.getBounds().contains(point))
 				.findFirst().orElse(Screen.getPrimary());

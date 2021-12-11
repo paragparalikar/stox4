@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import com.stox.fx.fluent.stage.FluentStage;
 import com.stox.fx.widget.FxMessageSource;
 import com.stox.fx.widget.Icon;
+import com.stox.fx.widget.Ui;
 import com.stox.module.charting.ChartingModule;
 import com.stox.module.core.CoreModule;
 import com.stox.module.core.persistence.BarRepository;
@@ -73,7 +74,7 @@ public class Main extends Application {
 	
 	private void onWorkbenchShown(final WindowEvent event) {
 		workbench.state(new WorkbenchStateRepository(home, jsonConverter).read());
-		modules.forEach(this::start);
+		Ui.fx(() -> modules.forEach(this::start));
 	}
 	
 	private void start(final Module module) {

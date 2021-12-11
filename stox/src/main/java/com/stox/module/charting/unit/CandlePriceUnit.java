@@ -1,7 +1,6 @@
 package com.stox.module.charting.unit;
 
 import com.stox.fx.fluent.scene.layout.FluentRegion;
-import com.stox.fx.widget.Ui;
 import com.stox.fx.widget.parent.Parent;
 import com.stox.module.charting.Configuration;
 import com.stox.module.charting.axis.horizontal.XAxis;
@@ -48,7 +47,7 @@ public class CandlePriceUnit implements PriceUnit {
 
 		final double bodyTop = yAxis.getY(Math.max(model.open(), model.close()));
 		final double bodyHeight = yAxis.getY(Math.min(model.open(), model.close())) - bodyTop;
-		body.resizeRelocate(Ui.px(x + width * 0.2), bodyTop, width * 0.6, bodyHeight);
+		body.resizeRelocate(x + width * 0.2, bodyTop, width * 0.6, bodyHeight);
 		body.setBorder(model.close() > model.open() ? configuration.upBarBorder() : configuration.downBarBorder());
 		body.setBackground(model.close() > model.open() ? configuration.upBarBackground() : configuration.downBarBackground());
 	}

@@ -11,6 +11,7 @@ import com.stox.module.watchlist.event.WatchlistClearedEvent;
 import com.stox.module.watchlist.event.WatchlistEntryCreatedEvent;
 import com.stox.module.watchlist.model.WatchlistEntry;
 import com.stox.module.watchlist.repository.WatchlistRepository;
+import com.stox.module.watchlist.widget.WatchlistContextMenu;
 import com.stox.module.watchlist.widget.WatchlistEntryListCell;
 import com.stox.workbench.module.ModuleView;
 
@@ -38,6 +39,8 @@ public class WatchlistView extends ModuleView<WatchlistViewState> {
 		getNode().sceneProperty().addListener(new WeakChangeListener<>(sceneChangeListener));
 		listView.setCellFactory(value -> new WatchlistEntryListCell());
 		content(listView);
+		final WatchlistContextMenu contextMenu = new WatchlistContextMenu(messageSource, listView);
+		listView.setContextMenu(contextMenu);
 	}
 	
 	private void watchlistCleared(final WatchlistClearedEvent event) {
