@@ -44,13 +44,10 @@ public class ScreenerService extends Service<ObservableList<Scrip>> {
 					final long progress = index;
 					final Scrip scrip = eligibleScrips.get(index);
 					if(test(scrip)) {
-						Ui.fx(() -> {
-							scrips.add(scrip);
-							updateProgress(progress, eligibleScrips.size());
-						});
+						Ui.fx(() -> scrips.add(scrip));
 					}
+					Ui.fx(() -> updateProgress(progress, eligibleScrips.size()));
 				}
-				
 				return scrips;
 			}
 		};
@@ -58,28 +55,32 @@ public class ScreenerService extends Service<ObservableList<Scrip>> {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private boolean test(Scrip scrip) {
-		final int span = screenerConfig.getSpan();
-		final int offset = screenerConfig.getOffset();
-		final Screen screen = screenerConfig.getScreen();
-		final Object screenConfig = screenerConfig.getScreenConfig();
-		final int totalBarCount = screen.minBarCount(screenConfig) + span + offset;
-		
-		final List<Bar> bars = barRepository.find(scrip.isin(), BarSpan.D, totalBarCount);
-		
-		if(totalBarCount > bars.size()) {
+		try {
+			final int span = screenerConfig.getSpan();
+			final int offset = screenerConfig.getOffset();
+			final Screen screen = screenerConfig.getScreen();
+			final Object screenConfig = screenerConfig.getScreenConfig();
+			final int totalBarCount = screen.minBarCount(screenConfig) + span + offset;
+			
+			final List<Bar> bars = barRepository.find(scrip.isin(), BarSpan.D, totalBarCount);
+			
+			if(totalBarCount > bars.size()) {
+				return false;
+			}
+			
+			final List<Bar> offsetBars = bars.subList(offset, bars.size());
+			
+			for(int index = 0; index < span; index++) {
+				final List<Bar> spanBars = offsetBars.subList(index, offsetBars.size());
+				if(screen.match(spanBars, screenConfig)) {
+					return true;
+				}
+			}
+			return false;
+		}catch(Exception e) {
+			e.printStackTrace();
 			return false;
 		}
-		
-		final List<Bar> offsetBars = bars.subList(offset, bars.size());
-		
-		for(int index = 0; index < span; index++) {
-			final List<Bar> spanBars = offsetBars.subList(index, offsetBars.size());
-			if(screen.match(spanBars, screenConfig)) {
-				return true;
-			}
-		}
-		
-		return false;
 	}
 
 }

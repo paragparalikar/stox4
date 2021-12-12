@@ -58,6 +58,7 @@ public class Move {
 			moves.add(new Move(BarValue.LOW, Collections.unmodifiableList(new ArrayList<>(bars.subList(0, pivotIndex))),
 					0, pivotIndex));
 		}
+		Collections.reverse(moves);
 		return moves;
 	}
 	
@@ -129,6 +130,11 @@ public class Move {
 
 	public int count() {
 		return bars.size();
+	}
+	
+	@Override
+	public String toString() {
+		return barValue.name();
 	}
 
 }
