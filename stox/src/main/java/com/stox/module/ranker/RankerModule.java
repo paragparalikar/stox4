@@ -30,7 +30,10 @@ public class RankerModule extends UiModule<RankerViewState> {
 
 	@Override
 	protected ModuleView<RankerViewState> buildModuleView() {
-		return new RankerView(getContext().getMessageSource(), getContext().getScripsSupplierViewSuppliers());
+		return new RankerView(
+				getContext().getMessageSource(), 
+				getContext().getBarRepository(),
+				getContext().getScripsSupplierViewSuppliers());
 	}
 
 }

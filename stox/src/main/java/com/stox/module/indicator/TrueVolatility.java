@@ -52,7 +52,7 @@ public class TrueVolatility implements Indicator<Config, Double> {
 						for (int i = index + config.getSpan(); i >= index; i--) {
 							deltaSum += Math.abs(value - average);
 						}
-						results.add(deltaSum);
+						results.add(deltaSum * 100 / average);
 					} else {
 						results.add(null);
 					}

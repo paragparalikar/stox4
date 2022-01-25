@@ -11,6 +11,7 @@ import lombok.NonNull;
 public interface Screen<T> {
 	public static final List<Screen<?>> ALL = Arrays.asList(
 			new BhedaScreen(),
+			new BullishRSIDivergenceScreen(),
 			new BullishSqueezeScreen(),
 			new BullishEntryBarScreen(), 
 			new BullishPriceReversalScreen());

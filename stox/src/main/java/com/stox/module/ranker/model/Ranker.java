@@ -1,7 +1,13 @@
 package com.stox.module.ranker.model;
 
-public interface Ranker {
+import java.util.List;
 
-	double rank();
+import com.stox.module.core.model.Bar;
+
+public interface Ranker<T> {
+
+	double rank(List<Bar> bars, T config);
+	
+	int minBarCount(T config);
 	
 }

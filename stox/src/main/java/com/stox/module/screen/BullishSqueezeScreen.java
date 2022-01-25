@@ -13,12 +13,14 @@ import lombok.Data;
 
 public class BullishSqueezeScreen implements Screen<Config> {
 
-	// Normalized std dev < 1
 	private final StandardDeviation standardDeviation = Indicator.ofType(StandardDeviation.class);
 	
 	@Data
 	public static class Config {
-		private int span = 14;
+		private int shortSpan = 30;
+		private double shortMaxStdDevValue = 3;
+		private int longSpan = 100;
+		private double longMaxStdDevValue = 15;
 	}
 
 	@Override
@@ -43,7 +45,7 @@ public class BullishSqueezeScreen implements Screen<Config> {
 
 	@Override
 	public int minBarCount(Config config) {
-		return config.getSpan();
+		return Math.max(config.getLongSpan(), config.getShortSpan());
 	}
 
 	@Override
@@ -51,9 +53,19 @@ public class BullishSqueezeScreen implements Screen<Config> {
 		final StandardDeviation.Config standardDeviationConfig  = standardDeviation.defaultConfig();
 		standardDeviationConfig.setBarValue(BarValue.CLOSE);
 		standardDeviationConfig.setNormalize(true);
-		standardDeviationConfig.setSpan(config.getSpan());
-		final Double standardDeviationValue = standardDeviation.compute(Collections.emptyList(), bars, standardDeviationConfig);
-		return null != standardDeviationValue && standardDeviationValue <= 1;
+		standardDeviationConfig.setSpan(config.getShortSpan());
+		final Double shortStandardDeviationValue = standardDeviation.compute(Collections.emptyList(), bars, standardDeviationConfig);
+		if (null == shortStandardDeviationValue || shortStandardDeviationValue > config.getShortMaxStdDevValue()) {
+			return false;
+		}
+		
+		standardDeviationConfig.setSpan(config.getLongSpan());
+		final Double longStandardDeviationValue = standardDeviation.compute(Collections.emptyList(), bars, standardDeviationConfig);
+		if (null == longStandardDeviationValue || longStandardDeviationValue > config.getLongMaxStdDevValue()) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 }
