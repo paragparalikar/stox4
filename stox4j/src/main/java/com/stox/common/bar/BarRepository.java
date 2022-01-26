@@ -11,6 +11,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.stereotype.Repository;
 import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBar;
@@ -19,6 +20,7 @@ import org.ta4j.core.num.DoubleNum;
 
 import lombok.SneakyThrows;
 
+@Repository
 public class BarRepository {
 	private static final int BYTES = 6 * Double.BYTES;
 

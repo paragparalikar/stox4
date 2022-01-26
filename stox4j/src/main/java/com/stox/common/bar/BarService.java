@@ -1,9 +1,11 @@
 package com.stox.common.bar;
 
+import org.springframework.stereotype.Service;
 import org.ta4j.core.BarSeries;
 
 import lombok.RequiredArgsConstructor;
 
+@Service
 @RequiredArgsConstructor
 public class BarService {
 

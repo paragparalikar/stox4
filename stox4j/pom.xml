@@ -58,6 +58,21 @@
 			<artifactId>spring-data-dynamodb</artifactId>
 			<version>${spring-data-dynamodb.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.dlsc.workbenchfx</groupId>
+			<artifactId>workbenchfx-core</artifactId>
+			<version>11.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dlsc.formsfx</groupId>
+			<artifactId>formsfx-core</artifactId>
+			<version>11.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dlsc.preferencesfx</groupId>
+			<artifactId>preferencesfx-core</artifactId>
+			<version>11.9.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
