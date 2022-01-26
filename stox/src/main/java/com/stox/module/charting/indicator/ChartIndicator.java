@@ -17,6 +17,7 @@ import javafx.scene.Group;
 public interface ChartIndicator<T, V, P> extends Indicator<T, V> {
 	public static final List<ChartIndicator<?,?,?>> ALL = Arrays.asList(
 			new ChartStochastics(), new ChartExponentialMovingAverage(),
+			new ChartRelativeVolatility(),
 			new ChartSimpleMovingAverage(), new ChartRelativeStrengthIndex(), new ChartBollingerBands(),
 			new ChartDecision(), new ChartRateOfChange(), new ChartStandardDeviation(), 
 			new ChartTrueVolatility(), new ChartZigZagIndicator());

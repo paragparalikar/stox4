@@ -13,7 +13,7 @@ public interface Indicator<T, V> {
 			new Stochastics(), new ExponentialMovingAverage(),
 			new SimpleMovingAverage(), new RelativeStrengthIndex(), new BollingerBands(),
 			new DecisionIndicator(), new RateOfChange(), new StandardDeviation(),
-			new TrueVolatility(), new ZigZagIndicator());
+			new TrueVolatility(), new ZigZagIndicator(), new RelativeVolatility());
 	
 	public static <I> I ofType(final Class<I> type) {
 		return ALL.stream().filter(type::isInstance).map(type::cast).findFirst().orElse(null);
