@@ -11,7 +11,6 @@
 		<ta4j.version>0.14</ta4j.version>
 		<spring.boot.version>2.6.3</spring.boot.version>
 		<spring.cloud.version>2021.0.0</spring.cloud.version>
-		<preferencesfx.version>8.6.0</preferencesfx.version>
 		<spring-data-dynamodb.version>5.2.5</spring-data-dynamodb.version>
 		<aws-java-sdk-dynamodb.version>1.12.141</aws-java-sdk-dynamodb.version>
 		<maven-compiler-plugin.version>3.9.0</maven-compiler-plugin.version>
@@ -61,17 +60,17 @@
 		<dependency>
 			<groupId>com.dlsc.workbenchfx</groupId>
 			<artifactId>workbenchfx-core</artifactId>
-			<version>11.3.1</version>
+			<version>8.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dlsc.formsfx</groupId>
 			<artifactId>formsfx-core</artifactId>
-			<version>11.5.0</version>
+			<version>8.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.dlsc.preferencesfx</groupId>
 			<artifactId>preferencesfx-core</artifactId>
-			<version>11.9.0</version>
+			<version>8.6.0</version>
 		</dependency>
 	</dependencies>
 

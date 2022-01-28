@@ -14,9 +14,9 @@ public class StoxApplication extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
-		SpringApplication.run(StoxApplication.class, args);
+		SpringApplication.run(StoxApplication.class);
 	}
-
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		final Workbench workbench = Workbench.builder().build();
