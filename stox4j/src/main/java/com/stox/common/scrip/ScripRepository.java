@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
@@ -17,8 +18,11 @@ public class ScripRepository {
 	private final Path path = Paths.get(System.getProperty("user.home"), ".stox4", "exchanges", "nse", "scrips.csv");
 	
 	@SneakyThrows
-	public Collection<Scrip> findAll(){
-		return Files.lines(path).map(this::parse).collect(Collectors.toSet());
+	public List<Scrip> findAll(){
+		return Files.lines(path)
+				.map(this::parse)
+				.sorted().distinct()
+				.collect(Collectors.toList());
 	}
 	
 	private Scrip parse(String line){

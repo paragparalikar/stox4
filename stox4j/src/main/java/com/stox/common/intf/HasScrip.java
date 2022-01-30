@@ -4,6 +4,6 @@ import com.stox.common.scrip.Scrip;
 
 public interface HasScrip {
 
-	public Scrip scrip();
+	public Scrip getScrip();
 
 }

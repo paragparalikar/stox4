@@ -2,9 +2,14 @@ package com.stox.common.scrip;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -14,6 +19,7 @@ import lombok.SneakyThrows;
 public class ScripService {
 
 	private final ScripRepository scripRepository;
+	private final List<Scrip> scrips = new LinkedList<>();
 	private final Map<String, Scrip> isinScripMapping = new HashMap<>();
 	private final Map<String, Scrip> codeScripMapping = new HashMap<>();
 	private final Map<String, Scrip> nameScripMapping = new HashMap<>();
@@ -24,6 +30,8 @@ public class ScripService {
 	}
 	
 	private void cache(Collection<Scrip> scrips) {
+		this.scrips.clear();
+		this.scrips.addAll(scrips);
 		scrips.forEach(scrip -> {
 			isinScripMapping.put(scrip.getIsin(), scrip);
 			codeScripMapping.put(scrip.getCode(), scrip);
@@ -31,9 +39,14 @@ public class ScripService {
 		});
 	}
 	
-	public Collection<Scrip> findAll(){
+	public List<Scrip> findAll(){
 		loadIfRequired();
-		return isinScripMapping.values();
+		return scrips;
+	}
+	
+	@Async
+	public ListenableFuture<List<Scrip>> findAllAsync(){
+		return AsyncResult.forValue(findAll());
 	}
 	
 	public Scrip findByIsin(String isin) {
