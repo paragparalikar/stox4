@@ -1,7 +1,8 @@
 package com.stox.common.bar;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
-import org.ta4j.core.BarSeries;
 
 import lombok.RequiredArgsConstructor;
 
@@ -11,7 +12,7 @@ public class BarService {
 
 	private final BarRepository barRepository;
 	
-	public BarSeries find(final String isin, int count) {
+	public List<Bar> find(final String isin, int count) {
 		return barRepository.find(isin, count);
 	}
 	

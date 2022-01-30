@@ -6,17 +6,11 @@ import java.io.RandomAccessFile;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Repository;
-import org.ta4j.core.Bar;
-import org.ta4j.core.BarSeries;
-import org.ta4j.core.BaseBar;
-import org.ta4j.core.BaseBarSeries;
-import org.ta4j.core.num.DoubleNum;
 
 import lombok.SneakyThrows;
 
@@ -35,25 +29,25 @@ public class BarRepository {
 	}
 	
 	@SneakyThrows
-	public BarSeries find(final String isin, int count) {
+	public List<Bar> find(final String isin, int count) {
 		final Path path = resolvePath(isin);
 		synchronized (isin) {
-			final BarSeries barSeries = new BaseBarSeries();
+			final List<Bar> bars = new ArrayList<>();
 			try (final RandomAccessFile file = new RandomAccessFile(path.toString(), "r")) {
 				if (0 == file.length()) {
-					return barSeries;
+					return bars;
 				} else {
 					final long initialDate = file.readLong();
 					for (long location = file.length() - BYTES; location >= Long.BYTES
-							&& barSeries.getBarCount() < count; location -= BYTES) {
+							&& bars.size() < count; location -= BYTES) {
 						file.seek(location);
 						final Bar bar = readBar(file, isin, getDate(initialDate, location));
-						if (null != bar) barSeries.addBar(bar);
+						if (null != bar) bars.add(bar);
 					}
-					return barSeries;
+					return bars;
 				}
 			} catch(FileNotFoundException e) {
-				return barSeries;
+				return bars;
 			}
 		}
 	}
@@ -66,17 +60,14 @@ public class BarRepository {
 		final double close = file.readDouble();
 		final double previousClose = file.readDouble();
 		final double volume = file.readDouble();
-		final ZoneId zoneId = ZoneId.systemDefault();
-		final Instant instant = Instant.ofEpochMilli(epochMillis);
-		final ZonedDateTime date = ZonedDateTime.ofInstant(instant, zoneId);
-		return 0 >= open ? null : BaseBar.builder()
-			.openPrice(DoubleNum.valueOf(open))
-			.highPrice(DoubleNum.valueOf(high))
-			.lowPrice(DoubleNum.valueOf(low))
-			.closePrice(DoubleNum.valueOf(close))
-			.volume(DoubleNum.valueOf(volume))
+		return 0 >= open ? null : Bar.builder()
+			.open(open)
+			.high(high)
+			.low(low)
+			.close(close)
+			.volume(volume)
 			.timePeriod(Duration.ofDays(1))
-			.endTime(date)
+			.date(epochMillis)
 			.build();
 	}
 }
