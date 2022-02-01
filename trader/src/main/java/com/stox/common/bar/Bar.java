@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Comparator;
+import java.util.Objects;
 
 import org.ta4j.core.num.DoubleNum;
 import org.ta4j.core.num.Num;
@@ -17,7 +19,7 @@ import lombok.experimental.Accessors;
 @Getter
 @NoArgsConstructor
 @Accessors(fluent = true)
-public class Bar implements org.ta4j.core.Bar {
+public class Bar implements org.ta4j.core.Bar, Comparable<Bar> {
 	private static final long serialVersionUID = -3047462532062623094L;
 	public static final int BYTES = Double.BYTES * 6 + Long.BYTES * 2;
 
@@ -50,6 +52,11 @@ public class Bar implements org.ta4j.core.Bar {
 		this.amountValue = DoubleNum.valueOf(amount);
 	}
 
+	@Override
+	public int compareTo(Bar o) {
+		return Objects.compare(date, o.date(), Comparator.naturalOrder());
+	}
+	
 	@Override
 	public Num getOpenPrice() {
 		return openPrice;

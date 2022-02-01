@@ -22,9 +22,8 @@ public class KiteUtil {
 		final KiteSession kiteSession = new KiteSession(kiteCredentials);
 		final KiteClient kiteClient = new KiteClient(kiteSession);
 		final KiteBarRepository kiteBarRepository = new KiteBarRepository();
-		final KiteDeltaBarDownloader kiteDeltaBarDownloader = new KiteDeltaBarDownloader(
-				kiteClient, kiteBarRepository);
-		final KiteBarService kiteBarService = new KiteBarService(kiteDeltaBarDownloader);
+		final KiteDeltaBarDownloader kiteDeltaBarDownloader = new KiteDeltaBarDownloader(kiteClient);
+		final KiteBarService kiteBarService = new KiteBarService(kiteBarRepository, kiteDeltaBarDownloader);
 		final KiteScripService kiteScripService = new KiteScripService();
 		return new KiteDataProvider(kiteBarService, kiteScripService);
 	}

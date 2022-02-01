@@ -64,7 +64,7 @@ public class KiteBarRepository {
 	@SneakyThrows
 	public boolean exists(int instrumentToken, String interval) {
 		final Path path = getPath(instrumentToken, interval);
-		return Files.exists(path) && BYTES < Files.size(path);
+		return Files.exists(path) && BYTES <= Files.size(path);
 	}
 	
 	@SneakyThrows
@@ -102,4 +102,5 @@ public class KiteBarRepository {
 	public List<Bar> read(String instrumentToken, String interval, long from, long to){
 		return null;
 	}
+	
 }
