@@ -9,9 +9,7 @@ public class Main {
 	public static void main(String[] args) {
 		final DataProvider dataProvider = KiteUtil.createDataProvider(
 				KiteCredentials.builder()
-				.pin("123456")
-				.username("YS9709")
-				.password("Dark@Horse1")
+				
 				.build());
 		
 		
