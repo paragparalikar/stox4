@@ -1,4 +1,4 @@
-package com.stox.chart;
+package com.stox.charting;
 
 import java.util.List;
 

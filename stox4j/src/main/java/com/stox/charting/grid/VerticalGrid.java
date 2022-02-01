@@ -1,4 +1,4 @@
-package com.stox.chart.grid;
+package com.stox.charting.grid;
 
 import javafx.scene.layout.Region;
 

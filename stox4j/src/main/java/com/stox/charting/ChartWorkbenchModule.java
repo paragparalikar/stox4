@@ -1,4 +1,4 @@
-package com.stox.chart;
+package com.stox.charting;
 
 import org.springframework.stereotype.Component;
 

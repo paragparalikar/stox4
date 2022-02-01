@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.dlsc.workbenchfx.Workbench;
-import com.stox.chart.ChartWorkbenchModule;
+import com.stox.charting.ChartWorkbenchModule;
 import com.sun.javafx.application.LauncherImpl;
 
 import javafx.application.Application;

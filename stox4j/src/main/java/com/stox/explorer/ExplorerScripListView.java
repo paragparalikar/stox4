@@ -9,7 +9,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
-import com.stox.chart.ScripListView;
+import com.stox.charting.ScripListView;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.scrip.ScripSelectionEvent;
 import com.stox.common.scrip.ScripService;
