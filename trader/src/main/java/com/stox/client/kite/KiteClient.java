@@ -34,7 +34,9 @@ import com.stox.client.kite.util.KiteConstant;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 public class KiteClient {
 	
@@ -43,7 +45,7 @@ public class KiteClient {
 		final InputStream content = new Get(KiteConstant.URL_INSTRUMENTS + exchange.name(), 
 				KiteConstant.TIMEOUT, KiteConstant.TIMEOUT).getInputStream();
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-		return reader.lines().map(Instrument::new).collect(Collectors.toList());
+		return reader.lines().skip(1).map(Instrument::new).collect(Collectors.toList());
 	}
 
 	private final KiteSession session;

@@ -2,7 +2,6 @@ package com.stox.client.kite.adapter;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,7 +14,9 @@ import com.stox.common.bar.Bar;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 public class KiteDeltaBarDownloader {
 
@@ -24,7 +25,8 @@ public class KiteDeltaBarDownloader {
 	
 	@SneakyThrows
 	public List<Bar> download(int instrumentToken, String interval){
-		final List<Bar> allBars = new ArrayList<>();
+		final List<Bar> allBars = kiteBarRepository.read(instrumentToken, interval);
+		log.info("Read {} bars from local repo", allBars.size());
 		final Duration increment = KiteUtil.getMaxIncrement(interval);
 		final Duration duration = KiteUtil.toInterval(interval).getDuration();
 		final ZonedDateTime limit = Optional.ofNullable(kiteBarRepository.getLastBarEndTime(instrumentToken, interval))
@@ -33,7 +35,10 @@ public class KiteDeltaBarDownloader {
 		ZonedDateTime from = computeFrom(to, limit, increment);
 		
 		while(true) {
+			if(0 <= from.compareTo(to)) break;
+			log.info("Attempting to download data from {} to {}", from, to);
 			final CandleSeries series = kiteClient.getData(instrumentToken, interval, from, to);
+			log.info("Successfully downloaded {} candles", series.getData().size());
 			if(series.getData().isEmpty()) {
 				break;
 			} else {
@@ -47,7 +52,7 @@ public class KiteDeltaBarDownloader {
 				Thread.sleep(300);
 			}
 		}
-		
+		log.info("Total bars available are {}", allBars.size());
 		return allBars;
 	}
 	
