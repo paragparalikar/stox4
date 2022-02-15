@@ -37,16 +37,18 @@ public class CandleUnit extends Group implements Unit<Bar> {
 		final double upperY = value(upper, highestValue, lowestValue, height);
 		final double lowerY = value(lower, highestValue, lowestValue, height);
 		body.setY(upperY);
-		body.setHeight(upperY - lowerY);
-		line.setStartY(value(bar.highPrice(), highestValue, lowestValue, height));
-		line.setEndY(value(bar.lowPrice(), highestValue, lowestValue, height));
+		body.setHeight(lowerY - upperY);
+		final double highY = value(bar.highPrice(), highestValue, lowestValue, height);
+		final double lowY = value(bar.lowPrice(), highestValue, lowestValue, height);
+		line.setStartY(highY);
+		line.setEndY(lowY);
 		
 		body.setFill(bar.openPrice().isLessThan(bar.getClosePrice()) ? 
 				Color.GREEN : Color.RED);
 	}
 	
 	private double value(Num value, Num highestValue, Num lowestValue, Num height) {
-		return lowestValue.plus(value.multipliedBy(height)
+		return height.minus(value.multipliedBy(height)
 				.dividedBy(highestValue.minus(lowestValue)))
 				.doubleValue();
 	}
