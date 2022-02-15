@@ -1,10 +1,9 @@
 package com.stox.charting.unit;
 
 import org.ta4j.core.Bar;
-import org.ta4j.core.num.DoubleNum;
-import org.ta4j.core.num.Num;
 
 import com.stox.charting.axis.XAxis;
+import com.stox.charting.axis.YAxis;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -19,37 +18,25 @@ public class CandleUnit extends Group implements Unit<Bar> {
 	
 	public CandleUnit() {
 		getChildren().addAll(line, body);
-		line.fillProperty().bindBidirectional(body.fillProperty());
+		line.strokeProperty().bindBidirectional(body.fillProperty());
 		line.endXProperty().bindBidirectional(line.startXProperty());
 		line.startXProperty().bind(body.xProperty().add(body.widthProperty().divide(2d)));
 	}
 	
 	@Override
-	public void layoutChildren(int index, Bar bar, XAxis xAxis, Num highestValue, Num lowestValue,
-			double parentHeight) {
-		final double barWidth = xAxis.getUnitWidth();
+	public void layoutChildren(int index, Bar bar, XAxis xAxis, YAxis yAxis) {
+		final double barWidth = xAxis.getUnitWidth() * 0.8;
 		body.setX(xAxis.getX(index) - barWidth/2d);
 		body.setWidth(barWidth);
-		final Num upper = bar.getOpenPrice().max(bar.getClosePrice());
-		final Num lower = bar.getOpenPrice().min(bar.getClosePrice());
-		final Num height = DoubleNum.valueOf(parentHeight);
-		final double upperY = value(upper, highestValue, lowestValue, height);
-		final double lowerY = value(lower, highestValue, lowestValue, height);
+		final double upperY = yAxis.value(bar.getOpenPrice().max(bar.getClosePrice()));
+		final double lowerY = yAxis.value(bar.getOpenPrice().min(bar.getClosePrice()));
 		body.setY(upperY);
 		body.setHeight(lowerY - upperY);
-		final double highY = value(bar.getHighPrice(), highestValue, lowestValue, height);
-		final double lowY = value(bar.getLowPrice(), highestValue, lowestValue, height);
-		line.setStartY(highY);
-		line.setEndY(lowY);
+		line.setStartY(yAxis.value(bar.getHighPrice()));
+		line.setEndY(yAxis.value(bar.getLowPrice()));
 		
 		body.setFill(bar.getOpenPrice().isLessThan(bar.getClosePrice()) ? 
 				Color.GREEN : Color.RED);
-	}
-	
-	private double value(Num value, Num highestValue, Num lowestValue, Num height) {
-		return height.minus(value.multipliedBy(height)
-				.dividedBy(highestValue.minus(lowestValue)))
-				.doubleValue();
 	}
 	
 	@Override

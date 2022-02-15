@@ -9,21 +9,29 @@ import org.ta4j.core.num.DoubleNum;
 import org.ta4j.core.num.Num;
 
 import com.stox.charting.axis.XAxis;
+import com.stox.charting.axis.YAxis;
 import com.stox.charting.unit.Unit;
 import com.stox.charting.unit.resolver.HighLowResolver;
 import com.stox.common.util.MathUtil;
 
 import javafx.scene.Group;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class Plot<T> extends Group {
 
 	private final Indicator<T> indicator;
+	private final YAxis yAxis = new YAxis();
 	private final Supplier<Unit<T>> unitSupplier;
 	private final HighLowResolver<T> highLowResolver;
 	private final List<Unit<T>> units = new ArrayList<>();
 	private int lastUnitIndex = Integer.MAX_VALUE;
+	
+	public Plot(Indicator<T> indicator, Supplier<Unit<T>> unitSupplier, HighLowResolver<T> highLowResolver) {
+		this.indicator = indicator;
+		this.unitSupplier = unitSupplier;
+		this.highLowResolver = highLowResolver;
+		setManaged(false);
+		setAutoSizeChildren(false);
+	}
 	
 	public void layoutChildren(XAxis xAxis, 
 			double parentHeight, double parentWidth) {
@@ -44,6 +52,9 @@ public class Plot<T> extends Group {
 				getChildren().add(unit.asNode());
 			}
 		}
+		yAxis.setHighestValue(highestValue);
+		yAxis.setLowestValue(lowestValue);
+		yAxis.setAxisHeight(DoubleNum.valueOf(yAxis.getHeight()));
 		
 		final int visibleBarCount = endIndex - startIndex;
 		final int unitLimit = Math.min(units.size(), lastUnitIndex);
@@ -53,8 +64,7 @@ public class Plot<T> extends Group {
 			if(index < endIndex) {
 				final Unit<T> unit = units.get(unitIndex);
 				unit.setVisible(true);
-				unit.layoutChildren(index, indicator.getValue(index), 
-						xAxis, highestValue, lowestValue, parentHeight);
+				unit.layoutChildren(index, indicator.getValue(index), xAxis, yAxis);
 			} else {
 				units.get(unitIndex).setVisible(false);
 			}
@@ -65,6 +75,10 @@ public class Plot<T> extends Group {
 	@Override
 	protected void layoutChildren() {
 
+	}
+	
+	public YAxis getYAxis() {
+		return yAxis;
 	}
 	
 }
