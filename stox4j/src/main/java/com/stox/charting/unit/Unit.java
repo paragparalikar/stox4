@@ -2,6 +2,8 @@ package com.stox.charting.unit;
 
 import org.ta4j.core.num.Num;
 
+import com.stox.charting.axis.XAxis;
+
 import javafx.scene.Node;
 
 public interface Unit<T> {
@@ -10,8 +12,7 @@ public interface Unit<T> {
 	
 	public void setVisible(boolean value);
 
-	public void layoutChildren(T model, 
-			Num highestValue, Num lowestValue, double parentHeight,
-			int barIndex, int visibleBarCount, double parentWidth);
+	public void layoutChildren(int index, T model, XAxis xAxis,
+			Num highestValue, Num lowestValue, double parentHeight);
 	
 }

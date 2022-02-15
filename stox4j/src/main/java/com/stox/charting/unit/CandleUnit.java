@@ -4,6 +4,8 @@ import org.ta4j.core.Bar;
 import org.ta4j.core.num.DoubleNum;
 import org.ta4j.core.num.Num;
 
+import com.stox.charting.axis.XAxis;
+
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -23,12 +25,10 @@ public class CandleUnit extends Group implements Unit<Bar> {
 	}
 	
 	@Override
-	public void layoutChildren(Bar bar, 
-			Num highestValue, Num lowestValue, double parentHeight,
-			int barIndex, int visibleBarCount, double parentWidth) {
-		final double x = parentWidth - (((double)barIndex) * parentWidth) / ((double)visibleBarCount);
-		final double barWidth = (parentWidth * 0.8) / ((double) visibleBarCount);
-		body.setX(x - barWidth/2d);
+	public void layoutChildren(int index, Bar bar, XAxis xAxis, Num highestValue, Num lowestValue,
+			double parentHeight) {
+		final double barWidth = xAxis.getUnitWidth();
+		body.setX(xAxis.getX(index) - barWidth/2d);
 		body.setWidth(barWidth);
 		final Num upper = bar.getOpenPrice().max(bar.getClosePrice());
 		final Num lower = bar.getOpenPrice().min(bar.getClosePrice());

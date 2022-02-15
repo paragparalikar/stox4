@@ -1,5 +1,7 @@
 package com.stox.charting;
 
+import com.stox.charting.axis.XAxis;
+
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SplitPane;
@@ -18,9 +20,9 @@ public class ChartingViewContentArea extends SplitPane {
 		getItems().setAll(charts);
 	}
 	
-	public void layoutCharts() {
+	public void layoutCharts(XAxis xAxis) {
 		for(Chart chart : charts) {
-			chart.layoutChildren(0, 199);
+			chart.layoutChildren(xAxis);
 		}
 	}
 

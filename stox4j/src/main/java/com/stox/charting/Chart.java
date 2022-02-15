@@ -1,5 +1,7 @@
 package com.stox.charting;
 
+import com.stox.charting.axis.XAxis;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.BorderPane;
@@ -20,10 +22,10 @@ public class Chart extends BorderPane {
 		this.plots.addAll(plots);
 	}
 	
-	public void layoutChildren(int startIndex, int endIndex) {
+	public void layoutChildren(XAxis xAxis) {
 		// verticalAxis.layoutChildren
 		// horizontalAxis.layoutChildren
-		contentArea.layoutChildren(startIndex, endIndex);
+		contentArea.layoutChildren(xAxis);
 	}
 	
 }
