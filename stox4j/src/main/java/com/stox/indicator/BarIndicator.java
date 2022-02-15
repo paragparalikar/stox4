@@ -1,10 +1,9 @@
 package com.stox.indicator;
 
+import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.Indicator;
 import org.ta4j.core.num.Num;
-
-import com.stox.common.bar.Bar;
 
 import lombok.NonNull;
 import lombok.Setter;

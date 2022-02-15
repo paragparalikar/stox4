@@ -1,9 +1,8 @@
 package com.stox.charting.unit;
 
+import org.ta4j.core.Bar;
 import org.ta4j.core.num.DoubleNum;
 import org.ta4j.core.num.Num;
-
-import com.stox.common.bar.Bar;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -31,19 +30,19 @@ public class CandleUnit extends Group implements Unit<Bar> {
 		final double barWidth = (parentWidth * 0.8) / ((double) visibleBarCount);
 		body.setX(x - barWidth/2d);
 		body.setWidth(barWidth);
-		final Num upper = bar.openPrice().max(bar.closePrice());
-		final Num lower = bar.openPrice().min(bar.closePrice());
+		final Num upper = bar.getOpenPrice().max(bar.getClosePrice());
+		final Num lower = bar.getOpenPrice().min(bar.getClosePrice());
 		final Num height = DoubleNum.valueOf(parentHeight);
 		final double upperY = value(upper, highestValue, lowestValue, height);
 		final double lowerY = value(lower, highestValue, lowestValue, height);
 		body.setY(upperY);
 		body.setHeight(lowerY - upperY);
-		final double highY = value(bar.highPrice(), highestValue, lowestValue, height);
-		final double lowY = value(bar.lowPrice(), highestValue, lowestValue, height);
+		final double highY = value(bar.getHighPrice(), highestValue, lowestValue, height);
+		final double lowY = value(bar.getLowPrice(), highestValue, lowestValue, height);
 		line.setStartY(highY);
 		line.setEndY(lowY);
 		
-		body.setFill(bar.openPrice().isLessThan(bar.getClosePrice()) ? 
+		body.setFill(bar.getOpenPrice().isLessThan(bar.getClosePrice()) ? 
 				Color.GREEN : Color.RED);
 	}
 	

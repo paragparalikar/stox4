@@ -1,8 +1,7 @@
 package com.stox.charting.unit.resolver;
 
+import org.ta4j.core.Bar;
 import org.ta4j.core.num.Num;
-
-import com.stox.common.bar.Bar;
 
 public class BarHighLowResolver implements HighLowResolver<Bar> {
 

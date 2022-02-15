@@ -6,11 +6,19 @@ import java.io.RandomAccessFile;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Repository;
+import org.ta4j.core.Bar;
+import org.ta4j.core.BarSeries;
+import org.ta4j.core.BaseBar;
+import org.ta4j.core.BaseBarSeries;
+import org.ta4j.core.num.DoubleNum;
 
 import lombok.SneakyThrows;
 
@@ -29,13 +37,13 @@ public class BarRepository {
 	}
 	
 	@SneakyThrows
-	public List<Bar> find(final String isin, int count) {
+	public BarSeries find(final String isin, int count) {
 		final Path path = resolvePath(isin);
 		synchronized (isin) {
 			final List<Bar> bars = new ArrayList<>();
 			try (final RandomAccessFile file = new RandomAccessFile(path.toString(), "r")) {
 				if (0 == file.length()) {
-					return bars;
+					return new BaseBarSeries();
 				} else {
 					final long initialDate = file.readLong();
 					for (long location = file.length() - BYTES; location >= Long.BYTES
@@ -44,10 +52,10 @@ public class BarRepository {
 						final Bar bar = readBar(file, isin, getDate(initialDate, location));
 						if (null != bar) bars.add(bar);
 					}
-					return bars;
+					return new BaseBarSeries(bars);
 				}
 			} catch(FileNotFoundException e) {
-				return bars;
+				return new BaseBarSeries();
 			}
 		}
 	}
@@ -60,14 +68,14 @@ public class BarRepository {
 		final double close = file.readDouble();
 		final double previousClose = file.readDouble();
 		final double volume = file.readDouble();
-		return 0 >= open ? null : Bar.builder()
-			.open(open)
-			.high(high)
-			.low(low)
-			.close(close)
-			.volume(volume)
+		return 0 >= open ? null : BaseBar.builder()
+			.openPrice(DoubleNum.valueOf(open))
+			.highPrice(DoubleNum.valueOf(high))
+			.lowPrice(DoubleNum.valueOf(low))
+			.closePrice(DoubleNum.valueOf(close))
+			.volume(DoubleNum.valueOf(volume))
 			.timePeriod(Duration.ofDays(1))
-			.date(epochMillis)
+			.endTime(ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMillis), ZoneId.systemDefault()))
 			.build();
 	}
 }

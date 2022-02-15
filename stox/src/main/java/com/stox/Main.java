@@ -47,7 +47,7 @@ public class Main extends Application {
 	private final Config config = buildConfig(home);
 	private final FxMessageSource messageSource = new FxMessageSource();
 	private final FluentStage stage = new FluentStage();
-	private final Workbench workbench = new Workbench(messageSource, stage);
+	private final Workbench workbench = new Workbench(messageSource);
 	private final ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors());
 	private final Context context = buildContext();
 	private final List<? extends Module> modules = Arrays.asList(
