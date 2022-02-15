@@ -15,11 +15,11 @@ public class MathUtil {
 		return Math.floor(value / boxSize) * boxSize;
 	}
 
-	public static int clip(final int min, final int value, final int max) {
+	public static long clip(final long min, final long value, final long max) {
 		return Math.max(min, Math.min(max, value));
 	}
 
-	public static int limit(int min, int value, int max) {
+	public static int clip(int min, int value, int max) {
 		return Math.max(min, Math.min(max, value));
 	}
 

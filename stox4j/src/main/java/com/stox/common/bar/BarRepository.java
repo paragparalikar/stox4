@@ -15,10 +15,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Repository;
 import org.ta4j.core.Bar;
-import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBar;
-import org.ta4j.core.BaseBarSeries;
 import org.ta4j.core.num.DoubleNum;
+
+import com.stox.common.util.MathUtil;
 
 import lombok.SneakyThrows;
 
@@ -36,14 +36,44 @@ public class BarRepository {
 		return initialDate + TimeUnit.DAYS.toMillis((location - Long.BYTES) / BYTES);
 	}
 	
+	private long getLocation(final long initialDate, final long date) {
+		return Long.BYTES + BYTES * TimeUnit.MILLISECONDS.toDays(date - initialDate);
+	}
+	
 	@SneakyThrows
-	public BarSeries find(final String isin, int count) {
+	public List<Bar> find(String isin, int count, ZonedDateTime offset){
 		final Path path = resolvePath(isin);
 		synchronized (isin) {
 			final List<Bar> bars = new ArrayList<>();
 			try (final RandomAccessFile file = new RandomAccessFile(path.toString(), "r")) {
 				if (0 == file.length()) {
-					return new BaseBarSeries();
+					return bars;
+				} else {
+					final long initialDate = file.readLong();
+					final long to = offset.toInstant().toEpochMilli();
+					final long maxLocation = MathUtil.clip(Long.BYTES, getLocation(initialDate, to) - BYTES, file.length() - BYTES);
+					final long minLocation = MathUtil.clip(Long.BYTES, maxLocation - (count + 1) * BYTES, maxLocation);
+					for (long location = maxLocation; location >= minLocation; location -= BYTES) {
+						file.seek(location);
+						final Bar bar = readBar(file, isin, getDate(initialDate, location));
+						if (null != bar) bars.add(bar);
+					}
+					return bars;
+				}
+			} catch(FileNotFoundException e) {
+				return bars;
+			}
+		}
+	}
+	
+	@SneakyThrows
+	public List<Bar> find(String isin, int count) {
+		final Path path = resolvePath(isin);
+		synchronized (isin) {
+			final List<Bar> bars = new ArrayList<>();
+			try (final RandomAccessFile file = new RandomAccessFile(path.toString(), "r")) {
+				if (0 == file.length()) {
+					return bars;
 				} else {
 					final long initialDate = file.readLong();
 					for (long location = file.length() - BYTES; location >= Long.BYTES
@@ -52,10 +82,10 @@ public class BarRepository {
 						final Bar bar = readBar(file, isin, getDate(initialDate, location));
 						if (null != bar) bars.add(bar);
 					}
-					return new BaseBarSeries(bars);
+					return bars;
 				}
 			} catch(FileNotFoundException e) {
-				return new BaseBarSeries();
+				return bars;
 			}
 		}
 	}

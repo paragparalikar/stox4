@@ -1,7 +1,10 @@
 package com.stox.charting;
 
+import java.util.List;
+
 import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
+import org.ta4j.core.BaseBarSeries;
 
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.event.PanRequestEvent;
@@ -21,8 +24,9 @@ import javafx.scene.layout.VBox;
 
 public class ChartingView extends BorderPane {
 	private static final int INITIAL_BAR_COUNT = 200;
-	private static final int FETCH_BAR_COUNT = 200;
+	private static final int FETCH_BAR_COUNT = 100;
 
+	private Scrip scrip;
 	private final BarService barService;
 	private final XAxis xAxis = new XAxis();
 	private final ToolBar toolBar = new ToolBar(new Button("Hello"));
@@ -45,19 +49,34 @@ public class ChartingView extends BorderPane {
 	}
 	
 	public void setScrip(Scrip scrip) {
-		final BarSeries barSeries = barService.find(scrip.getIsin(), INITIAL_BAR_COUNT);
-		barIndicator.setBarSeries(barSeries);
+		this.scrip = scrip;
+		final List<Bar> bars = barService.find(scrip.getIsin(), INITIAL_BAR_COUNT);
+		barIndicator.setBarSeries(new BaseBarSeries(bars));
 		redraw();
 	}
 	
 	private void pan(PanRequestEvent event) {
 		xAxis.pan(event.getDeltaX());
+		data();
 		redraw();
 	}
 	
 	private void zoom(ZoomRequestEvent event) {
 		xAxis.zoom(event.getX(), event.getPercentage());
+		data();
 		redraw();
+	}
+	
+	private void data() {
+		final BarSeries barSeries = barIndicator.getBarSeries();
+		if(xAxis.getEndIndex() > barSeries.getBarCount()) {
+			final int gap = xAxis.getEndIndex() - barSeries.getBarCount();
+			final int count = Math.max(gap, FETCH_BAR_COUNT);
+			final List<Bar> bars = barService.find(scrip.getIsin(), count, barSeries.getLastBar().getEndTime());
+			final List<Bar> data = barSeries.getBarData();
+			data.addAll(bars);
+			barIndicator.setBarSeries(new BaseBarSeries(data));
+		}
 	}
 	
 }
