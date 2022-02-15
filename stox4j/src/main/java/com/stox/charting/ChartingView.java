@@ -52,6 +52,7 @@ public class ChartingView extends BorderPane {
 		this.scrip = scrip;
 		final List<Bar> bars = barService.find(scrip.getIsin(), INITIAL_BAR_COUNT);
 		barIndicator.setBarSeries(new BaseBarSeries(bars));
+		xAxis.resetPanWidth();
 		redraw();
 	}
 	

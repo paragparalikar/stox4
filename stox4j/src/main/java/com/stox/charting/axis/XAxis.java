@@ -35,6 +35,10 @@ public class XAxis extends Pane {
 		panWidth += deltaX;
 	}
 	
+	public void resetPanWidth() {
+		panWidth = -100;
+	}
+	
 	public void zoom(final double x, final int percentage) {
 		double newUnitWidth = unitWidth * (100 + percentage) / 100;
 		if (newUnitWidth >= minUnitWidth && newUnitWidth <= maxUnitWidth && newUnitWidth != unitWidth) {
