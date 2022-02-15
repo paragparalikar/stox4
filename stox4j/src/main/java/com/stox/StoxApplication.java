@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.dlsc.workbenchfx.Workbench;
-import com.stox.charting.ChartWorkbenchModule;
+import com.stox.explorer.ExplorerWorkbenchModule;
 import com.sun.javafx.application.LauncherImpl;
 
 import javafx.application.Application;
@@ -27,9 +27,9 @@ public class StoxApplication extends Application {
 	}
 	
 	@Bean
-	public Workbench workbench(ChartWorkbenchModule chartWorkbenchModule) {
+	public Workbench workbench(ExplorerWorkbenchModule explorerWorkbenchModule) {
 		return Workbench
-				.builder(chartWorkbenchModule)
+				.builder(explorerWorkbenchModule)
 				.build();
 	}
 	
