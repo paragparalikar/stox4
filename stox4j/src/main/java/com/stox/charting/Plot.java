@@ -40,6 +40,7 @@ public class Plot<T> extends Group {
 			}
 		}
 		
+		final int visibleBarCount = endIndex - startIndex;
 		final int unitLimit = Math.min(units.size() - 1, lastUnitIndex);
 		for(int index = startIndex, unitIndex = 0; 
 				index <= endIndex || unitIndex <= unitLimit; 
@@ -49,12 +50,12 @@ public class Plot<T> extends Group {
 				unit.setVisible(true);
 				unit.layoutChildren(indicator.getValue(index), 
 						highestValue, lowestValue, parentHeight, 
-						index, unitIndex, parentWidth);
+						index, visibleBarCount, parentWidth);
 			} else {
 				units.get(unitIndex).setVisible(false);
 			}
 		}
-		lastUnitIndex = endIndex - startIndex;
+		lastUnitIndex = visibleBarCount;
 	}
 	
 	@Override
