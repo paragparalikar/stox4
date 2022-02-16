@@ -26,8 +26,6 @@ public class ChartingView extends BorderPane {
 	private final SplitPane splitPane = new SplitPane();
 	private final ToolBar toolBar = new ToolBar(new Button("Hello"));
 	private final BarIndicator barIndicator = new BarIndicator();
-	
-	
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
 	public ChartingView(BarService barService) {
