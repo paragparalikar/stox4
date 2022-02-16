@@ -1,45 +1,39 @@
 package com.stox.charting;
 
-import org.ta4j.core.BaseBarSeries;
-
+import com.dlsc.workbenchfx.Workbench;
 import com.stox.charting.axis.XAxis;
-import com.stox.charting.axis.YAxis;
+import com.stox.charting.chart.Chart;
+import com.stox.charting.chart.PriceChart;
 import com.stox.charting.handler.pan.PanRequestEvent;
 import com.stox.charting.handler.zoom.ZoomRequestEvent;
-import com.stox.charting.price.PriceChart;
-import com.stox.charting.price.PricePlot;
+import com.stox.charting.plot.PricePlot;
+import com.stox.charting.tools.RulesButton;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.Scrip;
-import com.stox.indicator.BarIndicator;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 public class ChartingView extends BorderPane {
 
-	private Scrip scrip;
 	private final XAxis xAxis = new XAxis();
+	private final ToolBar toolBar = new ToolBar();
 	private final SplitPane splitPane = new SplitPane();
-	private final ToolBar toolBar = new ToolBar(new Button("Hello"));
-	private final BarIndicator barIndicator = new BarIndicator();
+	private final ChartingContext context = new ChartingContext();
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
-	public ChartingView(BarService barService) {
-		final PricePlot pricePlot = new PricePlot(barIndicator, barService);
-		final PriceChart priceChart = new PriceChart(pricePlot);
+	public ChartingView(Workbench workbench, BarService barService) {
+		final PricePlot pricePlot = new PricePlot(context, barService);
+		final PriceChart priceChart = new PriceChart(context, pricePlot);
 		add(priceChart);
 		
 		setCenter(splitPane);
 		setBottom(new VBox(xAxis, toolBar));
+		toolBar.getItems().add(new RulesButton(workbench, context));
 		addEventHandler(PanRequestEvent.TYPE, this::pan);
 		addEventHandler(ZoomRequestEvent.TYPE, this::zoom);
 	}
@@ -50,12 +44,13 @@ public class ChartingView extends BorderPane {
 	}
 	
 	public void reload() {
-		for(Chart chart : charts) chart.reload(scrip, xAxis);
+		for(Chart chart : charts) {
+			chart.reload(context.getScrip(), xAxis);
+		}
 	}
 	
 	public void setScrip(Scrip scrip) {
-		this.scrip = scrip;
-		barIndicator.setBarSeries(new BaseBarSeries());
+		context.setScrip(scrip);
 		xAxis.reset();
 		reload();
 	}

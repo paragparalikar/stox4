@@ -1,10 +1,9 @@
 package com.stox.explorer;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.dlsc.workbenchfx.Workbench;
 import com.dlsc.workbenchfx.model.WorkbenchModule;
 import com.stox.charting.ChartingView;
 import com.stox.common.bar.BarService;
@@ -27,18 +26,19 @@ public class ExplorerWorkbenchModule extends WorkbenchModule {
 		super("Instrument Explorer", FontAwesomeIcon.WPEXPLORER);
 	}
 	
-	@PostConstruct
-	public void init() {
-		chartingView = new ChartingView(barService);
-		splitPane.getItems().addAll(explorerListView, chartingView);
-		splitPane.setDividerPositions(0.2d, 0.8d);
-		explorerListView.getSelectionModel().selectedItemProperty().addListener(this::onScripChanged);
-	}
-	
 	private void onScripChanged(ObservableValue<? extends Scrip> observable, Scrip oldValue, Scrip newValue) {
 		if(null != newValue) {
 			chartingView.setScrip(newValue);
 		}
+	}
+	
+	@Override
+	public void init(Workbench workbench) {
+		super.init(workbench);
+		chartingView = new ChartingView(workbench, barService);
+		splitPane.getItems().addAll(explorerListView, chartingView);
+		splitPane.setDividerPositions(0.2d, 0.8d);
+		explorerListView.getSelectionModel().selectedItemProperty().addListener(this::onScripChanged);
 	}
 
 	@Override

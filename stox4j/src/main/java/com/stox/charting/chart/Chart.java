@@ -1,9 +1,11 @@
-package com.stox.charting;
+package com.stox.charting.chart;
 
+import com.stox.charting.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.handler.CompositeModeMouseHandler;
 import com.stox.charting.handler.pan.PanModeMouseHandler;
 import com.stox.charting.handler.zoom.ZoomModeMouseHandler;
+import com.stox.charting.plot.Plot;
 import com.stox.common.scrip.Scrip;
 
 import javafx.collections.FXCollections;
@@ -21,10 +23,10 @@ public class Chart extends BorderPane {
 	private final StackPane contentArea = new StackPane();
 	private final ObservableList<Plot<?>> plots = FXCollections.observableArrayList();
 	
-	public Chart() {
+	public Chart(ChartingContext context) {
 		setRight(verticalAxes);
 		setCenter(contentArea);
-		
+
 		final PanModeMouseHandler panModeMouseHandler = new PanModeMouseHandler();
 		final ZoomModeMouseHandler zoomModeMouseHandler = new ZoomModeMouseHandler();
 		final CompositeModeMouseHandler compositeModeMouseHandler = new CompositeModeMouseHandler(panModeMouseHandler, zoomModeMouseHandler);

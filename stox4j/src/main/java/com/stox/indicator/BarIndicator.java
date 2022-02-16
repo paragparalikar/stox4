@@ -6,11 +6,12 @@ import org.ta4j.core.Indicator;
 import org.ta4j.core.num.Num;
 
 import lombok.NonNull;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class BarIndicator implements Indicator<Bar> {
 
-	@Setter @NonNull private BarSeries barSeries;
+	@NonNull private final BarSeries barSeries;
 
 	@Override
 	public Bar getValue(int index) {

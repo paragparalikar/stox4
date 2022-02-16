@@ -1,4 +1,4 @@
-package com.stox.charting;
+package com.stox.charting.plot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.ta4j.core.Indicator;
 import org.ta4j.core.num.DoubleNum;
 import org.ta4j.core.num.Num;
 
+import com.stox.charting.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
 import com.stox.charting.unit.Unit;
@@ -17,18 +18,20 @@ import com.stox.common.util.MathUtil;
 
 import javafx.scene.Group;
 import lombok.Getter;
+import lombok.Setter;
 
 public abstract class Plot<T> extends Group {
 
-	@Getter private final Indicator<T> indicator;
+	@Getter @Setter private Indicator<T> indicator;
+	@Getter private final ChartingContext context;
 	@Getter private final YAxis yAxis = new YAxis();
 	private final Supplier<Unit<T>> unitSupplier;
 	private final HighLowResolver<T> highLowResolver;
 	private final List<Unit<T>> units = new ArrayList<>();
 	private int lastUnitIndex = Integer.MAX_VALUE;
 	
-	public Plot(Indicator<T> indicator, Supplier<Unit<T>> unitSupplier, HighLowResolver<T> highLowResolver) {
-		this.indicator = indicator;
+	public Plot(ChartingContext context, Supplier<Unit<T>> unitSupplier, HighLowResolver<T> highLowResolver) {
+		this.context = context;
 		this.unitSupplier = unitSupplier;
 		this.highLowResolver = highLowResolver;
 		setManaged(false);
