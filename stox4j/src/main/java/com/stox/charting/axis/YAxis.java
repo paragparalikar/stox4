@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import lombok.Getter;
 import lombok.Setter;
 
 public class YAxis extends StackPane {
@@ -24,8 +25,10 @@ public class YAxis extends StackPane {
 			5.0E12d };
 	
 	private VBox container = new VBox();
-	@Setter private double highestValue, lowestValue, 
-		tickHeight = 20, topMargin = 20, bottomMargin = 20;
+	@Setter @Getter private double 
+			highestValue = Double.MIN_VALUE, 
+			lowestValue = Double.MAX_VALUE, 
+			tickHeight = 20, topMargin = 20, bottomMargin = 20;
 	
 	public YAxis() {
 		setWidth(WIDTH);
@@ -33,6 +36,11 @@ public class YAxis extends StackPane {
 		setMinWidth(WIDTH);
 		setPrefWidth(WIDTH);
 		getChildren().add(container);
+	}
+	
+	public void reset() {
+		highestValue = Double.MIN_VALUE;
+		lowestValue = Double.MAX_VALUE;
 	}
 	
 	public double getY(Num value) {

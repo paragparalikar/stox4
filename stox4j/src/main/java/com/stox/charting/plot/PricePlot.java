@@ -10,6 +10,7 @@ import org.ta4j.core.BaseBarSeries;
 import com.google.common.base.Objects;
 import com.stox.charting.ChartingContext;
 import com.stox.charting.axis.XAxis;
+import com.stox.charting.axis.YAxis;
 import com.stox.charting.unit.CandleUnit;
 import com.stox.charting.unit.resolver.BarHighLowResolver;
 import com.stox.common.bar.BarService;
@@ -29,13 +30,14 @@ public class PricePlot extends Plot<Bar> {
 	}
 
 	@Override
-	public void reload(Scrip scrip, XAxis xAxis) {
+	public boolean reload(Scrip scrip, XAxis xAxis) {
 		if(null == getIndicator() || !Objects.equal(scrip, this.scrip)) {
 			final List<Bar> bars = barService.find(scrip.getIsin(), INITIAL_BAR_COUNT);
 			final BarSeries barSeries = new BaseBarSeries(bars);
 			setIndicator(new BarIndicator(barSeries));
 			getContext().setBarSeries(barSeries);
 			this.scrip = scrip;
+			return true;
 		} else {
 			final BarSeries barSeries = getIndicator().getBarSeries();
 			final int barCount = barSeries.getBarCount();
@@ -49,13 +51,18 @@ public class PricePlot extends Plot<Bar> {
 				final BarSeries newBarSeries = new BaseBarSeries(data);
 				setIndicator(new BarIndicator(newBarSeries));
 				getContext().setBarSeries(newBarSeries);
+				return true;
 			}
 		}
+		return false;
 	}
 
 	@Override
-	public void layoutChildren(XAxis xAxis, double parentHeight, double parentWidth) {
-		super.layoutChildren(xAxis, parentHeight, parentWidth);
+	public void layoutChildren(
+			XAxis xAxis, YAxis yAxis, 
+			int startIndex, int endIndex,
+			double parentHeight, double parentWidth) {
+		super.layoutChildren(xAxis, yAxis, startIndex, endIndex, parentHeight, parentWidth);
 		xAxis.layoutChartChildren(getContext().getBarSeries());
 	}
 	
