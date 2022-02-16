@@ -1,12 +1,17 @@
 package com.stox.charting.axis;
 
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 
 @Getter
-public class XAxis extends Pane {
+public class XAxis extends StackPane {
 	public static final double HEIGHT = 16;
 
+	private final HBox container = new HBox(); 
 	private double unitWidth = 10, maxUnitWidth = 50, minUnitWidth = 1, panWidth;
 	
 	public XAxis() {
@@ -14,6 +19,11 @@ public class XAxis extends Pane {
 		setPrefHeight(HEIGHT);
 		setMinHeight(HEIGHT);
 		setHeight(HEIGHT);
+		
+		HBox.setHgrow(container, Priority.ALWAYS);
+		final Rectangle rectangle = new Rectangle(YAxis.WIDTH, XAxis.HEIGHT);
+		rectangle.setFill(Color.TRANSPARENT);
+		getChildren().add(new HBox(container, rectangle));
 	}
 	
 	public double getX(final int index) {
@@ -29,7 +39,8 @@ public class XAxis extends Pane {
 	}
 	
 	public int getStartIndex() {
-		return (int) (panWidth / unitWidth);
+		final double margin = YAxis.WIDTH + 2 * unitWidth;
+		return (int) ((panWidth + margin) / unitWidth);
 	}
 	
 	public void pan(final double deltaX) {

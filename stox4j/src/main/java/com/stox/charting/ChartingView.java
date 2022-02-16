@@ -3,6 +3,7 @@ package com.stox.charting;
 import org.ta4j.core.BaseBarSeries;
 
 import com.stox.charting.axis.XAxis;
+import com.stox.charting.axis.YAxis;
 import com.stox.charting.handler.pan.PanRequestEvent;
 import com.stox.charting.handler.zoom.ZoomRequestEvent;
 import com.stox.charting.price.PriceChart;
@@ -17,7 +18,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class ChartingView extends BorderPane {
 
@@ -29,14 +34,14 @@ public class ChartingView extends BorderPane {
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
 	public ChartingView(BarService barService) {
+		final PricePlot pricePlot = new PricePlot(barIndicator, barService);
+		final PriceChart priceChart = new PriceChart(pricePlot);
+		add(priceChart);
+		
 		setCenter(splitPane);
 		setBottom(new VBox(xAxis, toolBar));
 		addEventHandler(PanRequestEvent.TYPE, this::pan);
 		addEventHandler(ZoomRequestEvent.TYPE, this::zoom);
-		
-		final PricePlot pricePlot = new PricePlot(barIndicator, barService);
-		final PriceChart priceChart = new PriceChart(pricePlot);
-		add(priceChart);
 	}
 	
 	public void add(Chart chart) {
