@@ -1,32 +1,21 @@
 package com.stox.indicator;
 
 import org.ta4j.core.BarSeries;
-import org.ta4j.core.Indicator;
 import org.ta4j.core.Rule;
-import org.ta4j.core.num.Num;
+import org.ta4j.core.indicators.CachedIndicator;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
-public class RuleIndicator implements Indicator<Boolean> {
+public class RuleIndicator extends CachedIndicator<Boolean> {
 
 	private final Rule rule;
-	private final BarSeries barSeries;
 	
+	public RuleIndicator(Rule rule, BarSeries barSeries) {
+		super(barSeries);
+		this.rule = rule;
+	}
 	
 	@Override
-	public Boolean getValue(int index) {
+	protected Boolean calculate(int index) {
 		return rule.isSatisfied(index);
-	}
-
-	@Override
-	public BarSeries getBarSeries() {
-		return barSeries;
-	}
-
-	@Override
-	public Num numOf(Number number) {
-		return barSeries.numOf(number);
 	}
 
 }
