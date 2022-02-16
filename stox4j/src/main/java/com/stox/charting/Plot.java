@@ -58,7 +58,6 @@ public abstract class Plot<T> extends Group {
 		}
 		yAxis.setHighestValue(highestValue);
 		yAxis.setLowestValue(lowestValue);
-		yAxis.setAxisHeight(DoubleNum.valueOf(yAxis.getHeight()));
 		
 		final int visibleBarCount = endIndex - startIndex;
 		final int unitLimit = Math.min(units.size(), lastUnitIndex);
