@@ -66,14 +66,18 @@ public abstract class Plot<T> extends Group {
 				index < endIndex || unitIndex < unitLimit; 
 				index++, unitIndex++) {
 			if(index < endIndex) {
-				final Unit<T> unit = units.get(unitIndex);
-				unit.setVisible(true);
-				unit.layoutChildren(index, indicator.getValue(index), xAxis, yAxis);
+				layoutUnit(index, unitIndex, xAxis);
 			} else {
 				units.get(unitIndex).setVisible(false);
 			}
 		}
 		lastUnitIndex = visibleBarCount;
+	}
+	
+	protected void layoutUnit(int index, int unitIndex, XAxis xAxis) {
+		final Unit<T> unit = units.get(unitIndex);
+		unit.setVisible(true);
+		unit.layoutChildren(index, indicator.getValue(index), xAxis, yAxis);
 	}
 	
 	@Override

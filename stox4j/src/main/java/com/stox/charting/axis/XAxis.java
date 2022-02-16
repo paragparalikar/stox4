@@ -1,5 +1,7 @@
 package com.stox.charting.axis;
 
+import org.ta4j.core.Bar;
+
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -58,5 +60,9 @@ public class XAxis extends StackPane {
 			unitWidth = newUnitWidth;
 			panWidth = x - position * unitWidth;
 		}
+	}
+	
+	public void layoutChartChildren(int index, Bar bar) {
+		
 	}
 }
