@@ -7,17 +7,19 @@ import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeries;
 
 import com.stox.charting.axis.XAxis;
-import com.stox.charting.event.PanRequestEvent;
-import com.stox.charting.event.ZoomRequestEvent;
-import com.stox.charting.unit.CandleUnit;
-import com.stox.charting.unit.resolver.BarHighLowResolver;
+import com.stox.charting.handler.pan.PanRequestEvent;
+import com.stox.charting.handler.zoom.ZoomRequestEvent;
+import com.stox.charting.price.PriceChart;
+import com.stox.charting.price.PricePlot;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.Scrip;
 import com.stox.indicator.BarIndicator;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -29,23 +31,31 @@ public class ChartingView extends BorderPane {
 	private Scrip scrip;
 	private final BarService barService;
 	private final XAxis xAxis = new XAxis();
+	private final SplitPane splitPane = new SplitPane();
 	private final ToolBar toolBar = new ToolBar(new Button("Hello"));
 	private final BarIndicator barIndicator = new BarIndicator();
-	private final Plot<Bar> barPlot = new Plot<>(barIndicator, CandleUnit::new, new BarHighLowResolver());
-	private final Chart barChart = new Chart(barPlot);
-	private final ObservableList<Chart> charts = FXCollections.observableArrayList(barChart);
-	private final ChartingViewContentArea splitPane = new ChartingViewContentArea(charts);
+	private final PricePlot pricePlot = new PricePlot(barIndicator);
+	private final PriceChart priceChart = new PriceChart(pricePlot);
+	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
 	public ChartingView(BarService barService) {
 		this.barService = barService;
 		setCenter(splitPane);
 		setBottom(new VBox(xAxis, toolBar));
+		charts.addListener(this::onChartsChanged);
+		charts.add(priceChart);
 		addEventHandler(PanRequestEvent.TYPE, this::pan);
 		addEventHandler(ZoomRequestEvent.TYPE, this::zoom);
 	}
 	
+	public void onChartsChanged(Change<? extends Chart> change) {
+		splitPane.getItems().setAll(charts);
+	}
+	
 	public void redraw() {
-		splitPane.layoutCharts(xAxis);
+		for(Chart chart : charts) {
+			chart.layoutChildren(xAxis);
+		}
 	}
 	
 	public void setScrip(Scrip scrip) {

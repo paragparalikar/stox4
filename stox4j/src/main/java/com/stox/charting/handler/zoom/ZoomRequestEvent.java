@@ -1,4 +1,4 @@
-package com.stox.charting.event;
+package com.stox.charting.handler.zoom;
 
 import javafx.event.Event;
 import javafx.event.EventType;

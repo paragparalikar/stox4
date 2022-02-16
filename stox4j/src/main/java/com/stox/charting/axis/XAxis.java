@@ -5,14 +5,15 @@ import lombok.Getter;
 
 @Getter
 public class XAxis extends Pane {
+	public static final double HEIGHT = 16;
 
 	private double unitWidth = 10, maxUnitWidth = 50, minUnitWidth = 1, panWidth;
 	
 	public XAxis() {
-		setMaxHeight(10);
-		setPrefHeight(10);
-		setMinHeight(10);
-		setHeight(10);
+		setMaxHeight(HEIGHT);
+		setPrefHeight(HEIGHT);
+		setMinHeight(HEIGHT);
+		setHeight(HEIGHT);
 	}
 	
 	public double getX(final int index) {
