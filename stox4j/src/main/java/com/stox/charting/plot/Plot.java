@@ -45,11 +45,6 @@ public abstract class Plot<T> extends Group {
 			final T model = indicator.getValue(index);
 			lowestValue = lowestValue.min(highLowResolver.resolveLow(model));
 			highestValue = highestValue.max(highLowResolver.resolveHigh(model));
-			if(index - startIndex >= units.size()) {
-				final Unit<T> unit = unitSupplier.get();
-				units.add(unit);
-				getChildren().add(unit.asNode());
-			}
 		}
 		yAxis.setHighestValue(highestValue.doubleValue());
 		yAxis.setLowestValue(lowestValue.doubleValue());
@@ -62,6 +57,12 @@ public abstract class Plot<T> extends Group {
 			double parentHeight, double parentWidth) {
 		
 		updateYAxis(startIndex, endIndex, yAxis);
+		
+		for(int index = units.size(); index < endIndex - startIndex; index++) {
+			final Unit<T> unit = unitSupplier.get();
+			units.add(unit);
+			getChildren().add(unit.asNode());
+		}
 		
 		final int unitLimit = Math.min(units.size(), lastUnitIndex);
 		for(int index = startIndex, unitIndex = 0; 

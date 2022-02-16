@@ -6,6 +6,7 @@ import com.stox.charting.chart.Chart;
 import com.stox.charting.chart.PriceChart;
 import com.stox.charting.handler.pan.PanRequestEvent;
 import com.stox.charting.handler.zoom.ZoomRequestEvent;
+import com.stox.charting.plot.Plot;
 import com.stox.charting.plot.PricePlot;
 import com.stox.charting.tools.RulesButton;
 import com.stox.common.bar.BarService;
@@ -35,7 +36,7 @@ public class ChartingView extends BorderPane {
 		
 		setCenter(splitPane);
 		setBottom(new VBox(xAxis, toolBar));
-		toolBar.getItems().add(new RulesButton(workbench, context));
+		toolBar.getItems().add(new RulesButton(workbench, this, context));
 		addEventHandler(PanRequestEvent.TYPE, this::pan);
 		addEventHandler(ZoomRequestEvent.TYPE, this::zoom);
 	}
@@ -43,6 +44,11 @@ public class ChartingView extends BorderPane {
 	public void add(Chart chart) {
 		charts.add(chart);
 		splitPane.getItems().add(chart);
+	}
+	
+	public void add(Plot<?> plot) {
+		priceChart.add(plot);
+		reload();
 	}
 	
 	public void reload() {

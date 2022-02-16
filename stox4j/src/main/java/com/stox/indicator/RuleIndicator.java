@@ -12,7 +12,8 @@ public class RuleIndicator implements Indicator<Boolean> {
 
 	private final Rule rule;
 	private final BarSeries barSeries;
-
+	
+	
 	@Override
 	public Boolean getValue(int index) {
 		return rule.isSatisfied(index);
