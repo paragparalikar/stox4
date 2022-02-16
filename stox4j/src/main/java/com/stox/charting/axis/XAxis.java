@@ -22,7 +22,6 @@ public class XAxis extends StackPane {
 	public static final double HEIGHT = 16;
 	private static final Font FONT = Font.font(8);
 	private static final Insets INSETS = new Insets(2);
-	
 
 	private final Pane container = new Pane(); 
 	private double unitWidth = 10, maxUnitWidth = 50, minUnitWidth = 1, panWidth;

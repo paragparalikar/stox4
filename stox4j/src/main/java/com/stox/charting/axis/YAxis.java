@@ -35,7 +35,7 @@ public class YAxis extends StackPane {
 		getChildren().add(container);
 	}
 	
-	public double value(Num value) {
+	public double getY(Num value) {
 		final double axisHeight = getHeight() - topMargin - bottomMargin;
 		final double result = ((value.doubleValue() - lowestValue) * axisHeight) /
 				(highestValue - lowestValue);
