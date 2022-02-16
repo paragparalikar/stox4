@@ -42,17 +42,17 @@ public class Chart extends BorderPane {
 		final double height = contentArea.getHeight();
 		if(0 < width && 0 < height) {
 			for(Plot<?> plot : plots) plot.reload(scrip, xAxis);
-			
-			yAxis.reset();
-			final int barCount = context.getBarSeries().getBarCount();
-			final int startIndex = MathUtil.clip(0, xAxis.getStartIndex(), barCount);
-			final int endIndex = MathUtil.clip(0, xAxis.getEndIndex(), barCount);
-			
-			for(Plot<?> plot : plots) plot.updateYAxis(startIndex, endIndex, yAxis);
-			
-			for(Plot<?> plot : plots) plot.layoutChildren(xAxis, yAxis, startIndex, endIndex, height, width);
-			
+			redraw(xAxis, width, height);
 		}
+	}
+	
+	public void redraw(XAxis xAxis, double width, double height) {
+		yAxis.reset();
+		final int barCount = context.getBarSeries().getBarCount();
+		final int startIndex = MathUtil.clip(0, xAxis.getStartIndex(), barCount);
+		final int endIndex = MathUtil.clip(0, xAxis.getEndIndex(), barCount);
+		for(Plot<?> plot : plots) plot.updateYAxis(startIndex, endIndex, yAxis);
+		for(Plot<?> plot : plots) plot.layoutChildren(xAxis, yAxis, startIndex, endIndex, height, width);
 	}
 	
 	public void add(Plot<?> plot) {

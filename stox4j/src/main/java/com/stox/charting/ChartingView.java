@@ -20,6 +20,8 @@ import javafx.scene.layout.VBox;
 
 public class ChartingView extends BorderPane {
 
+	private final PricePlot pricePlot;
+	private final PriceChart priceChart;
 	private final XAxis xAxis = new XAxis();
 	private final ToolBar toolBar = new ToolBar();
 	private final SplitPane splitPane = new SplitPane();
@@ -27,9 +29,9 @@ public class ChartingView extends BorderPane {
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
 	public ChartingView(Workbench workbench, BarService barService) {
-		final PricePlot pricePlot = new PricePlot(context, barService);
-		final PriceChart priceChart = new PriceChart(context, pricePlot);
-		add(priceChart);
+		pricePlot = new PricePlot(context, barService);
+		priceChart = new PriceChart(context, pricePlot);
+		splitPane.getItems().add(priceChart);
 		
 		setCenter(splitPane);
 		setBottom(new VBox(xAxis, toolBar));
@@ -44,9 +46,9 @@ public class ChartingView extends BorderPane {
 	}
 	
 	public void reload() {
-		for(Chart chart : charts) {
-			chart.reload(context.getScrip(), xAxis);
-		}
+		final Scrip scrip = context.getScrip();
+		priceChart.reload(scrip, xAxis);
+		for(Chart chart : charts) chart.reload(scrip, xAxis);
 	}
 	
 	public void setScrip(Scrip scrip) {

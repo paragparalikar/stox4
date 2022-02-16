@@ -15,6 +15,4 @@ public class BarHighLowResolver implements HighLowResolver<Bar> {
 		return null == model ? null : model.getHighPrice();
 	}
 
-	
-
 }
