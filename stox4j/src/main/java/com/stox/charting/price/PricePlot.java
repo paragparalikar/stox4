@@ -43,4 +43,10 @@ public class PricePlot extends Plot<Bar> {
 		}
 	}
 
+	@Override
+	public void layoutChildren(XAxis xAxis, double parentHeight, double parentWidth) {
+		super.layoutChildren(xAxis, parentHeight, parentWidth);
+		xAxis.layoutChartChildren(barIndicator.getBarSeries());
+	}
+	
 }

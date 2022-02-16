@@ -56,7 +56,7 @@ public class ChartingView extends BorderPane {
 	public void setScrip(Scrip scrip) {
 		this.scrip = scrip;
 		barIndicator.setBarSeries(new BaseBarSeries());
-		xAxis.resetPanWidth();
+		xAxis.reset();
 		reload();
 	}
 	
