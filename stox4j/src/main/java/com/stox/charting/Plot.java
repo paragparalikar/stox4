@@ -12,14 +12,16 @@ import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
 import com.stox.charting.unit.Unit;
 import com.stox.charting.unit.resolver.HighLowResolver;
+import com.stox.common.scrip.Scrip;
 import com.stox.common.util.MathUtil;
 
 import javafx.scene.Group;
+import lombok.Getter;
 
-public class Plot<T> extends Group {
+public abstract class Plot<T> extends Group {
 
-	private final Indicator<T> indicator;
-	private final YAxis yAxis = new YAxis();
+	@Getter private final Indicator<T> indicator;
+	@Getter private final YAxis yAxis = new YAxis();
 	private final Supplier<Unit<T>> unitSupplier;
 	private final HighLowResolver<T> highLowResolver;
 	private final List<Unit<T>> units = new ArrayList<>();
@@ -32,6 +34,8 @@ public class Plot<T> extends Group {
 		setManaged(false);
 		setAutoSizeChildren(false);
 	}
+	
+	public abstract void reload(Scrip scrip, XAxis xAxis);
 	
 	public void layoutChildren(XAxis xAxis, 
 			double parentHeight, double parentWidth) {
@@ -75,10 +79,6 @@ public class Plot<T> extends Group {
 	@Override
 	protected void layoutChildren() {
 
-	}
-	
-	public YAxis getYAxis() {
-		return yAxis;
 	}
 	
 }
