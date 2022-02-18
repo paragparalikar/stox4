@@ -1,6 +1,5 @@
 package com.stox.charting;
 
-import com.dlsc.workbenchfx.Workbench;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.chart.Chart;
 import com.stox.charting.chart.PriceChart;
@@ -29,14 +28,14 @@ public class ChartingView extends BorderPane {
 	private final ChartingContext context = new ChartingContext();
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
-	public ChartingView(Workbench workbench, BarService barService) {
+	public ChartingView(BarService barService) {
 		pricePlot = new PricePlot(context, barService);
 		priceChart = new PriceChart(context, pricePlot);
 		splitPane.getItems().add(priceChart);
 		
 		setCenter(splitPane);
 		setBottom(new VBox(xAxis, toolBar));
-		toolBar.getItems().add(new RulesButton(workbench, this, context));
+		toolBar.getItems().add(new RulesButton(this, context));
 		addEventHandler(PanRequestEvent.TYPE, this::pan);
 		addEventHandler(ZoomRequestEvent.TYPE, this::zoom);
 	}

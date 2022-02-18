@@ -7,12 +7,10 @@ import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeries;
 
-import com.google.common.base.Objects;
 import com.stox.charting.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
 import com.stox.charting.unit.CandleUnit;
-import com.stox.charting.unit.resolver.BarHighLowResolver;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.Scrip;
 import com.stox.indicator.BarIndicator;
@@ -21,22 +19,21 @@ public class PricePlot extends Plot<Bar> {
 	private static final int INITIAL_BAR_COUNT = 200;
 	private static final int FETCH_BAR_COUNT = 100;
 
-	private Scrip scrip;
 	private final BarService barService;
 	
 	public PricePlot(ChartingContext context, BarService barService) {
-		super(context, CandleUnit::new, new BarHighLowResolver());
+		super(context, CandleUnit::new);
 		this.barService = barService;
 	}
 
 	@Override
-	public boolean reload(Scrip scrip, XAxis xAxis) {
-		if(null == getIndicator() || !Objects.equal(scrip, this.scrip)) {
+	public boolean load(XAxis xAxis) {
+		final Scrip scrip = getContext().getScrip();
+		if(null != scrip && null == getIndicator()) {
 			final List<Bar> bars = barService.find(scrip.getIsin(), INITIAL_BAR_COUNT);
 			final BarSeries barSeries = new BaseBarSeries(bars);
 			setIndicator(new BarIndicator(barSeries));
 			getContext().setBarSeries(barSeries);
-			this.scrip = scrip;
 			return true;
 		} else {
 			final BarSeries barSeries = getIndicator().getBarSeries();
@@ -58,12 +55,22 @@ public class PricePlot extends Plot<Bar> {
 	}
 
 	@Override
-	public void layoutChildren(
+	public void layoutChartChildren(
 			XAxis xAxis, YAxis yAxis, 
 			int startIndex, int endIndex,
 			double parentHeight, double parentWidth) {
-		super.layoutChildren(xAxis, yAxis, startIndex, endIndex, parentHeight, parentWidth);
+		super.layoutChartChildren(xAxis, yAxis, startIndex, endIndex, parentHeight, parentWidth);
 		xAxis.layoutChartChildren(getContext().getBarSeries());
+	}
+
+	@Override
+	protected double resolveLowValue(Bar model) {
+		return model.getLowPrice().doubleValue();
+	}
+
+	@Override
+	protected double resolveHighValue(Bar model) {
+		return model.getHighPrice().doubleValue();
 	}
 	
 }

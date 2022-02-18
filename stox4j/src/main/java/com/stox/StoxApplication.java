@@ -1,53 +1,32 @@
 package com.stox;
 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import com.dlsc.workbenchfx.Workbench;
-import com.stox.explorer.ExplorerWorkbenchModule;
+import com.stox.charting.ChartingView;
+import com.stox.common.bar.BarRepository;
+import com.stox.common.bar.BarService;
+import com.stox.common.scrip.Scrip;
 import com.sun.javafx.application.LauncherImpl;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-@SpringBootApplication
 public class StoxApplication extends Application {
 	
 	public static void main(String[] args) {
-		LauncherImpl.launchApplication(StoxApplication.class, StoxPreloader.class, args);
+		LauncherImpl.launchApplication(StoxApplication.class, null, args);
 	}
-	
+
 	@Override
-	public void init() throws Exception {
-		SpringApplication.run(StoxApplication.class);
-	}
-	
-	@Bean
-	public Workbench workbench(ExplorerWorkbenchModule explorerWorkbenchModule) {
-		return Workbench
-				.builder(explorerWorkbenchModule)
-				.build();
-	}
-	
-	@Bean
-	public CommandLineRunner show(Workbench workbench) {
-		return args -> {
-			Platform.runLater(() -> {
-				final Scene myScene = new Scene(workbench);
-				final Stage stage = new Stage();
-			    stage.setScene(myScene);
-			    stage.setMaximized(true);
-			    stage.show();
-			});
-		};
-	}
-	
-	@Override
-	public synchronized void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage) throws Exception {
+		final BarRepository barRepository = new BarRepository();
+		final BarService barService = new BarService(barRepository);
+		final ChartingView chartingView = new ChartingView(barService);
+		final Scrip scrip = Scrip.builder().isin("INE769A01020").code("AARTIIND").name("Aarti Industries Limited").build();
+		chartingView.setScrip(scrip);
+		primaryStage.setScene(new Scene(chartingView));
+		primaryStage.setMaximized(true);
+		primaryStage.show();
+		
 		
 	}
 	

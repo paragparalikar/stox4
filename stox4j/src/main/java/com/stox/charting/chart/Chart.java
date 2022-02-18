@@ -41,7 +41,7 @@ public class Chart extends BorderPane {
 		final double width = contentArea.getWidth();
 		final double height = contentArea.getHeight();
 		if(0 < width && 0 < height) {
-			for(Plot<?> plot : plots) plot.reload(scrip, xAxis);
+			for(Plot<?> plot : plots) plot.load(xAxis);
 			redraw(xAxis, width, height);
 		}
 	}
@@ -52,7 +52,7 @@ public class Chart extends BorderPane {
 		final int startIndex = MathUtil.clip(0, xAxis.getStartIndex(), barCount);
 		final int endIndex = MathUtil.clip(0, xAxis.getEndIndex(), barCount);
 		for(Plot<?> plot : plots) plot.updateYAxis(startIndex, endIndex, yAxis);
-		for(Plot<?> plot : plots) plot.layoutChildren(xAxis, yAxis, startIndex, endIndex, height, width);
+		for(Plot<?> plot : plots) plot.layoutChartChildren(xAxis, yAxis, startIndex, endIndex, height, width);
 	}
 	
 	public void add(Plot<?> plot) {

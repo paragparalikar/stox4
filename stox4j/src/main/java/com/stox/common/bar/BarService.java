@@ -3,12 +3,10 @@ package com.stox.common.bar;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import org.springframework.stereotype.Service;
 import org.ta4j.core.Bar;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
 @RequiredArgsConstructor
 public class BarService {
 

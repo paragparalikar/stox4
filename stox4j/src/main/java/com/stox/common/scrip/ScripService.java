@@ -6,15 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
-import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
-@Service
 @RequiredArgsConstructor
 public class ScripService {
 
@@ -42,11 +36,6 @@ public class ScripService {
 	public List<Scrip> findAll(){
 		loadIfRequired();
 		return scrips;
-	}
-	
-	@Async
-	public ListenableFuture<List<Scrip>> findAllAsync(){
-		return AsyncResult.forValue(findAll());
 	}
 	
 	public Scrip findByIsin(String isin) {

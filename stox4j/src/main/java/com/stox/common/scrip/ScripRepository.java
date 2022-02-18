@@ -8,11 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Repository;
-
 import lombok.SneakyThrows;
 
-@Repository
 public class ScripRepository {
 
 	private final Path path = Paths.get(System.getProperty("user.home"), ".stox4", "exchanges", "nse", "scrips.csv");

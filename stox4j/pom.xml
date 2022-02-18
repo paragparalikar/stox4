@@ -9,67 +9,20 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<ta4j.version>0.14</ta4j.version>
-		<spring.boot.version>2.6.3</spring.boot.version>
-		<spring.cloud.version>2021.0.0</spring.cloud.version>
-		<spring-data-dynamodb.version>5.2.5</spring-data-dynamodb.version>
-		<aws-java-sdk-dynamodb.version>1.12.141</aws-java-sdk-dynamodb.version>
 		<maven-compiler-plugin.version>3.9.0</maven-compiler-plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-dependencies</artifactId>
-				<version>${spring.boot.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.awaitility</groupId>
-			<artifactId>awaitility</artifactId>
+			<version>1.18.22</version>
 		</dependency>
 		<dependency>
 			<groupId>org.ta4j</groupId>
 			<artifactId>ta4j-core</artifactId>
-			<version>${ta4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-logging</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-dynamodb</artifactId>
-			<version>${aws-java-sdk-dynamodb.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.github.boostchicken</groupId>
-			<artifactId>spring-data-dynamodb</artifactId>
-			<version>${spring-data-dynamodb.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.dlsc.workbenchfx</groupId>
-			<artifactId>workbenchfx-core</artifactId>
-			<version>8.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.dlsc.preferencesfx</groupId>
-			<artifactId>preferencesfx-core</artifactId>
-			<version>8.6.0</version>
+			<version>0.14</version>
 		</dependency>
 	</dependencies>
 
@@ -89,21 +42,6 @@
 							<version>1.18.22</version>
 						</path>
 					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>2.6.3</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<mainClass>com.stox.StoxApplication</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
