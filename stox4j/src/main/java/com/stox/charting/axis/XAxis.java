@@ -29,7 +29,7 @@ public class XAxis extends StackPane {
 
 	private final ChartingContext context;
 	private final Pane container = new Pane();
-	private double unitWidth = 5, maxUnitWidth = 50, minUnitWidth = 1, panWidth;
+	private double unitWidth = 5, maxUnitWidth = 50, minUnitWidth = 1, labelWidth = 50, panWidth;
 	
 	public XAxis(ChartingContext context) {
 		this.context = context;
@@ -83,17 +83,17 @@ public class XAxis extends StackPane {
 	public void layoutChartChildren() {
 		final BarSeries barSeries = context.getBarSeriesProperty().get();
 		if(null != barSeries) {
-			ZonedDateTime lastTimestamp = null;
 			container.getChildren().clear();
+			ZonedDateTime lastTimestamp = null;
 			final int startIndex = Math.max(getStartIndex(), 0);
 			final int endIndex = Math.min(getEndIndex(), barSeries.getBarCount());
 			for(int index = endIndex - 1; index >= startIndex; index--) {
 				final ZonedDateTime timestamp = barSeries.getBar(index).getEndTime();
 				if(null == lastTimestamp || lastTimestamp.getYear() != timestamp.getYear()) {
 					addLabel(index, String.valueOf(timestamp.getYear()));
-				} else if(lastTimestamp.getMonth() != timestamp.getMonth()) {
+				} else if(lastTimestamp.getMonth() != timestamp.getMonth() && unitWidth > 4) {
 					addLabel(index, timestamp.getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault()));
-				} else if(unitWidth > 18) {
+				} else if(unitWidth > 24) {
 					addLabel(index, String.valueOf(timestamp.getDayOfMonth()));
 				}
 				lastTimestamp = timestamp;
@@ -105,6 +105,9 @@ public class XAxis extends StackPane {
 		final Label label = new Label(text);
 		label.setFont(FONT);
 		label.setPadding(INSETS);
+		label.setPrefWidth(labelWidth);
+		label.setMinWidth(labelWidth);
+		label.setMaxWidth(labelWidth);
 		container.getChildren().add(label);
 		label.relocate(getX(index), 0);
 	}
