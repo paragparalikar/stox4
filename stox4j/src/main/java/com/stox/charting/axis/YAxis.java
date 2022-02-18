@@ -1,15 +1,12 @@
 package com.stox.charting.axis;
 
-import org.ta4j.core.num.Num;
+import com.stox.charting.grid.HorizontalGrid;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,52 +23,58 @@ public class YAxis extends StackPane {
 			5.0E8d, 1.0E9d, 2.5E9d, 5.0E9d, 1.0E10d, 2.5E10d, 5.0E10d, 1.0E11d, 2.5E11d, 5.0E11d, 1.0E12d, 2.5E12d,
 			5.0E12d };
 	
-	private VBox container = new VBox();
+	private Pane container = new Pane();
+	private final HorizontalGrid horizontalGrid;
 	@Setter @Getter private double 
 			highestValue = Double.MIN_VALUE, 
 			lowestValue = Double.MAX_VALUE, 
 			tickHeight = 20, topMargin = 10, bottomMargin = 8;
 	
-	public YAxis() {
+	public YAxis(HorizontalGrid horizontalGrid) {
 		setWidth(WIDTH);
 		setMaxWidth(WIDTH);
 		setMinWidth(WIDTH);
 		setPrefWidth(WIDTH);
 		getChildren().add(container);
-		setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255), null, null)));
+		this.horizontalGrid = horizontalGrid;
 	}
 	
 	public void reset() {
 		highestValue = Double.MIN_VALUE;
 		lowestValue = Double.MAX_VALUE;
+		horizontalGrid.reset();
 	}
 	
-	public double getY(Num value) {
+	public double getY(double value) {
 		final double axisHeight = getHeight() - topMargin - bottomMargin;
-		final double result = ((value.doubleValue() - lowestValue) * axisHeight) /
+		final double result = ((value - lowestValue) * axisHeight) /
 				(highestValue - lowestValue);
 		return axisHeight + topMargin - result;
 	}
 
 	public void layoutChartChildren() {
+		horizontalGrid.reset();
 		container.getChildren().clear();
 		final double axisHeight = getHeight() - topMargin - bottomMargin;
 		final double tickSize = snap((highestValue - lowestValue) * tickHeight / axisHeight);
+		
 		final double labelHeight = (axisHeight * tickSize )/(highestValue - lowestValue);
 		final double highest = tickSize * Math.floor(highestValue / tickSize);
 		for(double value = highest; value > lowestValue; value -= tickSize) {
-			final Label label = new Label(String.format("%.2f", value));
-			label.setFont(FONT);
-			label.setPrefHeight(labelHeight);
-			label.setMinHeight(labelHeight);
-			label.setMaxHeight(labelHeight);
-			label.setPrefWidth(WIDTH);
-			label.setMinWidth(WIDTH);
-			label.setMaxWidth(WIDTH);
-			label.setAlignment(Pos.CENTER_RIGHT);
-			label.setPadding(PADDING);
-			container.getChildren().add(label);
+			addLabel(value, labelHeight);
 		}
+	}
+	
+	private void addLabel(double value, double labelHeight) {
+		final Label label = new Label(String.format("%.2f", value));
+		label.setFont(FONT);
+		label.setPadding(PADDING);
+		label.setAlignment(Pos.CENTER_RIGHT);
+		
+		final double y = getY(value);
+		horizontalGrid.addLine(y);
+		label.resizeRelocate(0, y - labelHeight/2, WIDTH, labelHeight);
+		container.getChildren().add(label);
 	}
 	
 	private double snap(double value) {

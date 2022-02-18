@@ -7,11 +7,11 @@ import java.util.Locale;
 import org.ta4j.core.BarSeries;
 
 import com.stox.charting.ChartingContext;
+import com.stox.charting.grid.VerticalGrid;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -28,11 +28,13 @@ public class XAxis extends StackPane {
 	private static final Insets INSETS = new Insets(2);
 
 	private final ChartingContext context;
+	private final VerticalGrid verticalGrid;
 	private final Pane container = new Pane();
 	private double unitWidth = 5, maxUnitWidth = 50, minUnitWidth = 1, labelWidth = 50, panWidth;
 	
-	public XAxis(ChartingContext context) {
+	public XAxis(ChartingContext context, VerticalGrid verticalGrid) {
 		this.context = context;
+		this.verticalGrid = verticalGrid;
 		context.getScripProperty().addListener((o,old,scrip) -> reset());
 		
 		setMaxHeight(HEIGHT);
@@ -44,7 +46,6 @@ public class XAxis extends StackPane {
 		final Rectangle rectangle = new Rectangle(YAxis.WIDTH, XAxis.HEIGHT);
 		rectangle.setFill(Color.TRANSPARENT);
 		getChildren().add(new HBox(container, rectangle));
-		setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255), null, null)));
 	}
 	
 	public double getX(final int index) {
@@ -69,6 +70,8 @@ public class XAxis extends StackPane {
 	
 	public void reset() {
 		panWidth = -10 * unitWidth;
+		verticalGrid.reset();
+		container.getChildren().clear();
 	}
 	
 	public void zoom(final double x, final int percentage) {
@@ -83,6 +86,7 @@ public class XAxis extends StackPane {
 	public void layoutChartChildren() {
 		final BarSeries barSeries = context.getBarSeriesProperty().get();
 		if(null != barSeries) {
+			verticalGrid.reset();
 			container.getChildren().clear();
 			ZonedDateTime lastTimestamp = null;
 			final int startIndex = Math.max(getStartIndex(), 0);
@@ -108,7 +112,10 @@ public class XAxis extends StackPane {
 		label.setPrefWidth(labelWidth);
 		label.setMinWidth(labelWidth);
 		label.setMaxWidth(labelWidth);
+		label.setAlignment(Pos.CENTER);
+		final double x = getX(index);
+		verticalGrid.addLine(x);
 		container.getChildren().add(label);
-		label.relocate(getX(index), 0);
+		label.relocate(x - labelWidth/2, 0);
 	}
 }

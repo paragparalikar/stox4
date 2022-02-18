@@ -1,6 +1,7 @@
 package com.stox.charting;
 
 import com.stox.charting.axis.XAxis;
+import com.stox.charting.grid.VerticalGrid;
 import com.stox.charting.handler.pan.PanRequestEvent;
 import com.stox.charting.handler.zoom.ZoomRequestEvent;
 import com.stox.charting.plot.Plot;
@@ -13,8 +14,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 public class ChartingView extends BorderPane {
 
@@ -24,21 +29,26 @@ public class ChartingView extends BorderPane {
 	private final Chart priceChart = new Chart();
 	private final ToolBar toolBar = new ToolBar();
 	private final SplitPane splitPane = new SplitPane();
+	private final VerticalGrid verticalGrid = new VerticalGrid();
+	private final StackPane stackPane = new StackPane(verticalGrid, splitPane);
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
 	public ChartingView(ChartingContext context, BarService barService) {
 		this.context = context;
-		this.xAxis = new XAxis(context);
+		this.xAxis = new XAxis(context, verticalGrid);
 		
 		add(priceChart);
 		add(pricePlot = new PricePlot(barService));
 		
-		setCenter(splitPane);
+		setCenter(stackPane);
 		setBottom(new VBox(xAxis, toolBar));
 		addEventHandler(PanRequestEvent.TYPE, this::pan);
 		addEventHandler(ZoomRequestEvent.TYPE, this::zoom);
 		toolBar.getItems().add(new RulesButton(this, context));
 		context.getBarSeriesProperty().addListener((o,old,value) -> redraw());
+		
+		splitPane.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
+		setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255), null, null)));
 	}
 	
 	public void add(Chart chart) {

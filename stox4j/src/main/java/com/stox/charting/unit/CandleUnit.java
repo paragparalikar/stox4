@@ -35,12 +35,12 @@ public class CandleUnit extends Group implements Unit<Bar> {
 		final double barWidth = xAxis.getUnitWidth() * 0.8;
 		body.setX(xAxis.getX(index) - barWidth/2d);
 		body.setWidth(barWidth);
-		final double upperY = yAxis.getY(bar.getOpenPrice().max(bar.getClosePrice()));
-		final double lowerY = yAxis.getY(bar.getOpenPrice().min(bar.getClosePrice()));
+		final double upperY = yAxis.getY(bar.getOpenPrice().max(bar.getClosePrice()).doubleValue());
+		final double lowerY = yAxis.getY(bar.getOpenPrice().min(bar.getClosePrice()).doubleValue());
 		body.setY(upperY);
 		body.setHeight(lowerY - upperY);
-		line.setStartY(yAxis.getY(bar.getHighPrice()));
-		line.setEndY(yAxis.getY(bar.getLowPrice()));
+		line.setStartY(yAxis.getY(bar.getHighPrice().doubleValue()));
+		line.setEndY(yAxis.getY(bar.getLowPrice().doubleValue()));
 		
 		body.setFill(bar.getOpenPrice().isLessThan(bar.getClosePrice()) ? UP : DOWN);
 	}

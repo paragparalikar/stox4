@@ -2,6 +2,7 @@ package com.stox.charting;
 
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
+import com.stox.charting.grid.HorizontalGrid;
 import com.stox.charting.handler.CompositeModeMouseHandler;
 import com.stox.charting.handler.pan.PanModeMouseHandler;
 import com.stox.charting.handler.zoom.ZoomModeMouseHandler;
@@ -21,8 +22,9 @@ public class Chart extends BorderPane {
 
 	@Getter @Setter private XAxis xAxis;
 	@Getter @Setter private ChartingContext context;
-	private final YAxis yAxis = new YAxis();
-	private final StackPane contentArea = new StackPane();
+	private final HorizontalGrid horizontalGrid = new HorizontalGrid();
+	private final YAxis yAxis = new YAxis(horizontalGrid);
+	private final StackPane contentArea = new StackPane(horizontalGrid);
 	private final ObservableList<Plot<?>> plots = FXCollections.observableArrayList();
 	private final PanModeMouseHandler panModeMouseHandler = new PanModeMouseHandler();
 	private final ZoomModeMouseHandler zoomModeMouseHandler = new ZoomModeMouseHandler();
@@ -32,7 +34,9 @@ public class Chart extends BorderPane {
 		setRight(yAxis);
 		setCenter(contentArea);
 		compositeModeMouseHandler.attach(contentArea);
-		setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255), null, null)));
+		final Background background = new Background(new BackgroundFill(Color.TRANSPARENT, null, null));
+		setBackground(background);
+		contentArea.setBackground(background);
 	}
 	
 	public boolean hasSize() {
