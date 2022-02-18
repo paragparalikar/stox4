@@ -6,8 +6,6 @@ import org.ta4j.core.Rule;
 import com.stox.charting.unit.BooleanUnit;
 import com.stox.indicator.RuleIndicator;
 
-import javafx.application.Platform;
-
 public class RulePlot extends Plot<Boolean> {
 
 	private final Rule rule;
@@ -21,7 +19,6 @@ public class RulePlot extends Plot<Boolean> {
 	public void reload() {
 		final BarSeries barSeries = getContext().getBarSeriesProperty().get();
 		if(null != barSeries) setIndicator(new RuleIndicator(rule, barSeries));
-		Platform.runLater(this::layoutChartChildren);
 	}
 	
 	@Override public void updateYAxis(int startIndex, int endIndex) {}

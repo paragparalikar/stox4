@@ -1,6 +1,5 @@
 package com.stox;
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 import com.stox.charting.ChartingContext;
@@ -25,7 +24,7 @@ public class StoxApplication extends Application {
 		final BarRepository barRepository = new BarRepository();
 		final BarService barService = new BarService(barRepository);
 		final ChartingContext context = new ChartingContext();
-		final ChartingView chartingView = new ChartingView(context, barService, Executors.newCachedThreadPool(new DaemonThreadFactory()));
+		final ChartingView chartingView = new ChartingView(context, barService);
 		final Scrip scrip = Scrip.builder().isin("INE769A01020").code("AARTIIND").name("Aarti Industries Limited").build();
 		context.getScripProperty().set(scrip);
 		primaryStage.setScene(new Scene(chartingView));
