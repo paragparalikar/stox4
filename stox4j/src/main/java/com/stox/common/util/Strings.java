@@ -105,18 +105,7 @@ public class Strings {
 	
 	
 	public static String stringValueOf(double value) {
-		String text = "";
-		if (value >= 1000000000) {
-			text = "B";
-			value /= 1000000000;
-		} else if (value >= 1000000) {
-			text = "M";
-			value /= 1000000;
-		} else if (value >= 1000) {
-			text = "K";
-			value /= 1000;
-		}
-		return String.valueOf(currencyFormat.format(value) + text);
+		return currencyFormat.format(value);
 	}
 
 	public static Predicate<String> equalsIgnoreCase(final String other){

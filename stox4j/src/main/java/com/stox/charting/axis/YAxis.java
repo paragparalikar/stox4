@@ -2,8 +2,7 @@ package com.stox.charting.axis;
 
 import org.ta4j.core.num.Num;
 
-import com.stox.common.util.Strings;
-
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
@@ -17,6 +16,7 @@ import lombok.Setter;
 
 public class YAxis extends StackPane {
 	public static final double WIDTH = 64;
+	private static final Insets PADDING = new Insets(0, 4, 0, 0);
 	private static final Font FONT = Font.font(12);
 	private static final double[] TICK_UNIT_DEFAULTS = { 1.0E-10d, 2.5E-10d, 5.0E-10d, 1.0E-9d, 2.5E-9d, 5.0E-9d,
 			1.0E-8d, 2.5E-8d, 5.0E-8d, 1.0E-7d, 2.5E-7d, 5.0E-7d, 1.0E-6d, 2.5E-6d, 5.0E-6d, 1.0E-5d, 2.5E-5d, 5.0E-5d,
@@ -60,7 +60,7 @@ public class YAxis extends StackPane {
 		final double labelHeight = (axisHeight * tickSize )/(highestValue - lowestValue);
 		final double highest = tickSize * Math.floor(highestValue / tickSize);
 		for(double value = highest; value > lowestValue; value -= tickSize) {
-			final Label label = new Label(Strings.stringValueOf(value));
+			final Label label = new Label(String.format("%.2f", value));
 			label.setFont(FONT);
 			label.setPrefHeight(labelHeight);
 			label.setMinHeight(labelHeight);
@@ -68,7 +68,8 @@ public class YAxis extends StackPane {
 			label.setPrefWidth(WIDTH);
 			label.setMinWidth(WIDTH);
 			label.setMaxWidth(WIDTH);
-			label.setAlignment(Pos.CENTER);
+			label.setAlignment(Pos.CENTER_RIGHT);
+			label.setPadding(PADDING);
 			container.getChildren().add(label);
 		}
 	}
