@@ -1,5 +1,9 @@
 package com.stox;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+
+import com.stox.charting.ChartingContext;
 import com.stox.charting.ChartingView;
 import com.stox.common.bar.BarRepository;
 import com.stox.common.bar.BarService;
@@ -20,14 +24,26 @@ public class StoxApplication extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		final BarRepository barRepository = new BarRepository();
 		final BarService barService = new BarService(barRepository);
-		final ChartingView chartingView = new ChartingView(barService);
+		final ChartingContext context = new ChartingContext();
+		final ChartingView chartingView = new ChartingView(context, barService, Executors.newCachedThreadPool(new DaemonThreadFactory()));
 		final Scrip scrip = Scrip.builder().isin("INE769A01020").code("AARTIIND").name("Aarti Industries Limited").build();
-		chartingView.setScrip(scrip);
+		context.getScripProperty().set(scrip);
 		primaryStage.setScene(new Scene(chartingView));
 		primaryStage.setMaximized(true);
 		primaryStage.show();
-		
-		
+	}
+	
+}
+
+class DaemonThreadFactory implements ThreadFactory {
+	
+	private int counter;
+
+	@Override
+	public Thread newThread(Runnable runnable) {
+		final Thread thread = new Thread(runnable, "Stox4j-executor-thread-" + ++counter);
+		thread.setDaemon(true);
+		return thread;
 	}
 	
 }

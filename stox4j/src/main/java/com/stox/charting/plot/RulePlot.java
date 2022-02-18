@@ -1,40 +1,30 @@
 package com.stox.charting.plot;
 
+import org.ta4j.core.BarSeries;
 import org.ta4j.core.Rule;
 
-import com.stox.charting.ChartingContext;
-import com.stox.charting.axis.XAxis;
-import com.stox.charting.axis.YAxis;
 import com.stox.charting.unit.BooleanUnit;
 import com.stox.indicator.RuleIndicator;
+
+import javafx.application.Platform;
 
 public class RulePlot extends Plot<Boolean> {
 
 	private final Rule rule;
 	
-	public RulePlot(Rule rule, ChartingContext context) {
-		super(context, () -> new BooleanUnit(context));
+	public RulePlot(Rule rule) {
+		super(BooleanUnit::new);
 		this.rule = rule;
 	}
 
 	@Override
-	public boolean load(XAxis xAxis) {
-		setIndicator(new RuleIndicator(rule, getContext().getBarSeries()));
-		return true;
+	public void reload() {
+		final BarSeries barSeries = getContext().getBarSeriesProperty().get();
+		if(null != barSeries) setIndicator(new RuleIndicator(rule, barSeries));
+		Platform.runLater(this::layoutChartChildren);
 	}
 	
-	@Override
-	public void updateYAxis(int startIndex, int endIndex, YAxis yAxis) {
-	}
-
-	@Override
-	protected double resolveLowValue(Boolean model) {
-		return 0;
-	}
-
-	@Override
-	protected double resolveHighValue(Boolean model) {
-		return 0;
-	}
-
+	@Override public void updateYAxis(int startIndex, int endIndex) {}
+	@Override protected double resolveLowValue(Boolean model) {return 0;}
+	@Override protected double resolveHighValue(Boolean model) {return 0;}
 }

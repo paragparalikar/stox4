@@ -12,6 +12,7 @@ public class CompositeModeMouseHandler implements ModeMouseHandler {
 
 	@Override
 	public void attach(Node node) {
+		detach();
 		if(null != handlers && 0 < handlers.length) {
 			for(ModeMouseHandler handler : handlers) {
 				handler.attach(node);

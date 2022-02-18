@@ -2,6 +2,7 @@ package com.stox.charting.unit;
 
 import org.ta4j.core.Bar;
 
+import com.stox.charting.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
 
@@ -10,9 +11,13 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import lombok.Setter;
 
 public class CandleUnit extends Group implements Unit<Bar> {
 
+	@Setter private XAxis xAxis;
+	@Setter private YAxis yAxis;
+	@Setter private ChartingContext context;
 	private final Line line = new Line();
 	private final Rectangle body = new Rectangle();
 	
@@ -24,7 +29,7 @@ public class CandleUnit extends Group implements Unit<Bar> {
 	}
 	
 	@Override
-	public void layoutChildren(int index, Bar bar, XAxis xAxis, YAxis yAxis) {
+	public void layoutChildren(int index, Bar bar) {
 		final double barWidth = xAxis.getUnitWidth() * 0.8;
 		body.setX(xAxis.getX(index) - barWidth/2d);
 		body.setWidth(barWidth);

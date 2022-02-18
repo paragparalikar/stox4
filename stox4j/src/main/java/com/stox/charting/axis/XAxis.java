@@ -6,6 +6,10 @@ import java.util.Locale;
 
 import org.ta4j.core.BarSeries;
 
+import com.stox.charting.ChartingContext;
+import com.stox.charting.handler.pan.PanRequestEvent;
+import com.stox.charting.handler.zoom.ZoomRequestEvent;
+
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -23,10 +27,16 @@ public class XAxis extends StackPane {
 	private static final Font FONT = Font.font(8);
 	private static final Insets INSETS = new Insets(2);
 
+	private final ChartingContext context;
 	private final Pane container = new Pane(); 
 	private double unitWidth = 10, maxUnitWidth = 50, minUnitWidth = 1, panWidth;
 	
-	public XAxis() {
+	public XAxis(ChartingContext context) {
+		this.context = context;
+		context.getScripProperty().addListener((o,old,scrip) -> reset());
+		addEventHandler(PanRequestEvent.TYPE, event -> pan(event.getDeltaX()));
+		addEventHandler(ZoomRequestEvent.TYPE, event -> zoom(event.getX(), event.getPercentage()));
+		
 		setMaxHeight(HEIGHT);
 		setPrefHeight(HEIGHT);
 		setMinHeight(HEIGHT);
@@ -72,21 +82,24 @@ public class XAxis extends StackPane {
 		}
 	}
 	
-	public void layoutChartChildren(BarSeries barSeries) {
-		ZonedDateTime lastTimestamp = null;
-		container.getChildren().clear();
-		final int startIndex = Math.max(getStartIndex(), 0);
-		final int endIndex = Math.min(getEndIndex(), barSeries.getBarCount());
-		for(int index = endIndex - 1; index >= startIndex; index--) {
-			final ZonedDateTime timestamp = barSeries.getBar(index).getEndTime();
-			if(null == lastTimestamp || lastTimestamp.getYear() != timestamp.getYear()) {
-				addLabel(index, String.valueOf(timestamp.getYear()));
-			} else if(lastTimestamp.getMonth() != timestamp.getMonth()) {
-				addLabel(index, timestamp.getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault()));
-			} else if(unitWidth > 18) {
-				addLabel(index, String.valueOf(timestamp.getDayOfMonth()));
+	public void layoutChartChildren() {
+		final BarSeries barSeries = context.getBarSeriesProperty().get();
+		if(null != barSeries) {
+			ZonedDateTime lastTimestamp = null;
+			container.getChildren().clear();
+			final int startIndex = Math.max(getStartIndex(), 0);
+			final int endIndex = Math.min(getEndIndex(), barSeries.getBarCount());
+			for(int index = endIndex - 1; index >= startIndex; index--) {
+				final ZonedDateTime timestamp = barSeries.getBar(index).getEndTime();
+				if(null == lastTimestamp || lastTimestamp.getYear() != timestamp.getYear()) {
+					addLabel(index, String.valueOf(timestamp.getYear()));
+				} else if(lastTimestamp.getMonth() != timestamp.getMonth()) {
+					addLabel(index, timestamp.getMonth().getDisplayName(TextStyle.SHORT, Locale.getDefault()));
+				} else if(unitWidth > 18) {
+					addLabel(index, String.valueOf(timestamp.getDayOfMonth()));
+				}
+				lastTimestamp = timestamp;
 			}
-			lastTimestamp = timestamp;
 		}
 	}
 	

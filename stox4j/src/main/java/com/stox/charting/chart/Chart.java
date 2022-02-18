@@ -7,55 +7,58 @@ import com.stox.charting.handler.CompositeModeMouseHandler;
 import com.stox.charting.handler.pan.PanModeMouseHandler;
 import com.stox.charting.handler.zoom.ZoomModeMouseHandler;
 import com.stox.charting.plot.Plot;
-import com.stox.common.scrip.Scrip;
-import com.stox.common.util.MathUtil;
 
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Parent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import lombok.Getter;
+import lombok.Setter;
 
 public class Chart extends BorderPane {
 
-	private final ChartingContext context;
+	@Getter @Setter private XAxis xAxis;
+	@Getter @Setter private ChartingContext context;
 	private final YAxis yAxis = new YAxis();
 	private final StackPane contentArea = new StackPane();
 	private final ObservableList<Plot<?>> plots = FXCollections.observableArrayList();
+	private final PanModeMouseHandler panModeMouseHandler = new PanModeMouseHandler();
+	private final ZoomModeMouseHandler zoomModeMouseHandler = new ZoomModeMouseHandler();
+	private final CompositeModeMouseHandler compositeModeMouseHandler = new CompositeModeMouseHandler(panModeMouseHandler, zoomModeMouseHandler);
 	
-	public Chart(ChartingContext context) {
+	
+	public Chart() {
 		setRight(yAxis);
 		setCenter(contentArea);
-		this.context = context;
-
-		final PanModeMouseHandler panModeMouseHandler = new PanModeMouseHandler();
-		final ZoomModeMouseHandler zoomModeMouseHandler = new ZoomModeMouseHandler();
-		final CompositeModeMouseHandler compositeModeMouseHandler = new CompositeModeMouseHandler(panModeMouseHandler, zoomModeMouseHandler);
-		compositeModeMouseHandler.attach(contentArea);
+		parentProperty().addListener(this::onParentChanged);
 		contentArea.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 	}
 	
-	public void reload(Scrip scrip, XAxis xAxis) {
-		final double width = contentArea.getWidth();
-		final double height = contentArea.getHeight();
-		if(0 < width && 0 < height) {
-			for(Plot<?> plot : plots) plot.load(xAxis);
-			redraw(xAxis, width, height);
+	private void onParentChanged(ObservableValue<? extends Parent> observable, Parent oldValue, Parent newValue) {
+		if(null != newValue) compositeModeMouseHandler.attach(newValue);
+	}
+	
+	public boolean hasSize() {
+		return 0 < contentArea.getHeight() && 0 < contentArea.getWidth();
+	}
+	
+	public void redraw() {
+		if(hasSize()) {
+			yAxis.reset();
+			for(Plot<?> plot : plots) plot.layoutChartChildren();
+			yAxis.layoutChartChildren();
 		}
 	}
 	
-	public void redraw(XAxis xAxis, double width, double height) {
-		yAxis.reset();
-		final int barCount = context.getBarSeries().getBarCount();
-		final int startIndex = MathUtil.clip(0, xAxis.getStartIndex(), barCount);
-		final int endIndex = MathUtil.clip(0, xAxis.getEndIndex(), barCount);
-		for(Plot<?> plot : plots) plot.updateYAxis(startIndex, endIndex, yAxis);
-		for(Plot<?> plot : plots) plot.layoutChartChildren(xAxis, yAxis, startIndex, endIndex, height, width);
-	}
-	
 	public void add(Plot<?> plot) {
+		plot.setXAxis(xAxis);
+		plot.setYAxis(yAxis);
+		plot.setContext(context);
 		plots.add(plot);
 		contentArea.getChildren().add(plot);
 	}

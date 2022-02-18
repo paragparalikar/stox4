@@ -46,7 +46,7 @@ public class RulesButton extends Button implements EventHandler<ActionEvent> {
 		if(ButtonType.OK.equals(buttonType)) {
 			final Rule rule = getRuleListView().getSelectionModel().getSelectedItem();
 			if(null != rule) {
-				final RulePlot rulePlot = new RulePlot(rule, context);
+				final RulePlot rulePlot = new RulePlot(rule);
 				chartingView.add(rulePlot);
 			}
 		}
