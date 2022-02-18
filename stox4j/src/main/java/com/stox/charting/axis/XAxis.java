@@ -28,7 +28,7 @@ public class XAxis extends StackPane {
 	private static final Insets INSETS = new Insets(2);
 
 	private final ChartingContext context;
-	private final Pane container = new Pane(); 
+	private final Pane container = new Pane();
 	private double unitWidth = 5, maxUnitWidth = 50, minUnitWidth = 1, panWidth;
 	
 	public XAxis(ChartingContext context) {
@@ -48,20 +48,19 @@ public class XAxis extends StackPane {
 	}
 	
 	public double getX(final int index) {
-		return getWidth() + panWidth - index * unitWidth;
+		return container.getWidth() + panWidth - index * unitWidth;
 	}
 
 	public int getIndex(final double x) {
-		return (int)Math.ceil((getWidth() + panWidth - x) / unitWidth);
+		return (int)Math.ceil((container.getWidth() + panWidth - x) / unitWidth);
 	}
 
 	public int getEndIndex() {
-		return (int) ((panWidth + getWidth()) / unitWidth);
+		return (int) ((panWidth + container.getWidth()) / unitWidth);
 	}
 	
 	public int getStartIndex() {
-		final double margin = YAxis.WIDTH + 2 * unitWidth;
-		return (int) ((panWidth + margin) / unitWidth);
+		return (int) Math.ceil((panWidth) / unitWidth);
 	}
 	
 	public void pan(final double deltaX) {
