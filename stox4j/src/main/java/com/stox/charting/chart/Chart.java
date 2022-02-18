@@ -31,7 +31,6 @@ public class Chart extends BorderPane {
 	private final ZoomModeMouseHandler zoomModeMouseHandler = new ZoomModeMouseHandler();
 	private final CompositeModeMouseHandler compositeModeMouseHandler = new CompositeModeMouseHandler(panModeMouseHandler, zoomModeMouseHandler);
 	
-	
 	public Chart() {
 		setRight(yAxis);
 		setCenter(contentArea);

@@ -10,8 +10,6 @@ import org.ta4j.core.BaseBarSeries;
 
 import com.stox.charting.ChartingContext;
 import com.stox.charting.axis.XAxis;
-import com.stox.charting.handler.pan.PanRequestEvent;
-import com.stox.charting.handler.zoom.ZoomRequestEvent;
 import com.stox.charting.unit.CandleUnit;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.Scrip;
@@ -28,10 +26,8 @@ public class PricePlot extends Plot<Bar> {
 	
 	public PricePlot(BarService barService, ExecutorService executor) {
 		super(CandleUnit::new);
-		this.barService = barService;
 		this.executor = executor;
-		addEventHandler(PanRequestEvent.TYPE, event -> reloadBars());
-		addEventHandler(ZoomRequestEvent.TYPE, event -> reloadBars());
+		this.barService = barService;
 	}
 
 	@Override

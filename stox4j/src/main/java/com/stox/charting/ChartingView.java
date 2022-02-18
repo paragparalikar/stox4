@@ -4,6 +4,8 @@ import java.util.concurrent.ExecutorService;
 
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.chart.Chart;
+import com.stox.charting.handler.pan.PanRequestEvent;
+import com.stox.charting.handler.zoom.ZoomRequestEvent;
 import com.stox.charting.plot.Plot;
 import com.stox.charting.plot.PricePlot;
 import com.stox.charting.tools.RulesButton;
@@ -19,6 +21,7 @@ import javafx.scene.layout.VBox;
 public class ChartingView extends BorderPane {
 
 	private final XAxis xAxis;
+	private final PricePlot pricePlot;
 	private final ChartingContext context;
 	private final Chart priceChart = new Chart();
 	private final ToolBar toolBar = new ToolBar();
@@ -30,10 +33,12 @@ public class ChartingView extends BorderPane {
 		this.xAxis = new XAxis(context);
 		
 		add(priceChart);
-		add(new PricePlot(barService, executor));
+		add(pricePlot = new PricePlot(barService, executor));
 		
 		setCenter(splitPane);
 		setBottom(new VBox(xAxis, toolBar));
+		addEventHandler(PanRequestEvent.TYPE, this::pan);
+		addEventHandler(ZoomRequestEvent.TYPE, this::zoom);
 		toolBar.getItems().add(new RulesButton(this, context));
 	}
 	
@@ -48,4 +53,13 @@ public class ChartingView extends BorderPane {
 		priceChart.add(plot);
 	}
 	
+	public void pan(PanRequestEvent event) {
+		xAxis.pan(event.getDeltaX());
+		pricePlot.reloadBars();
+	}
+	
+	public void zoom(ZoomRequestEvent event) {
+		xAxis.zoom(event.getX(), event.getPercentage());
+		pricePlot.reloadBars();
+	}
 }

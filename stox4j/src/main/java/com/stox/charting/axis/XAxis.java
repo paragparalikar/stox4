@@ -7,8 +7,6 @@ import java.util.Locale;
 import org.ta4j.core.BarSeries;
 
 import com.stox.charting.ChartingContext;
-import com.stox.charting.handler.pan.PanRequestEvent;
-import com.stox.charting.handler.zoom.ZoomRequestEvent;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -34,8 +32,6 @@ public class XAxis extends StackPane {
 	public XAxis(ChartingContext context) {
 		this.context = context;
 		context.getScripProperty().addListener((o,old,scrip) -> reset());
-		addEventHandler(PanRequestEvent.TYPE, event -> pan(event.getDeltaX()));
-		addEventHandler(ZoomRequestEvent.TYPE, event -> zoom(event.getX(), event.getPercentage()));
 		
 		setMaxHeight(HEIGHT);
 		setPrefHeight(HEIGHT);
