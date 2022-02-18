@@ -14,6 +14,8 @@ import javafx.scene.shape.Rectangle;
 import lombok.Setter;
 
 public class CandleUnit extends Group implements Unit<Bar> {
+	private static final Color UP = Color.rgb(38, 166, 154);
+	private static final Color DOWN = Color.rgb(239, 83, 80);
 
 	@Setter private XAxis xAxis;
 	@Setter private YAxis yAxis;
@@ -40,8 +42,7 @@ public class CandleUnit extends Group implements Unit<Bar> {
 		line.setStartY(yAxis.getY(bar.getHighPrice()));
 		line.setEndY(yAxis.getY(bar.getLowPrice()));
 		
-		body.setFill(bar.getOpenPrice().isLessThan(bar.getClosePrice()) ? 
-				Color.GREEN : Color.RED);
+		body.setFill(bar.getOpenPrice().isLessThan(bar.getClosePrice()) ? UP : DOWN);
 	}
 	
 	@Override

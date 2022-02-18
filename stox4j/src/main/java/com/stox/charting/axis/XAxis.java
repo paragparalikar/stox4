@@ -10,6 +10,8 @@ import com.stox.charting.ChartingContext;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -21,8 +23,8 @@ import lombok.Getter;
 
 @Getter
 public class XAxis extends StackPane {
-	public static final double HEIGHT = 16;
-	private static final Font FONT = Font.font(8);
+	public static final double HEIGHT = 28;
+	private static final Font FONT = Font.font(12);
 	private static final Insets INSETS = new Insets(2);
 
 	private final ChartingContext context;
@@ -42,6 +44,7 @@ public class XAxis extends StackPane {
 		final Rectangle rectangle = new Rectangle(YAxis.WIDTH, XAxis.HEIGHT);
 		rectangle.setFill(Color.TRANSPARENT);
 		getChildren().add(new HBox(container, rectangle));
+		setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255), null, null)));
 	}
 	
 	public double getX(final int index) {
@@ -66,7 +69,7 @@ public class XAxis extends StackPane {
 	}
 	
 	public void reset() {
-		panWidth = -100;
+		panWidth = -10 * unitWidth;
 	}
 	
 	public void zoom(final double x, final int percentage) {

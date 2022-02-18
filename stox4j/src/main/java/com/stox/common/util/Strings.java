@@ -19,7 +19,7 @@ public class Strings {
 	{
 		currencyFormat.setGroupingUsed(true);
 		currencyFormat.setMaximumFractionDigits(2);
-		currencyFormat.setMinimumFractionDigits(0);	
+		currencyFormat.setMinimumFractionDigits(2);	
 	}
 
 	public static void requireText(final String text) {

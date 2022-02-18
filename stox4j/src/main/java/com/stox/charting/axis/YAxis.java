@@ -6,15 +6,18 @@ import com.stox.common.util.Strings;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import lombok.Getter;
 import lombok.Setter;
 
 public class YAxis extends StackPane {
-	public static final double WIDTH = 30;
-	private static final Font FONT = Font.font(8);
+	public static final double WIDTH = 64;
+	private static final Font FONT = Font.font(12);
 	private static final Insets PADDING = new Insets(0, 0, 0, 3);
 	private static final double[] TICK_UNIT_DEFAULTS = { 1.0E-10d, 2.5E-10d, 5.0E-10d, 1.0E-9d, 2.5E-9d, 5.0E-9d,
 			1.0E-8d, 2.5E-8d, 5.0E-8d, 1.0E-7d, 2.5E-7d, 5.0E-7d, 1.0E-6d, 2.5E-6d, 5.0E-6d, 1.0E-5d, 2.5E-5d, 5.0E-5d,
@@ -28,7 +31,7 @@ public class YAxis extends StackPane {
 	@Setter @Getter private double 
 			highestValue = Double.MIN_VALUE, 
 			lowestValue = Double.MAX_VALUE, 
-			tickHeight = 20, topMargin = 20, bottomMargin = 20;
+			tickHeight = 20, topMargin = 10, bottomMargin = 8;
 	
 	public YAxis() {
 		setWidth(WIDTH);
@@ -36,6 +39,7 @@ public class YAxis extends StackPane {
 		setMinWidth(WIDTH);
 		setPrefWidth(WIDTH);
 		getChildren().add(container);
+		setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255), null, null)));
 	}
 	
 	public void reset() {

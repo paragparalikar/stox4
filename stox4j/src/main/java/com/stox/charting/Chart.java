@@ -32,7 +32,7 @@ public class Chart extends BorderPane {
 		setRight(yAxis);
 		setCenter(contentArea);
 		compositeModeMouseHandler.attach(contentArea);
-		contentArea.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+		setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255), null, null)));
 	}
 	
 	public boolean hasSize() {
