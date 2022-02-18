@@ -31,6 +31,7 @@ public class PricePlot extends Plot<Bar> {
 		context.getScripProperty().addListener((o,old,scrip) -> {
 			loading = false;
 			fullyLoaded = false;
+			context.getBarSeriesProperty().set(new BaseBarSeries());
 			reloadBars();
 		});
 	}

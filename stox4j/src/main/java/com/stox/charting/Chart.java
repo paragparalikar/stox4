@@ -1,6 +1,5 @@
-package com.stox.charting.chart;
+package com.stox.charting;
 
-import com.stox.charting.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
 import com.stox.charting.handler.CompositeModeMouseHandler;
@@ -8,10 +7,8 @@ import com.stox.charting.handler.pan.PanModeMouseHandler;
 import com.stox.charting.handler.zoom.ZoomModeMouseHandler;
 import com.stox.charting.plot.Plot;
 
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Parent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
@@ -34,12 +31,8 @@ public class Chart extends BorderPane {
 	public Chart() {
 		setRight(yAxis);
 		setCenter(contentArea);
-		parentProperty().addListener(this::onParentChanged);
+		compositeModeMouseHandler.attach(contentArea);
 		contentArea.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-	}
-	
-	private void onParentChanged(ObservableValue<? extends Parent> observable, Parent oldValue, Parent newValue) {
-		if(null != newValue) compositeModeMouseHandler.attach(newValue);
 	}
 	
 	public boolean hasSize() {

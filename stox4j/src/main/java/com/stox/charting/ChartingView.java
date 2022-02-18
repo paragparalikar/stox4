@@ -1,7 +1,6 @@
 package com.stox.charting;
 
 import com.stox.charting.axis.XAxis;
-import com.stox.charting.chart.Chart;
 import com.stox.charting.handler.pan.PanRequestEvent;
 import com.stox.charting.handler.zoom.ZoomRequestEvent;
 import com.stox.charting.plot.Plot;
