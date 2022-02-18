@@ -27,7 +27,7 @@ public class XAxis extends StackPane {
 
 	private final ChartingContext context;
 	private final Pane container = new Pane(); 
-	private double unitWidth = 10, maxUnitWidth = 50, minUnitWidth = 1, panWidth;
+	private double unitWidth = 5, maxUnitWidth = 50, minUnitWidth = 1, panWidth;
 	
 	public XAxis(ChartingContext context) {
 		this.context = context;

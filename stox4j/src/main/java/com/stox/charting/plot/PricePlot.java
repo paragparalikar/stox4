@@ -72,6 +72,7 @@ public class PricePlot extends Plot<Bar> {
 		data.addAll(bars);
 		final BarSeries newBarSeries = new BaseBarSeries(data);
 		getContext().getBarSeriesProperty().set(newBarSeries);
+		if(!fullyLoaded && xAxis.getEndIndex() > data.size()) doReload(scrip);
 	}
 
 	@Override
