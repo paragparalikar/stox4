@@ -1,6 +1,7 @@
 package com.stox.charting;
 
 import com.stox.charting.axis.XAxis;
+import com.stox.charting.grid.Crosshair;
 import com.stox.charting.grid.VerticalGrid;
 import com.stox.charting.handler.pan.PanRequestEvent;
 import com.stox.charting.handler.zoom.ZoomRequestEvent;
@@ -29,8 +30,9 @@ public class ChartingView extends BorderPane {
 	private final Chart priceChart = new Chart();
 	private final ToolBar toolBar = new ToolBar();
 	private final SplitPane splitPane = new SplitPane();
+	private final Crosshair crosshair = new Crosshair(splitPane);
 	private final VerticalGrid verticalGrid = new VerticalGrid();
-	private final StackPane stackPane = new StackPane(verticalGrid, splitPane);
+	private final StackPane stackPane = new StackPane(verticalGrid, splitPane, crosshair);
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
 	public ChartingView(ChartingContext context, BarService barService) {
