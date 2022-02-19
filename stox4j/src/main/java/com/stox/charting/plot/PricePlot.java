@@ -10,7 +10,6 @@ import org.ta4j.core.BaseBarSeries;
 import com.stox.charting.ChartingView.ChartingConfig;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
-import com.stox.charting.chart.PlotInfo;
 import com.stox.charting.grid.Crosshair;
 import com.stox.charting.unit.CandleUnit;
 import com.stox.charting.unit.Unit;
@@ -20,8 +19,6 @@ import com.stox.common.util.Colors;
 import com.stox.common.util.Strings;
 import com.stox.indicator.BarIndicator;
 
-import javafx.beans.value.ObservableValue;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -37,12 +34,6 @@ public class PricePlot extends Plot<Bar> {
 		super(CandleUnit::new);
 		this.config = config;
 		this.barService = barService;
-		crosshair.getVerticalLine().endXProperty().addListener(this::onCrosshairXChanged);
-	}
-	
-	private void onCrosshairXChanged(ObservableValue<? extends Number> observable, Number old, Number value) {
-		final int index = getXAxis().getIndex(value.doubleValue());
-		infoPane.show(getContext().getBar(index));
 	}
 	
 	@Override
@@ -125,7 +116,7 @@ public class PricePlot extends Plot<Bar> {
 	
 }
 
-class PricePlotInfoPane extends HBox implements PlotInfo<Bar>{
+class PricePlotInfoPane extends PlotInfo<Bar>{
 	private final Label nameLabel = new Label();
 	private final Label openLabel = new Label();
 	private final Label highLabel = new Label();
@@ -144,11 +135,6 @@ class PricePlotInfoPane extends HBox implements PlotInfo<Bar>{
 		getChildren().addAll(nameLabel, priceInfoContainer);
 	}
 	
-	@Override
-	public Node getNode() {
-		return this;
-	}
-	
 	public void set(Scrip scrip) {
 		if(null != scrip) {
 			nameLabel.setVisible(true);
@@ -159,7 +145,7 @@ class PricePlotInfoPane extends HBox implements PlotInfo<Bar>{
 	}
 	
 	@Override
-	public void show(Bar bar) {
+	public void setValue(Bar bar) {
 		if(null != bar) {
 			priceInfoContainer.setVisible(true);
 			final Color color = bar.getOpenPrice().isLessThan(bar.getClosePrice()) ? Colors.UP : Colors.DOWN;

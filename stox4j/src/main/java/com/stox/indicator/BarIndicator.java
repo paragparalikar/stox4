@@ -15,7 +15,7 @@ public class BarIndicator implements Indicator<Bar> {
 
 	@Override
 	public Bar getValue(int index) {
-		return (Bar) barSeries.getBar(index);
+		return 0 <= index && index < barSeries.getBarCount() ? barSeries.getBar(index) : null;
 	}
 
 	@Override

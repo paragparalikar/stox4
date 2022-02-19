@@ -3,12 +3,9 @@ package com.stox.charting.plot;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.indicators.helpers.ConstantIndicator;
 
-import com.stox.charting.chart.PlotInfo;
 import com.stox.charting.unit.BooleanUnit;
 
-import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
 
 public class RulePlot extends Plot<Boolean> {
 
@@ -42,7 +39,7 @@ public class RulePlot extends Plot<Boolean> {
 	}
 }
 
-class RulePlotInfo extends HBox implements PlotInfo<Boolean> {
+class RulePlotInfo extends PlotInfo<Boolean> {
 	private final Label nameLabel = new Label();
 	private final Label valueLabel = new Label();
 
@@ -56,14 +53,9 @@ class RulePlotInfo extends HBox implements PlotInfo<Boolean> {
 		setVisible(null != value);
 		nameLabel.setText(null == value ? null : value.toUpperCase());
 	}
-	
-	@Override
-	public Node getNode() {
-		return this;
-	}
 
 	@Override
-	public void show(Boolean model) {
+	public void setValue(Boolean model) {
 		valueLabel.setVisible(null != model);
 		valueLabel.setText(null == model ? null : model.toString().toUpperCase());
 	}

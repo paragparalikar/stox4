@@ -68,12 +68,10 @@ public class Chart extends BorderPane {
 		plot.setXAxis(xAxis);
 		plot.setYAxis(yAxis);
 		plot.setContext(context);
+		plot.setCrosshair(crosshair);
 		plots.add(plot);
 		contentArea.getChildren().add(plot);
-		final PlotInfo<?> plotInfo = plot.getInfo();
-		if(null != plotInfo) {
-			infoPane.getChildren().add(plotInfo.getNode());
-		}
+		infoPane.getChildren().add(plot.getInfo());
 		infoPane.toFront();
 	}
 	

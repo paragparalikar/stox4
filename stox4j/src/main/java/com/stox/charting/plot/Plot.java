@@ -9,7 +9,7 @@ import org.ta4j.core.Indicator;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
-import com.stox.charting.chart.PlotInfo;
+import com.stox.charting.grid.Crosshair;
 import com.stox.charting.unit.Unit;
 import com.stox.common.util.MathUtil;
 
@@ -41,6 +41,13 @@ public abstract class Plot<T> extends Group {
 	public void setContext(ChartingContext context) {
 		this.context = context;
 		context.getBarSeriesProperty().addListener((o,old,value) -> reload());
+	}
+	
+	public void setCrosshair(Crosshair crosshair) {
+		crosshair.getVerticalLine().endXProperty().addListener((o,old,value) -> {
+			final int index = getXAxis().getIndex(value.doubleValue());
+			getInfo().setValue(indicator.getValue(index));
+		});
 	}
 	
 	protected void updateYAxis(int startIndex, int endIndex) {
