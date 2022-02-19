@@ -17,18 +17,16 @@ import com.stox.common.bar.BarService;
 import com.stox.common.scrip.Scrip;
 
 import javafx.application.Platform;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import lombok.Getter;
 
 public class ChartingView extends BorderPane {
@@ -48,7 +46,7 @@ public class ChartingView extends BorderPane {
 		private final ObjectProperty<BarSeries> barSeriesProperty = new SimpleObjectProperty<>(new BaseBarSeries());
 		public Bar getBar(int index) {
 			final BarSeries barSeries = barSeriesProperty.get();
-			return null != barSeries && 0 < index && index < barSeries.getBarCount() ? barSeries.getBar(index) : null;
+			return null != barSeries && 0 <= index && index < barSeries.getBarCount() ? barSeries.getBar(index) : null;
 		}
 	}
 	
@@ -70,13 +68,17 @@ public class ChartingView extends BorderPane {
 		
 		setCenter(stackPane);
 		setBottom(new VBox(xAxis, toolBar));
+		getStyleClass().add("charting-view");
 		addEventHandler(PanRequestEvent.TYPE, this::pan);
 		addEventHandler(ZoomRequestEvent.TYPE, this::zoom);
 		toolBar.getItems().add(new RulesButton(this, context));
 		context.getBarSeriesProperty().addListener((o,old,value) -> redraw());
-		
-		splitPane.setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, null, null)));
-		setBackground(new Background(new BackgroundFill(Color.rgb(255, 255, 255), null, null)));
+		crosshair.visibleProperty().bind(new BooleanBinding() {
+			{bind(context.getBarSeriesProperty());}
+			protected boolean computeValue() {
+				return null != context.getBar(0);
+			}
+		});
 	}
 	
 	public void add(Chart chart) {

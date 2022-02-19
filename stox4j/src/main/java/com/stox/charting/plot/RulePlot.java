@@ -1,13 +1,10 @@
 package com.stox.charting.plot;
 
 import org.ta4j.core.BarSeries;
-import org.ta4j.core.Rule;
 import org.ta4j.core.indicators.helpers.ConstantIndicator;
 
 import com.stox.charting.chart.PlotInfo;
-import com.stox.charting.tools.RuleBuilder;
 import com.stox.charting.unit.BooleanUnit;
-import com.stox.indicator.RuleIndicator;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -15,10 +12,10 @@ import javafx.scene.layout.HBox;
 
 public class RulePlot extends Plot<Boolean> {
 
-	private final RuleBuilder ruleBuilder;
+	private final PlotBuilder<Boolean> ruleBuilder;
 	private final RulePlotInfo plotInfo = new RulePlotInfo();
 	
-	public RulePlot(RuleBuilder ruleBuilder) {
+	public RulePlot(PlotBuilder<Boolean> ruleBuilder) {
 		super(BooleanUnit::new);
 		this.ruleBuilder = ruleBuilder;
 	}
@@ -28,8 +25,7 @@ public class RulePlot extends Plot<Boolean> {
 		final BarSeries barSeries = getContext().getBarSeriesProperty().get();
 		if(null != barSeries) {
 			plotInfo.setName(ruleBuilder.getName());
-			final Rule rule = ruleBuilder.build(barSeries);
-			setIndicator(new RuleIndicator(rule, barSeries));
+			setIndicator(ruleBuilder.build(barSeries));
 		} else {
 			plotInfo.setName(null);
 			setIndicator(new ConstantIndicator<>(null, false));

@@ -13,6 +13,7 @@ import com.stox.charting.plot.Plot;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Cursor;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -47,6 +48,7 @@ public class Chart extends BorderPane {
 	}
 	
 	private void style() {
+		contentArea.setCursor(Cursor.CROSSHAIR);
 		infoPane.getStyleClass().add("chart-info-pane");
 	}
 	

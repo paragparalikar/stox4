@@ -41,6 +41,7 @@ public class YAxis extends StackPane {
 		this.crosshair = crosshair;
 		this.horizontalGrid = horizontalGrid;
 		getChildren().addAll(container, new Pane(label));
+		label.visibleProperty().bind(crosshair.visibleProperty());
 		crosshair.getHorizontalLine().endYProperty().addListener(this::onCrosshairYChanged);
 	}
 	

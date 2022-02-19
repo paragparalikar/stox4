@@ -1,13 +1,17 @@
 package com.stox.charting.tools;
 
+import java.util.function.Function;
+
 import org.ta4j.core.BarSeries;
-import org.ta4j.core.Rule;
+import org.ta4j.core.Indicator;
 
 import com.stox.charting.ChartingView;
 import com.stox.charting.ChartingView.ChartingContext;
+import com.stox.charting.plot.PlotBuilder;
 import com.stox.charting.plot.RulePlot;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.ui.DefaultDialogx;
+import com.stox.indicator.RuleIndicator;
 import com.stox.rule.TestRule;
 
 import javafx.event.ActionEvent;
@@ -33,17 +37,18 @@ public class RulesButton extends Button implements EventHandler<ActionEvent> {
 		final Scrip scrip = context.getScripProperty().get();
 		final BarSeries barSeries = context.getBarSeriesProperty().get();
 		if(null != scrip && null != barSeries && 0 < barSeries.getBarCount()) {
-			final ListView<RuleBuilder> listView = new ListView<>();
-			listView.getItems().add(new RuleBuilder("Test 1", null, TestRule::new));
-			listView.getItems().add(new RuleBuilder("Test 2", null, TestRule::new));
-			listView.getItems().add(new RuleBuilder("Test 3", null, TestRule::new));
+			final Function<BarSeries, Indicator<?>> function = value -> new RuleIndicator(new TestRule(barSeries), barSeries);
+			final ListView<PlotBuilder> listView = new ListView<>();
+			listView.getItems().add(new PlotBuilder("Test 1", null, function));
+			listView.getItems().add(new PlotBuilder("Test 2", null, function));
+			listView.getItems().add(new PlotBuilder("Test 3", null, function));
 			
 			new DefaultDialogx()
 				.withTitle("Rules")
 				.withContent(listView)
 				.withButton(ButtonType.CANCEL)
 				.withButton(ButtonType.APPLY, () -> {
-					final RuleBuilder ruleBuilder = listView.getSelectionModel().getSelectedItem();
+					final PlotBuilder ruleBuilder = listView.getSelectionModel().getSelectedItem();
 					if(null != ruleBuilder) {
 						final RulePlot rulePlot = new RulePlot(ruleBuilder);
 						chartingView.add(rulePlot);

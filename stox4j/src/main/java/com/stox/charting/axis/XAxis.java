@@ -13,7 +13,6 @@ import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.grid.Crosshair;
 import com.stox.charting.grid.VerticalGrid;
 
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -51,13 +50,9 @@ public class XAxis extends StackPane {
 	}
 	
 	private void bind() {
+		label.visibleProperty().bind(crosshair.visibleProperty());
 		context.getScripProperty().addListener((o,old,scrip) -> reset());
-		context.getBarSeriesProperty().addListener(this::onBarSeriesChanged);
 		crosshair.getVerticalLine().endXProperty().addListener(this::onCrosshairXChanged);
-	}
-	
-	private void onBarSeriesChanged(ObservableValue<? extends BarSeries> observable, BarSeries old, BarSeries barSeries) {
-		label.setVisible(null != barSeries && 0 < barSeries.getBarCount());
 	}
 	
 	private void onCrosshairXChanged(ObservableValue<? extends Number> observable, Number old, Number value) {
