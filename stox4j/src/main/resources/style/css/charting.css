@@ -50,7 +50,7 @@
 }
 .chart-info-pane{
 	-fx-alignment: top-left;
-	-fx-padding: 10px 10px;
+	-fx-padding: 5px 0 0 -10px;
 }
 .plot-info-pane{
 	-fx-spacing: 20px;

@@ -71,6 +71,11 @@ public abstract class Plot<T> extends Group {
 			units.add(unit);
 			getChildren().add(unit.asNode());
 		}
+		if(endIndex < units.size()) {
+			final List<Unit<T>> subList = units.subList(endIndex, units.size());
+			subList.forEach(unit -> getChildren().remove(unit.asNode()));
+			subList.clear();
+		}
 	}
 	
 	protected void layoutChartChildren(int startIndex, int endIndex) {
