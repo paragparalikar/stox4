@@ -5,6 +5,7 @@ import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.grid.Crosshair;
 import com.stox.charting.grid.HorizontalGrid;
 
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -23,6 +24,7 @@ public class YAxis extends StackPane {
 	private final Crosshair crosshair;
 	private final ChartingConfig config;
 	private final ChartingContext context;
+	private final Label label = new Label();
 	private final Pane container = new Pane();
 	private final HorizontalGrid horizontalGrid;
 	@Setter @Getter private double 
@@ -37,12 +39,21 @@ public class YAxis extends StackPane {
 		this.context = context;
 		this.crosshair = crosshair;
 		this.horizontalGrid = horizontalGrid;
-		getChildren().add(container);
+		getChildren().addAll(container, new Pane(label));
+		crosshair.getHorizontalLine().endYProperty().addListener(this::onCrosshairYChanged);
+	}
+	
+	private void onCrosshairYChanged(ObservableValue<? extends Number> observable, Number old, Number value) {
+		if(null != value) {
+			label.setText(toString(getValue(value.doubleValue())));
+			label.setLayoutY(value.doubleValue() - label.getHeight()/2);
+		}
 	}
 	
 	private void style() {
 		getStyleClass().add("y-axis");
 		container.getStyleClass().add("container");
+		label.getStyleClass().add("axis-info-label");
 	}
 	
 	public void reset() {
@@ -56,6 +67,11 @@ public class YAxis extends StackPane {
 		final double result = ((value - lowestValue) * axisHeight) /
 				(highestValue - lowestValue);
 		return axisHeight + topMargin - result;
+	}
+	
+	public double getValue(double y) {
+		final double axisHeight = getHeight() - topMargin - bottomMargin;
+		return lowestValue + (axisHeight + topMargin - y) * (highestValue - lowestValue)/axisHeight;
 	}
 
 	public void layoutChartChildren() {
@@ -71,8 +87,13 @@ public class YAxis extends StackPane {
 		}
 	}
 	
+	private String toString(double value) {
+		return Double.isInfinite(value) || Double.isNaN(value) ? null : 
+				String.format("%.2f", value);
+	}
+	
 	private void addLabel(double value, double labelHeight) {
-		final Label label = new Label(String.format("%.2f", value));
+		final Label label = new Label(toString(value));
 		final double y = getY(value);
 		horizontalGrid.addLine(y);
 		container.getChildren().add(label);

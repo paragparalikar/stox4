@@ -4,7 +4,6 @@ import com.stox.charting.ChartingView;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.scrip.ScripService;
 
-import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
@@ -19,17 +18,9 @@ public class ExplorerView extends BorderPane {
 		setCenter(listView);
 		listView.getItems().addAll(scripService.findAll());
 		listView.getSelectionModel().selectedItemProperty().addListener(this::onScripSelected);
-		if(!listView.getItems().isEmpty()) {
-			Platform.runLater(() -> {
-				listView.getSelectionModel().select(0);
-			});
-		}
 	}
 	
 	private void onScripSelected(ObservableValue<? extends Scrip> observable, Scrip oldValue, Scrip newValue) {
 		chartingView.setScrip(newValue);
 	}
-	
-	
-	
 }
