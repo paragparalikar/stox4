@@ -6,14 +6,12 @@ import java.time.format.TextStyle;
 import java.util.Locale;
 
 import org.ta4j.core.Bar;
-import org.ta4j.core.BarSeries;
 
 import com.stox.charting.ChartingView.ChartingConfig;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.grid.Crosshair;
 import com.stox.charting.grid.VerticalGrid;
 
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -52,26 +50,17 @@ public class XAxis extends StackPane {
 	private void bind() {
 		label.visibleProperty().bind(crosshair.visibleProperty());
 		context.getScripProperty().addListener((o,old,scrip) -> reset());
-		crosshair.getVerticalLine().endXProperty().addListener(this::onCrosshairXChanged);
+		context.getBarSeriesProperty().addListener((o,old,value) -> updateCrosshairLabel());
+		crosshair.getVerticalLine().endXProperty().addListener((o,old,value) -> updateCrosshairLabel());
 	}
 	
-	private void onCrosshairXChanged(ObservableValue<? extends Number> observable, Number old, Number value) {
-		if(null != value) {
-			label.setText(computeLabelText(value.doubleValue()));
-			label.setLayoutX(value.doubleValue() - label.getWidth()/2);
-		}
-	}
-		
-	private String computeLabelText(double x) {
-		final BarSeries barSeries = context.getBarSeriesProperty().get();
-		if(null != barSeries && 0 < barSeries.getBarCount()) {
-			final int index = getIndex(x);
-			if(index > 0 && index < barSeries.getBarCount()) {
-				final ZonedDateTime timestamp = barSeries.getBar(index).getEndTime();
-				return dateTimeFormatter.format(timestamp);
-			}
-		}
-		return null;
+	private void updateCrosshairLabel() {
+		final double value = crosshair.getVerticalLine().getEndX();
+		final int index = getIndex(value);
+		final Bar bar = context.getBar(index);
+		final String text = null == bar ? null : dateTimeFormatter.format(bar.getEndTime());
+		label.setText(text);
+		label.setLayoutX(value - label.getWidth()/2);
 	}
 	
 	private void style() {
