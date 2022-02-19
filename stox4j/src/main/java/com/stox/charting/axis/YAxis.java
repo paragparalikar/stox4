@@ -1,5 +1,8 @@
 package com.stox.charting.axis;
 
+import com.stox.charting.ChartingView.ChartingConfig;
+import com.stox.charting.ChartingView.ChartingContext;
+import com.stox.charting.grid.Crosshair;
 import com.stox.charting.grid.HorizontalGrid;
 
 import javafx.geometry.Insets;
@@ -8,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,7 +34,8 @@ public class YAxis extends StackPane {
 			lowestValue = Double.MAX_VALUE, 
 			tickHeight = 20, topMargin = 10, bottomMargin = 8;
 	
-	public YAxis(HorizontalGrid horizontalGrid) {
+	public YAxis(ChartingContext context, ChartingConfig config, 
+			Crosshair crosshair, HorizontalGrid horizontalGrid) {
 		setWidth(WIDTH);
 		setMaxWidth(WIDTH);
 		setMinWidth(WIDTH);

@@ -29,10 +29,8 @@ public class StoxApplication extends Application {
 	private final BarService barService = new BarService(barRepository);
 	private final ScripRepository scripRepository = new ScripRepository();
 	private final ScripService scripService = new ScripService(scripRepository);
-	private final ChartingContext context = new ChartingContext();
-	private final ChartingConfig config = new ChartingConfig();
-	private final ChartingView chartingView = new ChartingView(context, config, barService);
-	private final ExplorerView explorerView = new ExplorerView(scripService, context);
+	private final ChartingView chartingView = new ChartingView(barService);
+	private final ExplorerView explorerView = new ExplorerView(scripService, chartingView);
 	private final TabPane tabPane = new TabPane(new Tab("Explorer", explorerView));
 	private final SplitPane splitPane = new SplitPane(tabPane, chartingView);
 	private final Scene scene = new Scene(splitPane);

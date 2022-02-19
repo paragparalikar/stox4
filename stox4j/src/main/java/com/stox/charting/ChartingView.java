@@ -37,6 +37,8 @@ public class ChartingView extends BorderPane {
 	public static class ChartingConfig {
 		private final DoubleProperty maxUnitWidthProperty = new SimpleDoubleProperty(50);
 		private final DoubleProperty minUnitWidthProperty = new SimpleDoubleProperty(1);
+		private final DoubleProperty paddingTopProperty = new SimpleDoubleProperty(10);
+		private final DoubleProperty paddingBottomProperty = new SimpleDoubleProperty(8);
 	}
 	
 	@Getter
@@ -44,25 +46,20 @@ public class ChartingView extends BorderPane {
 		private final ObjectProperty<Scrip> scripProperty = new SimpleObjectProperty<>();
 		private final ObjectProperty<BarSeries> barSeriesProperty = new SimpleObjectProperty<>(new BaseBarSeries());
 	}
-
-	private final XAxis xAxis;
+	
 	private final PricePlot pricePlot;
-	private final ChartingConfig config;
-	private final ChartingContext context;
-	private final Chart priceChart = new Chart();
 	private final ToolBar toolBar = new ToolBar();
 	private final SplitPane splitPane = new SplitPane();
-	private final Crosshair crosshair = new Crosshair(splitPane);
+	private final ChartingConfig config = new ChartingConfig();
 	private final VerticalGrid verticalGrid = new VerticalGrid();
+	private final Crosshair crosshair = new Crosshair(splitPane);
+	private final ChartingContext context = new ChartingContext();
+	private final XAxis xAxis = new XAxis(context, config, crosshair, verticalGrid);
+	private final Chart priceChart = new Chart(context, config, crosshair, xAxis);
 	private final StackPane stackPane = new StackPane(verticalGrid, splitPane, crosshair);
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
-	public ChartingView(ChartingContext context, ChartingConfig config, BarService barService) {
-		this.config = config;
-		this.context = context;
-		this.xAxis = XAxis.builder().config(config).context(context).crosshair(crosshair)
-				.verticalGrid(verticalGrid).build();
-		
+	public ChartingView(BarService barService) {
 		add(priceChart);
 		add(pricePlot = new PricePlot(barService));
 		
@@ -78,14 +75,16 @@ public class ChartingView extends BorderPane {
 	}
 	
 	public void add(Chart chart) {
-		chart.setXAxis(xAxis);
-		chart.setContext(context);
 		charts.add(chart);
 		splitPane.getItems().add(chart);
 	}
 	
 	public void add(Plot<?> plot) {
 		priceChart.add(plot);
+	}
+	
+	public void setScrip(Scrip scrip) {
+		context.getScripProperty().set(scrip);
 	}
 	
 	public void pan(PanRequestEvent event) {

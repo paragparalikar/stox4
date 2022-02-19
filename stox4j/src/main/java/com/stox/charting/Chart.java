@@ -1,8 +1,10 @@
 package com.stox.charting;
 
+import com.stox.charting.ChartingView.ChartingConfig;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
+import com.stox.charting.grid.Crosshair;
 import com.stox.charting.grid.HorizontalGrid;
 import com.stox.charting.handler.CompositeModeMouseHandler;
 import com.stox.charting.handler.pan.PanModeMouseHandler;
@@ -11,33 +13,34 @@ import com.stox.charting.plot.Plot;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Builder;
 
 public class Chart extends BorderPane {
-
-	@Getter @Setter private XAxis xAxis;
-	@Getter @Setter private ChartingContext context;
+	
+	private final XAxis xAxis;
+	private final YAxis yAxis;
+	private final Crosshair crosshair;
+	private final ChartingConfig config;
+	private final ChartingContext context;
 	private final HorizontalGrid horizontalGrid = new HorizontalGrid();
-	private final YAxis yAxis = new YAxis(horizontalGrid);
 	private final StackPane contentArea = new StackPane(horizontalGrid);
 	private final ObservableList<Plot<?>> plots = FXCollections.observableArrayList();
 	private final PanModeMouseHandler panModeMouseHandler = new PanModeMouseHandler();
 	private final ZoomModeMouseHandler zoomModeMouseHandler = new ZoomModeMouseHandler();
 	private final CompositeModeMouseHandler compositeModeMouseHandler = new CompositeModeMouseHandler(panModeMouseHandler, zoomModeMouseHandler);
 	
-	public Chart() {
+	@Builder
+	public Chart(ChartingContext context, ChartingConfig config, Crosshair crosshair, XAxis xAxis) {
+		this.xAxis = xAxis;
+		this.config = config;
+		this.context = context;
+		this.crosshair = crosshair;
+		this.yAxis = new YAxis(context, config, crosshair, horizontalGrid);
 		setRight(yAxis);
 		setCenter(contentArea);
 		compositeModeMouseHandler.attach(contentArea);
-		final Background background = new Background(new BackgroundFill(Color.TRANSPARENT, null, null));
-		setBackground(background);
-		contentArea.setBackground(background);
 	}
 	
 	public boolean hasSize() {
