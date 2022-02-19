@@ -2,14 +2,21 @@
 	-fx-font-size: 12px;
 }
 
-.x-axis, .x-axis .container, .x-axis .filler {
+.x-axis, .x-axis .container, .x-axis .filler, .x-axis .axis-info-label {
 	-fx-pref-height: 28px;
 	-fx-min-height: 28px;
 	-fx-max-height: 28px;
 	-fx-height: 28px;
 }
 
-.x-axis .filler, .y-axis, .y-axis .label {
+.x-axis .axis-info-label{
+	-fx-width: 100px;
+	-fx-min-width: 100px;
+	-fx-max-width: 100px;
+	-fx-pref-width: 100px;
+}
+
+.x-axis .filler, .y-axis, .y-axis .label, .y-axis .axis-info-label {
 	-fx-width: 64px;
 	-fx-min-width: 64px;
 	-fx-max-width: 64px;
@@ -30,4 +37,8 @@
 .crosshair {
 	-fx-stroke: #8A2BE2;
 	-fx-stroke-dash-array: 10 5 5 5;
+}
+.axis-info-label{
+	-fx-text-fill: white;
+	-fx-background-color: #8A2BE2;
 }

@@ -1,16 +1,20 @@
 package com.stox.charting.axis;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Locale;
 
 import org.ta4j.core.Bar;
+import org.ta4j.core.BarSeries;
 
 import com.stox.charting.ChartingView.ChartingConfig;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.grid.Crosshair;
 import com.stox.charting.grid.VerticalGrid;
 
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -27,21 +31,52 @@ public class XAxis extends StackPane {
 	private final ChartingConfig config;
 	private final ChartingContext context;
 	private final VerticalGrid verticalGrid;
+	private final Label label = new Label();
 	private final Pane container = new Pane();
 	private final Region filler = new Region();
 	private double unitWidth = 5, panWidth = 0;
 	private volatile ZonedDateTime lastTimestamp = null;
+	private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
 	
 	@Builder
 	public XAxis(ChartingContext context, ChartingConfig config, 
 			Crosshair crosshair, VerticalGrid verticalGrid) {
-		style();
 		this.config = config;
 		this.context = context;
 		this.crosshair = crosshair;
 		this.verticalGrid = verticalGrid;
-		getChildren().addAll(new HBox(container, filler));
+		getChildren().addAll(new HBox(container, filler), new Pane(label));
+		bind();
+		style();
+	}
+	
+	private void bind() {
 		context.getScripProperty().addListener((o,old,scrip) -> reset());
+		context.getBarSeriesProperty().addListener(this::onBarSeriesChanged);
+		crosshair.getVerticalLine().endXProperty().addListener(this::onCrosshairXChanged);
+	}
+	
+	private void onBarSeriesChanged(ObservableValue<? extends BarSeries> observable, BarSeries old, BarSeries barSeries) {
+		label.setVisible(null != barSeries && 0 < barSeries.getBarCount());
+	}
+	
+	private void onCrosshairXChanged(ObservableValue<? extends Number> observable, Number old, Number value) {
+		if(null != value) {
+			label.setText(computeLabelText(value.doubleValue()));
+			label.setLayoutX(value.doubleValue() - label.getWidth()/2);
+		}
+	}
+		
+	private String computeLabelText(double x) {
+		final BarSeries barSeries = context.getBarSeriesProperty().get();
+		if(null != barSeries && 0 < barSeries.getBarCount()) {
+			final int index = getIndex(x);
+			if(index > 0 && index < barSeries.getBarCount()) {
+				final ZonedDateTime timestamp = barSeries.getBar(index).getEndTime();
+				return dateTimeFormatter.format(timestamp);
+			}
+		}
+		return null;
 	}
 	
 	private void style() {
@@ -49,6 +84,7 @@ public class XAxis extends StackPane {
 		container.getStyleClass().add("container");
 		HBox.setHgrow(container, Priority.ALWAYS);
 		filler.getStyleClass().add("filler");
+		label.getStyleClass().add("axis-info-label");
 	}
 	
 	public double getX(final int index) {
