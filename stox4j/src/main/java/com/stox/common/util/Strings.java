@@ -32,6 +32,12 @@ public class Strings {
 		}
 	}
 	
+	public static String toString(double value) {
+		return Double.isInfinite(value) || Double.isNaN(value) ? null : 
+				String.format("%.2f", value);
+	}
+	
+	
 	public static String quote(String text) {
 		return "\"" + text + "\"";
 	}

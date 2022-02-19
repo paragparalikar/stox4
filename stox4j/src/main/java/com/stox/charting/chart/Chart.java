@@ -1,4 +1,4 @@
-package com.stox.charting;
+package com.stox.charting.chart;
 
 import com.stox.charting.ChartingView.ChartingConfig;
 import com.stox.charting.ChartingView.ChartingContext;
@@ -15,6 +15,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import lombok.Builder;
 
 public class Chart extends BorderPane {
@@ -24,8 +25,9 @@ public class Chart extends BorderPane {
 	private final Crosshair crosshair;
 	private final ChartingConfig config;
 	private final ChartingContext context;
+	private final VBox infoPane = new VBox();
 	private final HorizontalGrid horizontalGrid = new HorizontalGrid();
-	private final StackPane contentArea = new StackPane(horizontalGrid);
+	private final StackPane contentArea = new StackPane(horizontalGrid, infoPane);
 	private final ObservableList<Plot<?>> plots = FXCollections.observableArrayList();
 	private final PanModeMouseHandler panModeMouseHandler = new PanModeMouseHandler();
 	private final ZoomModeMouseHandler zoomModeMouseHandler = new ZoomModeMouseHandler();
@@ -41,6 +43,11 @@ public class Chart extends BorderPane {
 		setRight(yAxis);
 		setCenter(contentArea);
 		compositeModeMouseHandler.attach(contentArea);
+		style();
+	}
+	
+	private void style() {
+		infoPane.getStyleClass().add("chart-info-pane");
 	}
 	
 	public boolean hasSize() {
@@ -61,6 +68,11 @@ public class Chart extends BorderPane {
 		plot.setContext(context);
 		plots.add(plot);
 		contentArea.getChildren().add(plot);
+		final PlotInfo<?> plotInfo = plot.getInfo();
+		if(null != plotInfo) {
+			infoPane.getChildren().add(plotInfo.getNode());
+		}
+		infoPane.toFront();
 	}
 	
 }

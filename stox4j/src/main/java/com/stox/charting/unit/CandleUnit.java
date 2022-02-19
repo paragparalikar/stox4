@@ -5,17 +5,15 @@ import org.ta4j.core.Bar;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
+import com.stox.common.util.Colors;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import lombok.Setter;
 
 public class CandleUnit extends Group implements Unit<Bar> {
-	private static final Color UP = Color.rgb(38, 166, 154);
-	private static final Color DOWN = Color.rgb(239, 83, 80);
 
 	@Setter private XAxis xAxis;
 	@Setter private YAxis yAxis;
@@ -43,7 +41,7 @@ public class CandleUnit extends Group implements Unit<Bar> {
 		body.setHeight(lowerY - upperY);
 		line.setStartY(yAxis.getY(bar.getHighPrice().doubleValue()));
 		line.setEndY(yAxis.getY(bar.getLowPrice().doubleValue()));
-		body.setFill(bar.getOpenPrice().isLessThan(bar.getClosePrice()) ? UP : DOWN);
+		body.setFill(bar.getOpenPrice().isLessThan(bar.getClosePrice()) ? Colors.UP : Colors.DOWN);
 	}
 	
 	@Override

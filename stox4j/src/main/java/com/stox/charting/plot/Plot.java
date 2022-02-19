@@ -9,6 +9,7 @@ import org.ta4j.core.Indicator;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
+import com.stox.charting.chart.PlotInfo;
 import com.stox.charting.unit.Unit;
 import com.stox.common.util.MathUtil;
 
@@ -33,6 +34,7 @@ public abstract class Plot<T> extends Group {
 	}
 	
 	public abstract void reload();
+	public abstract PlotInfo<T> getInfo();
 	protected abstract double resolveLowValue(T model);
 	protected abstract double resolveHighValue(T model);
 	

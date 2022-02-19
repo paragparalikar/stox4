@@ -1,9 +1,11 @@
 package com.stox.charting;
 
+import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeries;
 
 import com.stox.charting.axis.XAxis;
+import com.stox.charting.chart.Chart;
 import com.stox.charting.grid.Crosshair;
 import com.stox.charting.grid.VerticalGrid;
 import com.stox.charting.handler.pan.PanRequestEvent;
@@ -44,6 +46,10 @@ public class ChartingView extends BorderPane {
 	public static class ChartingContext {
 		private final ObjectProperty<Scrip> scripProperty = new SimpleObjectProperty<>();
 		private final ObjectProperty<BarSeries> barSeriesProperty = new SimpleObjectProperty<>(new BaseBarSeries());
+		public Bar getBar(int index) {
+			final BarSeries barSeries = barSeriesProperty.get();
+			return null != barSeries && 0 < index && index < barSeries.getBarCount() ? barSeries.getBar(index) : null;
+		}
 	}
 	
 	private final PricePlot pricePlot;
@@ -60,7 +66,7 @@ public class ChartingView extends BorderPane {
 	
 	public ChartingView(BarService barService) {
 		add(priceChart);
-		add(pricePlot = new PricePlot(config, barService));
+		add(pricePlot = new PricePlot(config, crosshair, barService));
 		
 		setCenter(stackPane);
 		setBottom(new VBox(xAxis, toolBar));
