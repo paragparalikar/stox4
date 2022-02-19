@@ -6,7 +6,6 @@ import com.stox.charting.grid.Crosshair;
 import com.stox.charting.grid.HorizontalGrid;
 import com.stox.common.util.Strings;
 
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -42,14 +41,14 @@ public class YAxis extends StackPane {
 		this.horizontalGrid = horizontalGrid;
 		getChildren().addAll(container, new Pane(label));
 		label.visibleProperty().bind(crosshair.visibleProperty());
-		crosshair.getHorizontalLine().endYProperty().addListener(this::onCrosshairYChanged);
+		context.getBarSeriesProperty().addListener((o,old,value) -> updateCrosshairLabel());
+		crosshair.getHorizontalLine().endYProperty().addListener((o,old,value) -> updateCrosshairLabel());
 	}
 	
-	private void onCrosshairYChanged(ObservableValue<? extends Number> observable, Number old, Number value) {
-		if(null != value) {
-			label.setText(Strings.toString(getValue(value.doubleValue())));
-			label.setLayoutY(value.doubleValue() - label.getHeight()/2);
-		}
+	private void updateCrosshairLabel() {
+		final double value = crosshair.getHorizontalLine().getEndY();
+		label.setText(Strings.toString(getValue(value)));
+		label.setLayoutY(value - label.getHeight()/2);
 	}
 	
 	private void style() {
