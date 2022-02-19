@@ -66,9 +66,9 @@ public abstract class Plot<T> extends Group {
 	
 	protected void layoutChartChildren(int startIndex, int endIndex) {
 		final int unitLimit = Math.min(units.size(), lastUnitIndex);
-		for(int index = startIndex, unitIndex = 0; 
-				index < endIndex || unitIndex < unitLimit; 
-				index++, unitIndex++) {
+		for(int index = Math.max(endIndex, unitLimit), unitIndex = 0; 
+				index >= startIndex && unitIndex < unitLimit; 
+				index--, unitIndex++) {
 			final Unit<T> unit = units.get(unitIndex);
 			if(index < endIndex) {
 				unit.setVisible(true);
