@@ -21,6 +21,9 @@
 .button-bar {
 	-fx-background-color: transparent;
 }
+.button-bar HBox{
+	-fx-spacing: 5px;
+}
 .button-bar .button{
 	-fx-background-color: #f0f0f0;
 	-fx-font-size: 14px;

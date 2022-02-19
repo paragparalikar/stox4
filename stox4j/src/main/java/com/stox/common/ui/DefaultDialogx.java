@@ -1,5 +1,8 @@
 package com.stox.common.ui;
 
+import java.util.Optional;
+
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -13,9 +16,21 @@ public class DefaultDialogx extends Dialogx {
 		return this;
 	}
 	
+	public DefaultDialogx withContent(Node node) {
+		setContent(node);
+		return this;
+	}
+	
+	public DefaultDialogx withButton(ButtonType buttonType) {
+		return withButton(buttonType, null);
+	}
+	
 	public DefaultDialogx withButton(ButtonType buttonType, Runnable runnable) {
 		final Button button = getButtonBar().create(buttonType);
-		if(null != runnable) button.setOnAction(event -> runnable.run());
+		button.setOnAction(event -> {
+			Optional.ofNullable(runnable).ifPresent(Runnable::run);
+			hide();
+		});
 		return this;
 	}
 

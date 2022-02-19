@@ -11,7 +11,7 @@ import lombok.Getter;
 public class Dialogx extends StackPane {
 
 	private final Pane glass = new Pane();
-	private final Pane container = new Pane();
+	private final StackPane container = new StackPane();
 	@Getter private final TitleBar titleBar = new TitleBar();
 	@Getter private final ButtonBar buttonBar = new ButtonBar();
 	private final BorderPane root = new BorderPane(container, titleBar, null, buttonBar, null);

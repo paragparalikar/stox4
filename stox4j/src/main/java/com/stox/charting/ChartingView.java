@@ -86,6 +86,8 @@ public class ChartingView extends BorderPane {
 	
 	public void add(Plot<?> plot) {
 		priceChart.add(plot);
+		plot.reload();
+		priceChart.redraw();
 	}
 	
 	public void setScrip(Scrip scrip) {
