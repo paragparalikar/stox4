@@ -27,7 +27,7 @@
 .grid-line{
 	-fx-stroke: #EFEFEF;
 }
-.crosshair-line{
+.crosshair {
 	-fx-stroke: #8A2BE2;
 	-fx-stroke-dash-array: 10 5 5 5;
 }

@@ -19,8 +19,8 @@ public class Crosshair extends Group {
 		setAutoSizeChildren(false);
 		verticalLine.setManaged(false);
 		horizontalLine.setManaged(false);
-		verticalLine.getStyleClass().add("crosshair-line");
-		horizontalLine.getStyleClass().add("crosshair-line");
+		verticalLine.getStyleClass().addAll("crosshair", "vertical");
+		horizontalLine.getStyleClass().addAll("crosshair", "horizontal");
 		getChildren().addAll(verticalLine, horizontalLine);
 		region.addEventHandler(MouseEvent.MOUSE_MOVED, this::onMouseMoved);
 		region.addEventHandler(MouseEvent.MOUSE_DRAGGED, this::onMouseMoved);
