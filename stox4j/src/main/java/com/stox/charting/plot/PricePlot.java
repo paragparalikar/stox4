@@ -7,9 +7,10 @@ import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeries;
 
-import com.stox.charting.ChartingContext;
+import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.unit.CandleUnit;
+import com.stox.charting.unit.Unit;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.Scrip;
 import com.stox.indicator.BarIndicator;
@@ -77,8 +78,14 @@ public class PricePlot extends Plot<Bar> {
 
 	@Override
 	public void layoutChartChildren() {
+		getXAxis().resetLayout();
 		super.layoutChartChildren();
-		getXAxis().layoutChartChildren();
+	}
+	
+	@Override
+	protected void layoutUnit(int index, Unit<Bar> unit, Bar model) {
+		super.layoutUnit(index, unit, model);
+		getXAxis().layoutUnit(index, model);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.stox.charting;
 
+import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
 import com.stox.charting.grid.HorizontalGrid;

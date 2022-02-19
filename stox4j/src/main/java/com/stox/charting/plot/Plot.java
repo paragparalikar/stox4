@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 import org.ta4j.core.Indicator;
 
-import com.stox.charting.ChartingContext;
+import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
 import com.stox.charting.unit.Unit;
@@ -72,12 +72,16 @@ public abstract class Plot<T> extends Group {
 			final Unit<T> unit = units.get(unitIndex);
 			if(index < endIndex) {
 				unit.setVisible(true);
-				unit.layoutChildren(index, indicator.getValue(index));
+				layoutUnit(index, unit, indicator.getValue(index));
 			} else {
 				unit.setVisible(false);
 			}
 		}
 		lastUnitIndex = endIndex - startIndex;
+	}
+	
+	protected void layoutUnit(int index, Unit<T> unit, T model) {
+		unit.layoutChildren(index, model);
 	}
 	
 	public void layoutChartChildren() {

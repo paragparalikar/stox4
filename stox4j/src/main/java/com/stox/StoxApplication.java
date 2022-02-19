@@ -1,7 +1,8 @@
 package com.stox;
 
-import com.stox.charting.ChartingContext;
 import com.stox.charting.ChartingView;
+import com.stox.charting.ChartingView.ChartingConfig;
+import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.common.bar.BarRepository;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.ScripRepository;
@@ -29,7 +30,8 @@ public class StoxApplication extends Application {
 	private final ScripRepository scripRepository = new ScripRepository();
 	private final ScripService scripService = new ScripService(scripRepository);
 	private final ChartingContext context = new ChartingContext();
-	private final ChartingView chartingView = new ChartingView(context, barService);
+	private final ChartingConfig config = new ChartingConfig();
+	private final ChartingView chartingView = new ChartingView(context, config, barService);
 	private final ExplorerView explorerView = new ExplorerView(scripService, context);
 	private final TabPane tabPane = new TabPane(new Tab("Explorer", explorerView));
 	private final SplitPane splitPane = new SplitPane(tabPane, chartingView);
@@ -38,6 +40,7 @@ public class StoxApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		tabPane.setSide(Side.BOTTOM);
+		scene.getStylesheets().addAll("style/css/charting.css");
 		
 		primaryStage.setScene(scene);
 		primaryStage.setMaximized(true);

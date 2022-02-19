@@ -1,6 +1,6 @@
 package com.stox.charting.unit;
 
-import com.stox.charting.ChartingContext;
+import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
 

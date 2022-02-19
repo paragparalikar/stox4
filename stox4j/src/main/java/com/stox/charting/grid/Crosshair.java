@@ -24,7 +24,6 @@ public class Crosshair extends Group {
 		verticalLine.setManaged(false);
 		horizontalLine.setManaged(false);
 		getChildren().addAll(verticalLine, horizontalLine);
-		
 
 		final Color color = Color.BLUEVIOLET;
 		final List<Double> offsets = Arrays.asList(10d, 5d, 5d, 5d);

@@ -1,6 +1,6 @@
 package com.stox.explorer;
 
-import com.stox.charting.ChartingContext;
+import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.scrip.ScripService;
 

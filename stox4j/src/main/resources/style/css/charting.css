@@ -1,0 +1,19 @@
+.x-axis, .x-axis .container, .x-axis .filler {
+	-fx-pref-height: 28px;
+	-fx-min-height: 28px;
+	-fx-max-height: 28px;
+	-fx-height: 28px;
+	-fx-background-color: transparent;
+}
+
+.x-axis .filler {
+	-fx-width: 64px;
+	-fx-min-width: 64px;
+	-fx-max-width: 64px;
+	-fx-pref-width: 64px;
+}
+
+.x-axis .label {
+	-fx-font-size: 12px;
+	-fx-alignment: center;
+}

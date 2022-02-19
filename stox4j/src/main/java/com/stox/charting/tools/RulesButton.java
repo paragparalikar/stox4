@@ -2,8 +2,8 @@ package com.stox.charting.tools;
 
 import org.ta4j.core.Rule;
 
-import com.stox.charting.ChartingContext;
 import com.stox.charting.ChartingView;
+import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.plot.RulePlot;
 import com.stox.rule.TestRule;
 
