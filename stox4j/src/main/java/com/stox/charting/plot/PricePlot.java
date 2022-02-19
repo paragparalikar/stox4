@@ -7,6 +7,7 @@ import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeries;
 
+import com.stox.charting.ChartingView.ChartingConfig;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.unit.CandleUnit;
@@ -16,13 +17,14 @@ import com.stox.common.scrip.Scrip;
 import com.stox.indicator.BarIndicator;
 
 public class PricePlot extends Plot<Bar> {
-	private static final int FETCH_SIZE = 200;
 
+	private final ChartingConfig config;
 	private final BarService barService;
 	private volatile boolean fullyLoaded, loading;
 	
-	public PricePlot(BarService barService) {
+	public PricePlot(ChartingConfig config, BarService barService) {
 		super(CandleUnit::new);
+		this.config = config;
 		this.barService = barService;
 	}
 
@@ -62,10 +64,10 @@ public class PricePlot extends Plot<Bar> {
 		final BarSeries barSeries = getContext().getBarSeriesProperty().get(); 
 		if(null == barSeries || 0 == barSeries.getBarCount()) {
 			to = ZonedDateTime.now().plusDays(1);
-			count = Math.max(FETCH_SIZE, xAxis.getEndIndex() - xAxis.getStartIndex());
+			count = Math.max(config.getFetchSize(), xAxis.getEndIndex() - xAxis.getStartIndex());
 		} else {
 			to = barSeries.getLastBar().getEndTime();
-			count = Math.max(FETCH_SIZE, xAxis.getEndIndex() - barSeries.getBarCount());
+			count = Math.max(config.getFetchSize(), xAxis.getEndIndex() - barSeries.getBarCount());
 		}
 		final List<Bar> bars = barService.find(scrip.getIsin(), count, to);
 		fullyLoaded = bars.isEmpty(); //bars.size() < count;

@@ -15,9 +15,7 @@ import com.stox.common.bar.BarService;
 import com.stox.common.scrip.Scrip;
 
 import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,10 +33,11 @@ public class ChartingView extends BorderPane {
 	
 	@Getter
 	public static class ChartingConfig {
-		private final DoubleProperty maxUnitWidthProperty = new SimpleDoubleProperty(50);
-		private final DoubleProperty minUnitWidthProperty = new SimpleDoubleProperty(1);
-		private final DoubleProperty paddingTopProperty = new SimpleDoubleProperty(10);
-		private final DoubleProperty paddingBottomProperty = new SimpleDoubleProperty(8);
+		private int fetchSize = 200;
+		private double maxUnitWidthProperty = 50;
+		private double minUnitWidthProperty = 1;
+		private double paddingTopProperty = 10;
+		private double paddingBottomProperty = 8;
 	}
 	
 	@Getter
@@ -61,7 +60,7 @@ public class ChartingView extends BorderPane {
 	
 	public ChartingView(BarService barService) {
 		add(priceChart);
-		add(pricePlot = new PricePlot(barService));
+		add(pricePlot = new PricePlot(config, barService));
 		
 		setCenter(stackPane);
 		setBottom(new VBox(xAxis, toolBar));

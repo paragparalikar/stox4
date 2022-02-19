@@ -77,8 +77,8 @@ public class XAxis extends StackPane {
 	}
 	
 	public void zoom(final double x, final int percentage) {
-		final double maxUnitWidth = config.getMaxUnitWidthProperty().get();
-		final double minUnitWidth = config.getMinUnitWidthProperty().get();
+		final double maxUnitWidth = config.getMaxUnitWidthProperty();
+		final double minUnitWidth = config.getMinUnitWidthProperty();
 		final double newUnitWidth = unitWidth * (100 + percentage) / 100;
 		if (newUnitWidth >= minUnitWidth && newUnitWidth <= maxUnitWidth && newUnitWidth != unitWidth) {
 			final double position = (x - panWidth) / unitWidth;
