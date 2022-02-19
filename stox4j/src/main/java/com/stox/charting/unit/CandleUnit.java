@@ -25,6 +25,8 @@ public class CandleUnit extends Group implements Unit<Bar> {
 	
 	public CandleUnit() {
 		getChildren().addAll(line, body);
+		line.getStyleClass().addAll("candle","wick");
+		line.getStyleClass().addAll("candle","body");
 		line.strokeProperty().bindBidirectional(body.fillProperty());
 		line.endXProperty().bindBidirectional(line.startXProperty());
 		line.startXProperty().bind(body.xProperty().add(body.widthProperty().divide(2d)));
@@ -41,7 +43,6 @@ public class CandleUnit extends Group implements Unit<Bar> {
 		body.setHeight(lowerY - upperY);
 		line.setStartY(yAxis.getY(bar.getHighPrice().doubleValue()));
 		line.setEndY(yAxis.getY(bar.getLowPrice().doubleValue()));
-		
 		body.setFill(bar.getOpenPrice().isLessThan(bar.getClosePrice()) ? UP : DOWN);
 	}
 	

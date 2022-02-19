@@ -11,7 +11,6 @@ import javafx.scene.layout.StackPane;
 import lombok.Getter;
 import lombok.Setter;
 
-@SuppressWarnings("unused")
 public class YAxis extends StackPane {
 	private static final double[] TICK_UNIT_DEFAULTS = { 1.0E-10d, 2.5E-10d, 5.0E-10d, 1.0E-9d, 2.5E-9d, 5.0E-9d,
 			1.0E-8d, 2.5E-8d, 5.0E-8d, 1.0E-7d, 2.5E-7d, 5.0E-7d, 1.0E-6d, 2.5E-6d, 5.0E-6d, 1.0E-5d, 2.5E-5d, 5.0E-5d,
