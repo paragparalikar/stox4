@@ -44,7 +44,7 @@
 }
 .chart-info-pane{
 	-fx-alignment: top-left;
-	-fx-padding: 20px 20px;
+	-fx-padding: 10px 10px;
 }
 .plot-info-pane{
 	-fx-spacing: 20px;
@@ -52,6 +52,7 @@
 }
 .plot-info-values{
 	-fx-spacing: 10px;
+	-fx-fill-height: true;
 	-fx-alignment: center-left;
 	-fx-text-alignment: center-left;
 }

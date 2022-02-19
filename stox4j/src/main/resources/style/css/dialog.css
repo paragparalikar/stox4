@@ -1,0 +1,36 @@
+.glass{
+	-fx-background-color: gray;
+	-fx-opacity: 0.4;
+}
+.dialog-root{
+	-fx-opacity: 1;
+	-fx-background-color: white;
+	-fx-pref-height: 30em;
+	-fx-pref-width: 60em;
+	-fx-padding: 5px;
+	-fx-effect: dropshadow(three-pass-box, rgba(88,88,88,0.2), 10, 0, 10, 10);
+}
+.title-bar{
+	-fx-pref-height: 3em;
+	-fx-background-color: #d0d0d0;
+}
+.title-label {
+	-fx-font-size: 14px;
+	-fx-padding: 0 0 0 5px;
+}
+.button-bar {
+	-fx-background-color: transparent;
+}
+.button-bar .button{
+	-fx-background-color: #f0f0f0;
+	-fx-font-size: 14px;
+	-fx-border-width: 0;
+	-fx-pref-width: 6em;
+	-fx-pref-height: 3em;
+}
+.button-bar .button:hover {
+	-fx-background-color: #d0d0d0;
+}
+.button-bar .button:pressed, .button-bar .button:focused{
+	-fx-background-color: #b0b0b0;
+}

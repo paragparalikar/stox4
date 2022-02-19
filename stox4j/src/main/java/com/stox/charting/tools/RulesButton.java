@@ -5,6 +5,7 @@ import org.ta4j.core.Rule;
 import com.stox.charting.ChartingView;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.plot.RulePlot;
+import com.stox.common.ui.DefaultDialogx;
 import com.stox.rule.TestRule;
 
 import javafx.collections.FXCollections;
@@ -39,7 +40,11 @@ public class RulesButton extends Button implements EventHandler<ActionEvent> {
 
 	@Override
 	public void handle(ActionEvent event) {
-		
+		final DefaultDialogx dialog = new DefaultDialogx();
+		dialog.withTitle("Rules")
+			.withButton(ButtonType.CANCEL, dialog::hide)
+			.show(this);
+			
 	}
 	
 	private void onAction(ButtonType buttonType) {

@@ -1,8 +1,6 @@
 package com.stox;
 
 import com.stox.charting.ChartingView;
-import com.stox.charting.ChartingView.ChartingConfig;
-import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.common.bar.BarRepository;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.ScripRepository;
@@ -16,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -33,12 +32,13 @@ public class StoxApplication extends Application {
 	private final ExplorerView explorerView = new ExplorerView(scripService, chartingView);
 	private final TabPane tabPane = new TabPane(new Tab("Explorer", explorerView));
 	private final SplitPane splitPane = new SplitPane(tabPane, chartingView);
-	private final Scene scene = new Scene(splitPane);
+	private final StackPane root = new StackPane(splitPane);
+	private final Scene scene = new Scene(root);
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		tabPane.setSide(Side.BOTTOM);
-		scene.getStylesheets().addAll("style/css/charting.css");
+		scene.getStylesheets().addAll("style/css/charting.css", "style/css/dialog.css");
 		
 		primaryStage.setScene(scene);
 		primaryStage.setMaximized(true);
