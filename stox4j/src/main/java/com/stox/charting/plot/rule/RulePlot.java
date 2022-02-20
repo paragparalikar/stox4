@@ -4,26 +4,26 @@ import org.ta4j.core.BarSeries;
 import org.ta4j.core.indicators.helpers.ConstantIndicator;
 
 import com.stox.charting.plot.Plot;
-import com.stox.charting.plot.PlotBuilder;
+import com.stox.charting.plot.PlotFacade;
 import com.stox.charting.plot.PlotInfo;
 import com.stox.charting.unit.BooleanUnit;
 
 public class RulePlot extends Plot<Boolean> {
 
-	private final PlotBuilder<Boolean> ruleBuilder;
+	private final PlotFacade<Boolean> facade;
 	private final RulePlotInfo plotInfo = new RulePlotInfo(this);
 	
-	public RulePlot(PlotBuilder<Boolean> ruleBuilder) {
+	public RulePlot(PlotFacade<Boolean> facade) {
 		super(BooleanUnit::new);
-		this.ruleBuilder = ruleBuilder;
+		this.facade = facade;
 	}
 
 	@Override
 	public void reload() {
 		final BarSeries barSeries = getContext().getBarSeriesProperty().get();
 		if(null != barSeries) {
-			plotInfo.setName(ruleBuilder.getName());
-			setIndicator(ruleBuilder.build(barSeries));
+			plotInfo.setName(facade.toString());
+			setIndicator(facade.createIndicator(barSeries));
 		} else {
 			plotInfo.setName(null);
 			setIndicator(new ConstantIndicator<>(null, false));

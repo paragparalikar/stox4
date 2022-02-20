@@ -1,6 +1,7 @@
 package com.stox.charting.plot.rule;
 
 import com.stox.charting.plot.PlotInfo;
+import com.stox.common.ui.Icon;
 
 import javafx.scene.control.Label;
 
@@ -13,7 +14,7 @@ public class RulePlotInfo extends PlotInfo<Boolean> {
 		nameLabel.getStyleClass().add("plot-name");
 		getStyleClass().add("plot-info-pane");
 		getChildren().addAll(nameLabel, valueLabel);
-		
+		createButton(Icon.TRASH, event -> plot.getChart().removePlot(plot));
 	}
 	
 	public void setName(String value) {
