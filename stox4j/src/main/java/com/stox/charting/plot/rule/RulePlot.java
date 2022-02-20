@@ -11,7 +11,7 @@ import com.stox.charting.unit.BooleanUnit;
 public class RulePlot extends Plot<Boolean> {
 
 	private final PlotBuilder<Boolean> ruleBuilder;
-	private final RulePlotInfo plotInfo = new RulePlotInfo();
+	private final RulePlotInfo plotInfo = new RulePlotInfo(this);
 	
 	public RulePlot(PlotBuilder<Boolean> ruleBuilder) {
 		super(BooleanUnit::new);

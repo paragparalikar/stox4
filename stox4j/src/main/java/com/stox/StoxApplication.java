@@ -5,6 +5,7 @@ import com.stox.common.bar.BarRepository;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.ScripRepository;
 import com.stox.common.scrip.ScripService;
+import com.stox.common.ui.Icon;
 import com.stox.explorer.ExplorerView;
 import com.sun.javafx.application.LauncherImpl;
 
@@ -15,6 +16,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -36,9 +38,15 @@ public class StoxApplication extends Application {
 	private final Scene scene = new Scene(root);
 	
 	@Override
+	public void init() throws Exception {
+		super.init();
+		Font.loadFont(Icon.class.getClassLoader().getResource(Icon.PATH).toExternalForm(), 10);
+	}
+	
+	@Override
 	public void start(Stage primaryStage) throws Exception {
 		tabPane.setSide(Side.BOTTOM);
-		scene.getStylesheets().addAll("style/css/charting.css", "style/css/dialog.css");
+		scene.getStylesheets().addAll("style/css/common.css", "style/css/charting.css", "style/css/dialog.css");
 		
 		primaryStage.setScene(scene);
 		primaryStage.setMaximized(true);

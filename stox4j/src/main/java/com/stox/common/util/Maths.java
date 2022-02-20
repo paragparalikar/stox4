@@ -1,6 +1,6 @@
 package com.stox.common.util;
 
-public class MathUtil {
+public class Maths {
 
 	public static double praportion(final double mina, final double a, final double maxa, final double minb,
 			final double maxb) {

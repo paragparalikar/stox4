@@ -17,7 +17,7 @@ import org.ta4j.core.Bar;
 import org.ta4j.core.BaseBar;
 import org.ta4j.core.num.DoubleNum;
 
-import com.stox.common.util.MathUtil;
+import com.stox.common.util.Maths;
 
 import lombok.SneakyThrows;
 
@@ -49,8 +49,8 @@ public class BarRepository {
 				} else {
 					final long initialDate = file.readLong();
 					final long to = offset.toInstant().toEpochMilli();
-					final long maxLocation = MathUtil.clip(Long.BYTES, getLocation(initialDate, to) - BYTES, file.length() - BYTES);
-					final long minLocation = MathUtil.clip(Long.BYTES, maxLocation - count * BYTES, maxLocation);
+					final long maxLocation = Maths.clip(Long.BYTES, getLocation(initialDate, to) - BYTES, file.length() - BYTES);
+					final long minLocation = Maths.clip(Long.BYTES, maxLocation - count * BYTES, maxLocation);
 					for (long location = maxLocation; location > minLocation; location -= BYTES) {
 						file.seek(location);
 						final Bar bar = readBar(file, isin, getDate(initialDate, location));

@@ -4,9 +4,6 @@
 .charting-view .split-pane {
 	-fx-background-color: transparent;
 }
-.label{
-	-fx-font-size: 12px;
-}
 
 .x-axis, .x-axis .container, .x-axis .filler, .x-axis .axis-info-label, .y-axis .axis-info-label {
 	-fx-pref-height: 28px;

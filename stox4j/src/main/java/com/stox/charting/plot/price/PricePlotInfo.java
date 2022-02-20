@@ -7,6 +7,7 @@ import com.stox.common.scrip.Scrip;
 import com.stox.common.util.Colors;
 import com.stox.common.util.Strings;
 
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -23,7 +24,8 @@ public class PricePlotInfo extends PlotInfo<Bar>{
 			new HBox(new Label("L "), lowLabel),
 			new HBox(new Label("C "), closeLabel));
 	
-	public PricePlotInfo() {
+	public PricePlotInfo(Node node) {
+		super(node);
 		getStyleClass().add("plot-info-pane");
 		nameLabel.getStyleClass().add("scrip-name");
 		priceInfoContainer.getStyleClass().add("plot-info-values");

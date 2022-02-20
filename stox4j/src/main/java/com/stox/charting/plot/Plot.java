@@ -1,6 +1,7 @@
 package com.stox.charting.plot;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -11,7 +12,7 @@ import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
 import com.stox.charting.crosshair.Crosshair;
 import com.stox.charting.unit.Unit;
-import com.stox.common.util.MathUtil;
+import com.stox.common.util.Maths;
 
 import javafx.scene.Group;
 import lombok.Getter;
@@ -25,7 +26,6 @@ public abstract class Plot<T> extends Group {
 	@Getter private ChartingContext context;
 	private final Supplier<Unit<T>> unitSupplier;
 	private final List<Unit<T>> units = new ArrayList<>();
-	private int lastUnitIndex = Integer.MAX_VALUE;
 	
 	public Plot(Supplier<Unit<T>> unitSupplier) {
 		this.unitSupplier = unitSupplier;
@@ -72,28 +72,28 @@ public abstract class Plot<T> extends Group {
 			units.add(unit);
 			getChildren().add(unit.asNode());
 		}
+	}
+	
+	protected void removeUnits(int startIndex, int endIndex) {
+		final int visibleBarCount = endIndex - startIndex;
 		if(visibleBarCount < units.size()) {
-			final List<Unit<T>> subList = units.subList(visibleBarCount, units.size());
-			subList.forEach(unit -> getChildren().remove(unit.asNode()));
-			subList.clear();
-			
+			final Iterator<Unit<T>> iterator = units.subList(visibleBarCount, units.size()).iterator();
+			while(iterator.hasNext()) {
+				final Unit<T> unit = iterator.next();
+				getChildren().remove(unit.asNode());
+				iterator.remove();
+			}
 		}
 	}
 	
-	protected void layoutChartChildren(int startIndex, int endIndex) {
-		final int unitLimit = Math.min(units.size(), lastUnitIndex + 1);
-		for(int index = Math.max(endIndex, unitLimit), unitIndex = 0; 
-				index >= startIndex && unitIndex < unitLimit; 
-				index--, unitIndex++) {
-			final Unit<T> unit = units.get(unitIndex);
-			if(index < endIndex) {
-				unit.setVisible(true);
+	protected void layoutChartChildren(final int startIndex, final int endIndex) {
+		for(int index = endIndex; index > startIndex; index--) {
+			final int unitIndex = endIndex - index;
+			if(0 <= unitIndex && unitIndex < units.size()) {
+				final Unit<T> unit = units.get(unitIndex);
 				layoutUnit(index, unit, indicator.getValue(index));
-			} else {
-				unit.setVisible(false);
 			}
 		}
-		lastUnitIndex = endIndex - startIndex;
 	}
 	
 	protected void layoutUnit(int index, Unit<T> unit, T model) {
@@ -101,11 +101,11 @@ public abstract class Plot<T> extends Group {
 	}
 	
 	public void layoutChartChildren() {
-		final int barCount = context.getBarSeriesProperty().get().getBarCount();
-		final int startIndex = MathUtil.clip(0, xAxis.getStartIndex(), barCount);
-		final int endIndex = MathUtil.clip(0, xAxis.getEndIndex(), barCount);
+		final int startIndex = Maths.clip(0, xAxis.getStartIndex(), context.getBarCount() - 1);
+		final int endIndex = Maths.clip(0, xAxis.getEndIndex(), context.getBarCount() - 1);
 		updateYAxis(startIndex, endIndex);
 		createUnits(startIndex, endIndex);
+		removeUnits(startIndex, endIndex);
 		layoutChartChildren(startIndex, endIndex);
 	}
 	

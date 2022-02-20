@@ -48,6 +48,10 @@ public class ChartingView extends BorderPane {
 			final BarSeries barSeries = barSeriesProperty.get();
 			return null != barSeries && 0 <= index && index < barSeries.getBarCount() ? barSeries.getBar(index) : null;
 		}
+		public int getBarCount() {
+			final BarSeries barSeries = barSeriesProperty.get();
+			return null == barSeries ? 0 : barSeries.getBarCount();
+		}
 	}
 	
 	private final PricePlot pricePlot;

@@ -1,0 +1,11 @@
+.icon{
+	-fx-font-family: 'FontAwesome';
+	-fx-padding: 0;
+	-fx-pref-width: 25px;
+	-fx-pref-height: 25px;
+	-fx-alignment: center;
+	-fx-content-display: center;
+}
+.label{
+	-fx-font-size: 12px;
+}

@@ -24,7 +24,7 @@ public class PricePlot extends Plot<Bar> {
 	private final ChartingConfig config;
 	private final BarService barService;
 	private volatile boolean fullyLoaded, loading;
-	private final PricePlotInfo infoPane = new PricePlotInfo();
+	private final PricePlotInfo infoPane = new PricePlotInfo(this);
 	
 	public PricePlot(ChartingConfig config, Crosshair crosshair, BarService barService) {
 		super(CandleUnit::new);
