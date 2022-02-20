@@ -41,12 +41,16 @@
 	-fx-stroke: #EFEFEF;
 }
 .crosshair {
-	-fx-stroke: #8A2BE2;
-	-fx-stroke-dash-array: 10 5 5 5;
+	-fx-stroke: #888888;
+	-fx-stroke-dash-array: 5 5;
 }
 .axis-info-label{
 	-fx-text-fill: white;
-	-fx-background-color: #8A2BE2;
+	-fx-background-color: #333333;
+	-fx-height: 14px;
+	-fx-pref-height: 14px;
+	-fx-min-height: 14px;
+	-fx-max-height: 14px;
 }
 .chart-info-pane{
 	-fx-alignment: top-left;

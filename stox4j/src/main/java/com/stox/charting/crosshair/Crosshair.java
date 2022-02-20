@@ -1,4 +1,4 @@
-package com.stox.charting.grid;
+package com.stox.charting.crosshair;
 
 import javafx.scene.Group;
 import javafx.scene.input.MouseEvent;

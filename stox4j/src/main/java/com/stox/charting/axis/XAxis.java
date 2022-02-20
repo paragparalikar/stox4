@@ -9,7 +9,7 @@ import org.ta4j.core.Bar;
 
 import com.stox.charting.ChartingView.ChartingConfig;
 import com.stox.charting.ChartingView.ChartingContext;
-import com.stox.charting.grid.Crosshair;
+import com.stox.charting.crosshair.Crosshair;
 import com.stox.charting.grid.VerticalGrid;
 
 import javafx.scene.control.Label;

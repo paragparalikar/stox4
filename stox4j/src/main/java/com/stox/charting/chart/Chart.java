@@ -4,7 +4,7 @@ import com.stox.charting.ChartingView.ChartingConfig;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
-import com.stox.charting.grid.Crosshair;
+import com.stox.charting.crosshair.Crosshair;
 import com.stox.charting.grid.HorizontalGrid;
 import com.stox.charting.handler.CompositeModeMouseHandler;
 import com.stox.charting.handler.pan.PanModeMouseHandler;

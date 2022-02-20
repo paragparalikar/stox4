@@ -9,7 +9,7 @@ import org.ta4j.core.Indicator;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
-import com.stox.charting.grid.Crosshair;
+import com.stox.charting.crosshair.Crosshair;
 import com.stox.charting.unit.Unit;
 import com.stox.common.util.MathUtil;
 
@@ -79,7 +79,7 @@ public abstract class Plot<T> extends Group {
 	}
 	
 	protected void layoutChartChildren(int startIndex, int endIndex) {
-		final int unitLimit = Math.min(units.size(), lastUnitIndex);
+		final int unitLimit = Math.min(units.size(), lastUnitIndex + 1);
 		for(int index = Math.max(endIndex, unitLimit), unitIndex = 0; 
 				index >= startIndex && unitIndex < unitLimit; 
 				index--, unitIndex++) {

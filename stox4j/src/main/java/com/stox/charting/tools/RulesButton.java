@@ -8,7 +8,7 @@ import org.ta4j.core.Indicator;
 import com.stox.charting.ChartingView;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.plot.PlotBuilder;
-import com.stox.charting.plot.RulePlot;
+import com.stox.charting.plot.rule.RulePlot;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.ui.DefaultDialogx;
 import com.stox.indicator.RuleIndicator;

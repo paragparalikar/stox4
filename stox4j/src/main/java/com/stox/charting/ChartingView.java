@@ -6,12 +6,12 @@ import org.ta4j.core.BaseBarSeries;
 
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.chart.Chart;
-import com.stox.charting.grid.Crosshair;
+import com.stox.charting.crosshair.Crosshair;
 import com.stox.charting.grid.VerticalGrid;
 import com.stox.charting.handler.pan.PanRequestEvent;
 import com.stox.charting.handler.zoom.ZoomRequestEvent;
 import com.stox.charting.plot.Plot;
-import com.stox.charting.plot.PricePlot;
+import com.stox.charting.plot.price.PricePlot;
 import com.stox.charting.tools.RulesButton;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.Scrip;
