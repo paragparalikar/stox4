@@ -57,7 +57,7 @@ public class PricePlot extends Plot<Bar> {
 	public void reloadBars() {
 		try {
 			final Scrip scrip = getContext().getScripProperty().get();
-			infoPane.set(scrip);
+			infoPane.setName(null == scrip ? null : scrip.getName());
 			if(null != scrip && !loading && !fullyLoaded) {
 				loading = true;
 				doReload(scrip);

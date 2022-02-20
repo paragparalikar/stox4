@@ -2,15 +2,14 @@ package com.stox.charting.plot.rule;
 
 import com.stox.charting.plot.PlotInfo;
 
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 
 public class RulePlotInfo extends PlotInfo<Boolean> {
 	private final Label nameLabel = new Label();
 	private final Label valueLabel = new Label();
 
-	public RulePlotInfo(Node node) {
-		super(node);
+	public RulePlotInfo(RulePlot plot) {
+		super(plot);
 		nameLabel.getStyleClass().add("plot-name");
 		getStyleClass().add("plot-info-pane");
 		getChildren().addAll(nameLabel, valueLabel);

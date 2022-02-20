@@ -65,14 +65,22 @@ public class Chart extends BorderPane {
 	}
 	
 	public void add(Plot<?> plot) {
+		plot.setChart(this);
 		plot.setXAxis(xAxis);
 		plot.setYAxis(yAxis);
+		plot.setConfig(config);
 		plot.setContext(context);
 		plot.setCrosshair(crosshair);
 		plots.add(plot);
 		contentArea.getChildren().add(plot);
 		infoPane.getChildren().add(plot.getInfo());
 		infoPane.toFront();
+	}
+	
+	public void removePlot(Plot<?> plot) {
+		plots.remove(plot);
+		contentArea.getChildren().remove(plot);
+		infoPane.getChildren().remove(plot.getInfo());
 	}
 	
 }

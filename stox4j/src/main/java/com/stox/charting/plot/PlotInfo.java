@@ -4,21 +4,25 @@ import com.stox.common.ui.Icon;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import lombok.Getter;
 
+@Getter 
 public class PlotInfo<T> extends HBox {
 
+	private final Plot<T> plot;
 	private final Label name = new Label();
 	private final HBox buttonBar = new HBox();
 	
-	public PlotInfo(Node node) {
-		getStyleClass().add("plot-info-pane");
+	public PlotInfo(Plot<T> plot) {
+		this.plot = plot;
+		getStyleClass().add("plot-info");
 		name.getStyleClass().add("plot-name");
+		buttonBar.getStyleClass().add("button-bar");
 		getChildren().addAll(buttonBar, name);
-		createButton(Icon.EYE, event -> node.setVisible(!node.isVisible()));
+		createButton(Icon.EYE, event -> plot.setVisible(!plot.isVisible()));
 	}
 	
 	protected void createButton(String icon, EventHandler<ActionEvent> handler) {

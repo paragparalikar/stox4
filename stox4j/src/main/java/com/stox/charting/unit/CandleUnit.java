@@ -11,7 +11,6 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
-import lombok.NonNull;
 import lombok.Setter;
 
 public class CandleUnit extends Group implements Unit<Bar> {
@@ -32,7 +31,7 @@ public class CandleUnit extends Group implements Unit<Bar> {
 	}
 	
 	@Override
-	public void layoutChildren(int index, @NonNull Bar bar) {
+	public void layoutChildren(int index, Bar bar) {
 		final double barWidth = xAxis.getUnitWidth() * 0.8;
 		body.setX(xAxis.getX(index) - barWidth/2d);
 		body.setWidth(barWidth);

@@ -3,17 +3,14 @@ package com.stox.charting.plot.price;
 import org.ta4j.core.Bar;
 
 import com.stox.charting.plot.PlotInfo;
-import com.stox.common.scrip.Scrip;
 import com.stox.common.util.Colors;
 import com.stox.common.util.Strings;
 
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 public class PricePlotInfo extends PlotInfo<Bar>{
-	private final Label nameLabel = new Label();
 	private final Label openLabel = new Label();
 	private final Label highLabel = new Label();
 	private final Label lowLabel = new Label();
@@ -24,21 +21,12 @@ public class PricePlotInfo extends PlotInfo<Bar>{
 			new HBox(new Label("L "), lowLabel),
 			new HBox(new Label("C "), closeLabel));
 	
-	public PricePlotInfo(Node node) {
-		super(node);
+	public PricePlotInfo(PricePlot pricePlot) {
+		super(pricePlot);
 		getStyleClass().add("plot-info-pane");
-		nameLabel.getStyleClass().add("scrip-name");
+		getName().getStyleClass().add("scrip-name");
 		priceInfoContainer.getStyleClass().add("plot-info-values");
-		getChildren().addAll(nameLabel, priceInfoContainer);
-	}
-	
-	public void set(Scrip scrip) {
-		if(null != scrip) {
-			nameLabel.setVisible(true);
-			nameLabel.setText(scrip.getName().toUpperCase());
-		} else {
-			nameLabel.setVisible(false);
-		}
+		getChildren().addAll(priceInfoContainer);
 	}
 	
 	@Override

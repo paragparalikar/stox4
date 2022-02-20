@@ -7,9 +7,11 @@ import java.util.function.Supplier;
 
 import org.ta4j.core.Indicator;
 
+import com.stox.charting.ChartingView.ChartingConfig;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
+import com.stox.charting.chart.Chart;
 import com.stox.charting.crosshair.Crosshair;
 import com.stox.charting.unit.Unit;
 import com.stox.common.util.Maths;
@@ -22,7 +24,9 @@ public abstract class Plot<T> extends Group {
 
 	@Setter @Getter private YAxis yAxis;
 	@Setter @Getter private XAxis xAxis;
+	@Getter @Setter private Chart chart;
 	@Setter @Getter private Indicator<T> indicator;
+	@Getter @Setter private ChartingConfig config;
 	@Getter private ChartingContext context;
 	private final Supplier<Unit<T>> unitSupplier;
 	private final List<Unit<T>> units = new ArrayList<>();

@@ -1,8 +1,14 @@
 .icon{
 	-fx-font-family: 'FontAwesome';
 	-fx-padding: 0;
+	-fx-width: 25px;
 	-fx-pref-width: 25px;
+	-fx-min-width: 25px;
+	-fx-max-width: 25px;
+	-fx-height: 25px;
 	-fx-pref-height: 25px;
+	-fx-min-height: 25px;
+	-fx-max-height: 25px;
 	-fx-alignment: center;
 	-fx-content-display: center;
 }
