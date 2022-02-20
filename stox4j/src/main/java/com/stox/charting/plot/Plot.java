@@ -63,7 +63,8 @@ public abstract class Plot<T> extends Group {
 	}
 	
 	protected void createUnits(int startIndex, int endIndex) {
-		for(int index = units.size(); index < endIndex - startIndex; index++) {
+		final int visibleBarCount = endIndex - startIndex;
+		for(int index = units.size(); index < visibleBarCount; index++) {
 			final Unit<T> unit = unitSupplier.get();
 			unit.setXAxis(xAxis);
 			unit.setYAxis(yAxis);
@@ -71,10 +72,11 @@ public abstract class Plot<T> extends Group {
 			units.add(unit);
 			getChildren().add(unit.asNode());
 		}
-		if(endIndex < units.size()) {
-			final List<Unit<T>> subList = units.subList(endIndex, units.size());
+		if(visibleBarCount < units.size()) {
+			final List<Unit<T>> subList = units.subList(visibleBarCount, units.size());
 			subList.forEach(unit -> getChildren().remove(unit.asNode()));
 			subList.clear();
+			
 		}
 	}
 	
