@@ -29,6 +29,11 @@ public class PlottableRsiIndicator extends GridPane implements ConfigView<RsiInd
 	}
 	
 	@Override
+	public String toString() {
+		return "Relative Strength Index";
+	}
+	
+	@Override
 	public void updateView(RsiIndicatorConfig config) {
 		
 	}

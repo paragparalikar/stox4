@@ -12,7 +12,8 @@ import com.stox.charting.handler.pan.PanRequestEvent;
 import com.stox.charting.handler.zoom.ZoomRequestEvent;
 import com.stox.charting.plot.Plot;
 import com.stox.charting.plot.price.PricePlot;
-import com.stox.charting.tools.RulesButton;
+import com.stox.charting.tools.IndicatorButton;
+import com.stox.charting.tools.RuleButton;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.Scrip;
 
@@ -22,6 +23,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Orientation;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
@@ -73,9 +75,10 @@ public class ChartingView extends BorderPane {
 		setCenter(stackPane);
 		setBottom(new VBox(xAxis, toolBar));
 		getStyleClass().add("charting-view");
+		splitPane.setOrientation(Orientation.VERTICAL);
 		addEventHandler(PanRequestEvent.TYPE, this::pan);
 		addEventHandler(ZoomRequestEvent.TYPE, this::zoom);
-		toolBar.getItems().add(new RulesButton(this, context));
+		toolBar.getItems().addAll(new RuleButton(this, context), new IndicatorButton(this, context));
 		context.getBarSeriesProperty().addListener((o,old,value) -> redraw());
 		crosshair.visibleProperty().bind(new BooleanBinding() {
 			{bind(context.getBarSeriesProperty());}
@@ -83,6 +86,12 @@ public class ChartingView extends BorderPane {
 				return null != context.getBar(0);
 			}
 		});
+	}
+	
+	public Chart createChart() {
+		final Chart chart = new Chart(context, config, crosshair, xAxis);
+		add(chart);
+		return chart;
 	}
 	
 	public void add(Chart chart) {
