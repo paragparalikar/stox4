@@ -1,9 +1,10 @@
-package com.stox.charting.plot.rule.facade;
+package com.stox.charting.plot.rule;
 
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.Indicator;
 
 import com.stox.charting.plot.Plottable;
+import com.stox.charting.unit.BooleanUnit;
 import com.stox.charting.unit.Unit;
 import com.stox.charting.unit.parent.UnitParent;
 import com.stox.common.ui.ConfigView;
@@ -40,13 +41,11 @@ public class PlottableBreakoutBarRule implements Plottable<Boolean, BreakoutBarR
 
 	@Override
 	public Unit<Boolean> createUnit() {
-		// TODO Auto-generated method stub
-		return null;
+		return new BooleanUnit();
 	}
 
 	@Override
 	public UnitParent<Boolean> createUnitParent() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

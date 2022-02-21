@@ -5,8 +5,8 @@ import org.ta4j.core.BarSeries;
 import com.stox.charting.ChartingView;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.plot.Plottable;
+import com.stox.charting.plot.rule.PlottableBreakoutBarRule;
 import com.stox.charting.plot.rule.RulePlot;
-import com.stox.charting.plot.rule.facade.PlottableBreakoutBarRule;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.ui.DefaultDialogx;
 

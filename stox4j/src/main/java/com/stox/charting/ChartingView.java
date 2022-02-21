@@ -68,7 +68,7 @@ public class ChartingView extends BorderPane {
 	
 	public ChartingView(BarService barService) {
 		add(priceChart);
-		add(pricePlot = new PricePlot(config, crosshair, barService));
+		add(pricePlot = new PricePlot(barService));
 		
 		setCenter(stackPane);
 		setBottom(new VBox(xAxis, toolBar));

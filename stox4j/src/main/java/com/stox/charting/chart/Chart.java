@@ -18,7 +18,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class Chart extends BorderPane {
 	
 	private final XAxis xAxis;
@@ -66,11 +68,6 @@ public class Chart extends BorderPane {
 	
 	public void add(Plot<?> plot) {
 		plot.setChart(this);
-		plot.setXAxis(xAxis);
-		plot.setYAxis(yAxis);
-		plot.setConfig(config);
-		plot.setContext(context);
-		plot.setCrosshair(crosshair);
 		plots.add(plot);
 		contentArea.getChildren().add(plot);
 		infoPane.getChildren().add(plot.getInfo());

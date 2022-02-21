@@ -3,16 +3,15 @@ package com.stox.charting.plot;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Supplier;
 
+import org.ta4j.core.BarSeries;
 import org.ta4j.core.Indicator;
+import org.ta4j.core.indicators.helpers.ConstantIndicator;
 
-import com.stox.charting.ChartingView.ChartingConfig;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
 import com.stox.charting.chart.Chart;
-import com.stox.charting.crosshair.Crosshair;
 import com.stox.charting.unit.Unit;
 import com.stox.common.util.Maths;
 
@@ -20,59 +19,63 @@ import javafx.scene.Group;
 import lombok.Getter;
 import lombok.Setter;
 
-public abstract class Plot<T> extends Group {
+@Getter @Setter
+public class Plot<T> extends Group {
 
-	@Setter @Getter private YAxis yAxis;
-	@Setter @Getter private XAxis xAxis;
-	@Getter @Setter private Chart chart;
-	@Setter @Getter private Indicator<T> indicator;
-	@Getter @Setter private ChartingConfig config;
-	@Getter private ChartingContext context;
-	private final Supplier<Unit<T>> unitSupplier;
+	private Chart chart;
+	private Indicator<T> indicator;
+	private final Plottable<T, ?> plottable;
 	private final List<Unit<T>> units = new ArrayList<>();
+	private PlotInfo<T> info = new DefaultPlotInfo<>(this);
 	
-	public Plot(Supplier<Unit<T>> unitSupplier) {
-		this.unitSupplier = unitSupplier;
+	public Plot(Plottable<T, ?> plottable) {
+		this.plottable = plottable;
 		setManaged(false);
 		setAutoSizeChildren(false);
 	}
 	
-	public abstract void reload();
-	public abstract PlotInfo<T> getInfo();
-	protected abstract double resolveLowValue(T model);
-	protected abstract double resolveHighValue(T model);
-	
-	public void setContext(ChartingContext context) {
-		this.context = context;
-		context.getBarSeriesProperty().addListener((o,old,value) -> reload());
+	public void reload() {
+		final BarSeries barSeries = getChart().getContext().getBarSeriesProperty().get();
+		if(null != barSeries && 0 < barSeries.getBarCount()) {
+			getInfo().setName(plottable.toString());
+			setIndicator(plottable.createIndicator(barSeries));
+		} else {
+			getInfo().setName(null);
+			setIndicator(new ConstantIndicator<>(barSeries, null));
+		}
 	}
 	
-	public void setCrosshair(Crosshair crosshair) {
-		crosshair.getVerticalLine().endXProperty().addListener((o,old,value) -> {
-			final int index = getXAxis().getIndex(value.doubleValue());
+	public void setChart(Chart chart) {
+		this.chart = chart;
+		chart.getContext().getBarSeriesProperty().addListener((o,old,value) -> reload());
+		chart.getCrosshair().getVerticalLine().endXProperty().addListener((o,old,value) -> {
+			final int index = chart.getXAxis().getIndex(value.doubleValue());
 			getInfo().setValue(indicator.getValue(index));
 		});
 	}
 	
 	protected void updateYAxis(int startIndex, int endIndex) {
+		final YAxis yAxis = chart.getYAxis();
 		double lowestValue = yAxis.getLowestValue();
 		double highestValue = yAxis.getHighestValue(); 
 		for(int index = startIndex; index < endIndex; index++) {
 			final T model = indicator.getValue(index);
-			lowestValue = Math.min(lowestValue, resolveLowValue(model));
-			highestValue = Math.max(highestValue, resolveHighValue(model));
+			lowestValue = Math.min(lowestValue, plottable.resolveLowValue(model));
+			highestValue = Math.max(highestValue, plottable.resolveHighValue(model));
 		}
 		yAxis.setHighestValue(highestValue);
 		yAxis.setLowestValue(lowestValue);
 	}
 	
 	protected void createUnits(int startIndex, int endIndex) {
+		final XAxis xAxis = chart.getXAxis();
+		final YAxis yAxis = chart.getYAxis();
 		final int visibleBarCount = endIndex - startIndex;
 		for(int index = units.size(); index < visibleBarCount; index++) {
-			final Unit<T> unit = unitSupplier.get();
+			final Unit<T> unit = plottable.createUnit();
 			unit.setXAxis(xAxis);
 			unit.setYAxis(yAxis);
-			unit.setContext(context);
+			unit.setContext(chart.getContext());
 			units.add(unit);
 			getChildren().add(unit.asNode());
 		}
@@ -105,6 +108,8 @@ public abstract class Plot<T> extends Group {
 	}
 	
 	public void layoutChartChildren() {
+		final XAxis xAxis = chart.getXAxis();
+		final ChartingContext context = chart.getContext();
 		final int startIndex = Maths.clip(0, xAxis.getStartIndex(), context.getBarCount() - 1);
 		final int endIndex = Maths.clip(0, xAxis.getEndIndex(), context.getBarCount() - 1);
 		updateYAxis(startIndex, endIndex);

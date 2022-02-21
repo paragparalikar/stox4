@@ -10,54 +10,45 @@ import org.ta4j.core.BaseBarSeries;
 import com.stox.charting.ChartingView.ChartingConfig;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
-import com.stox.charting.crosshair.Crosshair;
+import com.stox.charting.chart.Chart;
 import com.stox.charting.plot.Plot;
-import com.stox.charting.plot.PlotInfo;
-import com.stox.charting.unit.CandleUnit;
 import com.stox.charting.unit.Unit;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.Scrip;
-import com.stox.indicator.BarIndicator;
 
 public class PricePlot extends Plot<Bar> {
 
-	private final ChartingConfig config;
 	private final BarService barService;
 	private volatile boolean fullyLoaded, loading;
-	private final PricePlotInfo infoPane = new PricePlotInfo(this);
+	private final PricePlotInfo pricePlotInfo = new PricePlotInfo(this);
 	
-	public PricePlot(ChartingConfig config, Crosshair crosshair, BarService barService) {
-		super(CandleUnit::new);
-		this.config = config;
+	public PricePlot(BarService barService) {
+		super(new PlottableBarIndicator());
 		this.barService = barService;
+		setInfo(pricePlotInfo);
+	}
+	
+	public void reload() {
+		super.reload();
+		final Scrip scrip = getChart().getContext().getScripProperty().get();
+		pricePlotInfo.setName(null == scrip ? null : scrip.getName());
 	}
 	
 	@Override
-	public PlotInfo<Bar> getInfo() {
-		return infoPane;
-	}
-	
-	@Override
-	public void setContext(ChartingContext context) {
-		super.setContext(context);
-		context.getScripProperty().addListener((o,old,scrip) -> {
+	public void setChart(Chart chart) {
+		super.setChart(chart);
+		chart.getContext().getScripProperty().addListener((o,old,scrip) -> {
 			loading = false;
 			fullyLoaded = false;
-			context.getBarSeriesProperty().set(new BaseBarSeries());
+			chart.getContext().getBarSeriesProperty().set(new BaseBarSeries());
 			reloadBars();
 		});
 	}
 	
-	@Override
-	public void reload() {
-		final BarSeries barSeries = getContext().getBarSeriesProperty().get();
-		if(null != barSeries) setIndicator(new BarIndicator(barSeries));
-	}
-	
 	public void reloadBars() {
 		try {
-			final Scrip scrip = getContext().getScripProperty().get();
-			infoPane.setName(null == scrip ? null : scrip.getName());
+			final Scrip scrip = getChart().getContext().getScripProperty().get();
+			pricePlotInfo.setName(null == scrip ? null : scrip.getName());
 			if(null != scrip && !loading && !fullyLoaded) {
 				loading = true;
 				doReload(scrip);
@@ -70,8 +61,10 @@ public class PricePlot extends Plot<Bar> {
 	private void doReload(Scrip scrip) {
 		int count = 0;
 		ZonedDateTime to = null;
-		final XAxis xAxis = getXAxis();
-		final BarSeries barSeries = getContext().getBarSeriesProperty().get(); 
+		final XAxis xAxis = getChart().getXAxis();
+		final ChartingConfig config = getChart().getConfig();
+		final ChartingContext context = getChart().getContext();
+		final BarSeries barSeries = context.getBarSeriesProperty().get(); 
 		if(null == barSeries || 0 == barSeries.getBarCount()) {
 			to = ZonedDateTime.now().plusDays(1);
 			count = Math.max(config.getFetchSize(), xAxis.getEndIndex() - xAxis.getStartIndex());
@@ -84,30 +77,20 @@ public class PricePlot extends Plot<Bar> {
 		final List<Bar> data = barSeries.getBarData();
 		data.addAll(bars);
 		final BarSeries newBarSeries = new BaseBarSeries(data);
-		getContext().getBarSeriesProperty().set(newBarSeries);
+		context.getBarSeriesProperty().set(newBarSeries);
 		if(!fullyLoaded && xAxis.getEndIndex() > data.size()) doReload(scrip);
 	}
 
 	@Override
 	public void layoutChartChildren() {
-		getXAxis().resetLayout();
+		getChart().getXAxis().resetLayout();
 		super.layoutChartChildren();
 	}
 	
 	@Override
 	protected void layoutUnit(int index, Unit<Bar> unit, Bar model) {
 		super.layoutUnit(index, unit, model);
-		getXAxis().layoutUnit(index, model);
-	}
-
-	@Override
-	protected double resolveLowValue(Bar model) {
-		return model.getLowPrice().doubleValue();
-	}
-
-	@Override
-	protected double resolveHighValue(Bar model) {
-		return model.getHighPrice().doubleValue();
+		getChart().getXAxis().layoutUnit(index, model);
 	}
 	
 }
