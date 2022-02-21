@@ -3,12 +3,15 @@ package com.stox.charting.plot.rule.facade;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.Indicator;
 
-import com.stox.charting.plot.PlotFacade;
-import com.stox.common.ui.ModelAndView;
+import com.stox.charting.plot.Plottable;
+import com.stox.charting.unit.Unit;
+import com.stox.charting.unit.parent.UnitParent;
+import com.stox.common.ui.ConfigView;
 import com.stox.indicator.RuleIndicator;
 import com.stox.rule.BreakoutBarRule;
+import com.stox.rule.BreakoutBarRule.BreakoutBarRuleConfig;
 
-public class BreakoutBarRulePlotFacade implements PlotFacade<Boolean> {
+public class BreakoutBarRulePlotFacade implements Plottable<Boolean, BreakoutBarRuleConfig> {
 	
 	@Override
 	public String toString() {
@@ -16,7 +19,7 @@ public class BreakoutBarRulePlotFacade implements PlotFacade<Boolean> {
 	}
 
 	@Override
-	public ModelAndView createConfigView() {
+	public ConfigView<BreakoutBarRuleConfig> createConfigView() {
 		return null;
 	}
 
@@ -33,6 +36,23 @@ public class BreakoutBarRulePlotFacade implements PlotFacade<Boolean> {
 	@Override
 	public double resolveHighValue(Boolean model) {
 		return 0;
+	}
+
+	@Override
+	public Unit<Boolean> createUnit() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UnitParent<Boolean> createUnitParent() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BreakoutBarRuleConfig createConfig() {
+		return new BreakoutBarRuleConfig();
 	}
 
 }

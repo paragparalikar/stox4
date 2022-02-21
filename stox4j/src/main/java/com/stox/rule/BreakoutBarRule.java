@@ -10,6 +10,10 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class BreakoutBarRule extends AbstractRule {
+	
+	public static class BreakoutBarRuleConfig {
+		
+	}
 
 	@NonNull private final BarSeries barSeries;
 

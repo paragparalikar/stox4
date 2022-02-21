@@ -4,7 +4,7 @@ import org.ta4j.core.BarSeries;
 
 import com.stox.charting.ChartingView;
 import com.stox.charting.ChartingView.ChartingContext;
-import com.stox.charting.plot.PlotFacade;
+import com.stox.charting.plot.Plottable;
 import com.stox.charting.plot.rule.RulePlot;
 import com.stox.charting.plot.rule.facade.BreakoutBarRulePlotFacade;
 import com.stox.common.scrip.Scrip;
@@ -33,14 +33,14 @@ public class RulesButton extends Button implements EventHandler<ActionEvent> {
 		final Scrip scrip = context.getScripProperty().get();
 		final BarSeries barSeries = context.getBarSeriesProperty().get();
 		if(null != scrip && null != barSeries && 0 < barSeries.getBarCount()) {
-			final ListView<PlotFacade<Boolean>> listView = new ListView<>();
+			final ListView<Plottable<Boolean, ?>> listView = new ListView<>();
 			listView.getItems().add(new BreakoutBarRulePlotFacade());
 			new DefaultDialogx()
 				.withTitle("Rules")
 				.withContent(listView)
 				.withButton(ButtonType.CANCEL)
 				.withButton(ButtonType.APPLY, () -> {
-					final PlotFacade<Boolean> plotFacade = listView.getSelectionModel().getSelectedItem();
+					final Plottable<Boolean, ?> plotFacade = listView.getSelectionModel().getSelectedItem();
 					if(null != plotFacade) {
 						final RulePlot rulePlot = new RulePlot(plotFacade);
 						chartingView.add(rulePlot);

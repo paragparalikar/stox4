@@ -4,16 +4,16 @@ import org.ta4j.core.BarSeries;
 import org.ta4j.core.indicators.helpers.ConstantIndicator;
 
 import com.stox.charting.plot.Plot;
-import com.stox.charting.plot.PlotFacade;
 import com.stox.charting.plot.PlotInfo;
+import com.stox.charting.plot.Plottable;
 import com.stox.charting.unit.BooleanUnit;
 
 public class RulePlot extends Plot<Boolean> {
 
-	private final PlotFacade<Boolean> facade;
+	private final Plottable<Boolean, ?> facade;
 	private final RulePlotInfo plotInfo = new RulePlotInfo(this);
 	
-	public RulePlot(PlotFacade<Boolean> facade) {
+	public RulePlot(Plottable<Boolean, ?> facade) {
 		super(BooleanUnit::new);
 		this.facade = facade;
 	}
