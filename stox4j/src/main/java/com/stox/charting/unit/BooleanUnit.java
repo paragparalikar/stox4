@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import lombok.Setter;
 
-public class BooleanUnit extends Polygon implements Unit<Boolean> {
+public class BooleanUnit extends Polygon implements Unit<Boolean, Node> {
 	private static final double GAP = 10;
 
 	@Setter private XAxis xAxis;
@@ -24,7 +24,7 @@ public class BooleanUnit extends Polygon implements Unit<Boolean> {
 	}
 
 	@Override
-	public Node asNode() {
+	public Node asChild() {
 		return this;
 	}
 

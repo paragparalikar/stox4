@@ -31,7 +31,7 @@ public class Chart extends BorderPane {
 	private final VBox infoPane = new VBox();
 	private final HorizontalGrid horizontalGrid = new HorizontalGrid();
 	private final StackPane contentArea = new StackPane(horizontalGrid, infoPane);
-	private final ObservableList<Plot<?>> plots = FXCollections.observableArrayList();
+	private final ObservableList<Plot<?,?,?>> plots = FXCollections.observableArrayList();
 	private final PanModeMouseHandler panModeMouseHandler = new PanModeMouseHandler();
 	private final ZoomModeMouseHandler zoomModeMouseHandler = new ZoomModeMouseHandler();
 	private final CompositeModeMouseHandler compositeModeMouseHandler = new CompositeModeMouseHandler(panModeMouseHandler, zoomModeMouseHandler);
@@ -61,12 +61,12 @@ public class Chart extends BorderPane {
 	public void redraw() {
 		if(hasSize()) {
 			yAxis.reset();
-			for(Plot<?> plot : plots) plot.layoutChartChildren();
+			for(Plot<?, ?, ?> plot : plots) plot.layoutChartChildren();
 			yAxis.layoutChartChildren();
 		}
 	}
 	
-	public void add(Plot<?> plot) {
+	public void add(Plot<?, ?, ?> plot) {
 		plot.setChart(this);
 		plots.add(plot);
 		contentArea.getChildren().add(plot);
@@ -74,7 +74,7 @@ public class Chart extends BorderPane {
 		infoPane.toFront();
 	}
 	
-	public void removePlot(Plot<?> plot) {
+	public void removePlot(Plot<?, ?, ?> plot) {
 		plots.remove(plot);
 		contentArea.getChildren().remove(plot);
 		infoPane.getChildren().remove(plot.getInfo());

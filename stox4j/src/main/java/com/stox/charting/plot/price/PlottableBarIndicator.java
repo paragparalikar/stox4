@@ -7,11 +7,15 @@ import org.ta4j.core.Indicator;
 import com.stox.charting.plot.Plottable;
 import com.stox.charting.unit.CandleUnit;
 import com.stox.charting.unit.Unit;
+import com.stox.charting.unit.parent.GroupUnitParent;
 import com.stox.charting.unit.parent.UnitParent;
 import com.stox.common.ui.ConfigView;
 import com.stox.indicator.BarIndicator;
 
-public class PlottableBarIndicator implements Plottable<Bar, Void> {
+import javafx.scene.Group;
+import javafx.scene.Node;
+
+public class PlottableBarIndicator implements Plottable<Bar, Void, Node> {
 
 	@Override
 	public double resolveLowValue(Bar model) {
@@ -24,13 +28,13 @@ public class PlottableBarIndicator implements Plottable<Bar, Void> {
 	}
 
 	@Override
-	public Unit<Bar> createUnit() {
+	public Unit<Bar, Node> createUnit() {
 		return new CandleUnit();
 	}
 
 	@Override
-	public UnitParent<Bar> createUnitParent() {
-		return null;
+	public UnitParent<Node> createUnitParent() {
+		return new GroupUnitParent(new Group());
 	}
 
 	@Override
@@ -44,7 +48,7 @@ public class PlottableBarIndicator implements Plottable<Bar, Void> {
 	}
 
 	@Override
-	public Indicator<Bar> createIndicator(BarSeries barSeries) {
+	public Indicator<Bar> createIndicator(Void config, BarSeries barSeries) {
 		return new BarIndicator(barSeries);
 	}
 

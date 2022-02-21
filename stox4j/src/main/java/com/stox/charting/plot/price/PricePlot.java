@@ -16,7 +16,9 @@ import com.stox.charting.unit.Unit;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.Scrip;
 
-public class PricePlot extends Plot<Bar> {
+import javafx.scene.Node;
+
+public class PricePlot extends Plot<Bar, Void, Node> {
 
 	private final BarService barService;
 	private volatile boolean fullyLoaded, loading;
@@ -88,7 +90,7 @@ public class PricePlot extends Plot<Bar> {
 	}
 	
 	@Override
-	protected void layoutUnit(int index, Unit<Bar> unit, Bar model) {
+	protected void layoutUnit(int index, Unit<Bar, Node> unit, Bar model) {
 		super.layoutUnit(index, unit, model);
 		getChart().getXAxis().layoutUnit(index, model);
 	}

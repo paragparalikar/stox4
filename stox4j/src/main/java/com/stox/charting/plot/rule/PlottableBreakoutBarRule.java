@@ -6,13 +6,17 @@ import org.ta4j.core.Indicator;
 import com.stox.charting.plot.Plottable;
 import com.stox.charting.unit.BooleanUnit;
 import com.stox.charting.unit.Unit;
+import com.stox.charting.unit.parent.GroupUnitParent;
 import com.stox.charting.unit.parent.UnitParent;
 import com.stox.common.ui.ConfigView;
 import com.stox.indicator.RuleIndicator;
 import com.stox.rule.BreakoutBarRule;
 import com.stox.rule.BreakoutBarRule.BreakoutBarRuleConfig;
 
-public class PlottableBreakoutBarRule implements Plottable<Boolean, BreakoutBarRuleConfig> {
+import javafx.scene.Group;
+import javafx.scene.Node;
+
+public class PlottableBreakoutBarRule implements Plottable<Boolean, BreakoutBarRuleConfig, Node> {
 	
 	@Override
 	public String toString() {
@@ -25,7 +29,7 @@ public class PlottableBreakoutBarRule implements Plottable<Boolean, BreakoutBarR
 	}
 
 	@Override
-	public Indicator<Boolean> createIndicator(BarSeries barSeries) {
+	public Indicator<Boolean> createIndicator(BreakoutBarRuleConfig config, BarSeries barSeries) {
 		return new RuleIndicator(new BreakoutBarRule(barSeries), barSeries);
 	}
 
@@ -40,13 +44,13 @@ public class PlottableBreakoutBarRule implements Plottable<Boolean, BreakoutBarR
 	}
 
 	@Override
-	public Unit<Boolean> createUnit() {
+	public Unit<Boolean, Node> createUnit() {
 		return new BooleanUnit();
 	}
 
 	@Override
-	public UnitParent<Boolean> createUnitParent() {
-		return null;
+	public UnitParent<Node> createUnitParent() {
+		return new GroupUnitParent(new Group());
 	}
 
 	@Override

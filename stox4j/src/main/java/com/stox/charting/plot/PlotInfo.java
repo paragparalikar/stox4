@@ -12,11 +12,11 @@ import lombok.Getter;
 @Getter 
 public class PlotInfo<T> extends HBox {
 
-	private final Plot<T> plot;
+	private final Plot<T, ?, ?> plot;
 	private final Label name = new Label();
 	private final HBox buttonBar = new HBox();
 	
-	public PlotInfo(Plot<T> plot) {
+	public PlotInfo(Plot<T, ?, ?> plot) {
 		this.plot = plot;
 		getStyleClass().add("plot-info");
 		name.getStyleClass().add("plot-name");

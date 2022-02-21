@@ -13,6 +13,7 @@ import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
 import com.stox.charting.chart.Chart;
 import com.stox.charting.unit.Unit;
+import com.stox.charting.unit.parent.UnitParent;
 import com.stox.common.util.Maths;
 
 import javafx.scene.Group;
@@ -20,25 +21,30 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class Plot<T> extends Group {
+public class Plot<T, C, N> extends Group {
 
 	private Chart chart;
 	private Indicator<T> indicator;
-	private final Plottable<T, ?> plottable;
-	private final List<Unit<T>> units = new ArrayList<>();
+	private final C indicatorConfig;
+	private final UnitParent<N> unitParent;
+	private final Plottable<T, C, N> plottable;
+	private final List<Unit<T, N>> units = new ArrayList<>();
 	private PlotInfo<T> info = new DefaultPlotInfo<>(this);
 	
-	public Plot(Plottable<T, ?> plottable) {
-		this.plottable = plottable;
+	public Plot(Plottable<T, C, N> plottable) {
 		setManaged(false);
 		setAutoSizeChildren(false);
+		this.plottable = plottable;
+		this.indicatorConfig = plottable.createConfig();
+		this.unitParent = plottable.createUnitParent();
+		getChildren().add(unitParent.getNode());
 	}
 	
 	public void reload() {
 		final BarSeries barSeries = getChart().getContext().getBarSeriesProperty().get();
 		if(null != barSeries && 0 < barSeries.getBarCount()) {
 			getInfo().setName(plottable.toString());
-			setIndicator(plottable.createIndicator(barSeries));
+			setIndicator(plottable.createIndicator(indicatorConfig, barSeries));
 		} else {
 			getInfo().setName(null);
 			setIndicator(new ConstantIndicator<>(barSeries, null));
@@ -72,22 +78,22 @@ public class Plot<T> extends Group {
 		final YAxis yAxis = chart.getYAxis();
 		final int visibleBarCount = endIndex - startIndex;
 		for(int index = units.size(); index < visibleBarCount; index++) {
-			final Unit<T> unit = plottable.createUnit();
+			final Unit<T, N> unit = plottable.createUnit();
 			unit.setXAxis(xAxis);
 			unit.setYAxis(yAxis);
 			unit.setContext(chart.getContext());
 			units.add(unit);
-			getChildren().add(unit.asNode());
+			unitParent.add(unit.asChild());
 		}
 	}
 	
 	protected void removeUnits(int startIndex, int endIndex) {
 		final int visibleBarCount = endIndex - startIndex;
 		if(visibleBarCount < units.size()) {
-			final Iterator<Unit<T>> iterator = units.subList(visibleBarCount, units.size()).iterator();
+			final Iterator<Unit<T, N>> iterator = units.subList(visibleBarCount, units.size()).iterator();
 			while(iterator.hasNext()) {
-				final Unit<T> unit = iterator.next();
-				getChildren().remove(unit.asNode());
+				final Unit<T, N> unit = iterator.next();
+				unitParent.remove(unit.asChild());
 				iterator.remove();
 			}
 		}
@@ -97,13 +103,13 @@ public class Plot<T> extends Group {
 		for(int index = endIndex; index > startIndex; index--) {
 			final int unitIndex = endIndex - index;
 			if(0 <= unitIndex && unitIndex < units.size()) {
-				final Unit<T> unit = units.get(unitIndex);
+				final Unit<T, N> unit = units.get(unitIndex);
 				layoutUnit(index, unit, indicator.getValue(index));
 			}
 		}
 	}
 	
-	protected void layoutUnit(int index, Unit<T> unit, T model) {
+	protected void layoutUnit(int index, Unit<T, N> unit, T model) {
 		unit.layoutChildren(index, model);
 	}
 	

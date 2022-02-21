@@ -8,7 +8,7 @@ public class DefaultPlotInfo<T> extends PlotInfo<T> {
 	
 	private final Label valueLabel = new Label();
 
-	public DefaultPlotInfo(Plot<T> plot) {
+	public DefaultPlotInfo(Plot<T, ?, ?> plot) {
 		super(plot);
 		getChildren().add(valueLabel);
 		createButton(Icon.TRASH, event -> plot.getChart().removePlot(plot));

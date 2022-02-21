@@ -90,7 +90,7 @@ public class ChartingView extends BorderPane {
 		splitPane.getItems().add(chart);
 	}
 	
-	public void add(Plot<?> plot) {
+	public void add(Plot<?, ?, ?> plot) {
 		priceChart.add(plot);
 		plot.reload();
 		priceChart.redraw();

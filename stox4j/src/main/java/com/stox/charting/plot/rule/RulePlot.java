@@ -3,9 +3,11 @@ package com.stox.charting.plot.rule;
 import com.stox.charting.plot.Plot;
 import com.stox.charting.plot.Plottable;
 
-public class RulePlot extends Plot<Boolean> {
+import javafx.scene.Node;
 
-	public RulePlot(Plottable<Boolean, ?> plottable) {
+public class RulePlot<C> extends Plot<Boolean, C, Node> {
+
+	public RulePlot(Plottable<Boolean, C, Node> plottable) {
 		super(plottable);
 	}
 	

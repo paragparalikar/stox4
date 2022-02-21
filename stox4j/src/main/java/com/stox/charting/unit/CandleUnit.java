@@ -13,7 +13,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import lombok.Setter;
 
-public class CandleUnit extends Group implements Unit<Bar> {
+public class CandleUnit extends Group implements Unit<Bar, Node> {
 
 	@Setter private XAxis xAxis;
 	@Setter private YAxis yAxis;
@@ -45,7 +45,7 @@ public class CandleUnit extends Group implements Unit<Bar> {
 	}
 	
 	@Override
-	public Node asNode() {
+	public Node asChild() {
 		return this;
 	}
 	
