@@ -11,7 +11,7 @@ import com.stox.indicator.RuleIndicator;
 import com.stox.rule.BreakoutBarRule;
 import com.stox.rule.BreakoutBarRule.BreakoutBarRuleConfig;
 
-public class BreakoutBarRulePlotFacade implements Plottable<Boolean, BreakoutBarRuleConfig> {
+public class PlottableBreakoutBarRule implements Plottable<Boolean, BreakoutBarRuleConfig> {
 	
 	@Override
 	public String toString() {

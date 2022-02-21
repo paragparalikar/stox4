@@ -6,7 +6,7 @@ import com.stox.charting.ChartingView;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.plot.Plottable;
 import com.stox.charting.plot.rule.RulePlot;
-import com.stox.charting.plot.rule.facade.BreakoutBarRulePlotFacade;
+import com.stox.charting.plot.rule.facade.PlottableBreakoutBarRule;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.ui.DefaultDialogx;
 
@@ -34,7 +34,7 @@ public class RulesButton extends Button implements EventHandler<ActionEvent> {
 		final BarSeries barSeries = context.getBarSeriesProperty().get();
 		if(null != scrip && null != barSeries && 0 < barSeries.getBarCount()) {
 			final ListView<Plottable<Boolean, ?>> listView = new ListView<>();
-			listView.getItems().add(new BreakoutBarRulePlotFacade());
+			listView.getItems().add(new PlottableBreakoutBarRule());
 			new DefaultDialogx()
 				.withTitle("Rules")
 				.withContent(listView)
