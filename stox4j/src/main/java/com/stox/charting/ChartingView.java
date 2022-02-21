@@ -31,6 +31,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
 
+
+@Getter
 public class ChartingView extends BorderPane {
 	
 	@Getter
@@ -56,6 +58,7 @@ public class ChartingView extends BorderPane {
 		}
 	}
 	
+	private final Chart priceChart;
 	private final PricePlot pricePlot;
 	private final ToolBar toolBar = new ToolBar();
 	private final SplitPane splitPane = new SplitPane();
@@ -64,12 +67,12 @@ public class ChartingView extends BorderPane {
 	private final Crosshair crosshair = new Crosshair(splitPane);
 	private final ChartingContext context = new ChartingContext();
 	private final XAxis xAxis = new XAxis(context, config, crosshair, verticalGrid);
-	private final Chart priceChart = new Chart(context, config, crosshair, xAxis);
+	
 	private final StackPane stackPane = new StackPane(verticalGrid, splitPane, crosshair);
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
 	public ChartingView(BarService barService) {
-		add(priceChart);
+		add(priceChart = new Chart(this));
 		add(pricePlot = new PricePlot(barService));
 		
 		setCenter(stackPane);
@@ -88,21 +91,25 @@ public class ChartingView extends BorderPane {
 		});
 	}
 	
-	public Chart createChart() {
-		final Chart chart = new Chart(context, config, crosshair, xAxis);
-		add(chart);
-		return chart;
-	}
-	
 	public void add(Chart chart) {
 		charts.add(chart);
 		splitPane.getItems().add(chart);
+	}
+	
+	public void remove(Chart chart) {
+		charts.remove(chart);
+		splitPane.getItems().remove(chart);
+		redraw();
 	}
 	
 	public void add(Plot<?, ?, ?> plot) {
 		priceChart.add(plot);
 		plot.reload();
 		priceChart.redraw();
+	}
+	
+	public void remove(Plot<?, ?, ?> plot) {
+		priceChart.removePlot(plot);
 	}
 	
 	public void setScrip(Scrip scrip) {

@@ -11,5 +11,8 @@ public interface UnitParent<T> {
 	void remove(T child);
 	public void addAll(T... children);
 	public void removeAll(T... children);
+	
+	default void preLayoutChartChildren() {}
+	default void postLayoutChartChildren() {}
 
 }

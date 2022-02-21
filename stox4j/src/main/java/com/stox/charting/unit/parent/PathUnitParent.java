@@ -1,5 +1,7 @@
 package com.stox.charting.unit.parent;
 
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.PathElement;
 
@@ -29,7 +31,13 @@ public class PathUnitParent implements UnitParent<PathElement> {
 
 	@Override
 	public void add(PathElement child) {
-		path.getElements().add(child);
+		if(path.getElements().isEmpty() && child instanceof LineTo) {
+			final LineTo lineTo = LineTo.class.cast(child);
+			final MoveTo moveTo = new MoveTo(lineTo.getX(), lineTo.getY());
+			path.getElements().add(moveTo);
+		} else {
+			path.getElements().add(child);
+		}
 	}
 
 	@Override
@@ -46,7 +54,5 @@ public class PathUnitParent implements UnitParent<PathElement> {
 	public void removeAll(PathElement... children) {
 		path.getElements().removeAll(children);
 	}
-	
-	
 
 }

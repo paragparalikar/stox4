@@ -4,6 +4,7 @@ import org.ta4j.core.BarSeries;
 
 import com.stox.charting.ChartingView;
 import com.stox.charting.ChartingView.ChartingContext;
+import com.stox.charting.chart.Chart;
 import com.stox.charting.plot.Plot;
 import com.stox.charting.plot.Plottable;
 import com.stox.charting.plot.indicator.PlottableRsiIndicator;
@@ -40,8 +41,15 @@ public class IndicatorButton extends Button implements EventHandler<ActionEvent>
 				.withContent(listView)
 				.withButton(ButtonType.CANCEL)
 				.withButton(ButtonType.APPLY, () -> {
+					
 					final Plottable<?, ?, ?> plottable = listView.getSelectionModel().getSelectedItem();
-					if(null != plottable) chartingView.createChart().add(new Plot(plottable));
+					if(null != plottable) {
+						final Chart chart = new Chart(chartingView);
+						chartingView.add(chart);
+						final Plot<?,?,?> plot = new Plot(plottable);
+						chart.add(plot);
+						plot.reload();
+					}
 					
 				})
 				.show(this);

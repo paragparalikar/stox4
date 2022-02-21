@@ -1,6 +1,6 @@
 package com.stox.charting.axis;
 
-import com.stox.charting.ChartingView.ChartingConfig;
+import com.stox.charting.ChartingView;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.crosshair.Crosshair;
 import com.stox.charting.grid.HorizontalGrid;
@@ -21,9 +21,7 @@ public class YAxis extends StackPane {
 			5.0E8d, 1.0E9d, 2.5E9d, 5.0E9d, 1.0E10d, 2.5E10d, 5.0E10d, 1.0E11d, 2.5E11d, 5.0E11d, 1.0E12d, 2.5E12d,
 			5.0E12d };
 	
-	private final Crosshair crosshair;
-	private final ChartingConfig config;
-	private final ChartingContext context;
+	private final ChartingView chartingView;
 	private final Label label = new Label();
 	private final Pane container = new Pane();
 	private final HorizontalGrid horizontalGrid;
@@ -32,20 +30,20 @@ public class YAxis extends StackPane {
 			lowestValue = Double.MAX_VALUE, 
 			tickHeight = 20, topMargin = 10, bottomMargin = 8;
 	
-	public YAxis(ChartingContext context, ChartingConfig config, 
-			Crosshair crosshair, HorizontalGrid horizontalGrid) {
+	public YAxis(ChartingView chartingView, HorizontalGrid horizontalGrid) {
 		style();
-		this.config = config;
-		this.context = context;
-		this.crosshair = crosshair;
+		this.chartingView = chartingView;
 		this.horizontalGrid = horizontalGrid;
 		getChildren().addAll(container, new Pane(label));
+		final ChartingContext context = chartingView.getContext();
+		final Crosshair crosshair = chartingView.getCrosshair();
 		label.visibleProperty().bind(crosshair.visibleProperty());
 		context.getBarSeriesProperty().addListener((o,old,value) -> updateCrosshairLabel());
 		crosshair.getHorizontalLine().endYProperty().addListener((o,old,value) -> updateCrosshairLabel());
 	}
 	
 	private void updateCrosshairLabel() {
+		final Crosshair crosshair = chartingView.getCrosshair();
 		final double value = crosshair.getHorizontalLine().getEndY();
 		label.setText(Strings.toString(getValue(value)));
 		label.setLayoutY(value - label.getHeight()/2);

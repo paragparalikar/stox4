@@ -20,13 +20,15 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.PathElement;
 import lombok.Data;
 
-public class PlottableRsiIndicator extends GridPane implements ConfigView<RsiIndicatorConfig>, Plottable<Num, RsiIndicatorConfig, PathElement> {
+public class PlottableRsiIndicator implements ConfigView<RsiIndicatorConfig>, Plottable<Num, RsiIndicatorConfig, PathElement> {
 
 	@Data
 	public static class RsiIndicatorConfig {
 		private int span = 14;
 		private BarValueType barValueType = BarValueType.CLOSE;
 	}
+	
+	private final GridPane container = new GridPane();
 	
 	@Override
 	public String toString() {
@@ -45,7 +47,7 @@ public class PlottableRsiIndicator extends GridPane implements ConfigView<RsiInd
 	
 	@Override
 	public Node getNode() {
-		return this;
+		return container;
 	}
 
 	@Override

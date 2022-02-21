@@ -7,6 +7,7 @@ import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeries;
 
+import com.stox.charting.ChartingView;
 import com.stox.charting.ChartingView.ChartingConfig;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
@@ -32,24 +33,26 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 	
 	public void reload() {
 		super.reload();
-		final Scrip scrip = getChart().getContext().getScripProperty().get();
+		final Scrip scrip = getChart().getChartingView().getContext().getScripProperty().get();
 		pricePlotInfo.setName(null == scrip ? null : scrip.getName());
 	}
 	
 	@Override
 	public void setChart(Chart chart) {
 		super.setChart(chart);
-		chart.getContext().getScripProperty().addListener((o,old,scrip) -> {
+		final ChartingView chartingView = chart.getChartingView();
+		final ChartingContext context = chartingView.getContext();
+		context.getScripProperty().addListener((o,old,scrip) -> {
 			loading = false;
 			fullyLoaded = false;
-			chart.getContext().getBarSeriesProperty().set(new BaseBarSeries());
+			context.getBarSeriesProperty().set(new BaseBarSeries());
 			reloadBars();
 		});
 	}
 	
 	public void reloadBars() {
 		try {
-			final Scrip scrip = getChart().getContext().getScripProperty().get();
+			final Scrip scrip = getChart().getChartingView().getContext().getScripProperty().get();
 			pricePlotInfo.setName(null == scrip ? null : scrip.getName());
 			if(null != scrip && !loading && !fullyLoaded) {
 				loading = true;
@@ -63,9 +66,9 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 	private void doReload(Scrip scrip) {
 		int count = 0;
 		ZonedDateTime to = null;
-		final XAxis xAxis = getChart().getXAxis();
-		final ChartingConfig config = getChart().getConfig();
-		final ChartingContext context = getChart().getContext();
+		final XAxis xAxis = getChart().getChartingView().getXAxis();
+		final ChartingConfig config = getChart().getChartingView().getConfig();
+		final ChartingContext context = getChart().getChartingView().getContext();
 		final BarSeries barSeries = context.getBarSeriesProperty().get(); 
 		if(null == barSeries || 0 == barSeries.getBarCount()) {
 			to = ZonedDateTime.now().plusDays(1);
@@ -85,14 +88,14 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 
 	@Override
 	public void layoutChartChildren() {
-		getChart().getXAxis().resetLayout();
+		getChart().getChartingView().getXAxis().resetLayout();
 		super.layoutChartChildren();
 	}
 	
 	@Override
 	protected void layoutUnit(int index, Unit<Bar, Node> unit, Bar model) {
 		super.layoutUnit(index, unit, model);
-		getChart().getXAxis().layoutUnit(index, model);
+		getChart().getChartingView().getXAxis().layoutUnit(index, model);
 	}
 	
 }
