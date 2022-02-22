@@ -23,7 +23,7 @@ public interface Plottable<T, C, N> {
 	UnitParent<N> createUnitParent();
 	
 	C createConfig();
-	ConfigView<C> createConfigView(); 
+	ConfigView createConfigView(C config); 
 	
 	Indicator<T> createIndicator(C config, BarSeries barSeries);
 	

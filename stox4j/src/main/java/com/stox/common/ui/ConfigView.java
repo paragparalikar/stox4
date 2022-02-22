@@ -2,11 +2,11 @@ package com.stox.common.ui;
 
 import javafx.scene.Node;
 
-public interface ConfigView<C> {
+public interface ConfigView {
 
-	void updateConfig(C config);
+	void populateView();
 	
-	void updateView(C config);
+	void populateModel();
 	
 	Node getNode();
 	

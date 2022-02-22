@@ -9,6 +9,7 @@ import com.stox.charting.unit.Unit;
 import com.stox.charting.unit.parent.GroupUnitParent;
 import com.stox.charting.unit.parent.UnitParent;
 import com.stox.common.ui.ConfigView;
+import com.stox.common.ui.form.auto.AutoForm;
 import com.stox.indicator.RuleIndicator;
 import com.stox.rule.SimpleBreakoutBarRule;
 import com.stox.rule.SimpleBreakoutBarRule.SimpleBreakoutBarRuleConfig;
@@ -24,8 +25,8 @@ public class PlottableBreakoutBarRule implements Plottable<Boolean, SimpleBreako
 	}
 
 	@Override
-	public ConfigView<SimpleBreakoutBarRuleConfig> createConfigView() {
-		return null;
+	public ConfigView createConfigView(SimpleBreakoutBarRuleConfig config) {
+		return new AutoForm(config);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import com.stox.charting.unit.Unit;
 import com.stox.charting.unit.parent.GroupUnitParent;
 import com.stox.charting.unit.parent.UnitParent;
 import com.stox.common.ui.ConfigView;
+import com.stox.common.ui.form.auto.AutoForm;
 import com.stox.indicator.RuleIndicator;
 import com.stox.rule.ReaccumulationRule;
 import com.stox.rule.ReaccumulationRule.ReaccumulationRuleConfig;
@@ -49,8 +50,8 @@ public class PlottableReaccumulationRule implements Plottable<Boolean, Reaccumul
 	}
 
 	@Override
-	public ConfigView<ReaccumulationRuleConfig> createConfigView() {
-		return null;
+	public ConfigView createConfigView(ReaccumulationRuleConfig config) {
+		return new AutoForm(config);
 	}
 
 	@Override

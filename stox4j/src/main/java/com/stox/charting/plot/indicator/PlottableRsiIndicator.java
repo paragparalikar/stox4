@@ -13,14 +13,14 @@ import com.stox.charting.unit.parent.PolylineUnitParent;
 import com.stox.charting.unit.parent.UnitParent;
 import com.stox.common.bar.BarValueType;
 import com.stox.common.ui.ConfigView;
+import com.stox.common.ui.form.auto.AutoForm;
 
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Polyline;
 import lombok.Data;
 
-public class PlottableRsiIndicator implements ConfigView<RsiIndicatorConfig>, Plottable<Num, RsiIndicatorConfig, Point2D> {
+public class PlottableRsiIndicator implements Plottable<Num, RsiIndicatorConfig, Point2D> {
 
 	@Data
 	public static class RsiIndicatorConfig {
@@ -33,21 +33,6 @@ public class PlottableRsiIndicator implements ConfigView<RsiIndicatorConfig>, Pl
 	@Override
 	public String toString() {
 		return "Relative Strength Index";
-	}
-	
-	@Override
-	public void updateView(RsiIndicatorConfig config) {
-		
-	}
-	
-	@Override
-	public void updateConfig(RsiIndicatorConfig config) {
-		
-	}
-	
-	@Override
-	public Node getNode() {
-		return container;
 	}
 
 	@Override
@@ -76,10 +61,10 @@ public class PlottableRsiIndicator implements ConfigView<RsiIndicatorConfig>, Pl
 	}
 
 	@Override
-	public ConfigView<RsiIndicatorConfig> createConfigView() {
-		return this;
+	public ConfigView createConfigView(RsiIndicatorConfig config) {
+		return new AutoForm(config);
 	}
-
+	
 	@Override
 	public Indicator<Num> createIndicator(RsiIndicatorConfig config, BarSeries barSeries) {
 		return new RSIIndicator(createIndicator(config.getBarValueType(), barSeries), config.getSpan());

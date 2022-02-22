@@ -43,7 +43,7 @@ public class PlottableBarIndicator implements Plottable<Bar, Void, Node> {
 	}
 
 	@Override
-	public ConfigView<Void> createConfigView() {
+	public ConfigView createConfigView(Void config) {
 		return null;
 	}
 

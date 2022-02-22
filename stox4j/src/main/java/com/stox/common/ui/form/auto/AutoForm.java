@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.stox.common.ui.ConfigView;
 import com.stox.common.ui.form.Form;
 import com.stox.common.ui.form.auto.view.AutoFormFieldView;
 import com.stox.common.ui.form.auto.view.CheckBoxView;
@@ -11,9 +12,10 @@ import com.stox.common.ui.form.auto.view.ChoiceBoxView;
 import com.stox.common.ui.form.auto.view.DoubleFieldView;
 import com.stox.common.ui.form.auto.view.IntegerFieldView;
 
+import javafx.scene.Node;
 import lombok.Getter;
 
-public class AutoForm extends Form {
+public class AutoForm extends Form implements ConfigView {
 	
 	@Getter private final Object model;
 	private final List<AutoFormField> fields = new LinkedList<>();
@@ -44,13 +46,16 @@ public class AutoForm extends Form {
 		}
 	}
 	
-	public AutoForm populateView() {
+	public void populateView() {
 		fields.forEach(AutoFormField::populateView);
-		return this;
 	}
 	
-	public AutoForm populateModel() {
+	public void populateModel() {
 		fields.forEach(AutoFormField::populateModel);
+	}
+	
+	@Override
+	public Node getNode() {
 		return this;
 	}
 
