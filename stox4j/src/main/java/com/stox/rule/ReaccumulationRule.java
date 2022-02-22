@@ -17,6 +17,7 @@ public class ReaccumulationRule extends AbstractRule {
 	@Value
 	public static class ReaccumulationRuleConfig {
 		private int barCount = 55;
+		private double multiple = 2;
 	}
 
 	@Override
@@ -43,9 +44,13 @@ public class ReaccumulationRule extends AbstractRule {
 		if(highestHighBar.getHighPrice().isLessThanOrEqual(currentBar.getHighPrice())) return false;
 		if(highestHighBar.getHighPrice().isLessThanOrEqual(lowestLowBar.getHighPrice())) return false;
 		if(lowestLowBar.getLowPrice().isGreaterThanOrEqual(currentBar.getLowPrice())) return false;
+		if(index - highestHighBarIndex <= highestHighBarIndex - lowestLowBarIndex) return false;
 		
-		// up move bar count should be less than down move bar count
-		// up move change per bar should be multiple * down move change per bar
+		final double upMove = highestHighBar.getHighPrice().minus(lowestLowBar.getLowPrice()).doubleValue();
+		final double downMove = highestHighBar.getHighPrice().minus(currentBar.getLowPrice()).doubleValue();
+		final double averageUpMove = upMove/(index - highestHighBarIndex);
+		final double averageDownMove = downMove / (highestHighBarIndex - lowestLowBarIndex);
+		//if(averageUpMove < config.getMultiple() * averageDownMove) return false;
 		
 		return true;
 	}

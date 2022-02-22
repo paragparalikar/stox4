@@ -70,7 +70,9 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 		final ChartingConfig config = getChart().getChartingView().getConfig();
 		final ChartingContext context = getChart().getChartingView().getContext();
 		final BarSeries barSeries = context.getBarSeriesProperty().get(); 
-		if(null == barSeries || 0 == barSeries.getBarCount()) {
+		if(xAxis.getStartIndex() > 0) {
+			return;
+		} else if(null == barSeries || 0 == barSeries.getBarCount()) {
 			to = ZonedDateTime.now().plusDays(1);
 			count = Math.max(config.getFetchSize(), xAxis.getEndIndex() - xAxis.getStartIndex());
 		} else {
