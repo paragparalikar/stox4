@@ -103,7 +103,7 @@ public class Plot<T, C, N> extends Group {
 	
 	protected void layoutChartChildren(final int startIndex, final int endIndex) {
 		unitParent.preLayoutChartChildren();
-		for(int index = endIndex; index > startIndex; index--) {
+		for(int index = endIndex; index >= startIndex; index--) {
 			final int unitIndex = endIndex - index;
 			if(0 <= unitIndex && unitIndex < units.size()) {
 				final Unit<T, N> unit = units.get(unitIndex);

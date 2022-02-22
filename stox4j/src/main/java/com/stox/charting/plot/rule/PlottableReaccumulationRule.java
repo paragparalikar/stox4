@@ -10,29 +10,19 @@ import com.stox.charting.unit.parent.GroupUnitParent;
 import com.stox.charting.unit.parent.UnitParent;
 import com.stox.common.ui.ConfigView;
 import com.stox.indicator.RuleIndicator;
-import com.stox.rule.SimpleBreakoutBarRule;
-import com.stox.rule.SimpleBreakoutBarRule.SimpleBreakoutBarRuleConfig;
+import com.stox.rule.ReaccumulationRule;
+import com.stox.rule.ReaccumulationRule.ReaccumulationRuleConfig;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
 
-public class PlottableBreakoutBarRule implements Plottable<Boolean, SimpleBreakoutBarRuleConfig, Node> {
-	
+public class PlottableReaccumulationRule implements Plottable<Boolean, ReaccumulationRuleConfig, Node>{
+
 	@Override
 	public String toString() {
-		return "Breakout Bar";
+		return "Reaccumulation";
 	}
-
-	@Override
-	public ConfigView<SimpleBreakoutBarRuleConfig> createConfigView() {
-		return null;
-	}
-
-	@Override
-	public Indicator<Boolean> createIndicator(SimpleBreakoutBarRuleConfig config, BarSeries barSeries) {
-		return new RuleIndicator(new SimpleBreakoutBarRule(barSeries), barSeries);
-	}
-
+	
 	@Override
 	public double resolveLowValue(Boolean model) {
 		return 0;
@@ -54,8 +44,18 @@ public class PlottableBreakoutBarRule implements Plottable<Boolean, SimpleBreako
 	}
 
 	@Override
-	public SimpleBreakoutBarRuleConfig createConfig() {
-		return new SimpleBreakoutBarRuleConfig();
+	public ReaccumulationRuleConfig createConfig() {
+		return new ReaccumulationRuleConfig();
 	}
 
+	@Override
+	public ConfigView<ReaccumulationRuleConfig> createConfigView() {
+		return null;
+	}
+
+	@Override
+	public Indicator<Boolean> createIndicator(ReaccumulationRuleConfig config, BarSeries barSeries) {
+		return new RuleIndicator(new ReaccumulationRule(barSeries, config), barSeries);
+	}
+	
 }

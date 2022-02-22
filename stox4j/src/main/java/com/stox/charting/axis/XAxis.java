@@ -72,23 +72,27 @@ public class XAxis extends StackPane {
 	}
 	
 	public double getX(final int index) {
-		return container.getWidth() + panWidth - index * unitWidth;
+		return index * unitWidth + panWidth;
 	}
 
 	public int getIndex(final double x) {
-		return (int)Math.ceil((container.getWidth() + panWidth - x) / unitWidth);
+		return (int)((x - panWidth)/unitWidth);
 	}
 
 	public int getEndIndex() {
-		return (int) ((panWidth + container.getWidth()) / unitWidth);
+		return getIndex(container.getWidth());
 	}
 	
 	public int getStartIndex() {
-		return (int) Math.ceil((panWidth) / unitWidth);
+		return getIndex(0);
 	}
 	
 	public void pan(final double deltaX) {
 		panWidth += deltaX;
+	}
+	
+	public void shift(int barCount) {
+		pan(-1 * barCount*unitWidth);
 	}
 	
 	public void reset() {

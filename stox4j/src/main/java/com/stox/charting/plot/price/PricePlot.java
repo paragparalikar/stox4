@@ -74,16 +74,16 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 			to = ZonedDateTime.now().plusDays(1);
 			count = Math.max(config.getFetchSize(), xAxis.getEndIndex() - xAxis.getStartIndex());
 		} else {
-			to = barSeries.getLastBar().getEndTime();
+			to = barSeries.getFirstBar().getEndTime();
 			count = Math.max(config.getFetchSize(), xAxis.getEndIndex() - barSeries.getBarCount());
 		}
 		final List<Bar> bars = barService.find(scrip.getIsin(), count, to);
 		fullyLoaded = bars.isEmpty(); //bars.size() < count;
-		final List<Bar> data = barSeries.getBarData();
-		data.addAll(bars);
-		final BarSeries newBarSeries = new BaseBarSeries(data);
+		xAxis.shift(bars.size());
+		bars.addAll(barSeries.getBarData());
+		final BarSeries newBarSeries = new BaseBarSeries(bars);
 		context.getBarSeriesProperty().set(newBarSeries);
-		if(!fullyLoaded && xAxis.getEndIndex() > data.size()) doReload(scrip);
+		//if(!fullyLoaded && xAxis.getEndIndex() > bars.size()) doReload(scrip);
 	}
 
 	@Override

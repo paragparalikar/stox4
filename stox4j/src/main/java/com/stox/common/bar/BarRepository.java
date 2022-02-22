@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -50,12 +51,12 @@ public class BarRepository {
 					final long initialDate = file.readLong();
 					final long to = offset.toInstant().toEpochMilli();
 					final long maxLocation = Maths.clip(Long.BYTES, getLocation(initialDate, to) - BYTES, file.length() - BYTES);
-					final long minLocation = Maths.clip(Long.BYTES, maxLocation - count * BYTES, maxLocation);
-					for (long location = maxLocation; location > minLocation; location -= BYTES) {
+					for(long location = maxLocation; location >= Long.BYTES && bars.size() < count; location-= BYTES) {
 						file.seek(location);
 						final Bar bar = readBar(file, isin, getDate(initialDate, location));
 						if (null != bar) bars.add(bar);
 					}
+					Collections.reverse(bars);
 					return bars;
 				}
 			} catch(FileNotFoundException e) {
@@ -74,12 +75,13 @@ public class BarRepository {
 					return bars;
 				} else {
 					final long initialDate = file.readLong();
-					for (long location = file.length() - BYTES; location >= Long.BYTES
-							&& bars.size() < count; location -= BYTES) {
+					final long maxLocation = file.length() - BYTES;
+					for(long location = maxLocation; location >= Long.BYTES && bars.size() < count; location-= BYTES) {
 						file.seek(location);
 						final Bar bar = readBar(file, isin, getDate(initialDate, location));
 						if (null != bar) bars.add(bar);
 					}
+					Collections.reverse(bars);
 					return bars;
 				}
 			} catch(FileNotFoundException e) {

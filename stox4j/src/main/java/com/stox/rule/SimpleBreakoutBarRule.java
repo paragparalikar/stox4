@@ -9,9 +9,9 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class BreakoutBarRule extends AbstractRule {
+public class SimpleBreakoutBarRule extends AbstractRule {
 	
-	public static class BreakoutBarRuleConfig {
+	public static class SimpleBreakoutBarRuleConfig {
 		
 	}
 
