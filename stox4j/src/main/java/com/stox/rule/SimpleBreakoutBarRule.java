@@ -19,10 +19,10 @@ public class SimpleBreakoutBarRule extends AbstractRule {
 
 	@Override
 	public boolean isSatisfied(int index, TradingRecord tradingRecord) {
-		if(null != barSeries && 0 <= index && index < barSeries.getBarCount() - 2) {
+		if(null != barSeries && 2 <= index && index < barSeries.getBarCount()) {
 			final Bar bar = barSeries.getBar(index);
-			final Bar one = barSeries.getBar(index + 1);
-			final Bar two = barSeries.getBar(index + 2);
+			final Bar one = barSeries.getBar(index - 1);
+			final Bar two = barSeries.getBar(index - 2);
 			if(bar.getClosePrice().isLessThan(one.getHighPrice())) return false;
 			if(one.getClosePrice().isGreaterThan(two.getHighPrice())) return false;
 			return true;

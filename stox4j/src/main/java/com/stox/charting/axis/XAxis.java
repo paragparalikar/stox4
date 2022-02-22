@@ -96,7 +96,7 @@ public class XAxis extends StackPane {
 	}
 	
 	public void reset() {
-		panWidth = -10 * unitWidth;
+		panWidth = container.getWidth() - 10 * unitWidth;
 		resetLayout();
 	}
 	
