@@ -9,18 +9,18 @@ import com.stox.charting.plot.Plottable;
 import com.stox.charting.plot.indicator.PlottableRsiIndicator.RsiIndicatorConfig;
 import com.stox.charting.unit.LineUnit;
 import com.stox.charting.unit.Unit;
-import com.stox.charting.unit.parent.PathUnitParent;
+import com.stox.charting.unit.parent.PolylineUnitParent;
 import com.stox.charting.unit.parent.UnitParent;
 import com.stox.common.bar.BarValueType;
 import com.stox.common.ui.ConfigView;
 
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.PathElement;
+import javafx.scene.shape.Polyline;
 import lombok.Data;
 
-public class PlottableRsiIndicator implements ConfigView<RsiIndicatorConfig>, Plottable<Num, RsiIndicatorConfig, PathElement> {
+public class PlottableRsiIndicator implements ConfigView<RsiIndicatorConfig>, Plottable<Num, RsiIndicatorConfig, Point2D> {
 
 	@Data
 	public static class RsiIndicatorConfig {
@@ -61,13 +61,13 @@ public class PlottableRsiIndicator implements ConfigView<RsiIndicatorConfig>, Pl
 	}
 
 	@Override
-	public Unit<Num, PathElement> createUnit() {
+	public Unit<Num, Point2D> createUnit() {
 		return new LineUnit();
 	}
 
 	@Override
-	public UnitParent<PathElement> createUnitParent() {
-		return new PathUnitParent(new Path());
+	public UnitParent<Point2D> createUnitParent() {
+		return new PolylineUnitParent(new Polyline());
 	}
 
 	@Override

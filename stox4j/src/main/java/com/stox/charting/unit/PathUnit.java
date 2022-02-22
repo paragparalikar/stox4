@@ -7,19 +7,23 @@ import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
 import com.stox.charting.unit.parent.UnitParent;
 
-import javafx.geometry.Point2D;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.PathElement;
 import lombok.Setter;
 
 @Setter
-public class LineUnit implements Unit<Num, Point2D> {
-
+public class PathUnit implements Unit<Num, PathElement> {
+	
 	private XAxis xAxis;
 	private YAxis yAxis;
 	private ChartingContext context;
-	
+	private LineTo lineTo = new LineTo();
+
 	@Override
-	public void layoutChildren(int index, Num model, UnitParent<Point2D> parent) {
-		parent.add(new Point2D(xAxis.getX(index), yAxis.getY(model.doubleValue())));
+	public void layoutChildren(int index, Num model, UnitParent<PathElement> parent) {
+		lineTo.setX(xAxis.getX(index));
+		lineTo.setY(yAxis.getY(model.doubleValue()));
+		parent.add(lineTo);
 	}
 
 }

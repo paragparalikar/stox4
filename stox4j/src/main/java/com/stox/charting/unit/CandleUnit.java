@@ -5,6 +5,7 @@ import org.ta4j.core.Bar;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
+import com.stox.charting.unit.parent.UnitParent;
 import com.stox.common.util.Colors;
 
 import javafx.scene.Group;
@@ -31,7 +32,7 @@ public class CandleUnit extends Group implements Unit<Bar, Node> {
 	}
 	
 	@Override
-	public void layoutChildren(int index, Bar bar) {
+	public void layoutChildren(int index, Bar bar, UnitParent<Node> parent) {
 		final double barWidth = xAxis.getUnitWidth() * 0.8;
 		body.setX(xAxis.getX(index) - barWidth/2d);
 		body.setWidth(barWidth);
@@ -42,11 +43,7 @@ public class CandleUnit extends Group implements Unit<Bar, Node> {
 		line.setStartY(yAxis.getY(bar.getHighPrice().doubleValue()));
 		line.setEndY(yAxis.getY(bar.getLowPrice().doubleValue()));
 		body.setFill(bar.getOpenPrice().isLessThan(bar.getClosePrice()) ? Colors.UP : Colors.DOWN);
-	}
-	
-	@Override
-	public Node asChild() {
-		return this;
+		parent.add(this);
 	}
 	
 	@Override

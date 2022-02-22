@@ -1,7 +1,6 @@
 package com.stox.charting.plot;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.ta4j.core.BarSeries;
@@ -91,12 +90,7 @@ public class Plot<T, C, N> extends Group {
 	protected void removeUnits(int startIndex, int endIndex) {
 		final int visibleBarCount = endIndex - startIndex;
 		if(visibleBarCount < units.size()) {
-			final Iterator<Unit<T, N>> iterator = units.subList(visibleBarCount, units.size()).iterator();
-			while(iterator.hasNext()) {
-				final Unit<T, N> unit = iterator.next();
-				unitParent.remove(unit.asChild());
-				iterator.remove();
-			}
+			units.subList(visibleBarCount, units.size()).clear();
 		}
 	}
 	
@@ -114,8 +108,7 @@ public class Plot<T, C, N> extends Group {
 	}
 	
 	protected void layoutUnit(int index, Unit<T, N> unit, T model) {
-		unitParent.add(unit.asChild());
-		unit.layoutChildren(index, model);
+		unit.layoutChildren(index, model, unitParent);
 	}
 	
 	public void layoutChartChildren() {

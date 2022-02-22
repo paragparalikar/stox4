@@ -6,6 +6,7 @@ import org.ta4j.core.num.Num;
 import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
+import com.stox.charting.unit.parent.UnitParent;
 
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -24,23 +25,16 @@ public class BooleanUnit extends Polygon implements Unit<Boolean, Node> {
 	}
 
 	@Override
-	public Node asChild() {
-		return this;
-	}
-
-	@Override
-	public void layoutChildren(int index, Boolean model) {
+	public void layoutChildren(int index, Boolean model, UnitParent<Node> parent) {
 		getPoints().clear();
 		final BarSeries barSeries = context.getBarSeriesProperty().get();
 		if(null != barSeries && index < barSeries.getBarCount() && model) {
-			setVisible(true);
 			final Num low = barSeries.getBar(index).getLowPrice();
 			final double x = xAxis.getX(index);
 			final double y = yAxis.getY(low.doubleValue()) + GAP;
 			final double half = xAxis.getUnitWidth() / 2;
 			getPoints().addAll(x, y, x + half, y + half, x - half, y + half);
-		} else {
-			setVisible(false);
+			parent.add(this);
 		}
 	}
 
