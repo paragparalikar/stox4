@@ -85,7 +85,6 @@ public class Plot<T, C, N> extends Group {
 			unit.setYAxis(yAxis);
 			unit.setContext(chart.getChartingView().getContext());
 			units.add(unit);
-			unitParent.add(unit.asChild());
 		}
 	}
 	
@@ -102,6 +101,7 @@ public class Plot<T, C, N> extends Group {
 	}
 	
 	protected void layoutChartChildren(final int startIndex, final int endIndex) {
+		unitParent.clear();
 		unitParent.preLayoutChartChildren();
 		for(int index = endIndex; index >= startIndex; index--) {
 			final int unitIndex = endIndex - index;
@@ -114,6 +114,7 @@ public class Plot<T, C, N> extends Group {
 	}
 	
 	protected void layoutUnit(int index, Unit<T, N> unit, T model) {
+		unitParent.add(unit.asChild());
 		unit.layoutChildren(index, model);
 	}
 	

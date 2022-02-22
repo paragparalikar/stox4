@@ -76,7 +76,7 @@ public class XAxis extends StackPane {
 	}
 
 	public int getIndex(final double x) {
-		return (int)((x - panWidth)/unitWidth);
+		return (int)Math.ceil((x - panWidth)/unitWidth);
 	}
 
 	public int getEndIndex() {

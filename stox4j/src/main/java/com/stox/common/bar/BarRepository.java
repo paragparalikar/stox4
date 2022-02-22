@@ -51,6 +51,7 @@ public class BarRepository {
 					final long initialDate = file.readLong();
 					final long to = offset.toInstant().toEpochMilli();
 					final long maxLocation = Maths.clip(Long.BYTES, getLocation(initialDate, to) - BYTES, file.length() - BYTES);
+					if(maxLocation <= Long.BYTES) return bars;
 					for(long location = maxLocation; location >= Long.BYTES && bars.size() < count; location-= BYTES) {
 						file.seek(location);
 						final Bar bar = readBar(file, isin, getDate(initialDate, location));

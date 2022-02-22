@@ -1,5 +1,6 @@
 package com.stox.charting.unit.parent;
 
+import javafx.scene.shape.ClosePath;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -28,6 +29,11 @@ public class PathUnitParent implements UnitParent<PathElement> {
 	public void clear() {
 		path.getElements().clear();
 	}
+	
+	@Override
+	public void preLayoutChartChildren() {
+
+	}
 
 	@Override
 	public void add(PathElement child) {
@@ -38,6 +44,11 @@ public class PathUnitParent implements UnitParent<PathElement> {
 		} else {
 			path.getElements().add(child);
 		}
+	}
+	
+	@Override
+	public void postLayoutChartChildren() {
+		path.getElements().add(new ClosePath());
 	}
 
 	@Override
