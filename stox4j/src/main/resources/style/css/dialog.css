@@ -5,8 +5,8 @@
 .dialog-root{
 	-fx-opacity: 1;
 	-fx-background-color: white;
-	-fx-pref-height: 30em;
-	-fx-pref-width: 60em;
+/*	-fx-pref-height: 30em;
+	-fx-pref-width: 60em;*/
 	-fx-padding: 5px;
 	-fx-effect: dropshadow(three-pass-box, rgba(88,88,88,0.2), 10, 0, 10, 10);
 }

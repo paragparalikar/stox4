@@ -2,8 +2,11 @@ package com.stox.charting.plot;
 
 import org.ta4j.core.num.Num;
 
+import com.stox.common.ui.ConfigView;
+import com.stox.common.ui.DefaultDialogx;
 import com.stox.common.ui.Icon;
 
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 
 public class DefaultPlotInfo<T> extends PlotInfo<T> {
@@ -14,6 +17,19 @@ public class DefaultPlotInfo<T> extends PlotInfo<T> {
 		super(plot);
 		getChildren().add(valueLabel);
 		createButton(Icon.TRASH, event -> plot.getChart().removePlot(plot));
+		if(null != plot.getIndicatorConfig()) createButton(Icon.GEAR, event -> config());
+	}
+	
+	private void config() {
+		final ConfigView configView = getPlot().createConfigView();
+		new DefaultDialogx()
+		.withTitle("Rules")
+		.withContent(configView.getNode())
+		.withButton(ButtonType.CANCEL)
+		.withButton(ButtonType.APPLY, () -> {
+			configView.populateModel();
+			getPlot().reload();
+		}).show(this);
 	}
 	
 	@Override

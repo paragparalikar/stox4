@@ -13,6 +13,7 @@ import com.stox.charting.axis.YAxis;
 import com.stox.charting.chart.Chart;
 import com.stox.charting.unit.Unit;
 import com.stox.charting.unit.parent.UnitParent;
+import com.stox.common.ui.ConfigView;
 import com.stox.common.util.Maths;
 
 import javafx.scene.Group;
@@ -23,12 +24,12 @@ import lombok.Setter;
 public class Plot<T, C, N> extends Group {
 
 	private Chart chart;
+	private PlotInfo<T> info;
 	private Indicator<T> indicator;
 	private final C indicatorConfig;
 	private final UnitParent<N> unitParent;
 	private final Plottable<T, C, N> plottable;
 	private final List<Unit<T, N>> units = new ArrayList<>();
-	private PlotInfo<T> info = new DefaultPlotInfo<>(this);
 	
 	public Plot(Plottable<T, C, N> plottable) {
 		setManaged(false);
@@ -37,6 +38,11 @@ public class Plot<T, C, N> extends Group {
 		this.indicatorConfig = plottable.createConfig();
 		this.unitParent = plottable.createUnitParent();
 		getChildren().add(unitParent.getNode());
+		info = new DefaultPlotInfo<>(this);
+	}
+	
+	public ConfigView createConfigView() {
+		return null == indicatorConfig ? null : plottable.createConfigView(indicatorConfig);
 	}
 	
 	public void reload() {
@@ -100,8 +106,8 @@ public class Plot<T, C, N> extends Group {
 		for(int index = endIndex; index >= startIndex; index--) {
 			final int unitIndex = endIndex - index;
 			if(0 <= unitIndex && unitIndex < units.size()) {
-				final Unit<T, N> unit = units.get(unitIndex);
-				layoutUnit(index, unit, indicator.getValue(index));
+				final T model = indicator.getValue(index);
+				if(null != model) layoutUnit(index, units.get(unitIndex), model);
 			}
 		}
 		unitParent.postLayoutChartChildren();

@@ -5,8 +5,8 @@ import org.ta4j.core.BarSeries;
 import org.ta4j.core.TradingRecord;
 import org.ta4j.core.rules.AbstractRule;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 
 @RequiredArgsConstructor
 public class ReaccumulationRule extends AbstractRule {
@@ -14,7 +14,7 @@ public class ReaccumulationRule extends AbstractRule {
 	private final BarSeries barSeries;
 	private final ReaccumulationRuleConfig config;
 	
-	@Value
+	@Data
 	public static class ReaccumulationRuleConfig {
 		private int barCount = 55;
 		private double multiple = 2;
