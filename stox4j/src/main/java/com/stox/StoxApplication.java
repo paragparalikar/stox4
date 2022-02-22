@@ -46,7 +46,8 @@ public class StoxApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		tabPane.setSide(Side.BOTTOM);
-		scene.getStylesheets().addAll("style/css/common.css", "style/css/charting.css", "style/css/dialog.css");
+		scene.getStylesheets().addAll("style/css/common.css", "style/css/charting.css", "style/css/dialog.css",
+				"style/css/form.css");
 		
 		primaryStage.setScene(scene);
 		primaryStage.setMaximized(true);

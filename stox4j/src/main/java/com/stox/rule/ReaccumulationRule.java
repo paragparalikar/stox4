@@ -17,7 +17,12 @@ public class ReaccumulationRule extends AbstractRule {
 	@Data
 	public static class ReaccumulationRuleConfig {
 		private int barCount = 55;
-		private double multiple = 2;
+		private double minUpMovePercentage = 20;
+		private double maxUpMovePercentage = 100;
+		private double minDownMovePercentage = 10;
+		private double maxDownMovePercentage = 66.66;
+		private double barCountMultiple = 1.5;
+		private double priceMoveMultiple = 2;
 	}
 
 	@Override
@@ -41,13 +46,25 @@ public class ReaccumulationRule extends AbstractRule {
 		if(highestHighBarIndex >= index) return false;
 		if(lowestLowBarIndex >= highestHighBarIndex) return false;
 		if(null == highestHighBar || null == lowestLowBar) return false;
-		if(highestHighBar.getHighPrice().isLessThanOrEqual(currentBar.getHighPrice())) return false;
-		if(highestHighBar.getHighPrice().isLessThanOrEqual(lowestLowBar.getHighPrice())) return false;
-		if(lowestLowBar.getLowPrice().isGreaterThanOrEqual(currentBar.getLowPrice())) return false;
 		if(index - highestHighBarIndex <= highestHighBarIndex - lowestLowBarIndex) return false;
 		
-		final double upMove = highestHighBar.getHighPrice().minus(lowestLowBar.getLowPrice()).doubleValue();
-		final double downMove = highestHighBar.getHighPrice().minus(currentBar.getLowPrice()).doubleValue();
+		final double highestHigh = highestHighBar.getHighPrice().doubleValue();
+		final double lowestLow = lowestLowBar.getLowPrice().doubleValue();
+		final double currentHigh = currentBar.getHighPrice().doubleValue();
+		final double currentLow = currentBar.getLowPrice().doubleValue();
+		
+		if(highestHigh <= currentHigh) return false;
+		if(highestHigh <= lowestLow) return false;
+		if(currentLow <= lowestLow) return false;
+		
+		final double upMove = highestHigh - lowestLow;
+		final double upMovePercentage = upMove * 100 / lowestLow;
+		if(upMovePercentage > config.getMaxUpMovePercentage() || upMovePercentage < config.getMinUpMovePercentage()) return false;
+		
+		final double downMove = highestHigh - currentLow;
+		final double downMovePercentage = downMove * 100 / highestHigh;
+		if(downMovePercentage > config.getMaxDownMovePercentage() || downMovePercentage < config.getMinDownMovePercentage()) return false;
+		
 		final double averageUpMove = upMove/(index - highestHighBarIndex);
 		final double averageDownMove = downMove / (highestHighBarIndex - lowestLowBarIndex);
 		//if(averageUpMove < config.getMultiple() * averageDownMove) return false;
