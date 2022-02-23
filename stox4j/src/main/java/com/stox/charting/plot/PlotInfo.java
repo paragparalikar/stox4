@@ -34,7 +34,7 @@ public class PlotInfo<T> extends HBox {
 	
 	public void setName(String value) {
 		setVisible(null != value);
-		name.setText(null == value ? null : value.toUpperCase());
+		name.setText(value);
 	}
 	
 	public void setValue(T model) {

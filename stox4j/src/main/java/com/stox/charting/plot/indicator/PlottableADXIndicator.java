@@ -2,37 +2,32 @@ package com.stox.charting.plot.indicator;
 
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.Indicator;
-import org.ta4j.core.indicators.RSIIndicator;
+import org.ta4j.core.indicators.adx.ADXIndicator;
 import org.ta4j.core.num.Num;
 
 import com.stox.charting.plot.Plottable;
-import com.stox.charting.plot.indicator.PlottableRsiIndicator.RsiIndicatorConfig;
+import com.stox.charting.plot.indicator.PlottableADXIndicator.ADXIndicatorConfig;
 import com.stox.charting.unit.LineUnit;
 import com.stox.charting.unit.Unit;
 import com.stox.charting.unit.parent.PolylineUnitParent;
 import com.stox.charting.unit.parent.UnitParent;
-import com.stox.common.bar.BarValueType;
 import com.stox.common.ui.ConfigView;
 import com.stox.common.ui.form.auto.AutoForm;
 
 import javafx.geometry.Point2D;
-import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Polyline;
 import lombok.Data;
 
-public class PlottableRsiIndicator implements Plottable<Num, RsiIndicatorConfig, Point2D> {
+public class PlottableADXIndicator implements Plottable<Num, ADXIndicatorConfig, Point2D> {
 
 	@Data
-	public static class RsiIndicatorConfig {
-		private int span = 14;
-		private BarValueType barValueType = BarValueType.CLOSE;
+	public static class ADXIndicatorConfig{
+		private int barCount = 14;
 	}
-	
-	private final GridPane container = new GridPane();
 	
 	@Override
 	public String toString() {
-		return "Relative Strength Index";
+		return "Average Directional Index (ADX)";
 	}
 
 	@Override
@@ -56,18 +51,18 @@ public class PlottableRsiIndicator implements Plottable<Num, RsiIndicatorConfig,
 	}
 
 	@Override
-	public RsiIndicatorConfig createConfig() {
-		return new RsiIndicatorConfig();
+	public ADXIndicatorConfig createConfig() {
+		return new ADXIndicatorConfig();
 	}
 
 	@Override
-	public ConfigView createConfigView(RsiIndicatorConfig config) {
+	public ConfigView createConfigView(ADXIndicatorConfig config) {
 		return new AutoForm(config);
 	}
-	
+
 	@Override
-	public Indicator<Num> createIndicator(RsiIndicatorConfig config, BarSeries barSeries) {
-		return new RSIIndicator(createIndicator(config.getBarValueType(), barSeries), config.getSpan());
+	public Indicator<Num> createIndicator(ADXIndicatorConfig config, BarSeries barSeries) {
+		return new ADXIndicator(barSeries, config.getBarCount());
 	}
-	
+
 }

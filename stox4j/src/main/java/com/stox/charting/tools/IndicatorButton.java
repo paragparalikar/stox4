@@ -7,7 +7,9 @@ import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.chart.Chart;
 import com.stox.charting.plot.Plot;
 import com.stox.charting.plot.Plottable;
-import com.stox.charting.plot.indicator.PlottableRsiIndicator;
+import com.stox.charting.plot.indicator.PlottableADXIndicator;
+import com.stox.charting.plot.indicator.PlottableATRIndicator;
+import com.stox.charting.plot.indicator.PlottableRSIIndicator;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.ui.DefaultDialogx;
 
@@ -29,7 +31,9 @@ public class IndicatorButton extends Button implements EventHandler<ActionEvent>
 		setOnAction(this);
 		this.context = context;
 		this.chartingView = chartingView;
-		listView.getItems().add(new PlottableRsiIndicator());
+		listView.getItems().add(new PlottableRSIIndicator());
+		listView.getItems().add(new PlottableADXIndicator());
+		listView.getItems().add(new PlottableATRIndicator());
 	}
 
 	@Override
