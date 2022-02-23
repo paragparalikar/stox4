@@ -54,6 +54,7 @@ public class Plot<T, C, N> extends Group {
 			getInfo().setName(null);
 			setIndicator(new ConstantIndicator<>(barSeries, null));
 		}
+		chart.redraw();
 	}
 	
 	public void setChart(Chart chart) {

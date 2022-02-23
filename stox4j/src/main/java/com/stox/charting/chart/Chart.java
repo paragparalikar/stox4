@@ -35,6 +35,7 @@ public class Chart extends BorderPane {
 		setRight(yAxis);
 		setCenter(contentArea);
 		compositeModeMouseHandler.attach(contentArea);
+		contentArea.heightProperty().addListener((o,old,value) -> redraw());
 		style();
 	}
 	
@@ -61,6 +62,7 @@ public class Chart extends BorderPane {
 		contentArea.getChildren().add(plot);
 		infoPane.getChildren().add(plot.getInfo());
 		infoPane.toFront();
+		plot.reload();
 	}
 	
 	public void removePlot(Plot<?, ?, ?> plot) {
