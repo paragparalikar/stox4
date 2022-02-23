@@ -6,6 +6,7 @@ import org.ta4j.core.BaseBarSeries;
 
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.chart.Chart;
+import com.stox.charting.controls.ChartingButtonBar;
 import com.stox.charting.crosshair.Crosshair;
 import com.stox.charting.grid.VerticalGrid;
 import com.stox.charting.handler.pan.PanRequestEvent;
@@ -66,9 +67,10 @@ public class ChartingView extends BorderPane {
 	private final VerticalGrid verticalGrid = new VerticalGrid();
 	private final Crosshair crosshair = new Crosshair(splitPane);
 	private final ChartingContext context = new ChartingContext();
+	private final ChartingButtonBar controlButtons = new ChartingButtonBar(this);
 	private final XAxis xAxis = new XAxis(context, config, crosshair, verticalGrid);
 	
-	private final StackPane stackPane = new StackPane(verticalGrid, splitPane, crosshair);
+	private final StackPane stackPane = new StackPane(verticalGrid, splitPane, controlButtons, crosshair);
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
 	public ChartingView(BarService barService) {
