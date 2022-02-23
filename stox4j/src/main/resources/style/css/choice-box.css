@@ -1,0 +1,10 @@
+.choice-box{
+	-fx-background-radius: 0.3em;
+	-fx-border-radius: 0.3em;
+	-fx-content-display: LEFT;
+	-fx-padding: 0.2em 1em;
+}
+
+.choice-box.primary.inverted{
+	-fx-border-width: 0;
+}

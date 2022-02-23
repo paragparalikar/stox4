@@ -1,0 +1,144 @@
+.table-view{
+	-fx-padding: 0;
+	-fx-border-insets:0;
+	-fx-border-width: 0;
+	-fx-background-insets: 0;
+	mark-color: white;
+}
+.table-column{
+	-fx-padding: 0.2em 0.5em;
+}
+.table-view > .column-header-background > .show-hide-columns-button,
+.tree-table-view > .column-header-background > .show-hide-columns-button {
+    -fx-background-insets: 0, 0 0 1 1, 1 1 2 2;
+}
+.table-view .column-header .sort-order-dots-container,
+.tree-table-view .column-header .sort-order-dots-container{
+    -fx-padding: 2 0 2 0;
+}
+.table-view .column-header .sort-order,
+.tree-table-view .column-header .sort-order{
+    -fx-font-size: 0.916667em; /* 11pt - 1 less than the default font */
+}
+.table-view .column-header .sort-order-dot,
+.tree-table-view .column-header .sort-order-dot {
+    -fx-background-color: mark-color;
+    -fx-padding: 0.115em;
+    -fx-background-radius: 0.115em;
+}
+.table-view .column-header .label,
+.tree-table-view .column-header .label {
+    -fx-alignment: center;
+}
+
+/* Plus Symbol */
+.table-view .show-hide-column-image,
+.tree-table-view .show-hide-column-image {
+    -fx-background-color: mark-color;
+    -fx-padding: 0.25em; /* 3px */
+    -fx-shape: "M398.902,298.045c0.667,0,1.333,0,2,0c0,0.667,0,1.333,0,2c0.667,0,1.333,0,2,0c0,0.667,0,1.333,0,2c-0.667,0-1.333,0-2,0c0,0.666,0,1.332,0,1.999c-0.667,0-1.333,0-2,0c0-0.667,0-1.333,0-1.999c-0.666,0-1.333,0-1.999,0c0-0.667,0-1.334,0-2c0.666,0,1.333,0,1.999,0C398.902,299.378,398.902,298.711,398.902,298.045z";
+}
+/* When a column is being 'dragged' to be placed in a different position, there
+   is a region that follows along the column header area to indicate where the
+   column will be dropped. This region can be styled using the .column-drag-header
+   name. */
+.table-view .column-drag-header,
+.tree-table-view .column-drag-header {
+    -fx-background: mark-color;
+    -fx-background-color: mark-color;
+    -fx-border-color: transparent;
+    -fx-opacity: 0.6;
+}
+/* Semi-transparent overlay to indicate the column that is currently being moved */
+.table-view .column-overlay,
+.tree-table-view .column-overlay {
+    -fx-background-color: darkgray;
+    -fx-opacity: 0.3;
+}
+
+.table-view.primary .column-header-background,
+.table-view.primary .column-header-background .nested-column-header,
+.table-view.primary .column-header-background .nested-column-header .column-header,
+.table-view.primary .column-header-background .nested-column-header .column-header .label{
+    -fx-text-fill: white;
+    -fx-background-color: primary-background-color;
+    -fx-background-insets: 0;
+}
+.table-view.primary .column-header-background .nested-column-header .column-header *.arrow{
+	-fx-background-color: white;
+}
+.table-view.primary *.table-row-cell,
+.table-view.primary *.table-cell{
+	-fx-border-width: 0;
+	-fx-text-fill: primary-background-color;
+    -fx-background-color: transparent;
+}
+.table-view.primary *.table-cell{
+	-fx-border-color:lighter;
+	-fx-border-width: 0 0.5px 0.5px 0;
+}
+.table-view.primary *.table-cell:last-visible{
+	-fx-border-width: 0 0 0.5px 0;
+}
+.table-view.primary *.table-row-cell:focused, 
+.table-view.primary *.table-row-cell:selected,
+.table-view.primary *.table-cell:selected,
+.table-view.primary *.table-cell:focused{
+	-fx-background-color: lighter;
+}
+
+.table-view *.table-cell.danger{
+	-fx-font-weight: bold;
+	-fx-text-fill: danger-background-color;
+}
+.table-view *.table-row-cell.danger{
+	-fx-background-color: derive(danger-background-color, 90%);
+}
+.table-view *.table-row-cell.danger,
+.table-view *.table-row-cell.danger *.table-cell{
+	-fx-border-color: danger-background-color;
+}
+.table-view *.table-row-cell.danger:selected,
+.table-view *.table-row-cell.danger:focused{
+	-fx-background-color: derive(danger-background-color, 70%);
+}
+
+
+.table-view *.table-cell.Ssuccess{
+	-fx-font-weight: bold;
+	-fx-text-fill: success-background-color;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
+
+table-view
+  column-header-background
+    filler
+    nested-column-header
+      column-header table-column
+        label
+          text
+  virtual-flow
+    clipped-container
+      sheet
+        cell indexed-cell table-row-cell
+          cell indexed-cell table-cell table-column
+
+ */

@@ -1,0 +1,23 @@
+.list-view{
+	-fx-background-color: white;
+}
+
+.list-view .cell:filled{
+	-fx-padding: 0.2em 1em;
+	-fx-min-height: 2em;
+	-fx-pref-height: 2em;
+	-fx-border-width: 0 0 1px 0;
+	-fx-border-color: lightgray;
+	-fx-background-color: white;
+}
+
+.list-view .cell.dnd:filled {
+	-fx-border-width: 2px 0 1px 0;
+	-fx-border-color: gray;
+}
+
+.list-view .cell:filled:selected,
+.list-view .cell:filled:focused{
+	-fx-text-fill: black;
+	-fx-background-color: lightgray;
+}

@@ -46,7 +46,13 @@ public class StoxApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		tabPane.setSide(Side.BOTTOM);
-		scene.getStylesheets().addAll("style/css/common.css", "style/css/charting.css", "style/css/charting-controls.css", 
+		scene.getStylesheets().addAll("style/css/common.css", 
+				"style/css/check-box.css", "style/css/choice-box.css",
+				"style/css/progress-bar.css", "style/css/progress-indicator.css",
+				"style/css/combo-box.css", "style/css/list-view.css",
+				"style/css/table-view.css", "style/css/tab-pane.css",
+				"style/css/scroll-bar.css", 
+				"style/css/charting.css", "style/css/charting-controls.css", 
 				"style/css/dialog.css", "style/css/form.css");
 		
 		primaryStage.setScene(scene);

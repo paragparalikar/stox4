@@ -1,0 +1,53 @@
+.combo-box, .combo-box .list-view .list-cell{
+	-fx-content-display: LEFT;
+	-fx-padding: 0.2em 1em;
+	
+	-fx-background-color: background-color;
+	-fx-text-fill: text-color;
+}
+.combo-box{
+	-fx-background-radius: 0.3em;
+	-fx-border-radius: 0.3em;
+}
+.combo-box .arrow {
+	-fx-padding: 0.25em;
+    -fx-shape: "M 0 0 h 7 l -3.5 4 z";
+    -fx-background-color: text-color;
+}
+.combo-box .arrow-button:hover .arrow{
+	 -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.5) , 3, 0.0 , 3 , 3 );
+}
+.combo-box .list-view{
+	-fx-padding: 0;
+	-fx-border-width: 0;
+	-fx-border-insets: 0;
+	-fx-background-insets: 0;
+	-fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.5) , 3, 0.0 , 3 , 3 );
+}
+.combo-box .list-view .list-cell:hover{
+	-fx-background-color: derive(background-color, -10%);
+}
+.combo-box .list-view .list-cell:selected,
+.combo-box .list-view .list-cell:pressed,
+.combo-box .list-view .list-cell:focused{
+	-fx-background-color: derive(background-color, -20%);
+}
+.combo-box:disabled, .combo-box:disabled .list-cell, .combo-box:disabled .arrow{
+	-fx-text-fill: derive(text-color, 20%);
+}
+
+.primary.combo-box.inverted{
+	-fx-border-width: 0 0 1px 0;
+	-fx-border-color: primary-background-color;
+}
+.primary-background .primary.combo-box.inverted{
+	-fx-border-width: 0;
+} 
+
+.primary.combo-box.inverted, 
+.primary.combo-box.inverted .list-cell,
+.primary.combo-box.inverted .arrow,
+.primary.combo-box.inverted .list-view .list-cell{
+	background-color: primary-text-color;
+	text-color: primary-background-color;
+}

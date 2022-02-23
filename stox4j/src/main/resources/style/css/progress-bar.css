@@ -1,0 +1,36 @@
+.progress-bar {
+    -fx-indeterminate-bar-length: 60;
+    -fx-indeterminate-bar-escape: true;
+    -fx-indeterminate-bar-flip: true;
+    -fx-indeterminate-bar-animation-time: 2;
+}
+
+.progress-bar, 
+.progress-bar > .track{
+	-fx-background-insets: 0;
+	-fx-border-insets: 0;
+	-fx-background-color: background-color;
+}
+.progress-bar > .bar {
+    -fx-background-radius: 2;
+ 	-fx-background-insets: 0;
+    -fx-padding: 0.3em;
+    -fx-background-color: text-color;
+}
+
+.progress-bar.success.inverted, 
+.progress-bar.success.inverted > .track,
+.progress-bar.success.inverted > .bar{
+	background-color: success-text-color;
+	text-color: success-background-color;
+}
+
+
+.progress-bar.primary.success, 
+.progress-bar.primary.success > .track,
+.progress-bar.primary.success > .bar{
+	background-color: primary-background-color;
+	text-color: success-background-color;
+}
+
+
