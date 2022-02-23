@@ -12,7 +12,7 @@ public class PanResetButton extends Button implements EventHandler<ActionEvent> 
 	private final ChartingView chartingView;
 
 	public PanResetButton(ChartingView chartingView) {
-		super(Icon.ANGLE_DOUBLE_RIGHT);
+		super(Icon.ARROW_RIGHT);
 		setOnAction(this);
 		this.chartingView = chartingView;
 		getStyleClass().addAll("icon", "charting-control-button");

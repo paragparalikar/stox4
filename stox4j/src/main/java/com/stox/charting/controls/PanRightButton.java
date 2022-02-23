@@ -12,7 +12,7 @@ public class PanRightButton extends Button implements EventHandler<ActionEvent> 
 	private final ChartingView chartingView;
 	
 	public PanRightButton(ChartingView chartingView) {
-		super(Icon.ANGLE_RIGHT);
+		super(Icon.CHEVRON_RIGHT);
 		setOnAction(this);
 		this.chartingView = chartingView;
 		getStyleClass().addAll("icon", "charting-control-button");
