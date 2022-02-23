@@ -1,6 +1,7 @@
 package com.stox.charting.unit.parent;
 
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public class PolygonUnitParent implements UnitParent<Point2D> {
@@ -10,6 +11,11 @@ public class PolygonUnitParent implements UnitParent<Point2D> {
 	public PolygonUnitParent(Polygon area) {
 		super();
 		this.area = area;
+	}
+	
+	@Override
+	public void setColor(Color color) {
+		area.setFill(color);
 	}
 
 	@Override

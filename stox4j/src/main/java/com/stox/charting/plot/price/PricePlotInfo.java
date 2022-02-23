@@ -26,7 +26,7 @@ public class PricePlotInfo extends PlotInfo<Bar>{
 		getStyleClass().add("plot-info-pane");
 		getName().getStyleClass().add("scrip-name");
 		priceInfoContainer.getStyleClass().add("plot-info-values");
-		getChildren().addAll(priceInfoContainer);
+		getChildren().add(1, priceInfoContainer);
 	}
 	
 	@Override

@@ -96,6 +96,9 @@ public class ChartingView extends BorderPane {
 	public void add(Chart chart) {
 		charts.add(chart);
 		splitPane.getItems().add(chart);
+		for(int index = 1; index < charts.size(); index++) {
+			splitPane.setDividerPosition(index - 1, 1 - (index * 0.2));
+		}
 	}
 	
 	public void remove(Chart chart) {

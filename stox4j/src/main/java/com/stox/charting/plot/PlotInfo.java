@@ -21,7 +21,7 @@ public class PlotInfo<T> extends HBox {
 		getStyleClass().add("plot-info");
 		name.getStyleClass().add("plot-name");
 		buttonBar.getStyleClass().add("button-bar");
-		getChildren().addAll(buttonBar, name);
+		getChildren().addAll(name, buttonBar);
 		createButton(Icon.EYE, event -> plot.setVisible(!plot.isVisible()));
 	}
 	

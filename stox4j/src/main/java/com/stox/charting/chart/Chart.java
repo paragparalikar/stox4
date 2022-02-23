@@ -14,10 +14,13 @@ import javafx.scene.Cursor;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import lombok.Getter;
 
 @Getter
 public class Chart extends BorderPane {
+	private static final Color[] COLORS = {Color.BLUEVIOLET, Color.BROWN, Color.AQUA};
+	
 	
 	private final YAxis yAxis;
 	private final ChartingView chartingView;
@@ -62,6 +65,7 @@ public class Chart extends BorderPane {
 		contentArea.getChildren().add(plot);
 		infoPane.getChildren().add(plot.getInfo());
 		infoPane.toFront();
+		plot.getUnitParent().setColor(COLORS[plots.size() - 1]);
 		plot.reload();
 	}
 	

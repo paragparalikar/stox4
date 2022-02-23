@@ -15,9 +15,9 @@ public class DefaultPlotInfo<T> extends PlotInfo<T> {
 
 	public DefaultPlotInfo(Plot<T, ?, ?> plot) {
 		super(plot);
-		getChildren().add(valueLabel);
-		createButton(Icon.TRASH, event -> plot.getChart().removePlot(plot));
+		getChildren().add(1, valueLabel);
 		if(null != plot.getIndicatorConfig()) createButton(Icon.GEAR, event -> config());
+		createButton(Icon.TIMES, event -> plot.getChart().removePlot(plot));
 	}
 	
 	private void config() {

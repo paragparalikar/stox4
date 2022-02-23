@@ -1,6 +1,7 @@
 package com.stox.charting.unit.parent;
 
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polyline;
 
 public class PolylineUnitParent implements UnitParent<Point2D> {
@@ -10,6 +11,11 @@ public class PolylineUnitParent implements UnitParent<Point2D> {
 	public PolylineUnitParent(Polyline line) {
 		super();
 		this.line = line;
+	}
+	
+	@Override
+	public void setColor(Color color) {
+		line.setStroke(color);
 	}
 
 	@Override

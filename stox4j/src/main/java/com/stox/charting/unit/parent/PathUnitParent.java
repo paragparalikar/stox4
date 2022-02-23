@@ -1,5 +1,6 @@
 package com.stox.charting.unit.parent;
 
+import javafx.scene.paint.Color;
 import javafx.scene.shape.ClosePath;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
@@ -13,6 +14,11 @@ public class PathUnitParent implements UnitParent<PathElement> {
 	public PathUnitParent(Path path) {
 		super();
 		this.path = path;
+	}
+	
+	@Override
+	public void setColor(Color color) {
+		path.setStroke(color);
 	}
 
 	@Override

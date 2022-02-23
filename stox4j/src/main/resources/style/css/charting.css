@@ -59,9 +59,13 @@
 }
 .plot-info .button-bar {
 	-fx-spacing: 5px;
+	-fx-opacity: 0;
+}
+.plot-info .button-bar:hover{
+	-fx-opacity: 1;
 }
 .plot-info .button-bar .button{
-	-fx-background-color: #f0f0f0;
+	-fx-background-color: transparent;
 	-fx-border-width: 0;
 }
 .plot-info .button-bar .button:hover{

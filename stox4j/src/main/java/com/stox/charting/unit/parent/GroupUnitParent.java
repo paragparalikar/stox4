@@ -2,6 +2,7 @@ package com.stox.charting.unit.parent;
 
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 
 public class GroupUnitParent implements UnitParent<Node> {
 
@@ -46,5 +47,4 @@ public class GroupUnitParent implements UnitParent<Node> {
 	public void removeAll(Node... children) {
 		group.getChildren().removeAll(children);
 	}
-
 }
