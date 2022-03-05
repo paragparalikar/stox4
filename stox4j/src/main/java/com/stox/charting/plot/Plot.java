@@ -62,7 +62,7 @@ public class Plot<T, C, N> extends Group {
 		chart.getChartingView().getContext().getBarSeriesProperty().addListener((o,old,value) -> reload());
 		chart.getChartingView().getCrosshair().getVerticalLine().endXProperty().addListener((o,old,value) -> {
 			final int index = chart.getChartingView().getXAxis().getIndex(value.doubleValue());
-			getInfo().setValue(indicator.getValue(index));
+			getInfo().setValue(0 <= index && index < chart.getChartingView().getContext().getBarCount() ? indicator.getValue(index) : null);
 		});
 	}
 	

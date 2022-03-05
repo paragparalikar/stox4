@@ -7,6 +7,9 @@ import com.stox.common.scrip.ScripRepository;
 import com.stox.common.scrip.ScripService;
 import com.stox.common.ui.Icon;
 import com.stox.explorer.ExplorerView;
+import com.stox.watchlist.WatchlistRepository;
+import com.stox.watchlist.WatchlistService;
+import com.stox.watchlist.WatchlistView;
 import com.sun.javafx.application.LauncherImpl;
 
 import javafx.application.Application;
@@ -15,10 +18,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 
 public class StoxApplication extends Application {
 	
@@ -26,26 +31,35 @@ public class StoxApplication extends Application {
 		LauncherImpl.launchApplication(StoxApplication.class, null, args);
 	}
 	
-	private final BarRepository barRepository = new BarRepository();
-	private final BarService barService = new BarService(barRepository);
-	private final ScripRepository scripRepository = new ScripRepository();
-	private final ScripService scripService = new ScripService(scripRepository);
-	private final ChartingView chartingView = new ChartingView(barService);
-	private final ExplorerView explorerView = new ExplorerView(scripService, chartingView);
-	private final TabPane tabPane = new TabPane(new Tab("Explorer", explorerView));
-	private final SplitPane splitPane = new SplitPane(tabPane, chartingView);
-	private final StackPane root = new StackPane(splitPane);
-	private final Scene scene = new Scene(root);
+	private Scene scene;
+	private StackPane root;
+	private TabPane tabPane;
+	private SplitPane splitPane;
 	
 	@Override
 	public void init() throws Exception {
 		super.init();
 		Font.loadFont(Icon.class.getClassLoader().getResource(Icon.PATH).toExternalForm(), 10);
+		final BarRepository barRepository = new BarRepository();
+		final BarService barService = new BarService(barRepository);
+		final ScripRepository scripRepository = new ScripRepository();
+		final ScripService scripService = new ScripService(scripRepository);
+		final ChartingView chartingView = new ChartingView(barService);
+		final ExplorerView explorerView = new ExplorerView(scripService, chartingView);
+		final DynamoDbAsyncClient dynamoDbAsyncClient = DynamoDbAsyncClient.builder().build();
+		final WatchlistRepository watchlistRepository = new WatchlistRepository(dynamoDbAsyncClient);
+		final WatchlistService watchlistService = new WatchlistService(watchlistRepository);
+		final WatchlistView watchlistView = new WatchlistView(watchlistService, scripService, chartingView);
+		tabPane = new TabPane(new Tab("Explorer", explorerView), new Tab("Watchlist", watchlistView));
+		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
+		splitPane = new SplitPane(tabPane, chartingView);
+		root = new StackPane(splitPane);
+		scene = new Scene(root);
+		
 	}
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		tabPane.setSide(Side.BOTTOM);
 		scene.getStylesheets().addAll("style/css/common.css", 
 				"style/css/check-box.css", "style/css/choice-box.css",
 				"style/css/progress-bar.css", "style/css/progress-indicator.css",
@@ -62,6 +76,7 @@ public class StoxApplication extends Application {
 	}
 	
 	private void onShown(WindowEvent event) {
+		tabPane.setSide(Side.BOTTOM);
 		splitPane.setDividerPositions(0.2);
 	}
 	

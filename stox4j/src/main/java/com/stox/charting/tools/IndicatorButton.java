@@ -10,6 +10,7 @@ import com.stox.charting.plot.Plottable;
 import com.stox.charting.plot.indicator.PlottableADXIndicator;
 import com.stox.charting.plot.indicator.PlottableATRIndicator;
 import com.stox.charting.plot.indicator.PlottableRSIIndicator;
+import com.stox.charting.plot.indicator.PlottableStochasticRSIIndicator;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.ui.DefaultDialogx;
 
@@ -34,6 +35,7 @@ public class IndicatorButton extends Button implements EventHandler<ActionEvent>
 		listView.getItems().add(new PlottableRSIIndicator());
 		listView.getItems().add(new PlottableADXIndicator());
 		listView.getItems().add(new PlottableATRIndicator());
+		listView.getItems().add(new PlottableStochasticRSIIndicator());
 	}
 
 	@Override
