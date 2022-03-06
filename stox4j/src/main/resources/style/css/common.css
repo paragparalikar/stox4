@@ -41,4 +41,9 @@
 	-fx-font-size: 16px;
 }
 
+.split-pane-divider {
+    -fx-padding: 0 1 0 1 ;
+    -fx-background-color: lightgray ;
+    -fx-background-insets: 0;
+}
 

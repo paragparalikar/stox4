@@ -1,8 +1,12 @@
-.charting-view{
+.charting-view {
 	-fx-background-color: rgb(255,255,255);
+	-fx-min-width: 0;
+	-fx-min-height: 0;
 }
-.charting-view .split-pane {
+.charting-view StackPane, .charting-view .split-pane {
 	-fx-background-color: transparent;
+	-fx-min-width: 0;
+	-fx-min-height: 0;
 }
 
 .x-axis, .x-axis .container, .x-axis .filler, .x-axis .axis-info-label, .y-axis .axis-info-label {

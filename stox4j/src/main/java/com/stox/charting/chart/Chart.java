@@ -38,6 +38,7 @@ public class Chart extends BorderPane {
 		setRight(yAxis);
 		setCenter(contentArea);
 		compositeModeMouseHandler.attach(contentArea);
+		contentArea.widthProperty().addListener((o,old,value) -> redraw());
 		contentArea.heightProperty().addListener((o,old,value) -> redraw());
 		style();
 	}
