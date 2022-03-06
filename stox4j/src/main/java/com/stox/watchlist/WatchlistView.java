@@ -4,7 +4,9 @@ import com.stox.charting.ChartingView;
 import com.stox.common.scrip.ScripService;
 
 import javafx.scene.layout.BorderPane;
+import lombok.Getter;
 
+@Getter
 public class WatchlistView extends BorderPane {
 
 	private final ChartingView chartingView;

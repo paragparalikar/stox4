@@ -1,6 +1,5 @@
 package com.stox.watchlist;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -10,28 +9,19 @@ import lombok.RequiredArgsConstructor;
 public class WatchlistService {
 
 	private final WatchlistRepository watchlistRepository;
-	private final List<Watchlist> watchlists = new LinkedList<>();
 	
 	public CompletableFuture<List<Watchlist>> findAll(){
-		return watchlists.isEmpty() ? watchlistRepository.findAll().thenApply(this::cache) 
-				: CompletableFuture.completedFuture(watchlists);
-	}
-	
-	private List<Watchlist> cache(List<Watchlist> watchlists){
-		this.watchlists.addAll(watchlists);
-		return  watchlists;
+		return watchlistRepository.findAll();
 	}
 	
 	public CompletableFuture<Watchlist> create(Watchlist watchlist) {
 		return watchlistRepository.create(watchlist).thenApplyAsync(result -> {
-			watchlists.add(watchlist);
 			return watchlist;
 		});
 	}
 	
 	public CompletableFuture<Watchlist> delete(String name) {
 		return watchlistRepository.delete(name).thenApplyAsync(result -> {
-			watchlists.remove(result);
 			return result;
 		});
 	}

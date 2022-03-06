@@ -50,8 +50,8 @@ public class StoxApplication extends Application {
 		final DynamoDbAsyncClient dynamoDbAsyncClient = DynamoDbAsyncClient.builder().build();
 		final WatchlistRepository watchlistRepository = new WatchlistRepository(dynamoDbAsyncClient);
 		final WatchlistService watchlistService = new WatchlistService(watchlistRepository);
-		final AddToWatchlistMenu addToWatchlistMenu =  new AddToWatchlistMenu(chartingView, watchlistService);
 		final WatchlistView watchlistView = new WatchlistView(watchlistService, scripService, chartingView);
+		final AddToWatchlistMenu addToWatchlistMenu =  new AddToWatchlistMenu(chartingView, watchlistService, watchlistView.getWatchlistComboBox());
 		chartingView.getContextMenu().getItems().add(addToWatchlistMenu);
 		tabPane = new TabPane(new Tab("Explorer", explorerView), new Tab("Watchlist", watchlistView));
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
