@@ -33,18 +33,23 @@ public class Modal {
 		closeButton.setOnAction(event -> hide());
 	}
 	
-	public void setContent(Node node) {
+	public Modal setContent(Node node) {
 		container.getChildren().setAll(node);
+		return this;
 	}
 	
-	public void show(Node node) {
+	public Modal show(Node node) {
 		final StackPane stackPane = (StackPane) node.getScene().getRoot();
 		stackPane.getChildren().add(modal);
+		return this;
 	}
 	
-	public void hide() {
-		final StackPane stackPane = (StackPane) modal.getParent();
-		if(null != stackPane) stackPane.getChildren().remove(modal);
+	public Modal hide() {
+		Fx.run(() -> {
+			final StackPane stackPane = (StackPane) modal.getParent();
+			if(null != stackPane) stackPane.getChildren().remove(modal);
+		});
+		return this;
 	}
 	
 	

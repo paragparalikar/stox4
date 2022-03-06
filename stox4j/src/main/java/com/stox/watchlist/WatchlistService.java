@@ -13,7 +13,7 @@ public class WatchlistService {
 	private final List<Watchlist> watchlists = new LinkedList<>();
 	
 	public CompletableFuture<List<Watchlist>> findAll(){
-		return watchlists.isEmpty() ? watchlistRepository.findAll().thenApplyAsync(this::cache) 
+		return watchlists.isEmpty() ? watchlistRepository.findAll().thenApply(this::cache) 
 				: CompletableFuture.completedFuture(watchlists);
 	}
 	

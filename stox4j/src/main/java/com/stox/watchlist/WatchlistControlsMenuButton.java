@@ -60,17 +60,21 @@ public class WatchlistControlsMenuButton extends MenuButton {
 		final Label graphics = new Label(Icon.PLUS);
 		graphics.getStyleClass().add("icon");
 		final Button button = new Button("Create", graphics);
-		button.setOnAction(event -> create(textField.getText()));
-		new Modal()
+		final Modal modal = new Modal()
 			.withIcon(Icon.BOOKMARK)
 			.withTitleText("Create New Watchlist")
 			.withContent(textField)
 			.withButton(button)
 			.show(this);
+		button.setOnAction(event -> create(textField.getText(), modal));
 	}
 	
-	private void create(String name) {
-		watchlistService.create(new Watchlist(name));
+	private void create(String name, Modal modal) {
+		watchlistService.create(new Watchlist(name)).handle((watchlist, throwable) -> {
+			Optional.ofNullable(throwable).ifPresent(Throwable::printStackTrace);
+			modal.hide();
+			return null;
+		});
 	}
 	
 	private void delete() {

@@ -9,7 +9,6 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbAsyncTable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedAsyncClient;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
-import software.amazon.awssdk.enhanced.dynamodb.model.PagePublisher;
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.ReturnValue;
@@ -29,10 +28,10 @@ public class WatchlistRepository {
 	public CompletableFuture<List<Watchlist>> findAll() {
 		final List<Watchlist> watchlists = new LinkedList<>();
 		final CompletableFuture<List<Watchlist>> future = new CompletableFuture<List<Watchlist>>();
-		final PagePublisher<Watchlist> publisher = table.scan();
-		publisher.items().subscribe(watchlists::add);
-		publisher.doAfterOnError(error -> future.completeExceptionally(error));
-		publisher.doAfterOnComplete(() -> future.complete(watchlists));
+		table.scan().items()
+			.doAfterOnError(future::completeExceptionally)
+			.doAfterOnComplete(() -> future.complete(watchlists))
+			.subscribe(watchlists::add);
 		return future;
 	}
 	

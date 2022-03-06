@@ -4,7 +4,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import javafx.application.Platform;
+import com.stox.common.ui.Fx;
+
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -13,6 +14,7 @@ public class WatchlistComboBox extends ComboBox<Watchlist> {
 
 	public WatchlistComboBox(WatchlistService watchlistService) {
 		setCellFactory(this::createWatchlistCell);
+		setButtonCell(createWatchlistCell(null));
 		watchlistService.findAll().whenComplete(this::onWatchlistsLoaded);
 	}
 	
@@ -20,7 +22,10 @@ public class WatchlistComboBox extends ComboBox<Watchlist> {
 		Optional.ofNullable(throwable).ifPresent(Throwable::printStackTrace);
 		Optional.ofNullable(watchlists).ifPresent(w -> {
 			watchlists.sort(Comparator.comparing(Watchlist::getName));
-			Platform.runLater(() -> getItems().setAll(watchlists));
+			Fx.run(() -> {
+				getItems().setAll(watchlists);
+				if(!getItems().isEmpty()) getSelectionModel().select(0);
+				});
 		});
 	}
 	
