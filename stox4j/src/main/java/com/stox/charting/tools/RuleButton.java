@@ -9,13 +9,14 @@ import com.stox.charting.plot.rule.PlottableBreakoutBarRule;
 import com.stox.charting.plot.rule.PlottableReaccumulationRule;
 import com.stox.charting.plot.rule.RulePlot;
 import com.stox.common.scrip.Scrip;
-import com.stox.common.ui.DefaultDialogx;
+import com.stox.common.ui.Icon;
+import com.stox.common.ui.Modal;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
 public class RuleButton extends Button implements EventHandler<ActionEvent> {
@@ -43,15 +44,19 @@ public class RuleButton extends Button implements EventHandler<ActionEvent> {
 	}	
 	
 	private void showDialog() {
-		new DefaultDialogx()
-		.withTitle("Rules")
-		.withContent(listView)
-		.withButton(ButtonType.CANCEL)
-		.withButton(ButtonType.APPLY, this::action)
-		.show(this);
+		final Label graphics = new Label(Icon.PLUS);
+		graphics.getStyleClass().add("icon");
+		final Button button = new Button("Add", graphics);
+		button.setOnAction(this::action);
+		new Modal()
+			.withIcon(Icon.FILTER)
+			.withTitleText("Rules")
+			.withContent(listView)
+			.withButton(button)
+			.show(this);
 	}
 	
-	private void action() {
+	private void action(ActionEvent event) {
 		final Plottable<Boolean, ?, Node> plottable = listView.getSelectionModel().getSelectedItem();
 		if(null != plottable) {
 			final RulePlot<?> rulePlot = new RulePlot(plottable);

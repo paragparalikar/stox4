@@ -20,7 +20,7 @@ public class PlotInfo<T> extends HBox {
 		this.plot = plot;
 		getStyleClass().add("plot-info");
 		name.getStyleClass().add("plot-name");
-		buttonBar.getStyleClass().add("button-bar");
+		buttonBar.getStyleClass().add("plot-info-button-bar");
 		getChildren().addAll(name, buttonBar);
 		createButton(Icon.EYE, event -> plot.setVisible(!plot.isVisible()));
 	}

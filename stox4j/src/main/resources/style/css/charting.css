@@ -8,7 +8,6 @@
 	-fx-min-width: 0;
 	-fx-min-height: 0;
 }
-
 .x-axis, .x-axis .container, .x-axis .filler, .x-axis .axis-info-label, .y-axis .axis-info-label {
 	-fx-pref-height: 28px;
 	-fx-min-height: 28px;
@@ -61,21 +60,21 @@
 	-fx-spacing: 10px;
 	-fx-alignment: center-left;
 }
-.plot-info .button-bar {
+.plot-info-button-bar {
 	-fx-spacing: 5px;
 	-fx-opacity: 0;
 }
-.plot-info .button-bar:hover{
+.plot-info-button-bar:hover{
 	-fx-opacity: 1;
 }
-.plot-info .button-bar .button{
+.plot-info-button-bar .button{
 	-fx-background-color: transparent;
 	-fx-border-width: 0;
 }
-.plot-info .button-bar .button:hover{
+.plot-info-button-bar .button:hover{
 	-fx-background-color: #d0d0d0;
 }
-.plot-info .button-bar .button:pressed, .plot-info .button-bar .button:focused{
+.plot-info-button-bar .button:pressed, .plot-info .button-bar .button:focused{
 	-fx-background-color: #b0b0b0;
 }
 .plot-info-values{

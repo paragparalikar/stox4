@@ -3,10 +3,10 @@ package com.stox.charting.plot;
 import org.ta4j.core.num.Num;
 
 import com.stox.common.ui.ConfigView;
-import com.stox.common.ui.DefaultDialogx;
 import com.stox.common.ui.Icon;
+import com.stox.common.ui.Modal;
 
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 public class DefaultPlotInfo<T> extends PlotInfo<T> {
@@ -22,14 +22,20 @@ public class DefaultPlotInfo<T> extends PlotInfo<T> {
 	
 	private void config() {
 		final ConfigView configView = getPlot().createConfigView();
-		new DefaultDialogx()
-		.withTitle("Rules")
-		.withContent(configView.getNode())
-		.withButton(ButtonType.CANCEL)
-		.withButton(ButtonType.APPLY, () -> {
+		final Label graphics = new Label(Icon.CHECK);
+		graphics.getStyleClass().add("icon");
+		final Button button = new Button("Apply", graphics);
+		button.setOnAction(event -> {
 			configView.populateModel();
 			getPlot().reload();
-		}).show(this);
+		});
+		
+		new Modal()
+			.withIcon(Icon.GEAR)
+			.withTitleText("Configure")
+			.withContent(configView.getNode())
+			.withButton(button)
+			.show(this);
 	}
 	
 	@Override
