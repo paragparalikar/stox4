@@ -2,10 +2,10 @@ package com.stox.watchlist;
 
 import java.util.Optional;
 
-import com.stox.common.ui.DefaultDialogx;
 import com.stox.common.ui.Icon;
+import com.stox.common.ui.Modal;
 
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
@@ -54,14 +54,23 @@ public class WatchlistControlsMenuButton extends MenuButton {
 	
 	private void create() {
 		final TextField textField = new TextField();
-		new DefaultDialogx()
-			.withTitle("Create New Watchlist")
+		textField.setMaxWidth(Double.MAX_VALUE);
+		textField.getStyleClass().add("large");
+		textField.setPromptText("Watchlist Name");
+		final Label graphics = new Label(Icon.PLUS);
+		graphics.getStyleClass().add("icon");
+		final Button button = new Button("Create", graphics);
+		button.setOnAction(event -> create(textField.getText()));
+		new Modal()
+			.withIcon(Icon.BOOKMARK)
+			.withTitleText("Create New Watchlist")
 			.withContent(textField)
-			.withButton(ButtonType.APPLY, () -> {
-				final Watchlist watchlist = new Watchlist();
-				watchlist.setName(textField.getText());
-				watchlistService.create(watchlist);
-			}).withButton(ButtonType.CANCEL);
+			.withButton(button)
+			.show(this);
+	}
+	
+	private void create(String name) {
+		watchlistService.create(new Watchlist(name));
 	}
 	
 	private void delete() {

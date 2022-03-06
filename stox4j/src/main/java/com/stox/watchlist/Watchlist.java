@@ -7,15 +7,19 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
 @DynamoDbBean
+@NoArgsConstructor
 public class Watchlist {
 
 	private final StringProperty nameProperty = new SimpleStringProperty();
 	private final ListProperty<String> entriesProperty = new SimpleListProperty<>(FXCollections.observableArrayList());
+	
+	public Watchlist(String name) { nameProperty.set(name); }
 	
 	@DynamoDbPartitionKey
 	public String getName() { return nameProperty.get(); 	}

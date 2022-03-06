@@ -67,7 +67,7 @@ public class StoxApplication extends Application {
 				"style/css/table-view.css", "style/css/tab-pane.css",
 				"style/css/scroll-bar.css", "style/css/menu.css",
 				"style/css/charting.css", "style/css/charting-controls.css", 
-				"style/css/dialog.css", "style/css/form.css");
+				"style/css/modal.css", "style/css/form.css");
 		
 		primaryStage.setScene(scene);
 		primaryStage.setMaximized(true);

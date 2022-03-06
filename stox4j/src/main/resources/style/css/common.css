@@ -7,8 +7,6 @@
     default-background-color: #888888;
     primary-text-color: black;
     primary-background-color: white;
-   /* -fx-base: rgb(132, 145, 47);*/
-   /* -fx-background: rgb(225, 228, 203);*/
 }
 
 .icon{
@@ -24,7 +22,23 @@
 	-fx-max-height: 25px;
 	-fx-alignment: center;
 	-fx-content-display: center;
+	-fx-border-width: 0;
+	-fx-background-color: transparent;
 }
 .label{
 	-fx-font-size: 12px;
 }
+
+.text-field {
+	-fx-background: background-color;
+	-fx-border-radius: 0;
+	-fx-border-width: 0;
+}
+
+.text-field.large{
+	-fx-pref-width: 20em;
+	-fx-pref-height: 3em;
+	-fx-font-size: 16px;
+}
+
+
