@@ -11,7 +11,7 @@ public class WatchlistView extends BorderPane {
 	private final ScripService scripService;
 	private final WatchlistService watchlistService;
 	
-	private final WatchlistButtonBar watchlistButtonBar;
+	private final WatchlistControlsMenuButton watchlistButtonBar;
 	private final WatchlistComboBox watchlistComboBox;
 	private final WatchlistTitleBar watchlistTitleBar;
 	private final WatchlistEntryView watchlistEntryView;
@@ -23,7 +23,7 @@ public class WatchlistView extends BorderPane {
 		this.watchlistService = watchlistService;
 
 		this.watchlistComboBox = new WatchlistComboBox(watchlistService);
-		this.watchlistButtonBar = new WatchlistButtonBar(watchlistComboBox, watchlistService);
+		this.watchlistButtonBar = new WatchlistControlsMenuButton(watchlistComboBox, watchlistService);
 		this.watchlistTitleBar = new WatchlistTitleBar(watchlistComboBox, watchlistButtonBar);
 		this.watchlistEntryView = new WatchlistEntryView(scripService, watchlistService);
 		

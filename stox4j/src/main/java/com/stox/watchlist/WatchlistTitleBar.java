@@ -1,20 +1,15 @@
 package com.stox.watchlist;
 
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class WatchlistTitleBar extends VBox {
-
-	private final WatchlistComboBox watchlistComboBox;
-	private final WatchlistButtonBar watchlistButtonBar;
-	private final HBox container = new HBox();
 	
-	public WatchlistTitleBar(WatchlistComboBox watchlistComboBox, 
-			WatchlistButtonBar watchlistButtonBar) {
-		this.watchlistComboBox = watchlistComboBox;
-		this.watchlistButtonBar = watchlistButtonBar;
-		container.getChildren().addAll(watchlistComboBox, watchlistButtonBar);
-		getChildren().add(container);
+	public WatchlistTitleBar(WatchlistComboBox watchlistComboBox, WatchlistControlsMenuButton watchlistControlsMenuButton) {
+		HBox.setHgrow(watchlistComboBox, Priority.ALWAYS);
+		watchlistComboBox.setMaxWidth(Double.MAX_VALUE);
+		getChildren().addAll(new HBox(watchlistComboBox, watchlistControlsMenuButton));
 	}
 
 }
