@@ -7,6 +7,7 @@ import com.stox.common.scrip.ScripRepository;
 import com.stox.common.scrip.ScripService;
 import com.stox.common.ui.Icon;
 import com.stox.explorer.ExplorerView;
+import com.stox.watchlist.AddToWatchlistMenu;
 import com.stox.watchlist.WatchlistRepository;
 import com.stox.watchlist.WatchlistService;
 import com.stox.watchlist.WatchlistView;
@@ -49,7 +50,9 @@ public class StoxApplication extends Application {
 		final DynamoDbAsyncClient dynamoDbAsyncClient = DynamoDbAsyncClient.builder().build();
 		final WatchlistRepository watchlistRepository = new WatchlistRepository(dynamoDbAsyncClient);
 		final WatchlistService watchlistService = new WatchlistService(watchlistRepository);
+		final AddToWatchlistMenu addToWatchlistMenu =  new AddToWatchlistMenu(chartingView, watchlistService);
 		final WatchlistView watchlistView = new WatchlistView(watchlistService, scripService, chartingView);
+		chartingView.getContextMenu().getItems().add(addToWatchlistMenu);
 		tabPane = new TabPane(new Tab("Explorer", explorerView), new Tab("Watchlist", watchlistView));
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		splitPane = new SplitPane(tabPane, chartingView);

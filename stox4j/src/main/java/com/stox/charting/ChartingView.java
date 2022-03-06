@@ -25,8 +25,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -63,6 +65,7 @@ public class ChartingView extends BorderPane {
 	private final PricePlot pricePlot;
 	private final ToolBar toolBar = new ToolBar();
 	private final SplitPane splitPane = new SplitPane();
+	private final ContextMenu contextMenu = new ContextMenu();
 	private final ChartingConfig config = new ChartingConfig();
 	private final VerticalGrid verticalGrid = new VerticalGrid();
 	private final Crosshair crosshair = new Crosshair(splitPane);
@@ -76,6 +79,7 @@ public class ChartingView extends BorderPane {
 	public ChartingView(BarService barService) {
 		add(priceChart = new Chart(this));
 		add(pricePlot = new PricePlot(barService));
+		setOnContextMenuRequested(this::onContextMenuRequested);
 		
 		setCenter(stackPane);
 		setBottom(new VBox(xAxis, toolBar));
@@ -91,6 +95,10 @@ public class ChartingView extends BorderPane {
 				return null != context.getBar(0);
 			}
 		});
+	}
+	
+	private void onContextMenuRequested(ContextMenuEvent event) {
+		contextMenu.show(this, event.getScreenX(), event.getScreenY());
 	}
 	
 	public void add(Chart chart) {

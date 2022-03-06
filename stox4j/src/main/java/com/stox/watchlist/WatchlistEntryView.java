@@ -14,21 +14,22 @@ import javafx.scene.control.ListView;
 
 public class WatchlistEntryView extends ListView<String> implements ChangeListener<Watchlist> {
 
-	private volatile Watchlist watchlist;
 	private final ScripService scripService;
 	private final WatchlistService watchlistService;
+	private final WatchlistComboBox watchlistComboBox;
 	
-	public WatchlistEntryView(ScripService scripService, WatchlistService watchlistService) {
+	public WatchlistEntryView(WatchlistComboBox watchlistComboBox, ScripService scripService, WatchlistService watchlistService) {
 		this.scripService = scripService;
 		this.watchlistService = watchlistService;
+		this.watchlistComboBox = watchlistComboBox;
 		setCellFactory(this::createWatchlistEntryCell);
+		watchlistComboBox.getSelectionModel().selectedItemProperty().addListener(this::changed);
 	}
 	
 	@Override
 	public void changed(ObservableValue<? extends Watchlist> observable, Watchlist oldValue, Watchlist newValue) {
 		itemsProperty().unbind();
 		Optional.ofNullable(newValue)
-			.map(watchlist -> this.watchlist = watchlist)
 			.map(Watchlist::entriesProperty)
 			.ifPresent(itemsProperty()::bind);
 	}
@@ -39,7 +40,7 @@ public class WatchlistEntryView extends ListView<String> implements ChangeListen
 			@Override
 			protected void updateItem(String item, boolean empty) {
 				super.updateItem(item, empty);
-				if(empty || null != watchlist || null == item || 0 == item.trim().length()) {
+				if(empty || null == item || 0 == item.trim().length()) {
 					setText(null);
 					setGraphic(null);
 				} else {
@@ -48,6 +49,7 @@ public class WatchlistEntryView extends ListView<String> implements ChangeListen
 					setGraphic(deleteButton);
 					deleteButton.getStyleClass().setAll("icon", "button");
 					deleteButton.setOnAction(event -> {
+						final Watchlist watchlist = watchlistComboBox.getValue();
 						final int index = watchlist.getEntries().indexOf(item);
 						watchlistService.removeEntry(watchlist.getName(), index);
 					});

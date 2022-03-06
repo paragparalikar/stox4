@@ -25,7 +25,7 @@ public class WatchlistView extends BorderPane {
 		this.watchlistComboBox = new WatchlistComboBox(watchlistService);
 		this.watchlistButtonBar = new WatchlistControlsMenuButton(watchlistComboBox, watchlistService);
 		this.watchlistTitleBar = new WatchlistTitleBar(watchlistComboBox, watchlistButtonBar);
-		this.watchlistEntryView = new WatchlistEntryView(scripService, watchlistService);
+		this.watchlistEntryView = new WatchlistEntryView(watchlistComboBox, scripService, watchlistService);
 		
 		setTop(watchlistTitleBar);
 		setCenter(watchlistEntryView);

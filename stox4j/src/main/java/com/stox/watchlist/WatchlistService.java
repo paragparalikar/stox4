@@ -50,8 +50,4 @@ public class WatchlistService {
 	public CompletableFuture<Void> removeEntry(String name, int index) {
 		return watchlistRepository.removeEntry(name, index);
 	}
-	
-	public CompletableFuture<Void> setEntryIndex(String name, String isin, int index) {
-		return watchlistRepository.setEntryIndex(name, isin, index);
-	}
 }

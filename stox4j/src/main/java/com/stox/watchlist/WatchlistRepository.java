@@ -45,10 +45,12 @@ public class WatchlistRepository {
 	
 	public CompletableFuture<Void> addEntry(String name, String isin){
 		final UpdateItemRequest updateItemRequest = UpdateItemRequest.builder()
+				.tableName("watchlist")
 				.key(Collections.singletonMap("name", AttributeValue.builder().s(name).build()))
-				.updateExpression("SET #entries = list_append(#entries, :isin)")
+				.updateExpression("SET #entries = list_append(#entries, :isins)")
 				.expressionAttributeNames(Collections.singletonMap("#entries", "entries"))
-				.expressionAttributeValues(Collections.singletonMap(":isin", AttributeValue.builder().s(isin).build()))
+				.expressionAttributeValues(Collections.singletonMap(":isins", AttributeValue.builder().l(
+						AttributeValue.builder().s(isin).build()).build()))
 				.returnValues(ReturnValue.NONE)
 				.build();
 		return client.updateItem(updateItemRequest).thenApply(r -> null);
@@ -56,21 +58,12 @@ public class WatchlistRepository {
 	
 	public CompletableFuture<Void> removeEntry(String name, int index){
 		final UpdateItemRequest updateItemRequest = UpdateItemRequest.builder()
+				.tableName("watchlist")
 				.key(Collections.singletonMap("name", AttributeValue.builder().s(name).build()))
 				.updateExpression("REMOVE entries[" + index + "]")
 				.returnValues(ReturnValue.NONE)
 				.build();
 		return client.updateItem(updateItemRequest).thenApply(r -> null);
 	}
-	
-	public CompletableFuture<Void> setEntryIndex(String name, String isin, int index){
-		final UpdateItemRequest updateItemRequest = UpdateItemRequest.builder()
-				.key(Collections.singletonMap("name", AttributeValue.builder().s(name).build()))
-				.updateExpression("SET entries[ " + index + " ] = :isin")
-				.expressionAttributeNames(Collections.singletonMap("#entries", "entries"))
-				.expressionAttributeValues(Collections.singletonMap(":isin", AttributeValue.builder().s(isin).build()))
-				.returnValues(ReturnValue.NONE)
-				.build();
-		return client.updateItem(updateItemRequest).thenApply(r -> null);
-	}
+
 }
