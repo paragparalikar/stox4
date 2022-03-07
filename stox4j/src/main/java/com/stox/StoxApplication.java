@@ -42,7 +42,7 @@ public class StoxApplication extends Application {
 	public void init() throws Exception {
 		super.init();
 		Font.loadFont(Icon.class.getClassLoader().getResource(Icon.PATH).toExternalForm(), 10);
-		final Path home = Paths.get(System.getenv("user.home"), ".stox4j");
+		final Path home = Paths.get(System.getProperty("user.home"), ".stox4j");
 		final BarRepository barRepository = new BarRepository();
 		final BarService barService = new BarService(barRepository);
 		final ScripRepository scripRepository = new ScripRepository();

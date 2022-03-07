@@ -22,8 +22,17 @@ public class WatchlistComboBox extends ComboBox<Watchlist> {
 		watchlists.sort(Comparator.comparing(Watchlist::getName));
 		getItems().setAll(watchlists);
 		if(!getItems().isEmpty()) getSelectionModel().select(0);
-		watchlistService.onWatchlistAdded(getItems()::add);
-		watchlistService.onWatchlistRemoved(getItems()::remove);
+		watchlistService.onWatchlistAdded(this::onWatchlistCreated);
+		watchlistService.onWatchlistRemoved(this::onWatchlistRemoved);
+	}
+	
+	private void onWatchlistCreated(Watchlist watchlist) {
+		getItems().add(watchlist);
+		getSelectionModel().select(watchlist);
+	}
+	
+	private void onWatchlistRemoved(Watchlist watchlist) {
+		getItems().remove(watchlist);
 	}
 	
 	private ListCell<Watchlist> createWatchlistCell(ListView<Watchlist> listView){

@@ -2,6 +2,7 @@ package com.stox.watchlist;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,7 +27,10 @@ public class WatchlistFileRepository {
 
 	@SneakyThrows
 	public List<Watchlist> findAll() {
-		return Files.list(getPath()).map(this::read).collect(Collectors.toList());
+		final Path path = getPath();
+		return Files.exists(path) ?  
+				Files.list(path).map(this::read).collect(Collectors.toList())
+				: Collections.emptyList();
 	}
 	
 	public Watchlist findByName(String name) {
@@ -40,6 +44,15 @@ public class WatchlistFileRepository {
 		watchlist.setEntries(Files.readAllLines(path));
 		return watchlist;
 	}	
+	
+	@SneakyThrows
+	public void rename(String oldName, String newName) {
+		final Path newPath = getPath(newName);
+		if(Files.exists(newPath)) throw new IllegalArgumentException(newName + " already exists");
+		final Path oldPath = getPath(oldName);
+		if(Files.notExists(oldPath)) throw new IllegalArgumentException(oldName + " does not exists");
+		Files.move(oldPath, newPath, StandardCopyOption.values());
+	}
 	
 	@SneakyThrows
 	public void save(Watchlist watchlist) {

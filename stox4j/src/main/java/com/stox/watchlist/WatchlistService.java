@@ -47,6 +47,15 @@ public class WatchlistService {
 		//cache.get(name).getEntries().clear();
 	}
 	
+	public synchronized void rename(String oldName, String newName) {
+		watchlistRepository.rename(oldName, newName);
+		final Watchlist watchlist = cache.remove(oldName);
+		if(null != watchlist) {
+			watchlist.setName(newName);
+			cache.put(newName, watchlist);
+		}
+	}
+	
 	public synchronized void delete(String name) {
 		watchlistRepository.delete(name);
 		cache.remove(name);

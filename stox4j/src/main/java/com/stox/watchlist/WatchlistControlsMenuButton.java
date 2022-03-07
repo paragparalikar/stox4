@@ -17,13 +17,14 @@ public class WatchlistControlsMenuButton extends MenuButton {
 	private final WatchlistService watchlistService;
 	private final WatchlistComboBox watchlistComboBox;
 	private final MenuItem createMenuItem = new MenuItem("New");
+	private final MenuItem renameMenuItem = new MenuItem("Rename");
 	private final MenuItem deleteMenuItem = new MenuItem("Delete");
-	private final MenuItem truncateMenuItem = new MenuItem("Truncate");
+	private final MenuItem clearMenuItem = new MenuItem("Clear");
 	
 	public WatchlistControlsMenuButton(WatchlistComboBox watchlistComboBox, WatchlistService watchlistService) {
 		this.watchlistService = watchlistService;
 		this.watchlistComboBox = watchlistComboBox;
-		getItems().addAll(createMenuItem, truncateMenuItem, deleteMenuItem);
+		getItems().addAll(createMenuItem, renameMenuItem, clearMenuItem, deleteMenuItem);
 		style();
 		bind();
 	}
@@ -37,9 +38,12 @@ public class WatchlistControlsMenuButton extends MenuButton {
 		createIcon.getStyleClass().addAll("icon");
 		createMenuItem.setGraphic(createIcon);
 		createMenuItem.getStyleClass().add("first");
+		final Label renameIcon = new Label(Icon.EDIT);
+		renameIcon.getStyleClass().add("icon");
+		renameMenuItem.setGraphic(renameIcon);
 		final Label truncateIcon = new Label(Icon.ERASER);
 		truncateIcon.getStyleClass().addAll("icon");
-		truncateMenuItem.setGraphic(truncateIcon);
+		clearMenuItem.setGraphic(truncateIcon);
 		final Label deleteIcon = new Label(Icon.TRASH);
 		deleteIcon.getStyleClass().add("icon");
 		deleteMenuItem.setGraphic(deleteIcon);
@@ -48,8 +52,9 @@ public class WatchlistControlsMenuButton extends MenuButton {
 
 	private void bind() {
 		createMenuItem.setOnAction(event -> create());
+		renameMenuItem.setOnAction(event -> rename());
 		deleteMenuItem.setOnAction(event -> delete());
-		truncateMenuItem.setOnAction(event -> truncate());
+		clearMenuItem.setOnAction(event -> truncate());
 	}
 	
 	private void create() {
@@ -69,6 +74,31 @@ public class WatchlistControlsMenuButton extends MenuButton {
 		button.setOnAction(event -> create(textField.getText(), modal));
 	}
 	
+	private void rename() {
+		Optional.ofNullable(watchlistComboBox.getValue()).ifPresent(watchlist -> {
+			final String oldName = watchlist.getName();
+			final TextField textField = new TextField();
+			textField.setMaxWidth(Double.MAX_VALUE);
+			textField.getStyleClass().add("large");
+			textField.setText(watchlist.getName());
+			final Label graphics = new Label(Icon.EDIT);
+			graphics.getStyleClass().add("icon");
+			final Button button = new Button("Rename", graphics);
+			final Modal modal = new Modal()
+				.withIcon(Icon.BOOKMARK)
+				.withTitleText("Rename Watchlist")
+				.withContent(textField)
+				.withButton(button)
+				.show(this);
+			button.setOnAction(event -> rename(oldName, textField.getText(), modal));
+		});
+	}
+	
+	private void rename(String oldName, String newName, Modal modal) {
+		if(!newName.equalsIgnoreCase(oldName)) watchlistService.rename(oldName, newName);
+		modal.hide();
+	}
+	
 	private void create(String name, Modal modal) {
 		watchlistService.save(new Watchlist(name));
 		modal.hide();
@@ -81,6 +111,8 @@ public class WatchlistControlsMenuButton extends MenuButton {
 	}
 	
 	private void truncate() {
-		
+		Optional.ofNullable(watchlistComboBox.getValue()).ifPresent(watchlist -> {
+			watchlistService.clear(watchlist.getName());
+		});
 	}
 }
