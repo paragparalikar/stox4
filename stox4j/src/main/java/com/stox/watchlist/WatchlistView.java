@@ -32,4 +32,8 @@ public class WatchlistView extends BorderPane {
 		setTop(watchlistTitleBar);
 		setCenter(watchlistEntryView);
 	}
+	
+	public void init() {
+		watchlistComboBox.init();
+	}
 }

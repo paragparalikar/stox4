@@ -27,7 +27,9 @@ public class WatchlistTab extends Tab {
 	
 	private void init() {
 		if(isSelected() && null == getContent()) {
-			setContent(new WatchlistView(watchlistService, scripService, chartingView));
+			final WatchlistView watchlistView = new WatchlistView(watchlistService, scripService, chartingView);
+			setContent(watchlistView);
+			watchlistView.init();
 		}
 	}
 	
