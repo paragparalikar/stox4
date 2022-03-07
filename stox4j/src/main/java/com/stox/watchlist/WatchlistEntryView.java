@@ -50,8 +50,7 @@ public class WatchlistEntryView extends ListView<String> implements ChangeListen
 					deleteButton.getStyleClass().setAll("icon", "button");
 					deleteButton.setOnAction(event -> {
 						final Watchlist watchlist = watchlistComboBox.getValue();
-						final int index = watchlist.getEntries().indexOf(item);
-						watchlistService.removeEntry(watchlist.getName(), index);
+						watchlistService.removeEntry(watchlist.getName(), item);
 					});
 				}
 			}

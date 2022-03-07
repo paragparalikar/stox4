@@ -9,10 +9,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
-@DynamoDbBean
 @NoArgsConstructor
 public class Watchlist {
 
@@ -21,7 +18,6 @@ public class Watchlist {
 	
 	public Watchlist(String name) { nameProperty.set(name); }
 	
-	@DynamoDbPartitionKey
 	public String getName() { return nameProperty.get(); 	}
 	public void setName(@NonNull String name) { nameProperty.set(name.trim()); }
 	public StringProperty nameProperty() {return nameProperty;}

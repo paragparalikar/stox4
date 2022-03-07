@@ -1,7 +1,6 @@
 package com.stox.common.ui.form.auto.view;
 
 import java.util.Arrays;
-import java.util.Enumeration;
 
 import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;

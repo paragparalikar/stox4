@@ -1,16 +1,20 @@
 package com.stox;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import com.stox.charting.ChartingView;
 import com.stox.common.bar.BarRepository;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.ScripRepository;
 import com.stox.common.scrip.ScripService;
 import com.stox.common.ui.Icon;
+import com.stox.explorer.ExplorerTab;
 import com.stox.explorer.ExplorerView;
 import com.stox.watchlist.AddToWatchlistMenu;
-import com.stox.watchlist.WatchlistRepository;
+import com.stox.watchlist.WatchlistFileRepository;
 import com.stox.watchlist.WatchlistService;
-import com.stox.watchlist.WatchlistView;
+import com.stox.watchlist.WatchlistTab;
 import com.sun.javafx.application.LauncherImpl;
 
 import javafx.application.Application;
@@ -24,7 +28,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 
 public class StoxApplication extends Application {
 	
@@ -41,19 +44,19 @@ public class StoxApplication extends Application {
 	public void init() throws Exception {
 		super.init();
 		Font.loadFont(Icon.class.getClassLoader().getResource(Icon.PATH).toExternalForm(), 10);
+		final Path home = Paths.get(System.getenv("user.home"), ".stox4j");
 		final BarRepository barRepository = new BarRepository();
 		final BarService barService = new BarService(barRepository);
 		final ScripRepository scripRepository = new ScripRepository();
 		final ScripService scripService = new ScripService(scripRepository);
 		final ChartingView chartingView = new ChartingView(barService);
-		final ExplorerView explorerView = new ExplorerView(scripService, chartingView);
-		final DynamoDbAsyncClient dynamoDbAsyncClient = DynamoDbAsyncClient.builder().build();
-		final WatchlistRepository watchlistRepository = new WatchlistRepository(dynamoDbAsyncClient);
+		final ExplorerTab explorerTab = new ExplorerTab(chartingView, scripService);
+		final WatchlistFileRepository watchlistRepository = new WatchlistFileRepository(home);
 		final WatchlistService watchlistService = new WatchlistService(watchlistRepository);
-		final WatchlistView watchlistView = new WatchlistView(watchlistService, scripService, chartingView);
-		final AddToWatchlistMenu addToWatchlistMenu =  new AddToWatchlistMenu(chartingView, watchlistService, watchlistView.getWatchlistComboBox());
+		final WatchlistTab watchlistTab = new WatchlistTab(chartingView, scripService, watchlistService);
+		final AddToWatchlistMenu addToWatchlistMenu =  new AddToWatchlistMenu(chartingView, watchlistService);
 		chartingView.getContextMenu().getItems().add(addToWatchlistMenu);
-		tabPane = new TabPane(new Tab("Explorer", explorerView), new Tab("Watchlist", watchlistView));
+		tabPane = new TabPane(explorerTab, watchlistTab);
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		splitPane = new SplitPane(tabPane, chartingView);
 		root = new StackPane(splitPane);

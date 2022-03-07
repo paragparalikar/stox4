@@ -70,11 +70,8 @@ public class WatchlistControlsMenuButton extends MenuButton {
 	}
 	
 	private void create(String name, Modal modal) {
-		watchlistService.create(new Watchlist(name)).handle((watchlist, throwable) -> {
-			Optional.ofNullable(throwable).ifPresent(Throwable::printStackTrace);
-			modal.hide();
-			return null;
-		});
+		watchlistService.save(new Watchlist(name));
+		modal.hide();
 	}
 	
 	private void delete() {

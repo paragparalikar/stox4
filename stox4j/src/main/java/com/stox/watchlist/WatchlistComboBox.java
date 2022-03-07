@@ -2,7 +2,6 @@ package com.stox.watchlist;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 import com.stox.common.ui.Fx;
 
@@ -11,21 +10,21 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 
 public class WatchlistComboBox extends ComboBox<Watchlist> {
+	
+	private final WatchlistService watchlistService;
 
 	public WatchlistComboBox(WatchlistService watchlistService) {
+		this.watchlistService = watchlistService;
 		setCellFactory(this::createWatchlistCell);
 		setButtonCell(createWatchlistCell(null));
-		watchlistService.findAll().whenComplete(this::onWatchlistsLoaded);
 	}
 	
-	private void onWatchlistsLoaded(List<Watchlist> watchlists, Throwable throwable) {
-		Optional.ofNullable(throwable).ifPresent(Throwable::printStackTrace);
-		Optional.ofNullable(watchlists).ifPresent(w -> {
-			watchlists.sort(Comparator.comparing(Watchlist::getName));
-			Fx.run(() -> {
-				getItems().setAll(watchlists);
-				if(!getItems().isEmpty()) getSelectionModel().select(0);
-				});
+	public void init() {
+		final List<Watchlist> watchlists = watchlistService.findAll();
+		watchlists.sort(Comparator.comparing(Watchlist::getName));
+		Fx.run(() -> {
+			getItems().setAll(watchlists);
+			if(!getItems().isEmpty()) getSelectionModel().select(0);
 		});
 	}
 	

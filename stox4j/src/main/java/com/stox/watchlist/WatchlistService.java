@@ -1,43 +1,65 @@
 package com.stox.watchlist;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
+import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class WatchlistService {
 
-	private final WatchlistRepository watchlistRepository;
+	private final WatchlistFileRepository watchlistRepository;
+	private final ObservableMap<String, Watchlist> cache = FXCollections.observableHashMap();
 	
-	public CompletableFuture<List<Watchlist>> findAll(){
-		return watchlistRepository.findAll();
-	}
-	
-	public CompletableFuture<Watchlist> create(Watchlist watchlist) {
-		return watchlistRepository.create(watchlist).thenApplyAsync(result -> {
-			return watchlist;
+	public void onWatchlistAdded(Consumer<Watchlist> callback) {
+		cache.addListener((MapChangeListener<String, Watchlist>)change -> {
+			if(change.wasAdded()) callback.accept(change.getValueAdded());
 		});
 	}
 	
-	public CompletableFuture<Watchlist> delete(String name) {
-		return watchlistRepository.delete(name).thenApplyAsync(result -> {
-			return result;
+	public void onWatchlistRemoved(Consumer<Watchlist> callback) {
+		cache.addListener((MapChangeListener<String, Watchlist>)change -> {
+			if(change.wasRemoved()) callback.accept(change.getValueRemoved());
 		});
 	}
 	
-	public CompletableFuture<Boolean> exists(String name){
-		return findAll().thenApply(watchlists -> {
-			return watchlists.stream().map(Watchlist::getName)
-					.anyMatch(watchlistName -> watchlistName.equalsIgnoreCase(name));
-		});
+	public synchronized List<Watchlist> findAll(){
+		if(cache.isEmpty()) {
+			final List<Watchlist> watchlists = watchlistRepository.findAll();
+			watchlists.forEach(watchlist -> cache.put(watchlist.getName(), watchlist));
+			return watchlists;
+		} else {
+			return new ArrayList<>(cache.values());
+		}
 	}
 	
-	public CompletableFuture<Void> addEntry(String name, String isin) {
-		return watchlistRepository.addEntry(name, isin);
+	public synchronized void save(Watchlist watchlist) {
+		watchlistRepository.save(watchlist);
+		cache.put(watchlist.getName(), watchlist);
 	}
 	
-	public CompletableFuture<Void> removeEntry(String name, int index) {
-		return watchlistRepository.removeEntry(name, index);
+	public synchronized void clear(String name) {
+		watchlistRepository.truncate(name);
+		//cache.get(name).getEntries().clear();
+	}
+	
+	public synchronized void delete(String name) {
+		watchlistRepository.delete(name);
+		cache.remove(name);
+	}
+	
+	public synchronized void addEntry(String name, String entry) {
+		watchlistRepository.append(name, entry);
+		//cache.get(name).getEntries().add(entry);
+	}
+	
+	public synchronized void removeEntry(String name, String entry) {
+		final Watchlist watchlist = watchlistRepository.findByName(name);
+		watchlist.getEntries().remove(entry);
+		save(watchlist);
 	}
 }
