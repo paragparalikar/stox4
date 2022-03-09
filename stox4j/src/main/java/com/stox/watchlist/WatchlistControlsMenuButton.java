@@ -4,7 +4,8 @@ import java.util.Optional;
 
 import com.stox.common.ui.Fx;
 import com.stox.common.ui.Icon;
-import com.stox.common.ui.Modal;
+import com.stox.common.ui.modal.ConfirmationModal;
+import com.stox.common.ui.modal.Modal;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
@@ -55,7 +56,7 @@ public class WatchlistControlsMenuButton extends MenuButton {
 		createMenuItem.setOnAction(event -> create());
 		renameMenuItem.setOnAction(event -> rename());
 		deleteMenuItem.setOnAction(event -> delete());
-		clearMenuItem.setOnAction(event -> truncate());
+		clearMenuItem.setOnAction(event -> clear());
 	}
 	
 	private void create() {
@@ -67,7 +68,7 @@ public class WatchlistControlsMenuButton extends MenuButton {
 		graphics.getStyleClass().add("icon");
 		final Button button = new Button("Create", graphics);
 		final Modal modal = new Modal()
-			.withIcon(Icon.BOOKMARK)
+			.withTitleIcon(Icon.BOOKMARK)
 			.withTitleText("Create New Watchlist")
 			.withContent(textField)
 			.withButton(button)
@@ -88,7 +89,7 @@ public class WatchlistControlsMenuButton extends MenuButton {
 			graphics.getStyleClass().add("icon");
 			final Button button = new Button("Rename", graphics);
 			final Modal modal = new Modal()
-				.withIcon(Icon.BOOKMARK)
+				.withTitleIcon(Icon.BOOKMARK)
 				.withTitleText("Rename Watchlist")
 				.withContent(textField)
 				.withButton(button)
@@ -116,17 +117,37 @@ public class WatchlistControlsMenuButton extends MenuButton {
 	
 	private void delete() {
 		Optional.ofNullable(watchlistComboBox.getValue()).ifPresent(watchlist -> {
-			watchlistService.delete(watchlist.getName());
-			if(!watchlistComboBox.getItems().isEmpty()) {
-				watchlistComboBox.getSelectionModel().select(0);
-			}
+			new ConfirmationModal()
+				.withMessageIcon(Icon.WARNING)
+				.withMessageText("Are you sure you want to delete watchlist \"" + watchlist.getName() + "\"")
+				.withAction(() -> delete(watchlist))
+				.withTitleIcon(Icon.BOOKMARK)
+				.withTitleText("Delete watchlist \"" + watchlist.getName() + "\"")
+				.show(this);
 		});
 	}
 	
-	private void truncate() {
+	private void delete(Watchlist watchlist) {
+		watchlistService.delete(watchlist.getName());
+		if(!watchlistComboBox.getItems().isEmpty()) {
+			watchlistComboBox.getSelectionModel().select(0);
+		}
+	}
+	
+	private void clear() {
 		Optional.ofNullable(watchlistComboBox.getValue()).ifPresent(watchlist -> {
-			watchlistService.clear(watchlist.getName());
-			watchlist.getEntries().clear();
+			new ConfirmationModal()
+			.withMessageIcon(Icon.WARNING)
+			.withMessageText("Are you sure you want to clear watchlist \"" + watchlist.getName() + "\"")
+			.withAction(() -> clear(watchlist))
+			.withTitleIcon(Icon.BOOKMARK)
+			.withTitleText("Clear watchlist \"" + watchlist.getName() + "\"")
+			.show(this);
 		});
+	}
+	
+	private void clear(Watchlist watchlist) {
+		watchlistService.clear(watchlist.getName());
+		watchlist.getEntries().clear();
 	}
 }

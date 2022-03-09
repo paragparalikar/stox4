@@ -10,7 +10,7 @@ import com.stox.charting.plot.rule.PlottableReaccumulationRule;
 import com.stox.charting.plot.rule.RulePlot;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.ui.Icon;
-import com.stox.common.ui.Modal;
+import com.stox.common.ui.modal.Modal;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -49,7 +49,7 @@ public class RuleButton extends Button implements EventHandler<ActionEvent> {
 		final Button button = new Button("Add", graphics);
 		button.setOnAction(this::action);
 		new Modal()
-			.withIcon(Icon.FILTER)
+			.withTitleIcon(Icon.FILTER)
 			.withTitleText("Rules")
 			.withContent(listView)
 			.withButton(button)

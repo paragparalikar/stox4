@@ -13,7 +13,7 @@ import com.stox.charting.plot.indicator.PlottableRSIIndicator;
 import com.stox.charting.plot.indicator.PlottableStochasticRSIIndicator;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.ui.Icon;
-import com.stox.common.ui.Modal;
+import com.stox.common.ui.modal.Modal;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -54,7 +54,7 @@ public class IndicatorButton extends Button implements EventHandler<ActionEvent>
 		final Button button = new Button("Add", graphics);
 		button.setOnAction(this::action);
 		new Modal()
-			.withIcon(Icon.LINE_CHART)
+			.withTitleIcon(Icon.LINE_CHART)
 			.withTitleText("Add Indicators")
 			.withContent(listView)
 			.withButton(button)

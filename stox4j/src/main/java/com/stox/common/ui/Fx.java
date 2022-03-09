@@ -1,6 +1,8 @@
 package com.stox.common.ui;
 
 import javafx.application.Platform;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -16,4 +18,10 @@ public class Fx {
 		}
 	}
 
+	public Node icon(String value) {
+		final Label label = new Label(value);
+		label.getStyleClass().add("icon");
+		return label;
+	}
+	
 }

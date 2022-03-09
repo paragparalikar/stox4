@@ -1,4 +1,4 @@
-package com.stox.common.ui;
+package com.stox.common.ui.modal;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

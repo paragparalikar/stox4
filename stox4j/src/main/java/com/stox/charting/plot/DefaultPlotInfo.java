@@ -4,7 +4,7 @@ import org.ta4j.core.num.Num;
 
 import com.stox.common.ui.ConfigView;
 import com.stox.common.ui.Icon;
-import com.stox.common.ui.Modal;
+import com.stox.common.ui.modal.Modal;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -31,7 +31,7 @@ public class DefaultPlotInfo<T> extends PlotInfo<T> {
 		});
 		
 		new Modal()
-			.withIcon(Icon.GEAR)
+			.withTitleIcon(Icon.GEAR)
 			.withTitleText("Configure")
 			.withContent(configView.getNode())
 			.withButton(button)
