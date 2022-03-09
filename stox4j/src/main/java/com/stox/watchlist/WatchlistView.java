@@ -1,6 +1,7 @@
 package com.stox.watchlist;
 
-import com.stox.charting.ChartingView;
+import org.greenrobot.eventbus.EventBus;
+
 import com.stox.common.scrip.ScripService;
 
 import javafx.scene.layout.BorderPane;
@@ -9,7 +10,6 @@ import lombok.Getter;
 @Getter
 public class WatchlistView extends BorderPane {
 
-	private final ChartingView chartingView;
 	private final ScripService scripService;
 	private final WatchlistService watchlistService;
 	
@@ -18,16 +18,14 @@ public class WatchlistView extends BorderPane {
 	private final WatchlistTitleBar watchlistTitleBar;
 	private final WatchlistEntryView watchlistEntryView;
 	
-	public WatchlistView(WatchlistService watchlistService, 
-			ScripService scripService, ChartingView chartingView) {
-		this.chartingView = chartingView;
+	public WatchlistView(EventBus eventBus, WatchlistService watchlistService, ScripService scripService) {
 		this.scripService = scripService;
 		this.watchlistService = watchlistService;
 
-		this.watchlistComboBox = new WatchlistComboBox(watchlistService);
+		this.watchlistComboBox = new WatchlistComboBox(eventBus, watchlistService);
 		this.watchlistButtonBar = new WatchlistControlsMenuButton(watchlistComboBox, watchlistService);
 		this.watchlistTitleBar = new WatchlistTitleBar(watchlistComboBox, watchlistButtonBar);
-		this.watchlistEntryView = new WatchlistEntryView(watchlistComboBox, scripService, watchlistService);
+		this.watchlistEntryView = new WatchlistEntryView(eventBus, scripService, watchlistService);
 		
 		setTop(watchlistTitleBar);
 		setCenter(watchlistEntryView);

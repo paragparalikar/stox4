@@ -2,51 +2,102 @@ package com.stox.watchlist;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import com.stox.watchlist.event.WatchlistClearedEvent;
+import com.stox.watchlist.event.WatchlistCreatedEvent;
+import com.stox.watchlist.event.WatchlistDeletedEvent;
+import com.stox.watchlist.event.WatchlistEntryAddedEvent;
+import com.stox.watchlist.event.WatchlistEntryRemovedEvent;
+import com.stox.watchlist.event.WatchlistRenamedEvent;
+import com.stox.watchlist.event.WatchlistSelectedEvent;
+import com.stox.watchlist.event.WatchlistUpdatedEvent;
+
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class WatchlistComboBox extends ComboBox<Watchlist> {
 	
+	private final EventBus eventBus;
 	private final WatchlistService watchlistService;
-
-	public WatchlistComboBox(WatchlistService watchlistService) {
-		this.watchlistService = watchlistService;
-		setCellFactory(this::createWatchlistCell);
-		setButtonCell(createWatchlistCell(null));
-	}
 	
 	public void init() {
 		final List<Watchlist> watchlists = watchlistService.findAll();
 		watchlists.sort(Comparator.comparing(Watchlist::getName));
 		getItems().setAll(watchlists);
+		getSelectionModel().selectedItemProperty().addListener(this::changed);
 		if(!getItems().isEmpty()) getSelectionModel().select(0);
-		watchlistService.onWatchlistAdded(this::onWatchlistCreated);
-		watchlistService.onWatchlistRemoved(this::onWatchlistRemoved);
+		eventBus.register(this);
 	}
 	
-	private void onWatchlistCreated(Watchlist watchlist) {
-		getItems().add(watchlist);
-		getSelectionModel().select(watchlist);
+	private void changed(ObservableValue<? extends Watchlist> observable, Watchlist oldValue, Watchlist newValue) {
+		eventBus.post(new WatchlistSelectedEvent(newValue));
 	}
 	
-	private void onWatchlistRemoved(Watchlist watchlist) {
-		getItems().remove(watchlist);
+	private Optional<Watchlist> findItem(String name) {
+		return getItems().stream()
+				.filter(item -> item.getName().equalsIgnoreCase(name))
+				.findAny();
 	}
 	
-	private ListCell<Watchlist> createWatchlistCell(ListView<Watchlist> listView){
-		return  new ListCell<Watchlist>() {
-			@Override
-			protected void updateItem(Watchlist item, boolean empty) {
-				super.updateItem(item, empty);
-				textProperty().unbind();
-				setText(null);
-				if(null != item && !empty) {
-					textProperty().bind(item.nameProperty());
-				}
+	@Subscribe
+	public void onWatchlistCreated(WatchlistCreatedEvent event) {
+		getItems().add(event.getWatchlist());
+		getSelectionModel().select(event.getWatchlist());
+	}
+	
+	@Subscribe
+	public void onWatchlistRenamed(WatchlistRenamedEvent event) {
+		findItem(event.getOldName()).ifPresent(watchlist -> {
+			watchlist.setName(event.getNewName());
+			final List<Watchlist> watchlists = getItems().stream()
+					.sorted(Comparator.comparing(Watchlist::getName))
+					.collect(Collectors.toList());
+			getItems().setAll(watchlists);
+			if(Objects.equals(getValue(), watchlist) && null != getButtonCell()) {
+				getButtonCell().setText(watchlist.getName());
 			}
-		};
+		});
+	}
+	
+	@Subscribe
+	public void onWatchlistUpdated(WatchlistUpdatedEvent event) {
+		findItem(event.getWatchlist().getName()).ifPresent(watchlist -> {
+			watchlist.getEntries().clear();
+			watchlist.getEntries().addAll(event.getWatchlist().getEntries());
+		});
+	}
+	
+	@Subscribe
+	public void onWatchlistCleared(WatchlistClearedEvent event) {
+		findItem(event.getWatchlist().getName()).ifPresent(watchlist -> {
+			watchlist.getEntries().clear();
+		});
+	}
+	
+	@Subscribe
+	public void onWatchlistDeletetd(WatchlistDeletedEvent event) {
+		findItem(event.getWatchlist().getName()).ifPresent(getItems()::remove);
 	}
 
+	@Subscribe
+	public void onWatchlistEntryAdded(WatchlistEntryAddedEvent event) {
+		findItem(event.getName()).ifPresent(watchlist -> {
+			watchlist.getEntries().add(event.getEntry());
+		});
+	}
+
+	@Subscribe
+	public void onWatchlistEntryRemoved(WatchlistEntryRemovedEvent event) {
+		findItem(event.getName()).ifPresent(watchlist -> {
+			watchlist.getEntries().remove(event.getEntry());
+		});
+	}
 }

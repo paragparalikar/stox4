@@ -111,7 +111,7 @@ public class WatchlistControlsMenuButton extends MenuButton {
 	}
 	
 	private void create(String name, Modal modal) {
-		watchlistService.save(new Watchlist(name));
+		watchlistService.create(new Watchlist(name));
 		modal.hide();
 	}
 	

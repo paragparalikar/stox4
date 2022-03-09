@@ -1,68 +1,69 @@
 package com.stox.watchlist;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
-import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
-import javafx.collections.ObservableMap;
+import org.greenrobot.eventbus.EventBus;
+
+import com.stox.watchlist.event.WatchlistClearedEvent;
+import com.stox.watchlist.event.WatchlistCreatedEvent;
+import com.stox.watchlist.event.WatchlistDeletedEvent;
+import com.stox.watchlist.event.WatchlistEntryAddedEvent;
+import com.stox.watchlist.event.WatchlistEntryRemovedEvent;
+import com.stox.watchlist.event.WatchlistRenamedEvent;
+import com.stox.watchlist.event.WatchlistUpdatedEvent;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class WatchlistService {
 
-	private final WatchlistFileRepository watchlistRepository;
-	private final ObservableMap<String, Watchlist> cache = FXCollections.observableHashMap();
+	private final EventBus eventBus;
+	private final WatchlistRepository watchlistRepository;
 	
-	public void onWatchlistAdded(Consumer<Watchlist> callback) {
-		cache.addListener((MapChangeListener<String, Watchlist>)change -> {
-			if(change.wasAdded()) callback.accept(change.getValueAdded());
-		});
+	public List<Watchlist> findAll(){
+		return watchlistRepository.findAll();
 	}
 	
-	public void onWatchlistRemoved(Consumer<Watchlist> callback) {
-		cache.addListener((MapChangeListener<String, Watchlist>)change -> {
-			if(change.wasRemoved()) callback.accept(change.getValueRemoved());
-		});
+	public void create(Watchlist watchlist) {
+		watchlistRepository.create(watchlist);
+		eventBus.post(new WatchlistCreatedEvent(watchlist));
 	}
 	
-	public synchronized List<Watchlist> findAll(){
-		if(cache.isEmpty()) {
-			final List<Watchlist> watchlists = watchlistRepository.findAll();
-			watchlists.forEach(watchlist -> cache.put(watchlist.getName(), watchlist));
-			return watchlists;
-		} else {
-			return new ArrayList<>(cache.values());
+	public void update(Watchlist watchlist) {
+		watchlistRepository.update(watchlist);
+		eventBus.post(new WatchlistUpdatedEvent(watchlist));
+	}
+	
+	public void clear(String name) {
+		final Watchlist watchlist = watchlistRepository.truncate(name);
+		eventBus.post(new WatchlistClearedEvent(watchlist));
+	}
+	
+	public void rename(String oldName, String newName) {
+		watchlistRepository.rename(oldName, newName);
+		eventBus.post(new WatchlistRenamedEvent(oldName, newName));
+	}
+	
+	public void delete(String name) {
+		final Watchlist watchlist = watchlistRepository.delete(name);
+		eventBus.post(new WatchlistDeletedEvent(watchlist));
+	}
+	
+	public void addEntry(String name, String entry) {
+		final Watchlist watchlist = watchlistRepository.findByName(name);
+		if(!watchlist.getEntries().contains(entry)) {
+			watchlist.getEntries().add(entry);
+			watchlistRepository.update(watchlist);
+			eventBus.post(new WatchlistEntryAddedEvent(name, entry));
 		}
 	}
 	
-	public synchronized void save(Watchlist watchlist) {
-		watchlistRepository.save(watchlist);
-		cache.put(watchlist.getName(), watchlist);
-	}
-	
-	public synchronized void clear(String name) {
-		watchlistRepository.truncate(name);
-	}
-	
-	public synchronized void rename(String oldName, String newName) {
-		watchlistRepository.rename(oldName, newName);
-		final Watchlist watchlist = cache.remove(oldName);
-		if(null != watchlist) cache.put(newName, watchlist);
-	}
-	
-	public synchronized void delete(String name) {
-		watchlistRepository.delete(name);
-		cache.remove(name);
-	}
-	
-	public synchronized void addEntry(String name, String entry) {
-		watchlistRepository.append(name, entry);
-	}
-	
-	public synchronized void removeEntry(String name, String entry) {
+	public void removeEntry(String name, String entry) {
 		final Watchlist watchlist = watchlistRepository.findByName(name);
-		save(watchlist);
+		if(watchlist.getEntries().contains(entry)) {
+			watchlist.getEntries().remove(entry);
+			watchlistRepository.update(watchlist);
+			eventBus.post(new WatchlistEntryRemovedEvent(name, entry));
+		}
 	}
 }

@@ -1,5 +1,7 @@
 package com.stox.charting;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeries;
@@ -16,6 +18,8 @@ import com.stox.charting.plot.price.PricePlot;
 import com.stox.charting.tools.IndicatorButton;
 import com.stox.charting.tools.RuleButton;
 import com.stox.common.bar.BarService;
+import com.stox.common.event.ScripSelectionEvent;
+import com.stox.common.event.SelectedScripQueryEvent;
 import com.stox.common.scrip.Scrip;
 
 import javafx.application.Platform;
@@ -76,7 +80,7 @@ public class ChartingView extends BorderPane {
 	private final StackPane stackPane = new StackPane(verticalGrid, splitPane, controlButtons, crosshair);
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
-	public ChartingView(BarService barService) {
+	public ChartingView(EventBus eventBus, BarService barService) {
 		add(priceChart = new Chart(this));
 		add(pricePlot = new PricePlot(barService));
 		setOnContextMenuRequested(this::onContextMenuRequested);
@@ -95,6 +99,7 @@ public class ChartingView extends BorderPane {
 				return null != context.getBar(0);
 			}
 		});
+		eventBus.register(this);
 	}
 	
 	private void onContextMenuRequested(ContextMenuEvent event) {
@@ -125,8 +130,14 @@ public class ChartingView extends BorderPane {
 		priceChart.removePlot(plot);
 	}
 	
-	public void setScrip(Scrip scrip) {
-		context.getScripProperty().set(scrip);
+	@Subscribe
+	public void onScripSelected(ScripSelectionEvent event) {
+		context.getScripProperty().set(event.getScrip());
+	}
+	
+	@Subscribe
+	public void onSelectedScripQuery(SelectedScripQueryEvent event) {
+		event.setScrip(context.getScripProperty().get());
 	}
 	
 	public void pan(PanRequestEvent event) {
