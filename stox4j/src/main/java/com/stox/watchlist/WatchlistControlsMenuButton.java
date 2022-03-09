@@ -2,6 +2,7 @@ package com.stox.watchlist;
 
 import java.util.Optional;
 
+import com.stox.common.ui.Fx;
 import com.stox.common.ui.Icon;
 import com.stox.common.ui.Modal;
 
@@ -72,6 +73,8 @@ public class WatchlistControlsMenuButton extends MenuButton {
 			.withButton(button)
 			.show(this);
 		button.setOnAction(event -> create(textField.getText(), modal));
+		button.setDefaultButton(true);
+		Fx.run(textField::requestFocus);
 	}
 	
 	private void rename() {
@@ -80,7 +83,7 @@ public class WatchlistControlsMenuButton extends MenuButton {
 			final TextField textField = new TextField();
 			textField.setMaxWidth(Double.MAX_VALUE);
 			textField.getStyleClass().add("large");
-			textField.setText(watchlist.getName());
+			textField.setText(oldName);
 			final Label graphics = new Label(Icon.EDIT);
 			graphics.getStyleClass().add("icon");
 			final Button button = new Button("Rename", graphics);
@@ -90,12 +93,19 @@ public class WatchlistControlsMenuButton extends MenuButton {
 				.withContent(textField)
 				.withButton(button)
 				.show(this);
-			button.setOnAction(event -> rename(oldName, textField.getText(), modal));
+			button.setOnAction(event -> rename(watchlist, textField.getText(), modal));
+			button.setDefaultButton(true);
+			Fx.run(textField::requestFocus);
+			textField.positionCaret(oldName.length());
 		});
 	}
 	
-	private void rename(String oldName, String newName, Modal modal) {
-		if(!newName.equalsIgnoreCase(oldName)) watchlistService.rename(oldName, newName);
+	private void rename(Watchlist watchlist, String newName, Modal modal) {
+		final String oldName = watchlist.getName();
+		if(null != newName && 0 < newName.trim().length() && !newName.equalsIgnoreCase(oldName)) {
+			watchlistService.rename(oldName, newName);
+			watchlist.setName(newName);
+		}
 		modal.hide();
 	}
 	
@@ -107,12 +117,16 @@ public class WatchlistControlsMenuButton extends MenuButton {
 	private void delete() {
 		Optional.ofNullable(watchlistComboBox.getValue()).ifPresent(watchlist -> {
 			watchlistService.delete(watchlist.getName());
+			if(!watchlistComboBox.getItems().isEmpty()) {
+				watchlistComboBox.getSelectionModel().select(0);
+			}
 		});
 	}
 	
 	private void truncate() {
 		Optional.ofNullable(watchlistComboBox.getValue()).ifPresent(watchlist -> {
 			watchlistService.clear(watchlist.getName());
+			watchlist.getEntries().clear();
 		});
 	}
 }

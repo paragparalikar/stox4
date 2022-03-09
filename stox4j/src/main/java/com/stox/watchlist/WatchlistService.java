@@ -44,16 +44,12 @@ public class WatchlistService {
 	
 	public synchronized void clear(String name) {
 		watchlistRepository.truncate(name);
-		//cache.get(name).getEntries().clear();
 	}
 	
 	public synchronized void rename(String oldName, String newName) {
 		watchlistRepository.rename(oldName, newName);
 		final Watchlist watchlist = cache.remove(oldName);
-		if(null != watchlist) {
-			watchlist.setName(newName);
-			cache.put(newName, watchlist);
-		}
+		if(null != watchlist) cache.put(newName, watchlist);
 	}
 	
 	public synchronized void delete(String name) {
@@ -63,12 +59,10 @@ public class WatchlistService {
 	
 	public synchronized void addEntry(String name, String entry) {
 		watchlistRepository.append(name, entry);
-		//cache.get(name).getEntries().add(entry);
 	}
 	
 	public synchronized void removeEntry(String name, String entry) {
 		final Watchlist watchlist = watchlistRepository.findByName(name);
-		watchlist.getEntries().remove(entry);
 		save(watchlist);
 	}
 }

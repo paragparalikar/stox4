@@ -2,7 +2,6 @@ package com.stox.watchlist;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Collections;
@@ -51,7 +50,7 @@ public class WatchlistFileRepository {
 		if(Files.exists(newPath)) throw new IllegalArgumentException(newName + " already exists");
 		final Path oldPath = getPath(oldName);
 		if(Files.notExists(oldPath)) throw new IllegalArgumentException(oldName + " does not exists");
-		Files.move(oldPath, newPath, StandardCopyOption.values());
+		Files.move(oldPath, newPath);
 	}
 	
 	@SneakyThrows
