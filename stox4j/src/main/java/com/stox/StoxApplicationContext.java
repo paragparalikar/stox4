@@ -9,6 +9,10 @@ import com.stox.common.bar.BarRepository;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.ScripRepository;
 import com.stox.common.scrip.ScripService;
+import com.stox.example.ExampleGroupRepository;
+import com.stox.example.ExampleGroupService;
+import com.stox.example.ExampleRepository;
+import com.stox.example.ExampleService;
 import com.stox.watchlist.WatchlistRepository;
 import com.stox.watchlist.WatchlistService;
 
@@ -25,6 +29,10 @@ public class StoxApplicationContext {
 	private final ScripRepository scripRepository;
 	private final WatchlistService watchlistService;
 	private final WatchlistRepository watchlistRepository;
+	private final ExampleService exampleService;
+	private final ExampleRepository exampleRepository;
+	private final ExampleGroupService exampleGroupService;
+	private final ExampleGroupRepository exampleGroupRepository;
 
 	public StoxApplicationContext() {
 		eventBus = new EventBus();
@@ -35,6 +43,10 @@ public class StoxApplicationContext {
 		scripService = new ScripService(scripRepository);
 		watchlistRepository = new WatchlistRepository(home);
 		watchlistService = new WatchlistService(eventBus, watchlistRepository);
+		exampleRepository = new ExampleRepository(home);
+		exampleService = new ExampleService(eventBus, exampleRepository);
+		exampleGroupRepository = new ExampleGroupRepository(home);
+		exampleGroupService = new ExampleGroupService(eventBus, exampleGroupRepository);
 	}
 	
 }

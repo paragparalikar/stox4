@@ -39,7 +39,7 @@ public class ExampleGroupService {
 		return exampleGroup;
 	}
 	
-	public ExampleGroup udpate(ExampleGroup exampleGroup) {
+	public ExampleGroup update(ExampleGroup exampleGroup) {
 		if(null == exampleGroup.getId()) throw new IllegalArgumentException("Id must not be null for updating a resource");
 		cache.put(exampleGroup.getId(), exampleGroup);
 		repository.saveAll(cache.values());

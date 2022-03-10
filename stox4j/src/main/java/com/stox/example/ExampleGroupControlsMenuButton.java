@@ -1,4 +1,4 @@
-package com.stox.watchlist;
+package com.stox.example;
 
 import java.util.Optional;
 
@@ -14,18 +14,23 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 
-public class WatchlistControlsMenuButton extends MenuButton {
+public class ExampleGroupControlsMenuButton extends MenuButton {
 
-	private final WatchlistService watchlistService;
-	private final WatchlistComboBox watchlistComboBox;
+	private final ExampleService exampleService;
+	private final ExampleGroupService exampleGroupService;
+	private final ExampleGroupComboBox exampleGroupComboBox;
 	private final MenuItem createMenuItem = new MenuItem("New");
 	private final MenuItem renameMenuItem = new MenuItem("Rename");
 	private final MenuItem deleteMenuItem = new MenuItem("Delete");
 	private final MenuItem clearMenuItem = new MenuItem("Clear");
 	
-	public WatchlistControlsMenuButton(WatchlistComboBox watchlistComboBox, WatchlistService watchlistService) {
-		this.watchlistService = watchlistService;
-		this.watchlistComboBox = watchlistComboBox;
+	public ExampleGroupControlsMenuButton(
+			ExampleService exampleService,
+			ExampleGroupService exampleGroupService, 
+			ExampleGroupComboBox exampleGroupComboBox) {
+		this.exampleService = exampleService;
+		this.exampleGroupService = exampleGroupService;
+		this.exampleGroupComboBox = exampleGroupComboBox;
 		getItems().addAll(createMenuItem, renameMenuItem, clearMenuItem, deleteMenuItem);
 		style();
 		bind();
@@ -63,13 +68,13 @@ public class WatchlistControlsMenuButton extends MenuButton {
 		final TextField textField = new TextField();
 		textField.setMaxWidth(Double.MAX_VALUE);
 		textField.getStyleClass().add("large");
-		textField.setPromptText("Watchlist Name");
+		textField.setPromptText("Example Group Name");
 		final Label graphics = new Label(Icon.PLUS);
 		graphics.getStyleClass().add("icon");
 		final Button button = new Button("Create", graphics);
 		final Modal modal = new Modal()
 			.withTitleIcon(Icon.BOOKMARK)
-			.withTitleText("Create New Watchlist")
+			.withTitleText("Create New Example Group")
 			.withContent(textField)
 			.withButton(button)
 			.show(this);
@@ -78,9 +83,15 @@ public class WatchlistControlsMenuButton extends MenuButton {
 		Fx.run(textField::requestFocus);
 	}
 	
+	private void create(String name, Modal modal) {
+		final ExampleGroup exampleGroup = new ExampleGroup(null, name);
+		exampleGroupService.create(exampleGroup);
+		modal.hide();
+	}
+	
 	private void rename() {
-		Optional.ofNullable(watchlistComboBox.getValue()).ifPresent(watchlist -> {
-			final String oldName = watchlist.getName();
+		Optional.ofNullable(exampleGroupComboBox.getValue()).ifPresent(group -> {
+			final String oldName = group.getName();
 			final TextField textField = new TextField();
 			textField.setMaxWidth(Double.MAX_VALUE);
 			textField.getStyleClass().add("large");
@@ -90,64 +101,47 @@ public class WatchlistControlsMenuButton extends MenuButton {
 			final Button button = new Button("Rename", graphics);
 			final Modal modal = new Modal()
 				.withTitleIcon(Icon.BOOKMARK)
-				.withTitleText("Rename Watchlist")
+				.withTitleText("Rename Example Group")
 				.withContent(textField)
 				.withButton(button)
 				.show(this);
-			button.setOnAction(event -> rename(watchlist, textField.getText(), modal));
+			button.setOnAction(event -> rename(group, textField.getText(), modal));
 			button.setDefaultButton(true);
 			Fx.run(textField::requestFocus);
 			textField.positionCaret(oldName.length());
 		});
 	}
 	
-	private void rename(Watchlist watchlist, String newName, Modal modal) {
-		final String oldName = watchlist.getName();
+	private void rename(ExampleGroup exampleGroup, String newName, Modal modal) {
+		final String oldName = exampleGroup.getName();
 		if(null != newName && 0 < newName.trim().length() && !newName.equalsIgnoreCase(oldName)) {
-			watchlistService.rename(oldName, newName);
-			watchlist.setName(newName);
+			exampleGroup.setName(newName);
+			exampleGroupService.update(exampleGroup);
 			modal.hide();
 		}
 	}
 	
-	private void create(String name, Modal modal) {
-		watchlistService.create(new Watchlist(name));
-		modal.hide();
-	}
-	
 	private void delete() {
-		Optional.ofNullable(watchlistComboBox.getValue()).ifPresent(watchlist -> {
+		Optional.ofNullable(exampleGroupComboBox.getValue()).ifPresent(group -> {
 			new ConfirmationModal()
 				.withMessageIcon(Icon.WARNING)
-				.withMessageText("Are you sure you want to delete watchlist \"" + watchlist.getName() + "\"")
-				.withAction(() -> delete(watchlist))
+				.withMessageText("Are you sure you want to delete example group \"" + group.getName() + "\"")
+				.withAction(() -> exampleGroupService.deleteById(group.getId()))
 				.withTitleIcon(Icon.BOOKMARK)
-				.withTitleText("Delete watchlist \"" + watchlist.getName() + "\"")
+				.withTitleText("Delete example group \"" + group.getName() + "\"")
 				.show(this);
 		});
 	}
 	
-	private void delete(Watchlist watchlist) {
-		watchlistService.delete(watchlist.getName());
-		if(!watchlistComboBox.getItems().isEmpty()) {
-			watchlistComboBox.getSelectionModel().select(0);
-		}
-	}
-	
 	private void clear() {
-		Optional.ofNullable(watchlistComboBox.getValue()).ifPresent(watchlist -> {
+		Optional.ofNullable(exampleGroupComboBox.getValue()).ifPresent(group -> {
 			new ConfirmationModal()
 			.withMessageIcon(Icon.WARNING)
-			.withMessageText("Are you sure you want to clear watchlist \"" + watchlist.getName() + "\"")
-			.withAction(() -> clear(watchlist))
+			.withMessageText("Are you sure you want to clear example group \"" + group.getName() + "\"")
+			.withAction(() -> exampleService.clear(group.getId()))
 			.withTitleIcon(Icon.BOOKMARK)
-			.withTitleText("Clear watchlist \"" + watchlist.getName() + "\"")
+			.withTitleText("Clear example group \"" + group.getName() + "\"")
 			.show(this);
 		});
-	}
-	
-	private void clear(Watchlist watchlist) {
-		watchlistService.clear(watchlist.getName());
-		watchlist.getEntries().clear();
 	}
 }

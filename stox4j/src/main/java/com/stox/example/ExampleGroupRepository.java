@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,10 @@ public class ExampleGroupRepository {
 	
 	@SneakyThrows
 	public List<ExampleGroup> findAll(){
-		return Files.lines(getPath()).map(this::map).collect(Collectors.toList());
+		final Path path = getPath();
+		return Files.exists(path) ? 
+				Files.lines(path).map(this::map).collect(Collectors.toList()) :
+					Collections.emptyList();
 	}
 	
 	@SneakyThrows
