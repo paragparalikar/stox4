@@ -42,10 +42,8 @@ public class ExampleListView extends ListView<Example> {
 	public void onExampleGroupSelected(ExampleGroupSelectedEvent event) {
 		if(null == group || !Objects.equals(group, event.getExampleGroup())) {
 			this.group = event.getExampleGroup();
-			Optional.ofNullable(group)
-				.map(ExampleGroup::getId)
-				.map(exampleService::findByGroupId)
-				.ifPresent(getItems()::setAll);
+			if(null == group) getItems().clear();
+			else getItems().setAll(exampleService.findByGroupId(group.getId()));
 		}
 	}
 	
