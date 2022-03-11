@@ -36,7 +36,7 @@ public class StoxApplication extends Application {
 		super.init();
 		Font.loadFont(Icon.class.getClassLoader().getResource(Icon.PATH).toExternalForm(), 10);
 		final StoxApplicationContext context = new StoxApplicationContext();
-		final ChartingView chartingView = new ChartingView(context.getEventBus(), context.getBarService());
+		final ChartingView chartingView = new ChartingView(context.getEventBus(), context.getBarService(), context.getScripService());
 		final ExplorerTab explorerTab = new ExplorerTab(context.getEventBus(), context.getScripService());
 		final WatchlistTab watchlistTab = new WatchlistTab(context.getEventBus(), context.getScripService(), context.getWatchlistService());
 		final AddToWatchlistMenu addToWatchlistMenu =  new AddToWatchlistMenu(context.getEventBus(), context.getWatchlistService());

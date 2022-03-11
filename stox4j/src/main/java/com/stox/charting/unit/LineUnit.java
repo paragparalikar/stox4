@@ -2,7 +2,7 @@ package com.stox.charting.unit;
 
 import org.ta4j.core.num.Num;
 
-import com.stox.charting.ChartingView.ChartingContext;
+import com.stox.charting.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
 import com.stox.charting.unit.parent.UnitParent;

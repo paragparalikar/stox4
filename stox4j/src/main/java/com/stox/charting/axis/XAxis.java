@@ -7,8 +7,8 @@ import java.util.Locale;
 
 import org.ta4j.core.Bar;
 
-import com.stox.charting.ChartingView.ChartingConfig;
-import com.stox.charting.ChartingView.ChartingContext;
+import com.stox.charting.ChartingConfig;
+import com.stox.charting.ChartingContext;
 import com.stox.charting.crosshair.Crosshair;
 import com.stox.charting.grid.VerticalGrid;
 
@@ -49,7 +49,7 @@ public class XAxis extends StackPane {
 	
 	private void bind() {
 		label.visibleProperty().bind(crosshair.visibleProperty());
-		context.getScripProperty().addListener((o,old,scrip) -> reset());
+		context.getInputProperty().addListener((o,old,scrip) -> reset());
 		context.getBarSeriesProperty().addListener((o,old,value) -> updateCrosshairLabel());
 		crosshair.getVerticalLine().endXProperty().addListener((o,old,value) -> updateCrosshairLabel());
 	}

@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import com.stox.common.event.ScripSelectionEvent;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.scrip.ScripService;
 import com.stox.common.ui.Icon;
@@ -15,6 +14,7 @@ import com.stox.example.event.ExampleAddedEvent;
 import com.stox.example.event.ExampleGroupClearedEvent;
 import com.stox.example.event.ExampleGroupSelectedEvent;
 import com.stox.example.event.ExampleRemovedEvent;
+import com.stox.example.event.ExampleSelectedEvent;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
@@ -71,12 +71,9 @@ public class ExampleListView extends ListView<Example> {
 	}
 	
 	private void changed(ObservableValue<? extends Example> observable, Example oldValue, Example newValue) {
-		if(null != newValue) {
-			final Scrip scrip = scripService.findByIsin(newValue.getIsin());
-			if(null != scrip) {
-				eventBus.post(new ScripSelectionEvent(scrip));
-			}
-		}
+		Optional.ofNullable(newValue)
+			.map(ExampleSelectedEvent::new)
+			.ifPresent(eventBus::post);
 	}
 	
 	private ListCell<Example> createExampleCell(ListView<Example> listView){

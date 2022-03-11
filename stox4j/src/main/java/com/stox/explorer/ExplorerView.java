@@ -2,7 +2,7 @@ package com.stox.explorer;
 
 import org.greenrobot.eventbus.EventBus;
 
-import com.stox.common.event.ScripSelectionEvent;
+import com.stox.common.event.ScripSelectedEvent;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.scrip.ScripService;
 
@@ -23,6 +23,6 @@ public class ExplorerView extends BorderPane {
 	}
 	
 	private void onScripSelected(ObservableValue<? extends Scrip> observable, Scrip oldValue, Scrip newValue) {
-		eventBus.post(new ScripSelectionEvent(newValue));
+		eventBus.post(new ScripSelectedEvent(newValue));
 	}
 }

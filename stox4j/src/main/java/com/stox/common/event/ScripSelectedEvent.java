@@ -5,7 +5,7 @@ import com.stox.common.scrip.Scrip;
 import lombok.Value;
 
 @Value
-public class ScripSelectionEvent {
+public class ScripSelectedEvent {
 
 	private final Scrip scrip;
 	

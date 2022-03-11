@@ -1,10 +1,10 @@
 package com.stox.charting;
 
+import java.util.Optional;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.ta4j.core.Bar;
-import org.ta4j.core.BarSeries;
-import org.ta4j.core.BaseBarSeries;
 
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.chart.Chart;
@@ -18,15 +18,15 @@ import com.stox.charting.plot.price.PricePlot;
 import com.stox.charting.tools.IndicatorButton;
 import com.stox.charting.tools.RuleButton;
 import com.stox.common.bar.BarService;
-import com.stox.common.event.ScripSelectionEvent;
+import com.stox.common.event.ScripSelectedEvent;
 import com.stox.common.event.SelectedBarQueryEvent;
 import com.stox.common.event.SelectedScripQueryEvent;
-import com.stox.common.scrip.Scrip;
+import com.stox.common.scrip.ScripService;
+import com.stox.example.Example;
+import com.stox.example.event.ExampleSelectedEvent;
 
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
@@ -44,31 +44,9 @@ import lombok.Getter;
 @Getter
 public class ChartingView extends BorderPane {
 	
-	@Getter
-	public static class ChartingConfig {
-		private int fetchSize = 200;
-		private double maxUnitWidthProperty = 50;
-		private double minUnitWidthProperty = 1;
-		private double paddingTopProperty = 10;
-		private double paddingBottomProperty = 8;
-	}
-	
-	@Getter
-	public static class ChartingContext {
-		private final ObjectProperty<Scrip> scripProperty = new SimpleObjectProperty<>();
-		private final ObjectProperty<BarSeries> barSeriesProperty = new SimpleObjectProperty<>(new BaseBarSeries());
-		public Bar getBar(int index) {
-			final BarSeries barSeries = barSeriesProperty.get();
-			return null != barSeries && 0 <= index && index < barSeries.getBarCount() ? barSeries.getBar(index) : null;
-		}
-		public int getBarCount() {
-			final BarSeries barSeries = barSeriesProperty.get();
-			return null == barSeries ? 0 : barSeries.getBarCount();
-		}
-	}
-	
 	private final Chart priceChart;
 	private final PricePlot pricePlot;
+	private final ScripService scripService;
 	private final ToolBar toolBar = new ToolBar();
 	private final SplitPane splitPane = new SplitPane();
 	private final ContextMenu contextMenu = new ContextMenu();
@@ -82,7 +60,8 @@ public class ChartingView extends BorderPane {
 	private final StackPane stackPane = new StackPane(verticalGrid, splitPane, controlButtons, crosshair);
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
-	public ChartingView(EventBus eventBus, BarService barService) {
+	public ChartingView(EventBus eventBus, BarService barService, ScripService scripService) {
+		this.scripService = scripService;
 		add(priceChart = new Chart(this));
 		add(pricePlot = new PricePlot(barService));
 		setOnContextMenuRequested(this::onContextMenuRequested);
@@ -133,22 +112,29 @@ public class ChartingView extends BorderPane {
 	}
 	
 	@Subscribe
-	public void onScripSelected(ScripSelectionEvent event) {
-		context.getScripProperty().set(event.getScrip());
+	public void onScripSelected(ScripSelectedEvent event) {
+		context.getInputProperty().set(new ChartingInput(event.getScrip(), null));
+	}
+	
+	@Subscribe
+	public void onExampleSelected(ExampleSelectedEvent event) {
+		Optional.ofNullable(event.getExample())
+			.map(Example::getIsin)
+			.map(scripService::findByIsin)
+			.map(scrip -> new ChartingInput(scrip, event.getExample().getTimestamp()))
+			.ifPresent(context.getInputProperty()::set);
 	}
 	
 	@Subscribe
 	public void onSelectedScripQuery(SelectedScripQueryEvent event) {
-		event.setScrip(context.getScripProperty().get());
-		if(event instanceof SelectedBarQueryEvent) {
-			final SelectedBarQueryEvent selectedBarQueryEvent = SelectedBarQueryEvent.class.cast(event);
-			final double x = selectedBarQueryEvent.getScreenX();
-			final double y = selectedBarQueryEvent.getScreenY();
-			final Point2D point = priceChart.getContentArea().screenToLocal(x, y);
-			final int index = xAxis.getIndex(point.getX());
-			final Bar bar = context.getBar(index);
-			selectedBarQueryEvent.setBar(bar);
-		}
+		event.setScrip(context.getScrip());
+	}
+	
+	@Subscribe
+	public void onSelectedBarQueryEvent(SelectedBarQueryEvent event) {
+		final Point2D point = priceChart.getContentArea().screenToLocal(event.getScreenX(), event.getScreenY());
+		final Bar bar = context.getBar(xAxis.getIndex(point.getX()));
+		event.setBar(bar);
 	}
 	
 	public void pan(PanRequestEvent event) {

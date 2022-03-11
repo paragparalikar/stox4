@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import com.stox.common.event.ScripSelectionEvent;
+import com.stox.common.event.ScripSelectedEvent;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.scrip.ScripService;
 import com.stox.common.ui.Icon;
@@ -39,7 +39,7 @@ public class WatchlistEntryView extends ListView<String> {
 	
 	private void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 		final Scrip scrip = scripService.findByIsin(newValue);
-		if(null != scrip) eventBus.post(new ScripSelectionEvent(scrip));
+		if(null != scrip) eventBus.post(new ScripSelectedEvent(scrip));
 	}
 	
 	@Subscribe

@@ -2,14 +2,16 @@ package com.stox.charting.plot.price;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeries;
 
+import com.stox.charting.ChartingConfig;
+import com.stox.charting.ChartingContext;
+import com.stox.charting.ChartingInput;
 import com.stox.charting.ChartingView;
-import com.stox.charting.ChartingView.ChartingConfig;
-import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.chart.Chart;
 import com.stox.charting.plot.Plot;
@@ -33,7 +35,7 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 	
 	public void reload() {
 		super.reload();
-		final Scrip scrip = getChart().getChartingView().getContext().getScripProperty().get();
+		final Scrip scrip = getChart().getChartingView().getContext().getInputProperty().get().getScrip();
 		pricePlotInfo.setName(null == scrip ? null : scrip.getName());
 	}
 	
@@ -42,7 +44,7 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 		super.setChart(chart);
 		final ChartingView chartingView = chart.getChartingView();
 		final ChartingContext context = chartingView.getContext();
-		context.getScripProperty().addListener((o,old,scrip) -> {
+		context.getInputProperty().addListener((o,old,scrip) -> {
 			loading = false;
 			fullyLoaded = false;
 			context.getBarSeriesProperty().set(new BaseBarSeries());
@@ -52,20 +54,22 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 	
 	public void reloadBars() {
 		try {
-			final Scrip scrip = getChart().getChartingView().getContext().getScripProperty().get();
+			
+			final ChartingInput input = getChart().getChartingView().getContext().getInputProperty().get();
+			final Scrip scrip = null == input ? null : input.getScrip();
 			pricePlotInfo.setName(null == scrip ? null : scrip.getName());
 			if(null != scrip && !loading && !fullyLoaded) {
 				loading = true;
-				doReload(scrip);
+				doReload(input);
 			}
 		} finally {
 			loading = false;
 		}
 	}
 
-	private void doReload(Scrip scrip) {
+	private void doReload(ChartingInput input) {
 		int count = 0;
-		ZonedDateTime to = null;
+		ZonedDateTime to = input.getTo();
 		final XAxis xAxis = getChart().getChartingView().getXAxis();
 		final ChartingConfig config = getChart().getChartingView().getConfig();
 		final ChartingContext context = getChart().getChartingView().getContext();
@@ -73,13 +77,13 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 		if(xAxis.getStartIndex() > 0) {
 			return;
 		} else if(null == barSeries || 0 == barSeries.getBarCount()) {
-			to = ZonedDateTime.now().plusDays(1);
+			to = Optional.ofNullable(input.getTo()).orElse(ZonedDateTime.now().plusDays(1));
 			count = Math.max(config.getFetchSize(), xAxis.getEndIndex() - xAxis.getStartIndex());
 		} else {
 			to = barSeries.getFirstBar().getEndTime();
 			count = Math.max(config.getFetchSize(), xAxis.getEndIndex() - barSeries.getBarCount());
 		}
-		final List<Bar> bars = barService.find(scrip.getIsin(), count, to);
+		final List<Bar> bars = barService.find(input.getScrip().getIsin(), count, to);
 		fullyLoaded = bars.isEmpty(); //bars.size() < count;
 		xAxis.shift(bars.size());
 		bars.addAll(barSeries.getBarData());

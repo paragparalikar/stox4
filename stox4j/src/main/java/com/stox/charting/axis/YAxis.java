@@ -1,7 +1,7 @@
 package com.stox.charting.axis;
 
+import com.stox.charting.ChartingContext;
 import com.stox.charting.ChartingView;
-import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.crosshair.Crosshair;
 import com.stox.charting.grid.HorizontalGrid;
 import com.stox.common.util.Strings;

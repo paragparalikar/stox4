@@ -7,7 +7,7 @@ import org.ta4j.core.BarSeries;
 import org.ta4j.core.Indicator;
 import org.ta4j.core.indicators.helpers.ConstantIndicator;
 
-import com.stox.charting.ChartingView.ChartingContext;
+import com.stox.charting.ChartingContext;
 import com.stox.charting.axis.XAxis;
 import com.stox.charting.axis.YAxis;
 import com.stox.charting.chart.Chart;

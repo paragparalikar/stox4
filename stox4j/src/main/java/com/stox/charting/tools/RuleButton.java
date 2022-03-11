@@ -2,8 +2,8 @@ package com.stox.charting.tools;
 
 import org.ta4j.core.BarSeries;
 
+import com.stox.charting.ChartingContext;
 import com.stox.charting.ChartingView;
-import com.stox.charting.ChartingView.ChartingContext;
 import com.stox.charting.plot.Plottable;
 import com.stox.charting.plot.rule.PlottableBreakoutBarRule;
 import com.stox.charting.plot.rule.PlottableReaccumulationRule;
@@ -36,7 +36,7 @@ public class RuleButton extends Button implements EventHandler<ActionEvent> {
 
 	@Override
 	public void handle(ActionEvent event) {
-		final Scrip scrip = context.getScripProperty().get();
+		final Scrip scrip = context.getScrip();
 		final BarSeries barSeries = context.getBarSeriesProperty().get();
 		if(null != scrip && null != barSeries && 0 < barSeries.getBarCount()) {
 			showDialog();
