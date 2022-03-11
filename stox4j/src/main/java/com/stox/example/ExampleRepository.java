@@ -6,7 +6,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,8 +27,7 @@ public class ExampleRepository {
 	public Set<Example> findByGroupId(String groupId){
 		final Path path = getPath(groupId);
 		return Files.exists(path) ?
-				Files.lines(path).map(this::map).collect(Collectors.toSet()) :
-				Collections.emptySet();
+				Files.lines(path).map(this::map).collect(Collectors.toSet()) : new HashSet<>();
 	}
 	
 	@SneakyThrows

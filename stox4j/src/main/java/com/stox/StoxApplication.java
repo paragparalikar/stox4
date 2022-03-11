@@ -2,6 +2,7 @@ package com.stox;
 
 import com.stox.charting.ChartingView;
 import com.stox.common.ui.Icon;
+import com.stox.example.AddAsExampleMenu;
 import com.stox.example.ExampleTab;
 import com.stox.explorer.ExplorerTab;
 import com.stox.watchlist.AddToWatchlistMenu;
@@ -41,7 +42,9 @@ public class StoxApplication extends Application {
 		final AddToWatchlistMenu addToWatchlistMenu =  new AddToWatchlistMenu(context.getEventBus(), context.getWatchlistService());
 		addToWatchlistMenu.init();
 		final ExampleTab exampleTab = new ExampleTab(context.getEventBus(), context.getScripService(), context.getExampleService(), context.getExampleGroupService());
-		chartingView.getContextMenu().getItems().add(addToWatchlistMenu);
+		final AddAsExampleMenu addAsExampleMenu = new AddAsExampleMenu(context.getEventBus(), context.getExampleService(), context.getExampleGroupService());
+		addAsExampleMenu.init();
+		chartingView.getContextMenu().getItems().addAll(addToWatchlistMenu, addAsExampleMenu);
 		tabPane = new TabPane(explorerTab, watchlistTab, exampleTab);
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		splitPane = new SplitPane(tabPane, chartingView);

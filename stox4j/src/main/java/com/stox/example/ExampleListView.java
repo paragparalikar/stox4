@@ -1,5 +1,6 @@
 package com.stox.example;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -26,6 +27,7 @@ public class ExampleListView extends ListView<Example> {
 	private final EventBus eventBus;
 	private final ScripService scripService;
 	private final ExampleService exampleService;
+	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	public ExampleListView(EventBus eventBus, ScripService scripService, ExampleService exampleService) {
 		this.eventBus = eventBus;
@@ -89,7 +91,8 @@ public class ExampleListView extends ListView<Example> {
 					setGraphic(null);
 				} else {
 					final Scrip scrip = scripService.findByIsin(item.getIsin());
-					setText(null == scrip ? item.getIsin() : scrip.getName());
+					final String scripName = null == scrip ? item.getIsin() : scrip.getName();
+					setText(scripName + " (" + formatter.format(item.getTimestamp()) + ")");
 					setGraphic(deleteButton);
 					deleteButton.setOnAction(event -> exampleService.delete(item));
 				}

@@ -19,6 +19,7 @@ import com.stox.charting.tools.IndicatorButton;
 import com.stox.charting.tools.RuleButton;
 import com.stox.common.bar.BarService;
 import com.stox.common.event.ScripSelectionEvent;
+import com.stox.common.event.SelectedBarQueryEvent;
 import com.stox.common.event.SelectedScripQueryEvent;
 import com.stox.common.scrip.Scrip;
 
@@ -29,6 +30,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
+import javafx.geometry.Point2D;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
@@ -138,6 +140,15 @@ public class ChartingView extends BorderPane {
 	@Subscribe
 	public void onSelectedScripQuery(SelectedScripQueryEvent event) {
 		event.setScrip(context.getScripProperty().get());
+		if(event instanceof SelectedBarQueryEvent) {
+			final SelectedBarQueryEvent selectedBarQueryEvent = SelectedBarQueryEvent.class.cast(event);
+			final double x = selectedBarQueryEvent.getScreenX();
+			final double y = selectedBarQueryEvent.getScreenY();
+			final Point2D point = priceChart.getContentArea().screenToLocal(x, y);
+			final int index = xAxis.getIndex(point.getX());
+			final Bar bar = context.getBar(index);
+			selectedBarQueryEvent.setBar(bar);
+		}
 	}
 	
 	public void pan(PanRequestEvent event) {
