@@ -4,12 +4,12 @@ import org.ta4j.core.BarSeries;
 
 import com.stox.charting.ChartingContext;
 import com.stox.charting.ChartingView;
-import com.stox.charting.chart.Chart;
-import com.stox.charting.plot.Plot;
 import com.stox.charting.plot.Plottable;
 import com.stox.charting.plot.indicator.PlottableADXIndicator;
 import com.stox.charting.plot.indicator.PlottableATRIndicator;
 import com.stox.charting.plot.indicator.PlottableRSIIndicator;
+import com.stox.charting.plot.indicator.PlottableSMAIndicator;
+import com.stox.charting.plot.indicator.PlottableStandardDeviationIndicator;
 import com.stox.charting.plot.indicator.PlottableStochasticRSIIndicator;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.ui.Icon;
@@ -37,7 +37,9 @@ public class IndicatorButton extends Button implements EventHandler<ActionEvent>
 		listView.getItems().add(new PlottableRSIIndicator());
 		listView.getItems().add(new PlottableADXIndicator());
 		listView.getItems().add(new PlottableATRIndicator());
+		listView.getItems().add(new PlottableSMAIndicator());
 		listView.getItems().add(new PlottableStochasticRSIIndicator());
+		listView.getItems().add(new PlottableStandardDeviationIndicator());
 	}
 
 	@Override
@@ -65,9 +67,7 @@ public class IndicatorButton extends Button implements EventHandler<ActionEvent>
 	private void action(Modal modal) {
 		final Plottable<?, ?, ?> plottable = listView.getSelectionModel().getSelectedItem();
 		if(null != plottable) {
-			final Chart chart = new Chart(chartingView);
-			chartingView.add(chart);
-			chart.add(new Plot(plottable));
+			plottable.getUnderlay().addPlot(plottable, chartingView);
 			Platform.runLater(chartingView::redraw);
 		}
 		modal.hide();

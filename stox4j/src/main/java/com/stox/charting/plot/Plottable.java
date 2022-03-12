@@ -27,6 +27,10 @@ public interface Plottable<T, C, N> {
 	
 	Indicator<T> createIndicator(C config, BarSeries barSeries);
 	
+	default Underlay getUnderlay() {
+		return Underlay.INDEPENDENT;
+	}
+	
 	default Indicator<Num> createIndicator(BarValueType barValueType, BarSeries barSeries){
 		switch(barValueType) {
 		case CLOSE: return new ClosePriceIndicator(barSeries);
