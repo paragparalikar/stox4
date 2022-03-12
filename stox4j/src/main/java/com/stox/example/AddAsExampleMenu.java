@@ -1,5 +1,6 @@
 package com.stox.example;
 
+import java.util.Comparator;
 import java.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
@@ -13,6 +14,7 @@ import com.stox.example.event.ExampleGroupCreatedEvent;
 import com.stox.example.event.ExampleGroupDeletedEvent;
 import com.stox.example.event.ExampleGroupUpdatedEvent;
 
+import javafx.collections.FXCollections;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +29,9 @@ public class AddAsExampleMenu extends Menu {
 	public void init() {
 		setText("Add to example");
 		eventBus.register(this);
-		exampleGroupService.findAll().forEach(this::addItem);
+		exampleGroupService.findAll().stream()
+			.sorted(Comparator.comparing(ExampleGroup::getName))
+			.forEach(this::addItem);
 	}
 	
 	private Optional<MenuItem> findItem(String id){
@@ -39,7 +43,10 @@ public class AddAsExampleMenu extends Menu {
 	@Subscribe
 	public void onExampleGroupCreated(ExampleGroupCreatedEvent event) {
 		if(!findItem(event.getExampleGroup().getId()).isPresent()) {
-			Fx.run(() -> addItem(event.getExampleGroup()));
+			Fx.run(() -> {
+				addItem(event.getExampleGroup());
+				FXCollections.sort(getItems(), Comparator.comparing(MenuItem::getText));
+			});
 		}
 	}
 	
@@ -49,6 +56,7 @@ public class AddAsExampleMenu extends Menu {
 			Fx.run(() -> {
 				getItems().remove(item);
 				addItem(event.getExampleGroup());
+				FXCollections.sort(getItems(), Comparator.comparing(MenuItem::getText));
 			});
 		});
 	}

@@ -64,6 +64,9 @@ public class ChartingView extends BorderPane {
 		this.scripService = scripService;
 		add(priceChart = new Chart(this));
 		add(pricePlot = new PricePlot(barService));
+		
+		contextMenu.setAutoHide(true);
+		contextMenu.setConsumeAutoHidingEvents(true);
 		setOnContextMenuRequested(this::onContextMenuRequested);
 		
 		setCenter(stackPane);

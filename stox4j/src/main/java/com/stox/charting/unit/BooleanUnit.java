@@ -32,7 +32,7 @@ public class BooleanUnit extends Polygon implements Unit<Boolean, Node> {
 			final Num low = barSeries.getBar(index).getLowPrice();
 			final double x = xAxis.getX(index);
 			final double y = yAxis.getY(low.doubleValue()) + GAP;
-			final double half = xAxis.getUnitWidth() / 2;
+			final double half = 5; //xAxis.getUnitWidth() / 2;
 			getPoints().addAll(x, y, x + half, y + half, x - half, y + half);
 			parent.add(this);
 		}

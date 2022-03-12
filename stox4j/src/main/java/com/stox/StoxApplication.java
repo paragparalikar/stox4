@@ -63,7 +63,7 @@ public class StoxApplication extends Application {
 				"style/css/scroll-bar.css", "style/css/menu.css",
 				"style/css/charting.css", "style/css/charting-controls.css", 
 				"style/css/modal.css", "style/css/form.css");
-		
+		primaryStage.setTitle("Stox4j by Parag Paralikar (parag.paralikar@gmail.com)");
 		primaryStage.setScene(scene);
 		primaryStage.setMaximized(true);
 		primaryStage.setOnShown(this::onShown);

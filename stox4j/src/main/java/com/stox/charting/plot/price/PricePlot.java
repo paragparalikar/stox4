@@ -54,7 +54,6 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 	
 	public void reloadBars() {
 		try {
-			
 			final ChartingInput input = getChart().getChartingView().getContext().getInputProperty().get();
 			final Scrip scrip = null == input ? null : input.getScrip();
 			pricePlotInfo.setName(null == scrip ? null : scrip.getName());
