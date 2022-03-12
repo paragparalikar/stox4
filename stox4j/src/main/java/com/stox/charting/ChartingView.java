@@ -3,6 +3,7 @@ package com.stox.charting;
 import java.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Logger.SystemOutLogger;
 import org.greenrobot.eventbus.Subscribe;
 import org.ta4j.core.Bar;
 
@@ -93,8 +94,10 @@ public class ChartingView extends BorderPane {
 	public void add(Chart chart) {
 		charts.add(chart);
 		splitPane.getItems().add(chart);
-		for(int index = 1; index < charts.size(); index++) {
-			splitPane.setDividerPosition(index - 1, 1 - (index * 0.2));
+		for(int index = charts.size() - 1; index > 0; index--) {
+			final int dividerIndex = index - 1;
+			final double dividerPosition = 1 - ((charts.size() - index) * 0.2);
+			splitPane.setDividerPosition(dividerIndex, dividerPosition);
 		}
 	}
 	
