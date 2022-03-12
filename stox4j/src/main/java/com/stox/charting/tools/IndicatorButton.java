@@ -7,10 +7,17 @@ import com.stox.charting.ChartingView;
 import com.stox.charting.plot.Plottable;
 import com.stox.charting.plot.indicator.PlottableADXIndicator;
 import com.stox.charting.plot.indicator.PlottableATRIndicator;
+import com.stox.charting.plot.indicator.PlottableChopIndicator;
+import com.stox.charting.plot.indicator.PlottableMeanDeviationIndicator;
+import com.stox.charting.plot.indicator.PlottableROCIndicator;
 import com.stox.charting.plot.indicator.PlottableRSIIndicator;
 import com.stox.charting.plot.indicator.PlottableSMAIndicator;
+import com.stox.charting.plot.indicator.PlottableSigmaIndicator;
 import com.stox.charting.plot.indicator.PlottableStandardDeviationIndicator;
+import com.stox.charting.plot.indicator.PlottableStochasticKIndicator;
 import com.stox.charting.plot.indicator.PlottableStochasticRSIIndicator;
+import com.stox.charting.plot.indicator.PlottableTRIndicator;
+import com.stox.charting.plot.indicator.PlottableVarianceIndicator;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.ui.Icon;
 import com.stox.common.ui.modal.Modal;
@@ -34,11 +41,18 @@ public class IndicatorButton extends Button implements EventHandler<ActionEvent>
 		setOnAction(this);
 		this.context = context;
 		this.chartingView = chartingView;
+		listView.getItems().add(new PlottableTRIndicator());
 		listView.getItems().add(new PlottableRSIIndicator());
 		listView.getItems().add(new PlottableADXIndicator());
 		listView.getItems().add(new PlottableATRIndicator());
 		listView.getItems().add(new PlottableSMAIndicator());
+		listView.getItems().add(new PlottableROCIndicator());
+		listView.getItems().add(new PlottableChopIndicator());
+		listView.getItems().add(new PlottableSigmaIndicator());
+		listView.getItems().add(new PlottableVarianceIndicator());
+		listView.getItems().add(new PlottableStochasticKIndicator());
 		listView.getItems().add(new PlottableStochasticRSIIndicator());
+		listView.getItems().add(new PlottableMeanDeviationIndicator());
 		listView.getItems().add(new PlottableStandardDeviationIndicator());
 	}
 

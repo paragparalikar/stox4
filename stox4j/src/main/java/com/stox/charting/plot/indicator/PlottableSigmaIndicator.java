@@ -1,0 +1,36 @@
+package com.stox.charting.plot.indicator;
+
+import org.ta4j.core.BarSeries;
+import org.ta4j.core.Indicator;
+import org.ta4j.core.indicators.statistics.SigmaIndicator;
+import org.ta4j.core.num.Num;
+
+import com.stox.charting.plot.indicator.PlottableSigmaIndicator.SigmaConfig;
+import com.stox.common.bar.BarValueType;
+
+import lombok.Data;
+
+public class PlottableSigmaIndicator implements PlottableLineIndicator<SigmaConfig> {
+
+	@Data
+	public static class SigmaConfig {
+		private int barCount = 14;
+		private BarValueType barValueType = BarValueType.CLOSE;
+	}
+	
+	@Override
+	public String toString() {
+		return "Z-score (ZSI)";
+	}
+
+	@Override
+	public SigmaConfig createConfig() {
+		return new SigmaConfig();
+	}
+
+	@Override
+	public Indicator<Num> createIndicator(SigmaConfig config, BarSeries barSeries) {
+		return new SigmaIndicator(createIndicator(config.getBarValueType(), barSeries), config.getBarCount());
+	}
+	
+}
