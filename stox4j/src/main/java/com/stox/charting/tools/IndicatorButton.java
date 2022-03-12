@@ -29,7 +29,8 @@ public class IndicatorButton extends Button implements EventHandler<ActionEvent>
 	private final ListView<Plottable<?, ?, ?>> listView = new ListView<>();
 	
 	public IndicatorButton(ChartingView chartingView, ChartingContext context) {
-		super("Indicators");
+		super(Icon.LINE_CHART);
+		getStyleClass().add("icon");
 		setOnAction(this);
 		this.context = context;
 		this.chartingView = chartingView;
@@ -52,16 +53,16 @@ public class IndicatorButton extends Button implements EventHandler<ActionEvent>
 		final Label graphics = new Label(Icon.PLUS);
 		graphics.getStyleClass().add("icon");
 		final Button button = new Button("Add", graphics);
-		button.setOnAction(this::action);
-		new Modal()
+		final Modal modal = new Modal()
 			.withTitleIcon(Icon.LINE_CHART)
 			.withTitleText("Add Indicators")
 			.withContent(listView)
 			.withButton(button)
 			.show(this);
+		button.setOnAction(event -> action(modal));
 	}
 	
-	private void action(ActionEvent event) {
+	private void action(Modal modal) {
 		final Plottable<?, ?, ?> plottable = listView.getSelectionModel().getSelectedItem();
 		if(null != plottable) {
 			final Chart chart = new Chart(chartingView);
@@ -69,5 +70,6 @@ public class IndicatorButton extends Button implements EventHandler<ActionEvent>
 			chart.add(new Plot(plottable));
 			Platform.runLater(chartingView::redraw);
 		}
+		modal.hide();
 	}
 }

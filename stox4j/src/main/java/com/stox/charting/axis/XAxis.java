@@ -58,7 +58,7 @@ public class XAxis extends StackPane {
 		final double value = crosshair.getVerticalLine().getEndX();
 		final int index = getIndex(value);
 		final Bar bar = context.getBar(index);
-		final String text = null == bar ? null : dateTimeFormatter.format(bar.getEndTime());
+ 		final String text = null == bar ? null : dateTimeFormatter.format(bar.getEndTime());
 		label.setText(text);
 		label.setLayoutX(value - label.getWidth()/2);
 	}

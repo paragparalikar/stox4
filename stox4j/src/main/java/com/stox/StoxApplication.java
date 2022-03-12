@@ -71,7 +71,7 @@ public class StoxApplication extends Application {
 	}
 	
 	private void onShown(WindowEvent event) {
-		tabPane.setSide(Side.BOTTOM);
+		tabPane.setSide(Side.LEFT);
 		splitPane.setDividerPositions(0.2);
 	}
 	

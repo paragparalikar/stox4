@@ -26,7 +26,8 @@ public class RuleButton extends Button implements EventHandler<ActionEvent> {
 	private final ListView<Plottable<Boolean, ?, Node>> listView = new ListView<>();
 	
 	public RuleButton(ChartingView chartingView, ChartingContext context) {
-		super("Rules");
+		super(Icon.FILTER);
+		getStyleClass().add("icon");
 		setOnAction(this);
 		this.context = context;
 		this.chartingView = chartingView;
@@ -47,20 +48,21 @@ public class RuleButton extends Button implements EventHandler<ActionEvent> {
 		final Label graphics = new Label(Icon.PLUS);
 		graphics.getStyleClass().add("icon");
 		final Button button = new Button("Add", graphics);
-		button.setOnAction(this::action);
-		new Modal()
+		final Modal modal = new Modal()
 			.withTitleIcon(Icon.FILTER)
 			.withTitleText("Rules")
 			.withContent(listView)
 			.withButton(button)
 			.show(this);
+		button.setOnAction(event -> action(modal));
 	}
 	
-	private void action(ActionEvent event) {
+	private void action(Modal modal) {
 		final Plottable<Boolean, ?, Node> plottable = listView.getSelectionModel().getSelectedItem();
 		if(null != plottable) {
 			final RulePlot<?> rulePlot = new RulePlot(plottable);
 			chartingView.add(rulePlot);
 		}
+		modal.hide();
 	}
 }

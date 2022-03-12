@@ -25,17 +25,17 @@ public class DefaultPlotInfo<T> extends PlotInfo<T> {
 		final Label graphics = new Label(Icon.CHECK);
 		graphics.getStyleClass().add("icon");
 		final Button button = new Button("Apply", graphics);
-		button.setOnAction(event -> {
-			configView.populateModel();
-			getPlot().reload();
-		});
-		
-		new Modal()
+		final Modal modal = new Modal()
 			.withTitleIcon(Icon.GEAR)
 			.withTitleText("Configure")
 			.withContent(configView.getNode())
 			.withButton(button)
 			.show(this);
+		button.setOnAction(event -> {
+			configView.populateModel();
+			modal.hide();
+			getPlot().reload();
+		});
 	}
 	
 	@Override
