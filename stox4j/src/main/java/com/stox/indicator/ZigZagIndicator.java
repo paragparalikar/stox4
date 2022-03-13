@@ -20,6 +20,7 @@ public class ZigZagIndicator extends AbstractIndicator<Move> {
 		this.barSeries = barSeries;
 		this.tolarancePercentage = tolarancePercentage;
 		this.moves = calculateAll();
+		moves.forEach(System.out::println);
 	}
 
 	public List<Move> calculateAll(){

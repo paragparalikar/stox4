@@ -28,4 +28,12 @@ public class Move {
 		final Bar bar = bars.get(bars.size() - 1);
 		return down ? bar.getLowPrice() : bar.getHighPrice();
 	}
+	
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append("Up : " + up + ", Down : " + down + ",");
+		builder.append("Start : " + startIndex + " - " + getStartPrice() + ",");
+		builder.append("End : " + endIndex + " - " + getEndPrice());
+		return builder.toString();
+	}
 }

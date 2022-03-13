@@ -13,12 +13,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import lombok.Setter;
 
+@Setter
 public class BooleanUnit extends Polygon implements Unit<Boolean, Node> {
 	private static final double GAP = 10;
 
-	@Setter private XAxis xAxis;
-	@Setter private YAxis yAxis;
-	@Setter private ChartingContext context;
+	private XAxis xAxis;
+	private YAxis yAxis;
+	private ChartingContext context;
 	
 	public BooleanUnit() {
 		setFill(Color.BLUE);

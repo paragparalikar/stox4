@@ -24,7 +24,7 @@ public class PlottableZigZagIndicator implements Plottable<Move, ZigZagConfig, P
 	@Data
 	public static class ZigZagConfig {
 		private int barCount = 144;
-		private double tolarancePercentage = 10;
+		private double tolarancePercentage = 20;
 	}
 	
 	@Override
