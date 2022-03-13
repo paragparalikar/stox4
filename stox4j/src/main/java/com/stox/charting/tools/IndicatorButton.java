@@ -18,6 +18,7 @@ import com.stox.charting.plot.indicator.PlottableStochasticKIndicator;
 import com.stox.charting.plot.indicator.PlottableStochasticRSIIndicator;
 import com.stox.charting.plot.indicator.PlottableTRIndicator;
 import com.stox.charting.plot.indicator.PlottableVarianceIndicator;
+import com.stox.charting.plot.indicator.PlottableZigZagIndicator;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.ui.Icon;
 import com.stox.common.ui.modal.Modal;
@@ -49,6 +50,7 @@ public class IndicatorButton extends Button implements EventHandler<ActionEvent>
 		listView.getItems().add(new PlottableROCIndicator());
 		listView.getItems().add(new PlottableChopIndicator());
 		listView.getItems().add(new PlottableSigmaIndicator());
+		listView.getItems().add(new PlottableZigZagIndicator());
 		listView.getItems().add(new PlottableVarianceIndicator());
 		listView.getItems().add(new PlottableStochasticKIndicator());
 		listView.getItems().add(new PlottableStochasticRSIIndicator());
@@ -81,7 +83,7 @@ public class IndicatorButton extends Button implements EventHandler<ActionEvent>
 	private void action(Modal modal) {
 		final Plottable<?, ?, ?> plottable = listView.getSelectionModel().getSelectedItem();
 		if(null != plottable) {
-			plottable.getUnderlay().addPlot(plottable, chartingView);
+			plottable.add(chartingView);
 			Platform.runLater(chartingView::redraw);
 		}
 		modal.hide();

@@ -5,8 +5,9 @@ import org.ta4j.core.Indicator;
 import org.ta4j.core.indicators.SMAIndicator;
 import org.ta4j.core.num.Num;
 
+import com.stox.charting.ChartingView;
+import com.stox.charting.plot.Plot;
 import com.stox.charting.plot.Plottable;
-import com.stox.charting.plot.Underlay;
 import com.stox.charting.plot.indicator.PlottableSMAIndicator.SmaIndicatorConfig;
 import com.stox.charting.unit.LineUnit;
 import com.stox.charting.unit.Unit;
@@ -34,8 +35,8 @@ public class PlottableSMAIndicator implements Plottable<Num, SmaIndicatorConfig,
 	}
 	
 	@Override
-	public Underlay getUnderlay() {
-		return Underlay.PRICE;
+	public void add(ChartingView chartingView) {
+		chartingView.add(new Plot<>(this));
 	}
 
 	@Override

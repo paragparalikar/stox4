@@ -9,6 +9,8 @@ import org.ta4j.core.indicators.helpers.OpenPriceIndicator;
 import org.ta4j.core.indicators.helpers.VolumeIndicator;
 import org.ta4j.core.num.Num;
 
+import com.stox.charting.ChartingView;
+import com.stox.charting.chart.Chart;
 import com.stox.charting.unit.Unit;
 import com.stox.charting.unit.parent.UnitParent;
 import com.stox.common.bar.BarValueType;
@@ -27,8 +29,10 @@ public interface Plottable<T, C, N> {
 	
 	Indicator<T> createIndicator(C config, BarSeries barSeries);
 	
-	default Underlay getUnderlay() {
-		return Underlay.INDEPENDENT;
+	default void add(ChartingView chartingView) {
+		final Chart chart = new Chart(chartingView);
+		chartingView.add(chart);
+		chart.add(new Plot<T, C, N>(this));
 	}
 	
 	default Indicator<Num> createIndicator(BarValueType barValueType, BarSeries barSeries){
