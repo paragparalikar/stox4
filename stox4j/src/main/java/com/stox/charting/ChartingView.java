@@ -3,7 +3,6 @@ package com.stox.charting;
 import java.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Logger.SystemOutLogger;
 import org.greenrobot.eventbus.Subscribe;
 import org.ta4j.core.Bar;
 
@@ -15,6 +14,7 @@ import com.stox.charting.grid.VerticalGrid;
 import com.stox.charting.handler.pan.PanRequestEvent;
 import com.stox.charting.handler.zoom.ZoomRequestEvent;
 import com.stox.charting.plot.Plot;
+import com.stox.charting.plot.indicator.PlottableVolumeIndicator;
 import com.stox.charting.plot.price.PricePlot;
 import com.stox.charting.tools.IndicatorButton;
 import com.stox.charting.tools.RuleButton;
@@ -64,6 +64,7 @@ public class ChartingView extends BorderPane {
 	public ChartingView(EventBus eventBus, BarService barService, ScripService scripService) {
 		this.scripService = scripService;
 		add(priceChart = new Chart(this));
+		new PlottableVolumeIndicator().add(this);
 		add(pricePlot = new PricePlot(barService));
 		
 		contextMenu.setAutoHide(true);
@@ -156,14 +157,9 @@ public class ChartingView extends BorderPane {
 	}
 	
 	public void redraw() {
-		if(Platform.isFxApplicationThread()) {
+		Platform.runLater(() -> {
 			priceChart.redraw();
 			charts.forEach(Chart::redraw);
-		} else {
-			Platform.runLater(() -> {
-				priceChart.redraw();
-				charts.forEach(Chart::redraw);
-			});
-		}
+		});
 	}
 }

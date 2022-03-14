@@ -1,5 +1,8 @@
 package com.stox.charting.plot.indicator;
 
+import com.stox.charting.ChartingContext;
+import com.stox.charting.axis.x.XAxis;
+import com.stox.charting.axis.y.YAxis;
 import com.stox.charting.plot.Plot;
 import com.stox.charting.plot.indicator.PlottableZigZagIndicator.ZigZagConfig;
 import com.stox.charting.unit.Unit;
@@ -14,7 +17,7 @@ public class ZigZagPlot extends Plot<Move, ZigZagConfig, Point2D> {
 	}
 	
 	@Override protected void updateYAxis(int startIndex, int endIndex) {}
-	@Override protected void createUnits(int startIndex, int endIndex) {}
+	@Override protected void createUnits(int startIndex, int endIndex, XAxis xAxis, YAxis yAxis, ChartingContext context) {}
 	@Override protected void removeUnits(int startIndex, int endIndex) {}
 	
 	@Override

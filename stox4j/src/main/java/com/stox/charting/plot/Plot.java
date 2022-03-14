@@ -54,7 +54,6 @@ public class Plot<T, C, N> extends Group {
 			getInfo().setName(null);
 			setIndicator(new ConstantIndicator<>(barSeries, null));
 		}
-		chart.redraw();
 	}
 	
 	public void setChart(Chart chart) {
@@ -81,15 +80,13 @@ public class Plot<T, C, N> extends Group {
 		yAxis.setLowestValue(lowestValue);
 	}
 	
-	protected void createUnits(int startIndex, int endIndex) {
-		final XAxis xAxis = chart.getChartingView().getXAxis();
-		final YAxis yAxis = chart.getYAxis();
+	protected void createUnits(int startIndex, int endIndex, XAxis xAxis, YAxis yAxis, ChartingContext context) {
 		final int visibleBarCount = endIndex - startIndex;
 		for(int index = units.size(); index < visibleBarCount; index++) {
 			final Unit<T, N> unit = plottable.createUnit();
 			unit.setXAxis(xAxis);
 			unit.setYAxis(yAxis);
-			unit.setContext(chart.getChartingView().getContext());
+			unit.setContext(context);
 			units.add(unit);
 		}
 	}
@@ -119,12 +116,13 @@ public class Plot<T, C, N> extends Group {
 	}
 	
 	public void layoutChartChildren() {
+		final YAxis yAxis = chart.getYAxis();
 		final XAxis xAxis = chart.getChartingView().getXAxis();
 		final ChartingContext context = chart.getChartingView().getContext();
 		final int startIndex = Maths.clip(0, xAxis.getStartIndex(), context.getBarCount() - 1);
 		final int endIndex = Maths.clip(0, xAxis.getEndIndex(), context.getBarCount() - 1);
 		updateYAxis(startIndex, endIndex);
-		createUnits(startIndex, endIndex);
+		createUnits(startIndex, endIndex, xAxis, yAxis, context);
 		removeUnits(startIndex, endIndex);
 		layoutChartChildren(startIndex, endIndex);
 	}
