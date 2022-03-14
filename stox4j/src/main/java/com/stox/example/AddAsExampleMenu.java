@@ -1,6 +1,7 @@
 package com.stox.example;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
@@ -35,9 +36,13 @@ public class AddAsExampleMenu extends Menu {
 	}
 	
 	private Optional<MenuItem> findItem(String id){
-		return getItems().stream()
-				.filter(item -> ExampleGroup.class.cast(item.getUserData()).getId().equals(id))
-				.findFirst();
+		for(MenuItem item : getItems()) {
+			final ExampleGroup group = ExampleGroup.class.cast(item.getUserData());
+			if(Objects.equals(group.getId(), id)) {
+				return Optional.of(item);
+			}
+		}
+		return Optional.empty();
 	}
 	
 	@Subscribe
@@ -61,6 +66,7 @@ public class AddAsExampleMenu extends Menu {
 		});
 	}
 	
+	@Subscribe
 	public void onExampleGroupDeleted(ExampleGroupDeletedEvent event) {
 		findItem(event.getExampleGroup().getId()).ifPresent(item -> {
 			Fx.run(() -> getItems().remove(item));
@@ -69,7 +75,7 @@ public class AddAsExampleMenu extends Menu {
 	
 	private void addItem(ExampleGroup group) {
 		final MenuItem item = new MenuItem(group.getName());
-		item.setUserData(item);
+		item.setUserData(group);
 		getItems().add(item);
 		item.setOnAction(event -> addTo(group));
 	}
