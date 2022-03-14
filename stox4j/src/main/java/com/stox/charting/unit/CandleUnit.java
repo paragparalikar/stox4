@@ -3,8 +3,8 @@ package com.stox.charting.unit;
 import org.ta4j.core.Bar;
 
 import com.stox.charting.ChartingContext;
-import com.stox.charting.axis.XAxis;
-import com.stox.charting.axis.YAxis;
+import com.stox.charting.axis.x.XAxis;
+import com.stox.charting.axis.y.YAxis;
 import com.stox.charting.unit.parent.UnitParent;
 import com.stox.common.util.Colors;
 

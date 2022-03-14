@@ -19,6 +19,7 @@ import com.stox.charting.plot.indicator.PlottableStochasticKIndicator;
 import com.stox.charting.plot.indicator.PlottableStochasticRSIIndicator;
 import com.stox.charting.plot.indicator.PlottableTRIndicator;
 import com.stox.charting.plot.indicator.PlottableVarianceIndicator;
+import com.stox.charting.plot.indicator.PlottableVolumeIndicator;
 import com.stox.charting.plot.indicator.PlottableZigZagIndicator;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.ui.Icon;
@@ -51,6 +52,7 @@ public class IndicatorButton extends Button implements EventHandler<ActionEvent>
 		listView.getItems().add(new PlottableROCIndicator());
 		listView.getItems().add(new PlottableChopIndicator());
 		listView.getItems().add(new PlottableSigmaIndicator());
+		listView.getItems().add(new PlottableVolumeIndicator());
 		listView.getItems().add(new PlottableZigZagIndicator());
 		listView.getItems().add(new PlottableVarianceIndicator());
 		listView.getItems().add(new PlottableStochasticKIndicator());

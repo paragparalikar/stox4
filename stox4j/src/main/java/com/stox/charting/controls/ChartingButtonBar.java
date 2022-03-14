@@ -3,7 +3,7 @@ package com.stox.charting.controls;
 import java.util.Optional;
 
 import com.stox.charting.ChartingView;
-import com.stox.charting.axis.XAxis;
+import com.stox.charting.axis.x.XAxis;
 
 import javafx.beans.binding.DoubleBinding;
 import javafx.scene.layout.HBox;

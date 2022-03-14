@@ -1,4 +1,4 @@
-package com.stox.charting.axis;
+package com.stox.charting.axis.x;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;

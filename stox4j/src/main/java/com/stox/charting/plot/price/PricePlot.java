@@ -12,7 +12,7 @@ import com.stox.charting.ChartingConfig;
 import com.stox.charting.ChartingContext;
 import com.stox.charting.ChartingInput;
 import com.stox.charting.ChartingView;
-import com.stox.charting.axis.XAxis;
+import com.stox.charting.axis.x.XAxis;
 import com.stox.charting.chart.Chart;
 import com.stox.charting.plot.Plot;
 import com.stox.charting.unit.Unit;

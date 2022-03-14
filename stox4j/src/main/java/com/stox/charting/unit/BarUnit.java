@@ -3,15 +3,16 @@ package com.stox.charting.unit;
 import org.ta4j.core.num.Num;
 
 import com.stox.charting.ChartingContext;
-import com.stox.charting.axis.XAxis;
-import com.stox.charting.axis.YAxis;
+import com.stox.charting.axis.x.XAxis;
+import com.stox.charting.axis.y.YAxis;
 import com.stox.charting.unit.parent.UnitParent;
 
 import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
+import lombok.Getter;
 import lombok.Setter;
 
-@Setter
+@Setter @Getter
 public class BarUnit implements Unit<Num, Node> {
 
 	private XAxis xAxis;

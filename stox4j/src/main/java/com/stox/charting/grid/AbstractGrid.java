@@ -24,21 +24,23 @@ public abstract class AbstractGrid extends Group {
 		getChildren().clear();
 	}
 
-	public void addLine(double value) {
+	public Line addLine(double value) {
 		final Parent parent = getParent();
 		if (null != parent && parent instanceof Region) {
 			final Region region = (Region) parent;
-			addLine(value, region);
+			return addLine(value, region);
 		}
+		return null;
 	}
 
-	protected abstract void addLine(final double value, final Region parent);
+	protected abstract Line addLine(final double value, final Region parent);
 
-	protected void addLine(final double startX, final double startY, final double endX, final double endY) {
+	protected Line addLine(final double startX, final double startY, final double endX, final double endY) {
 		final Line line = new Line(startX, startY, endX, endY);
 		line.setStroke(Color.web("#EFEFEF"));
 		line.getStyleClass().add("grid-line");
 		getChildren().add(line);
+		return line;
 	}
 
 }

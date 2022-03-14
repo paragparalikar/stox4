@@ -8,8 +8,8 @@ import org.ta4j.core.Indicator;
 import org.ta4j.core.indicators.helpers.ConstantIndicator;
 
 import com.stox.charting.ChartingContext;
-import com.stox.charting.axis.XAxis;
-import com.stox.charting.axis.YAxis;
+import com.stox.charting.axis.x.XAxis;
+import com.stox.charting.axis.y.YAxis;
 import com.stox.charting.chart.Chart;
 import com.stox.charting.unit.Unit;
 import com.stox.charting.unit.parent.UnitParent;

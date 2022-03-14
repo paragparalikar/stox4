@@ -7,7 +7,7 @@ import org.greenrobot.eventbus.Logger.SystemOutLogger;
 import org.greenrobot.eventbus.Subscribe;
 import org.ta4j.core.Bar;
 
-import com.stox.charting.axis.XAxis;
+import com.stox.charting.axis.x.XAxis;
 import com.stox.charting.chart.Chart;
 import com.stox.charting.controls.ChartingButtonBar;
 import com.stox.charting.crosshair.Crosshair;
