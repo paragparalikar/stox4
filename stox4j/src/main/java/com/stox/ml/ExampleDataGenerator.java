@@ -1,7 +1,12 @@
 package com.stox.ml;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.ta4j.core.Bar;
 
@@ -41,24 +46,47 @@ public class ExampleDataGenerator {
 	private double[][] extractNormalizedData(int barCount, List<Example> examples) {
 		final int colCount = 1 + barCount * 5;
 		final ArrayList<double[]> table = new ArrayList<>();
-		for(int exampleIndex = 0; exampleIndex < examples.size(); exampleIndex++) {
-			final Example example = examples.get(exampleIndex);
-			final List<Bar> bars = barService.find(example.getIsin(), barCount, example.getTimestamp());
+		final Map<String, Set<ZonedDateTime>> cache = toMap(examples);
+		for(String isin : cache.keySet()) {
+			final Set<ZonedDateTime> timestamps = cache.get(isin);
+			final List<Bar> bars = barService.find(isin, Integer.MAX_VALUE);
 			if(bars.size() < barCount) continue;
-			final double[] row = new double[colCount];
+			
 			final List<Bar> normalizedBars = barValueNormalizer.normalize(bars);
-			row[0] = 1;
-			for(int barIndex = 0; barIndex < normalizedBars.size(); barIndex++) {
-				final Bar bar = normalizedBars.get(barIndex);
-				row[barIndex * 5 + 1] = bar.getOpenPrice().doubleValue();
-				row[barIndex * 5 + 2] = bar.getHighPrice().doubleValue();
-				row[barIndex * 5 + 3] = bar.getLowPrice().doubleValue();
-				row[barIndex * 5 + 4] = bar.getClosePrice().doubleValue();
-				row[barIndex * 5 + 5] = bar.getVolume().doubleValue();
+			for(int offset = barCount; offset < normalizedBars.size(); offset++) {
+				final List<Bar> subBars = normalizedBars.subList(offset - barCount, offset);
+				final Bar latestBar = subBars.get(subBars.size() - 1);
+				final boolean exists = timestamps.contains(latestBar.getEndTime());
+				table.add(row(colCount, subBars, exists ? 1 : 0));
 			}
-			table.add(row);
 		}
-		
+		return transform(colCount, table);
+	}
+	
+	private double[] row(int colCount, List<Bar> bars, double classValue) {
+		final double[] row = new double[colCount];
+		row[0] = classValue;
+		for(int barIndex = 0; barIndex < bars.size(); barIndex++) {
+			final Bar bar = bars.get(barIndex);
+			row[barIndex * 5 + 1] = bar.getOpenPrice().doubleValue();
+			row[barIndex * 5 + 2] = bar.getHighPrice().doubleValue();
+			row[barIndex * 5 + 3] = bar.getLowPrice().doubleValue();
+			row[barIndex * 5 + 4] = bar.getClosePrice().doubleValue();
+			row[barIndex * 5 + 5] = bar.getVolume().doubleValue();
+		}
+		return row;
+	}
+	
+	private Map<String, Set<ZonedDateTime>> toMap(List<Example> examples){
+		final Map<String, Set<ZonedDateTime>> map = new HashMap<>();
+		for(Example example : examples) {
+			final Set<ZonedDateTime> set = map.computeIfAbsent(example.getIsin(), key -> new HashSet<>());
+			set.add(example.getTimestamp());
+		}
+		return map;
+	}
+	
+	private double[][] transform(int colCount, ArrayList<double[]> table) {
 		final double[][] data = new double[table.size()][colCount];
 		for(int colIndex = 0; colIndex < colCount; colIndex++) {
 			for(int rowIndex = 0; rowIndex < table.size(); rowIndex++) {
