@@ -2,6 +2,7 @@ package com.stox.charting.plot.indicator;
 
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.Indicator;
+import org.ta4j.core.indicators.StochasticRSIIndicator;
 import org.ta4j.core.num.Num;
 
 import com.stox.charting.plot.Plottable;
@@ -37,7 +38,8 @@ public class PlottableVolatilityContractionIndicator implements Plottable<Num, V
 
 	@Override
 	public Indicator<Num> createIndicator(VolatilityContractionConfig config, BarSeries barSeries) {
-		return new VolatilityContractionIndicator(barSeries, config.getBarCount());
+		final Indicator<Num> indicator = new VolatilityContractionIndicator(barSeries, config.getBarCount());
+		return new StochasticRSIIndicator(indicator, config.getBarCount());
 	}
 
 	@Override
