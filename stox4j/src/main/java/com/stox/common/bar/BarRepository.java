@@ -3,15 +3,18 @@ package com.stox.common.bar;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import org.ta4j.core.Bar;
@@ -20,15 +23,42 @@ import org.ta4j.core.num.DoubleNum;
 
 import com.stox.common.util.Maths;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
+@RequiredArgsConstructor
 public class BarRepository {
 	private static final int BYTES = 6 * Double.BYTES;
+	private static final String METADATA = "metadata.properties";
+	private static final String KEY_LAST_DOWNLOAD_DATE = "last-download-date";
 
-	private final Path path = Paths.get(System.getProperty("user.home"), ".stox4", "bars", "D");
+	private final Path home;
+	private final Properties properties = new Properties();
+	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 	
 	private Path resolvePath(String isin) {
-		return path.resolve(isin);
+		return home.resolve(Paths.get("bars", "D", isin));
+	}
+	
+	@SneakyThrows
+	public void writeLastDownloadDate(ZonedDateTime date) {
+		final Path path = resolvePath(METADATA);
+		Files.createDirectories(path.getParent());
+		if(properties.isEmpty() && Files.exists(path)) {
+			properties.load(Files.newInputStream(path));
+		}
+		properties.setProperty(KEY_LAST_DOWNLOAD_DATE, formatter.format(date));
+		properties.store(Files.newOutputStream(path), "");
+	}
+	
+	@SneakyThrows
+	public ZonedDateTime readLastDownloadDate() {
+		final Path path = resolvePath(METADATA);
+		if(properties.isEmpty() && Files.exists(path)) {
+			properties.load(Files.newInputStream(path));
+		}
+		final String text = properties.getProperty(KEY_LAST_DOWNLOAD_DATE, "20000101");
+		return ZonedDateTime.from(formatter.parse(text));
 	}
 
 	private long getDate(final long initialDate, final long location) {
@@ -89,6 +119,48 @@ public class BarRepository {
 				return bars;
 			}
 		}
+	}
+	
+	@SneakyThrows
+	public void save(String isin, Bar bar) {
+		final Path path = resolvePath(isin);
+		synchronized(isin) {
+			try (final RandomAccessFile file = new RandomAccessFile(path.toString(), "rw")) {
+				write(bar, file);
+			}
+		}
+	}
+	
+	private void write(final Bar bar, final RandomAccessFile file) throws IOException {
+		final long date = bar.getEndTime().toInstant().toEpochMilli();
+		if (0 == file.length()) {
+			file.writeLong(date);
+			writeBar(bar, file);
+		} else {
+			file.seek(0);
+			final long location = getLocation(file.readLong(), date);
+			pad(location, file);
+			file.seek(location);
+			writeBar(bar, file);
+		}
+	}
+
+	private void pad(final long location, final RandomAccessFile file) throws IOException {
+		if (location > file.length()) {
+			file.seek(file.length());
+			while (location > file.length()) {
+				file.writeDouble(0);
+			}
+		}
+	}
+
+	private void writeBar(final Bar bar, final RandomAccessFile file) throws IOException {
+		file.writeDouble(bar.getOpenPrice().doubleValue());
+		file.writeDouble(bar.getHighPrice().doubleValue());
+		file.writeDouble(bar.getLowPrice().doubleValue());
+		file.writeDouble(bar.getClosePrice().doubleValue());
+		file.writeDouble(0);
+		file.writeDouble(bar.getVolume().doubleValue());
 	}
 	
 	@SuppressWarnings("unused")

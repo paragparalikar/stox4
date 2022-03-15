@@ -1,5 +1,6 @@
 package com.stox.common.scrip;
 
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -56,5 +57,9 @@ public class ScripService {
 	public void saveAll(Collection<Scrip> scrips) {
 		scripRepository.saveAll(scrips);
 		cache(scrips);
+	}
+	
+	public ZonedDateTime getLastModifiedDate() {
+		return scripRepository.getLastModifiedDate();
 	}
 }

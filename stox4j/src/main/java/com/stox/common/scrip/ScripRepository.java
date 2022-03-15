@@ -3,20 +3,27 @@ package com.stox.common.scrip;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
+@RequiredArgsConstructor
 public class ScripRepository {
 
-	private final Path path = Paths.get(System.getProperty("user.home"), ".stox4", "exchanges", "nse", "scrips.csv");
+	private final Path home;
+	
+	private Path getPath() {
+		return home.resolve(Paths.get("exchanges", "nse", "scrips.csv"));
+	}
 	
 	@SneakyThrows
 	public List<Scrip> findAll(){
-		return Files.lines(path)
+		return Files.lines(getPath())
 				.map(this::parse)
 				.sorted().distinct()
 				.collect(Collectors.toList());
@@ -29,7 +36,7 @@ public class ScripRepository {
 	
 	@SneakyThrows
 	public void saveAll(Collection<Scrip> scrips) {
-		Files.write(path, scrips.stream()
+		Files.write(getPath(), scrips.stream()
 				.map(this::format)
 				.collect(Collectors.toSet()));
 	}
@@ -39,8 +46,12 @@ public class ScripRepository {
 	}
 	
 	@SneakyThrows
-	public Date getLastModifiedDate(){
-		return Files.exists(path) ? new Date(Files.getLastModifiedTime(path).toMillis()) : null;
+	public ZonedDateTime getLastModifiedDate(){
+		final Path path = getPath();
+		if(!Files.exists(path)) return null;
+		return ZonedDateTime.ofInstant(
+				Files.getLastModifiedTime(getPath()).toInstant(), 
+				ZoneId.systemDefault());
 	}
 	
 }

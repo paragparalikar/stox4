@@ -2,6 +2,7 @@ package com.stox;
 
 import com.stox.charting.ChartingView;
 import com.stox.common.ui.Icon;
+import com.stox.data.downloader.DataDownloader;
 import com.stox.example.AddAsExampleMenu;
 import com.stox.example.ExampleTab;
 import com.stox.explorer.ExplorerTab;
@@ -32,12 +33,13 @@ public class StoxApplication extends Application {
 	private StackPane root;
 	private TabPane tabPane;
 	private SplitPane splitPane;
+	private StoxApplicationContext context;
 	
 	@Override
 	public void init() throws Exception {
 		super.init();
 		Font.loadFont(Icon.class.getClassLoader().getResource(Icon.PATH).toExternalForm(), 10);
-		final StoxApplicationContext context = new StoxApplicationContext();
+		this.context = new StoxApplicationContext();
 		final ChartingView chartingView = new ChartingView(context.getEventBus(), context.getBarService(), context.getScripService());
 		final ExplorerTab explorerTab = new ExplorerTab(context.getEventBus(), context.getScripService());
 		final RankerTab rankerTab = new RankerTab(context.getEventBus(), context.getBarService(), context.getScripService());
@@ -77,6 +79,16 @@ public class StoxApplication extends Application {
 	private void onShown(WindowEvent event) {
 		tabPane.setSide(Side.LEFT);
 		splitPane.setDividerPositions(0.2);
+		
+		DataDownloader.builder()
+			.executor(context.getExecutor())
+			.eventBus(context.getEventBus())
+			.barService(context.getBarService())
+			.scripService(context.getScripService())
+			.eodBarDownloader(context.getEodBarDownloader())
+			.scripMasterDownloader(context.getScripMasterDownloader())
+			.build()
+			.download();
 	}
 	
 }

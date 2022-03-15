@@ -12,6 +12,10 @@ public class BarService {
 
 	private final BarRepository barRepository;
 	
+	public void save(String isin, Bar bar) {
+		barRepository.save(isin, bar);
+	}
+	
 	public List<Bar> find(final String isin, int count) {
 		return barRepository.find(isin, count);
 	}
@@ -20,4 +24,11 @@ public class BarService {
 		return barRepository.find(isin, count, offset);
 	}
 	
+	public ZonedDateTime readLastDownloadDate() {
+		return barRepository.readLastDownloadDate();
+	}
+	
+	public void writeLastDownloadDate(ZonedDateTime date) {
+		barRepository.writeLastDownloadDate(date);
+	}
 }
