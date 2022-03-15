@@ -5,6 +5,7 @@ import com.stox.common.ui.Icon;
 import com.stox.example.AddAsExampleMenu;
 import com.stox.example.ExampleTab;
 import com.stox.explorer.ExplorerTab;
+import com.stox.ranker.RankerTab;
 import com.stox.watchlist.AddToWatchlistMenu;
 import com.stox.watchlist.WatchlistTab;
 import com.sun.javafx.application.LauncherImpl;
@@ -38,6 +39,7 @@ public class StoxApplication extends Application {
 		final StoxApplicationContext context = new StoxApplicationContext();
 		final ChartingView chartingView = new ChartingView(context.getEventBus(), context.getBarService(), context.getScripService());
 		final ExplorerTab explorerTab = new ExplorerTab(context.getEventBus(), context.getScripService());
+		final RankerTab rankerTab = new RankerTab(context.getEventBus(), context.getBarService(), context.getScripService());
 		final WatchlistTab watchlistTab = new WatchlistTab(context.getEventBus(), context.getScripService(), context.getWatchlistService());
 		final AddToWatchlistMenu addToWatchlistMenu =  new AddToWatchlistMenu(context.getEventBus(), context.getWatchlistService());
 		addToWatchlistMenu.init();
@@ -45,7 +47,7 @@ public class StoxApplication extends Application {
 		final AddAsExampleMenu addAsExampleMenu = new AddAsExampleMenu(context.getEventBus(), context.getExampleService(), context.getExampleGroupService());
 		addAsExampleMenu.init();
 		chartingView.getContextMenu().getItems().addAll(addToWatchlistMenu, addAsExampleMenu);
-		tabPane = new TabPane(explorerTab, watchlistTab, exampleTab);
+		tabPane = new TabPane(explorerTab, watchlistTab, exampleTab, rankerTab);
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		splitPane = new SplitPane(tabPane, chartingView);
 		root = new StackPane(splitPane);
