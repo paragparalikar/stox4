@@ -7,12 +7,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.greenrobot.eventbus.EventBus;
+
+import com.stox.common.event.ScripMasterDownloadedEvent;
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 @RequiredArgsConstructor
 public class ScripService {
 
+	private final EventBus eventBus;
 	private final ScripRepository scripRepository;
 	private final List<Scrip> scrips = new LinkedList<>();
 	private final Map<String, Scrip> isinScripMapping = new HashMap<>();
@@ -57,6 +62,7 @@ public class ScripService {
 	public void saveAll(Collection<Scrip> scrips) {
 		scripRepository.saveAll(scrips);
 		cache(scrips);
+		eventBus.post(new ScripMasterDownloadedEvent(this.scrips));
 	}
 	
 	public ZonedDateTime getLastModifiedDate() {

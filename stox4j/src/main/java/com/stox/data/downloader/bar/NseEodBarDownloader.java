@@ -1,5 +1,6 @@
 package com.stox.data.downloader.bar;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
@@ -7,9 +8,11 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,19 +44,26 @@ public class NseEodBarDownloader implements EodBarDownloader {
 	
 	@Override
 	public Map<Scrip, Bar> download(ZonedDateTime date) throws IOException{
-		final String formattedDate = bhavcopyDateFormat.format(new Date(date.toInstant().toEpochMilli()));
-		final String url = "https://www1.nseindia.com/content/historical/EQUITIES/" + formattedDate + "bhav.csv.zip";
-		final HttpURLConnection connection = init((HttpURLConnection) new URL(url).openConnection());
-		final String rawData = Strings.toString(new ZipInputStream(connection.getInputStream()));
-		final String[] tokens = rawData.split("\n");
-		final Map<Scrip, Bar> data = new HashMap<>();
-		for (int index = 1; index < tokens.length; index++) {
-			final Map.Entry<Scrip, Bar> entry = parse(tokens[index], date);
-			if (null != entry) {
-				data.put(entry.getKey(), entry.getValue());
+		try {
+			if(DayOfWeek.SUNDAY.equals(date.getDayOfWeek()) ||  DayOfWeek.SATURDAY.equals(date.getDayOfWeek())) {
+				return Collections.emptyMap();
 			}
+			final String formattedDate = bhavcopyDateFormat.format(new Date(date.toInstant().toEpochMilli()));
+			final String url = "https://www1.nseindia.com/content/historical/EQUITIES/" + formattedDate + "bhav.csv.zip";
+			final HttpURLConnection connection = init((HttpURLConnection) new URL(url).openConnection());
+			final String rawData = Strings.toString(new ZipInputStream(connection.getInputStream()));
+			final String[] tokens = rawData.split("\n");
+			final Map<Scrip, Bar> data = new HashMap<>();
+			for (int index = 1; index < tokens.length; index++) {
+				final Map.Entry<Scrip, Bar> entry = parse(tokens[index], date);
+				if (null != entry) {
+					data.put(entry.getKey(), entry.getValue());
+				}
+			}
+			return data;
+		} catch(FileNotFoundException e) {
+			return Collections.emptyMap();
 		}
-		return data;
 	}
 
 	private HttpURLConnection init(HttpURLConnection connection) throws ProtocolException{

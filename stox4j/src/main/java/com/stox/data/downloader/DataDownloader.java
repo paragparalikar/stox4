@@ -6,6 +6,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 
 import org.greenrobot.eventbus.EventBus;
@@ -53,7 +54,11 @@ public class DataDownloader {
 		while(lastDownloadDate.isBefore(ZonedDateTime.now())) {
 			lastDownloadDate = lastDownloadDate.plusDays(1);
 			final Map<Scrip, Bar> data = eodBarDownloader.download(lastDownloadDate);
-			data.forEach((scrip, bar) -> executor.execute(() -> barService.save(scrip.getIsin(), bar)));
+			final CountDownLatch latch = new CountDownLatch(data.size());
+			data.forEach((scrip, bar) -> executor.execute(() -> {
+				try { barService.save(scrip.getIsin(), bar); } finally { latch.countDown(); }
+			}));
+			latch.await();
 			barService.writeLastDownloadDate(lastDownloadDate);
 			eventBus.post(MessageEvent.builder()
 					.icon(Icon.DOWNLOAD)

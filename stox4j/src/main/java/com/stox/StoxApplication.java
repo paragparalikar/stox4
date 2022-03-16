@@ -1,7 +1,9 @@
 package com.stox;
 
 import com.stox.charting.ChartingView;
+import com.stox.common.ui.Fx;
 import com.stox.common.ui.Icon;
+import com.stox.common.ui.MessagePanel;
 import com.stox.data.downloader.DataDownloader;
 import com.stox.example.AddAsExampleMenu;
 import com.stox.example.ExampleTab;
@@ -51,6 +53,7 @@ public class StoxApplication extends Application {
 		final AddAsExampleMenu addAsExampleMenu = new AddAsExampleMenu(context.getEventBus(), context.getExampleService(), context.getExampleGroupService());
 		addAsExampleMenu.init();
 		chartingView.getContextMenu().getItems().addAll(addToWatchlistMenu, addAsExampleMenu);
+		chartingView.getToolBar().getItems().addAll(Fx.spacer(), new MessagePanel(context.getEventBus()));
 		tabPane = new TabPane(explorerTab, watchlistTab, exampleTab, screenerTab, rankerTab);
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		splitPane = new SplitPane(tabPane, chartingView);

@@ -50,7 +50,7 @@ public class StoxApplicationContext {
 		barRepository = new BarRepository(home);
 		barService = new BarService(barRepository);
 		scripRepository = new ScripRepository(home);
-		scripService = new ScripService(scripRepository);
+		scripService = new ScripService(eventBus, scripRepository);
 		watchlistRepository = new WatchlistRepository(home);
 		watchlistService = new WatchlistService(eventBus, watchlistRepository);
 		exampleRepository = new ExampleRepository(home);

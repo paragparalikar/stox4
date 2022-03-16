@@ -36,6 +36,11 @@ public class ScripRepository {
 	
 	@SneakyThrows
 	public void saveAll(Collection<Scrip> scrips) {
+		final Path path = getPath();
+		if(!Files.exists(path)) {
+			Files.createDirectories(path.getParent());
+			Files.createFile(path);
+		}
 		Files.write(getPath(), scrips.stream()
 				.map(this::format)
 				.collect(Collectors.toSet()));

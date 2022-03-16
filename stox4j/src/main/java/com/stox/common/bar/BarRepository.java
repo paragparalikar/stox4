@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -58,7 +59,8 @@ public class BarRepository {
 			properties.load(Files.newInputStream(path));
 		}
 		final String text = properties.getProperty(KEY_LAST_DOWNLOAD_DATE, "20000101");
-		return ZonedDateTime.from(formatter.parse(text));
+		final LocalDate localDate = LocalDate.from(formatter.parse(text));
+		return localDate.atStartOfDay(ZoneId.systemDefault());
 	}
 
 	private long getDate(final long initialDate, final long location) {
