@@ -6,24 +6,25 @@ import java.util.List;
 import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Builder;
 import smile.data.AbstractTuple;
 import smile.data.type.DataType;
 import smile.data.type.StructField;
 import smile.data.type.StructType;
 
-@RequiredArgsConstructor
+@Builder
 public class BarSeriesTuple extends AbstractTuple {
 	private static final long serialVersionUID = -2788136059591500998L;
 
+	private final int index;
 	private final int class_;
+	private final int barCount;
 	private final BarSeries barSeries;
 	private StructType structType;
 	
 	@Override
 	public StructType schema() {
 		if(null == structType) {
-			final int barCount = barSeries.getBarCount();
 			final DataType doubleDataType = DataType.of(double.class);
 			final List<StructField> fields = new ArrayList<>(1 + barCount * 5);
 			fields.add(new StructField("class", DataType.of(int.class)));
@@ -42,7 +43,7 @@ public class BarSeriesTuple extends AbstractTuple {
 	@Override
 	public Object get(int i) {
 		if(0 == i) return class_;
-		final int barIndex = i - 1;
+		final int barIndex = index + i - 1;
 		final Bar bar = barSeries.getBar(barIndex);
 		switch(barIndex % 5) {
 			case 0: return bar.getOpenPrice().doubleValue();
