@@ -5,19 +5,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ta4j.core.Bar;
+import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBar;
+import org.ta4j.core.BaseBarSeries;
 import org.ta4j.core.num.DoubleNum;
 import org.ta4j.core.num.Num;
 
-public class BarValueNormalizer {
+public class BarSeriesNormalizer {
 
-	public List<Bar> normalize(List<Bar> bars){
+	public BarSeries normalize(BarSeries barSeries){
 		Num lowestVolume = DoubleNum.valueOf(Double.MAX_VALUE);
 		Num highestVolume = DoubleNum.valueOf(Double.MIN_VALUE);
 		Num lowestLowPrice = DoubleNum.valueOf(Double.MAX_VALUE);
 		Num highestHighPrice = DoubleNum.valueOf(Double.MIN_VALUE);
 		
-		for(Bar bar : bars) {
+		for(int index = 0; index < barSeries.getBarCount(); index++) {
+			final Bar bar = barSeries.getBar(index);
 			lowestVolume = lowestVolume.min(bar.getVolume());
 			highestVolume = highestVolume.max(bar.getVolume());
 			lowestLowPrice = lowestLowPrice.min(bar.getLowPrice());
@@ -25,9 +28,9 @@ public class BarValueNormalizer {
 		}
 		
 		final Duration day = Duration.ofDays(1);
-		final List<Bar> results = new ArrayList<>(bars.size());
-		for(int index = 0; index < bars.size(); index++) {
-			final Bar bar = bars.get(index);
+		final List<Bar> results = new ArrayList<>(barSeries.getBarCount());
+		for(int index = 0; index < barSeries.getBarCount(); index++) {
+			final Bar bar = barSeries.getBar(index);
 			final Num volumeDenominator = highestVolume.minus(lowestVolume);
 			final Num priceDenominator = highestHighPrice.minus(lowestLowPrice);
 			final Bar result = BaseBar.builder()
@@ -41,7 +44,7 @@ public class BarValueNormalizer {
 					.build();
 			results.add(result);
 		}
-		return results;
+		return new BaseBarSeries(results);
 	}
 	
 }

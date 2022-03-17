@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ta4j.core.Bar;
+import org.ta4j.core.BaseBarSeries;
 
 import com.stox.common.bar.BarService;
 import com.stox.example.Example;
@@ -22,7 +23,7 @@ public class ExampleDataGenerator {
 
 	private final BarService barService;
 	private final ExampleService exampleService;
-	private final BarValueNormalizer barValueNormalizer;
+	private final BarSeriesNormalizer barValueNormalizer;
 	
 	public DataFrame generate(String exampleGroupId, int barCount) {
 		final List<Example> examples = new ArrayList<>(exampleService.findByGroupId(exampleGroupId));
@@ -52,7 +53,7 @@ public class ExampleDataGenerator {
 			final List<Bar> bars = barService.find(isin, Integer.MAX_VALUE);
 			if(bars.size() < barCount) continue;
 			
-			final List<Bar> normalizedBars = barValueNormalizer.normalize(bars);
+			final List<Bar> normalizedBars = barValueNormalizer.normalize(new BaseBarSeries(bars)).getBarData();
 			for(int offset = barCount; offset < normalizedBars.size(); offset++) {
 				final List<Bar> subBars = normalizedBars.subList(offset - barCount, offset);
 				final Bar latestBar = subBars.get(subBars.size() - 1);

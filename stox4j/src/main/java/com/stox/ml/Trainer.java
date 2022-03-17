@@ -14,7 +14,7 @@ import smile.data.formula.Formula;
 public class Trainer {
 
 	public static void main(String[] args) throws IOException, URISyntaxException {
-		final BarValueNormalizer normalizer = new BarValueNormalizer();
+		final BarSeriesNormalizer normalizer = new BarSeriesNormalizer();
 		final StoxApplicationContext context = new StoxApplicationContext();
 		final ExampleDataGenerator dataGenerator = new ExampleDataGenerator(
 				context.getBarService(), context.getExampleService(), normalizer);
