@@ -15,14 +15,15 @@ public class RuleDataFrameBuilder {
 	
 	public List<Tuple> build(int barCount, 
 			Rule rule, 
+			Rule liquidityRule,
 			Rule classificationRule,
 			Indicator<Integer> classIndicator, 
 			BarSeries barSeries) {
 		final List<Tuple> tuples = new LinkedList<>();
 		for(int index = barCount; index < barSeries.getBarCount() - barCount; index++) {
-			if(rule.isSatisfied(index)) {
+			if(liquidityRule.isSatisfied(index) && rule.isSatisfied(index)) {
 				final Integer class_ = classificationRule.isSatisfied(index) ? 
-						classIndicator.getValue(index) : -1;
+						classIndicator.getValue(index) : Integer.valueOf(-1);
 				if(null != class_) {
 					final Tuple tuple = BarSeriesTuple.builder()
 							.index(index)

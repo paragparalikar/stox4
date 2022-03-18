@@ -6,7 +6,8 @@ import java.util.UUID;
 
 import com.stox.StoxApplicationContext;
 import com.stox.ml.indicator.BuyTradeClassIndicatorProvider.BuyTradeClassConfig;
-import com.stox.ml.screener.BuyTradeClassificationScreener.BuyTradeClassificationConfig;
+import com.stox.ml.screener.BuyTradeSuccessScreener.BuyTradeSuccessConfig;
+import com.stox.ml.screener.LiquidityScreener.LiquidityConfig;
 import com.stox.screener.VolatilityContractionBreakoutScreener;
 import com.stox.screener.VolatilityContractionBreakoutScreener.VolatilityContractionBreakoutConfig;
 
@@ -20,21 +21,25 @@ public class ScreenerDataGenerator {
 		final Path path = appContext.getHome().resolve(runId);
 		
 		// Variable configs - permutations and combinations of these
+		final LiquidityConfig liquidityConfig = mlContext.getLiquidityConfig();
 		final BuyTradeClassConfig buyTradeClassConfig = mlContext.getClassIndicatorConfig();
-		final BuyTradeClassificationConfig buyTradeClassificationConfig = mlContext.getClassificationConfig();
+		final BuyTradeSuccessConfig buyTradeSuccessConfig = mlContext.getBuyTradeSuccessConfig();
 		final VolatilityContractionBreakoutConfig ruleConfig = new VolatilityContractionBreakoutConfig();
 		
 		ScreenerDataFrameBuilder.builder()
+				.path(path)
 				.barService(appContext.getBarService())
 				.scripService(appContext.getScripService())
+				.liquidityConfig(liquidityConfig)
+				.liquidityScreener(mlContext.getLiquidityScreener())
 				.barSeriesNormalizer(mlContext.getBarSeriesNormalizer())
 				.ruleDataFrameBuilder(mlContext.getRuleDataFrameBuilder())
 				.classIndicatorConfig(buyTradeClassConfig)
 				.classIndicatorProvider(mlContext.getClassIndicatorProvider())
-				.classificationConfig(buyTradeClassificationConfig)
-				.classificationScreener(mlContext.getClassificationScreener())
+				.buyTradeSuccessConfig(buyTradeSuccessConfig)
+				.buyTradeSuccessScreener(mlContext.getBuyTradeSuccessScreener())
 				.build()
-				.build(path, ruleConfig, screener);
+				.build(ruleConfig, screener);
 	}
 	
 }

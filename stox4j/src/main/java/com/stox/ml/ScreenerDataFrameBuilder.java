@@ -16,8 +16,10 @@ import com.stox.common.scrip.Scrip;
 import com.stox.common.scrip.ScripService;
 import com.stox.ml.indicator.BuyTradeClassIndicatorProvider;
 import com.stox.ml.indicator.BuyTradeClassIndicatorProvider.BuyTradeClassConfig;
-import com.stox.ml.screener.BuyTradeClassificationScreener;
-import com.stox.ml.screener.BuyTradeClassificationScreener.BuyTradeClassificationConfig;
+import com.stox.ml.screener.BuyTradeSuccessScreener;
+import com.stox.ml.screener.BuyTradeSuccessScreener.BuyTradeSuccessConfig;
+import com.stox.ml.screener.LiquidityScreener;
+import com.stox.ml.screener.LiquidityScreener.LiquidityConfig;
 import com.stox.screener.Screener;
 import com.stox.screener.ScreenerConfig;
 
@@ -34,17 +36,20 @@ import smile.io.Write;
 @RequiredArgsConstructor
 public class ScreenerDataFrameBuilder {
 
+	private final Path path;
 	private final BarService barService;
 	private final ScripService scripService;
+	private final LiquidityConfig liquidityConfig;
+	private final LiquidityScreener liquidityScreener;
 	private final BuyTradeClassConfig classIndicatorConfig;
 	private final BarSeriesNormalizer barSeriesNormalizer;
 	private final RuleDataFrameBuilder ruleDataFrameBuilder;
-	private final BuyTradeClassificationConfig classificationConfig;
-	private final BuyTradeClassificationScreener classificationScreener;
+	private final BuyTradeSuccessConfig buyTradeSuccessConfig;
+	private final BuyTradeSuccessScreener buyTradeSuccessScreener;
 	private final BuyTradeClassIndicatorProvider classIndicatorProvider;
 	
 	@SneakyThrows
-	public <T extends ScreenerConfig> void build(Path path, T config, Screener<T> screener) {
+	public <T extends ScreenerConfig> void build(T config, Screener<T> screener) {
 		Files.createDirectories(path);
 		log.info("Building dataframe for screener : {}, barCount : {}", screener, config.getBarCount());
 		for(Scrip scrip : scripService.findAll()) {
@@ -58,15 +63,16 @@ public class ScreenerDataFrameBuilder {
 	}
 	
 	private <T extends ScreenerConfig> List<Tuple> build(Scrip scrip, T config, Screener<T> screener){
-		final int barCount = Math.max(config.getBarCount(), classificationConfig.getBarCount());
+		final int barCount = Math.max(config.getBarCount(), liquidityConfig.getBarCount());
 		final List<Bar> bars = barService.find(scrip.getIsin(), Integer.MAX_VALUE);
 		if(bars.size() >= barCount) {
 			final BarSeries barSeries = new BaseBarSeries(bars);
-			final BarSeries normalizedBarSeries = barSeriesNormalizer.normalize(barSeries);
-			final Rule rule = screener.createRule(config, normalizedBarSeries);
+			final Rule rule = screener.createRule(config, barSeries);
+			final Rule liquidityRule = liquidityScreener.createRule(liquidityConfig, barSeries);
+			final Rule classificationRule = buyTradeSuccessScreener.createRule(buyTradeSuccessConfig, barSeries);
 			final Indicator<Integer> classIndicator = classIndicatorProvider.createIndicator(classIndicatorConfig, barSeries);
-			final Rule classificationRule = classificationScreener.createRule(classificationConfig, barSeries);
-			return ruleDataFrameBuilder.build(barCount, rule, classificationRule, classIndicator, normalizedBarSeries);
+			final BarSeries normalizedBarSeries = barSeriesNormalizer.normalize(barSeries);
+			return ruleDataFrameBuilder.build(barCount, rule, liquidityRule, classificationRule, classIndicator, normalizedBarSeries);
 		}
 		return Collections.emptyList();
 	}
