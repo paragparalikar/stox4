@@ -4,9 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.ta4j.core.BarSeries;
+import org.ta4j.core.Indicator;
 import org.ta4j.core.Rule;
-
-import com.stox.ml.indicator.BuyTradeClassIndicator;
 
 import lombok.RequiredArgsConstructor;
 import smile.data.Tuple;
@@ -14,18 +13,25 @@ import smile.data.Tuple;
 @RequiredArgsConstructor
 public class RuleDataFrameBuilder {
 	
-	public List<Tuple> build(int barCount, Rule rule, BarSeries barSeries, BuyTradeClassIndicator classIndicator) {
+	public List<Tuple> build(int barCount, 
+			Rule rule, 
+			Rule classificationRule,
+			Indicator<Integer> classIndicator, 
+			BarSeries barSeries) {
 		final List<Tuple> tuples = new LinkedList<>();
 		for(int index = barCount; index < barSeries.getBarCount() - barCount; index++) {
 			if(rule.isSatisfied(index)) {
-				final int class_ = classIndicator.getValue(index);
-				final Tuple tuple = BarSeriesTuple.builder()
-						.index(index)
-						.class_(class_)
-						.barCount(barCount)
-						.barSeries(barSeries)
-						.build();
-				tuples.add(tuple);
+				final Integer class_ = classificationRule.isSatisfied(index) ? 
+						classIndicator.getValue(index) : -1;
+				if(null != class_) {
+					final Tuple tuple = BarSeriesTuple.builder()
+							.index(index)
+							.class_(class_)
+							.barCount(barCount)
+							.barSeries(barSeries)
+							.build();
+					tuples.add(tuple);
+				}
 			}
 		}
 		return tuples;

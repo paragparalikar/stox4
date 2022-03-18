@@ -43,7 +43,7 @@ public class BarSeriesTuple extends AbstractTuple {
 	@Override
 	public Object get(int i) {
 		if(0 == i) return class_;
-		final int barIndex = index + i - 1;
+		final int barIndex = index + ((i - 1) / 5);
 		final Bar bar = barSeries.getBar(barIndex);
 		switch(barIndex % 5) {
 			case 0: return bar.getOpenPrice().doubleValue();

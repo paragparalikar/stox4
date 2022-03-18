@@ -11,11 +11,13 @@ import org.ta4j.core.num.Num;
 public class BuyTradeClassIndicator extends CachedIndicator<Integer> {
 
 	private final int barCount;
+	private final int maxClass;
 	private final double stepPercentage;
 	private final Indicator<Num> highestHighIndicator;
 	
-	protected BuyTradeClassIndicator(BarSeries series, int barCount, double stepPercentage) {
+	public BuyTradeClassIndicator(BarSeries series, int barCount, int maxClass, double stepPercentage) {
 		super(series);
+		this.maxClass = maxClass;
 		this.barCount = barCount;
 		this.stepPercentage = stepPercentage;
 		final Indicator<Num> highPriceIndicator = new HighPriceIndicator(series);
@@ -25,11 +27,12 @@ public class BuyTradeClassIndicator extends CachedIndicator<Integer> {
 	@Override
 	protected Integer calculate(int index) {
 		final BarSeries barSeries = getBarSeries();
-		if(index < barSeries.getBarCount() - barCount) {
+		if(index < barSeries.getBarCount() - barCount - 1) {
 			final Num close = getBarSeries().getBar(index).getClosePrice();
-			final Num highestHigh = highestHighIndicator.getValue(index + barCount);
+			final Num highestHigh = highestHighIndicator.getValue(index + barCount + 1);
 			final Num step = close.multipliedBy(DoubleNum.valueOf(stepPercentage)).dividedBy(DoubleNum.valueOf(100));
-			return highestHigh.minus(close).dividedBy(step).ceil().intValue();
+			final Integer class_ = highestHigh.minus(close).dividedBy(step).ceil().intValue();
+			return class_ > maxClass ? maxClass : class_;
 		}
 		return null;
 	}
