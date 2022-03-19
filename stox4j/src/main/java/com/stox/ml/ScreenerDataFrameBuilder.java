@@ -52,13 +52,15 @@ public class ScreenerDataFrameBuilder {
 		log.info("Building dataframe for screener : {}, barCount : {}", screener, config.getBarCount());
 		final List<Row> rows = new LinkedList<>();
 		final ExecutorService executorService = Executors.newWorkStealingPool();
+		
+		int count = 0;
 		for(Scrip scrip : scripService.findAll()) {
 			executorService.execute(() -> {
 				final List<Row> scripRows = build(scrip, config, screener);
 				rows.addAll(scripRows);
 				log.info("Built dataframe for scrip : {}, tuples : {}", scrip.getName(), scripRows.size());
 			});
-			break;
+			//if(10 <= count++) break;
 		}
 		executorService.shutdown();
 		executorService.awaitTermination(10, TimeUnit.MINUTES);

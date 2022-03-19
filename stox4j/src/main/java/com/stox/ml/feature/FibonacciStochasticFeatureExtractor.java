@@ -21,9 +21,9 @@ public class FibonacciStochasticFeatureExtractor implements BarSeriesFeatureExtr
 	@Override
 	public List<Double> extract(int index, int barCount, BarSeries barSeries) {
 		final List<Double> features = new LinkedList<>();
-		final List<Integer> fibBarCounts = Maths.fib(1, barCount);
+		final List<Integer> fibBarCounts = Maths.fib(2, barCount);
 		if(!fibBarCounts.contains(barCount)) fibBarCounts.add(barCount);
-		if(index < barCount) {
+		if(index < barCount || index >= barSeries.getBarCount()) {
 			fibBarCounts.forEach(fib -> features.add(null));
 			return features;
 		}
@@ -32,7 +32,7 @@ public class FibonacciStochasticFeatureExtractor implements BarSeriesFeatureExtr
 			final int fibBarCount = fibBarCounts.get(fibBarCountIndex);
 			final StochasticOccilatorIndicator stochasticIndicator = new StochasticOccilatorIndicator(indicator, fibBarCount);
 			final Num feature = stochasticIndicator.getValue(index);
-			features.add(null == feature ? null : feature.doubleValue());
+			features.add(null == feature || feature.isNaN() ? 0 : feature.doubleValue());
 		}
 		return features;
 	}

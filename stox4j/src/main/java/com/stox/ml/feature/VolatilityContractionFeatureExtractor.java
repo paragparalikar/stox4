@@ -34,7 +34,7 @@ public class VolatilityContractionFeatureExtractor implements BarSeriesFeatureEx
 	
 	@Override
 	public List<Double> extract(int index, int barCount, BarSeries barSeries) {
-		if(index < 2 * barCount + 1) return null;
+		if(index < 2 * barCount + 1 || index >= barSeries.getBarCount()) return null;
 		final List<Double> features = new ArrayList<>();
 		extract(index, barCount, barSeries, features);
 		extract(index - 1, barCount, barSeries, features);

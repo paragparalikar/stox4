@@ -24,7 +24,7 @@ public class RatioWithSmaFeatureExtractor implements BarSeriesFeatureExtractor {
 		final List<Integer> fibBarCounts = Maths.fib(1, barCount);
 		if(!fibBarCounts.contains(barCount)) fibBarCounts.add(barCount);
 		
-		if(index < barCount) {
+		if(index < barCount || index >= barSeries.getBarCount()) {
 			fibBarCounts.forEach(fib -> features.add(null));
 			return features;
 		}
@@ -41,8 +41,9 @@ public class RatioWithSmaFeatureExtractor implements BarSeriesFeatureExtractor {
 			final int fibBarCount = fibBarCounts.get(fibBarCountIndex);
 			final Indicator<Num> smaIndicator = new SMAIndicator(indicator, fibBarCount);
 			final Num averageValue = smaIndicator.getValue(index);
-			final Double feature = null == averageValue ? null : value.dividedBy(averageValue).doubleValue();
-			features.add(feature);
+			final Double feature = null == averageValue || averageValue.isNaN() ? 0 : 
+				value.dividedBy(averageValue).doubleValue();
+			features.add(feature.isNaN() || feature.isInfinite() ? 0 : feature);
 		}
 		return features;
 	}
