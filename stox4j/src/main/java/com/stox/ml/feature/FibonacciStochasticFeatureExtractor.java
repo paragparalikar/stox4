@@ -12,11 +12,12 @@ import com.stox.common.util.Maths;
 import com.stox.indicator.StochasticOccilatorIndicator;
 
 import lombok.NonNull;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class FibonacciStochasticFeatureExtractor implements BarSeriesFeatureExtractor {
 
-	@Setter @NonNull private Function<BarSeries, Indicator<Num>> indicatorFunction;
+	@NonNull private final Function<BarSeries, Indicator<Num>> indicatorFunction;
 	
 	@Override
 	public List<Double> extract(int index, int barCount, BarSeries barSeries) {

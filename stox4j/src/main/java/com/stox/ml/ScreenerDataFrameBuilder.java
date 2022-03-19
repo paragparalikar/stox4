@@ -60,7 +60,7 @@ public class ScreenerDataFrameBuilder {
 				rows.addAll(scripRows);
 				log.info("Built dataframe for scrip : {}, tuples : {}", scrip.getName(), scripRows.size());
 			});
-			//if(10 <= count++) break;
+			if(100 <= count++) break;
 		}
 		executorService.shutdown();
 		executorService.awaitTermination(10, TimeUnit.MINUTES);

@@ -12,11 +12,12 @@ import org.ta4j.core.num.Num;
 import com.stox.common.util.Maths;
 
 import lombok.NonNull;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class RatioWithSmaFeatureExtractor implements BarSeriesFeatureExtractor {
 
-	@Setter @NonNull private Function<BarSeries, Indicator<Num>> indicatorFunction;
+	@NonNull private final Function<BarSeries, Indicator<Num>> indicatorFunction;
 	
 	@Override
 	public List<Double> extract(int index, int barCount, BarSeries barSeries) {

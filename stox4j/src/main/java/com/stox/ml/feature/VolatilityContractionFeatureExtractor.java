@@ -29,8 +29,6 @@ public class VolatilityContractionFeatureExtractor implements BarSeriesFeatureEx
 	private final Function<BarSeries, Indicator<Num>> avgPriceSpreadIndicatorFunction = getAverageIndicatorFunction(priceSpreadIndicatorFunction);
 	private final Function<BarSeries, Indicator<Num>> avgCandleBodyIndicatorFunction = getAverageIndicatorFunction(candleBodyIndicatorFunction);
 	private final Function<BarSeries, Indicator<Num>> avgTrueRangeIndicatorFunction = getAverageIndicatorFunction(trueRangeIndicatorFunction);
-	private final RatioWithSmaFeatureExtractor ratioWithSmaFeatureExtractor = new RatioWithSmaFeatureExtractor();
-	private final FibonacciStochasticFeatureExtractor fibonacciStochasticFeatureExtractor = new FibonacciStochasticFeatureExtractor();
 	
 	@Override
 	public List<Double> extract(int index, int barCount, BarSeries barSeries) {
@@ -70,13 +68,11 @@ public class VolatilityContractionFeatureExtractor implements BarSeriesFeatureEx
 	}
 	
 	private List<Double> extractStochFeatures(int index, int barCount, BarSeries barSeries, Function<BarSeries, Indicator<Num>> function){
-		fibonacciStochasticFeatureExtractor.setIndicatorFunction(function);
-		return fibonacciStochasticFeatureExtractor.extract(index, barCount, barSeries);
+		return new FibonacciStochasticFeatureExtractor(function).extract(index, barCount, barSeries);
 	}
 	
 	private List<Double> extractRatioFeatures(int index, int barCount, BarSeries barSeries, Function<BarSeries, Indicator<Num>> function){
-		ratioWithSmaFeatureExtractor.setIndicatorFunction(function);
-		return ratioWithSmaFeatureExtractor.extract(index, barCount, barSeries);
+		return new RatioWithSmaFeatureExtractor(function).extract(index, barCount, barSeries);
 	}
 	
 }
