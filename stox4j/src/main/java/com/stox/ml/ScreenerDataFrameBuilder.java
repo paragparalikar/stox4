@@ -1,9 +1,11 @@
 package com.stox.ml;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
@@ -14,6 +16,7 @@ import org.ta4j.core.Rule;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.scrip.ScripService;
+import com.stox.ml.domain.Row;
 import com.stox.ml.indicator.BuyTradeClassIndicatorProvider;
 import com.stox.ml.indicator.BuyTradeClassIndicatorProvider.BuyTradeClassConfig;
 import com.stox.ml.screener.BuyTradeSuccessScreener;
@@ -27,16 +30,12 @@ import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import smile.data.DataFrame;
-import smile.data.Tuple;
-import smile.io.Write;
 
 @Slf4j
 @Builder
 @RequiredArgsConstructor
 public class ScreenerDataFrameBuilder {
 
-	private final Path path;
 	private final BarService barService;
 	private final ScripService scripService;
 	private final LiquidityConfig liquidityConfig;
@@ -49,20 +48,24 @@ public class ScreenerDataFrameBuilder {
 	private final BuyTradeClassIndicatorProvider classIndicatorProvider;
 	
 	@SneakyThrows
-	public <T extends ScreenerConfig> void build(T config, Screener<T> screener) {
-		Files.createDirectories(path);
+	public <T extends ScreenerConfig> List<Row> build(T config, Screener<T> screener) {
 		log.info("Building dataframe for screener : {}, barCount : {}", screener, config.getBarCount());
+		final List<Row> rows = new LinkedList<>();
+		final ExecutorService executorService = Executors.newWorkStealingPool();
 		for(Scrip scrip : scripService.findAll()) {
-			final List<Tuple> tuples = build(scrip, config, screener);
-			if(null != tuples && !tuples.isEmpty()) {
-				final DataFrame dataFrame = DataFrame.of(tuples);
-				Write.csv(dataFrame, path.resolve(scrip.getCode() + ".csv"));
-				log.info("Built dataframe for scrip : {}, tuples : {}", scrip.getName(), tuples.size());
-			}
+			executorService.execute(() -> {
+				final List<Row> scripRows = build(scrip, config, screener);
+				rows.addAll(scripRows);
+				log.info("Built dataframe for scrip : {}, tuples : {}", scrip.getName(), scripRows.size());
+			});
+			break;
 		}
+		executorService.shutdown();
+		executorService.awaitTermination(10, TimeUnit.MINUTES);
+		return rows;
 	}
 	
-	private <T extends ScreenerConfig> List<Tuple> build(Scrip scrip, T config, Screener<T> screener){
+	private <T extends ScreenerConfig> List<Row> build(Scrip scrip, T config, Screener<T> screener){
 		final int barCount = Math.max(config.getBarCount(), liquidityConfig.getBarCount());
 		final List<Bar> bars = barService.find(scrip.getIsin(), Integer.MAX_VALUE);
 		if(bars.size() >= barCount) {

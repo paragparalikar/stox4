@@ -12,7 +12,7 @@ public class StochasticOccilatorIndicator extends CachedIndicator<Num> {
 	private final LowestValueIndicator lowestValueIndicator;
 	private final HighestValueIndicator highestValueIndicator;
 
-	protected StochasticOccilatorIndicator(Indicator<Num> indicator, int barCount) {
+	public StochasticOccilatorIndicator(Indicator<Num> indicator, int barCount) {
 		super(indicator);
 		this.indicator = indicator;
 		this.lowestValueIndicator = new LowestValueIndicator(indicator, barCount);
