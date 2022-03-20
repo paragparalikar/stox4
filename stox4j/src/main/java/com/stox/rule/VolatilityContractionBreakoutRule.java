@@ -3,7 +3,6 @@ package com.stox.rule;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.Indicator;
 import org.ta4j.core.Rule;
-import org.ta4j.core.indicators.StochasticRSIIndicator;
 import org.ta4j.core.num.Num;
 import org.ta4j.core.rules.AbstractRule;
 import org.ta4j.core.rules.OverIndicatorRule;
@@ -19,7 +18,7 @@ public class VolatilityContractionBreakoutRule extends AbstractRule {
 	
 	@Data
 	public static class VolatilityContractionBreakoutRuleConfig implements ScreenerConfig {
-		private double minValue = 0.9;
+		private double minValue = 0.5;
 		private int barCount = 34;
 		private int breakoutBarCount = 5;
 		private double volumeMultiple = 5;
@@ -36,8 +35,7 @@ public class VolatilityContractionBreakoutRule extends AbstractRule {
 	public VolatilityContractionBreakoutRule(BarSeries barSeries, int barCount, VolatilityContractionBreakoutRuleConfig config) {
 		final Rule breakoutRule = new SimpleBreakoutBarRule(barSeries, config.toBreakoutBarConfig());
 		final Indicator<Num> volatilityContractionIndicator = new VolatilityContractionIndicator(barSeries, barCount);
-		final Indicator<Num> stochasticIndicator = new StochasticRSIIndicator(volatilityContractionIndicator, barCount);
-		final Rule volatilityRule = new OverIndicatorRule(stochasticIndicator, config.getMinValue());
+		final Rule volatilityRule = new OverIndicatorRule(volatilityContractionIndicator, config.getMinValue());
 		this.delegate = breakoutRule.and(volatilityRule);
 	}
 

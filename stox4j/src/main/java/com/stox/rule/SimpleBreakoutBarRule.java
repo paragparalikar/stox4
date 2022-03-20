@@ -37,7 +37,7 @@ public class SimpleBreakoutBarRule extends AbstractRule {
 
 	@Override
 	public boolean isSatisfied(int index, TradingRecord tradingRecord) {
-		if(null != barSeries && config.getBarCount() + 1 <= index && index < barSeries.getBarCount()) {
+		if(null != barSeries && config.getBarCount() < index && index < barSeries.getBarCount()) {
 			return match(index) && !match(index - 1);
 		}
 		return false;
@@ -54,19 +54,19 @@ public class SimpleBreakoutBarRule extends AbstractRule {
 		
 		final Indicator<Num> volumeIndicator = new VolumeIndicator(barSeries);
 		final Indicator<Num> volumeSMAIndicator = new SMAIndicator(volumeIndicator, barCount);
-		final Num avgVolume = volumeSMAIndicator.getValue(index);
+		final Num avgVolume = volumeSMAIndicator.getValue(index - 1);
 		final Num volumeMultiple = barSeries.numOf(config.getVolumeMultiple());
 		if(bar.getVolume().isGreaterThan(avgVolume.multipliedBy(volumeMultiple))) return false;
 		
 		final Num spread = bar.getHighPrice().minus(bar.getLowPrice());
 		final Indicator<Num> priceSpreadIndicator = new PriceSpreadIndicator(barSeries);
 		final Indicator<Num> spreadSMAIndicator = new SMAIndicator(priceSpreadIndicator, barCount);
-		final Num avgSpread = spreadSMAIndicator.getValue(index);
+		final Num avgSpread = spreadSMAIndicator.getValue(index - 1);
 		final Num spreadMultiple = barSeries.numOf(config.getSpreadMultiple());
 		if(spread.isGreaterThan(avgSpread.multipliedBy(spreadMultiple))) return false;
 		
 		final Indicator<Num> atrIndicator = new ATRIndicator(barSeries, barCount);
-		final Num atrValue = atrIndicator.getValue(index);
+		final Num atrValue = atrIndicator.getValue(index - 1);
 		final Num atrMultiple = barSeries.numOf(config.getHighDiffATRMultiple());
 		final Num highDiff = bar.getHighPrice().minus(one.getHighPrice());
 		if(highDiff.isLessThan(atrValue.multipliedBy(atrMultiple))) return false;

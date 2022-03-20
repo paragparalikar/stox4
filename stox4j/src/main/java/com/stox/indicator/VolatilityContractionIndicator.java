@@ -20,11 +20,6 @@ public class VolatilityContractionIndicator extends CachedIndicator<Num> {
 
 	@Override
 	protected Num calculate(int index) {
-		//final List<Integer> fibs = Maths.fib(5, barCount);
-		return calculateInternal(index, barCount);
-	}
-	
-	private Num calculateInternal(int index, int barCount) {
 		final BarSeries series = getBarSeries();
 		final PlusIndicator plusIndicator = new PlusIndicator(series,
 				new ClosePriceIndicator(series), 
