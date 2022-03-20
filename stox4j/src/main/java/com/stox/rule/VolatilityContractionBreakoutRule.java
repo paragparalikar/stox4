@@ -19,7 +19,7 @@ public class VolatilityContractionBreakoutRule extends AbstractRule {
 	@Data
 	public static class VolatilityContractionBreakoutRuleConfig implements ScreenerConfig {
 		private double minValue = 0.5;
-		private int barCount = 34;
+		private int barCount = 55;
 		private int breakoutBarCount = 5;
 		private double volumeMultiple = 5;
 		private double spreadMultiple = 5;

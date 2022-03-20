@@ -23,13 +23,12 @@ public class Main {
 		
 		// Variable configs - permutations and combinations of these
 		final LiquidityConfig liquidityConfig = mlContext.getLiquidityConfig();
-		final BuyTradeClassConfig buyTradeClassConfig = mlContext.getClassIndicatorConfig();
 		final BuyTradeSuccessConfig buyTradeSuccessConfig = mlContext.getBuyTradeSuccessConfig();
 		final VolatilityContractionBreakoutRuleConfig ruleConfig = new VolatilityContractionBreakoutRuleConfig();
 		
 		final Path path = mlContext.getAppContext().getHome().resolve(screener.toString() + " - " + ruleConfig.getBarCount() + "-test.csv");
-		mlContext.getScreenerDataGenerator().generate(liquidityConfig, buyTradeClassConfig, 
-				buyTradeSuccessConfig, featureExtractor, ruleConfig, screener, path);
+		mlContext.getScreenerDataGenerator().generate(liquidityConfig, buyTradeSuccessConfig, 
+				featureExtractor, ruleConfig, screener, path);
 	}
 	
 }

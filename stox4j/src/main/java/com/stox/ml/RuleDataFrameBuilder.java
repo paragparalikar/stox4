@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.ta4j.core.BarSeries;
-import org.ta4j.core.Indicator;
 import org.ta4j.core.Rule;
 
 import com.stox.ml.domain.Row;
@@ -21,7 +20,6 @@ public class RuleDataFrameBuilder {
 			Rule rule, 
 			Rule liquidityRule,
 			Rule classificationRule,
-			Indicator<Integer> classIndicator, 
 			BarSeries barSeries) {
 		final List<Row> rows = new LinkedList<>();
 		for(int index = barCount; index < barSeries.getBarCount() - barCount; index++) {

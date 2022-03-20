@@ -2,77 +2,49 @@ package com.stox.ml.feature;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.Indicator;
 import org.ta4j.core.indicators.SMAIndicator;
-import org.ta4j.core.indicators.helpers.ClosePriceIndicator;
-import org.ta4j.core.indicators.helpers.HighPriceIndicator;
-import org.ta4j.core.indicators.helpers.TRIndicator;
 import org.ta4j.core.indicators.helpers.VolumeIndicator;
-import org.ta4j.core.indicators.statistics.StandardDeviationIndicator;
 import org.ta4j.core.num.Num;
 
+import com.stox.common.util.Maths;
 import com.stox.indicator.CandleBodyIndicator;
 import com.stox.indicator.PriceSpreadIndicator;
+import com.stox.indicator.VolatilityContractionIndicator;
 
 public class VolatilityContractionFeatureExtractor implements BarSeriesFeatureExtractor {
-
-	private final Function<BarSeries, Indicator<Num>> closePriceIndicatorFunction = ClosePriceIndicator::new;	
-	private final Function<BarSeries, Indicator<Num>> highPriceIndicatorFunction = HighPriceIndicator::new;
-	private final Function<BarSeries, Indicator<Num>> volumeIndicatorFunction = VolumeIndicator::new;
-	private final Function<BarSeries, Indicator<Num>> priceSpreadIndicatorFunction = PriceSpreadIndicator::new;
-	private final Function<BarSeries, Indicator<Num>> candleBodyIndicatorFunction = CandleBodyIndicator::new;
-	private final Function<BarSeries, Indicator<Num>> trueRangeIndicatorFunction = TRIndicator::new;
-	private final Function<BarSeries, Indicator<Num>> avgVolumeIndicatorFunction = getAverageIndicatorFunction(volumeIndicatorFunction);
-	private final Function<BarSeries, Indicator<Num>> avgPriceSpreadIndicatorFunction = getAverageIndicatorFunction(priceSpreadIndicatorFunction);
-	private final Function<BarSeries, Indicator<Num>> avgCandleBodyIndicatorFunction = getAverageIndicatorFunction(candleBodyIndicatorFunction);
-	private final Function<BarSeries, Indicator<Num>> avgTrueRangeIndicatorFunction = getAverageIndicatorFunction(trueRangeIndicatorFunction);
 	
 	@Override
 	public List<Double> extract(int index, int barCount, BarSeries barSeries) {
 		if(index < 2 * barCount + 1 || index >= barSeries.getBarCount()) return null;
 		final List<Double> features = new ArrayList<>();
-		extract(index, barCount, barSeries, features);
-		extract(index - 1, barCount, barSeries, features);
+		
+		final Indicator<Num> volumeIndicator = new VolumeIndicator(barSeries);
+		final Indicator<Num> bodyIndicator = new CandleBodyIndicator(barSeries);
+		final Indicator<Num> spreadIndicator = new PriceSpreadIndicator(barSeries);
+		final Indicator<Num> averageVolumeIndicator = new SMAIndicator(volumeIndicator, 5);
+		final Indicator<Num> averageBodyIndicator = new SMAIndicator(bodyIndicator, 5);
+		final Indicator<Num> averageSpreadIndicator = new SMAIndicator(spreadIndicator, 5);
+		
+		features.add(volumeIndicator.getValue(index).dividedBy(volumeIndicator.getValue(index - 1)).doubleValue());
+		features.add(bodyIndicator.getValue(index).dividedBy(bodyIndicator.getValue(index - 1)).doubleValue());
+		features.add(spreadIndicator.getValue(index).dividedBy(spreadIndicator.getValue(index - 1)).doubleValue());
+		features.add(volumeIndicator.getValue(index).dividedBy(averageVolumeIndicator.getValue(index - 1)).doubleValue());
+		features.add(bodyIndicator.getValue(index).dividedBy(averageBodyIndicator.getValue(index - 1)).doubleValue());
+		features.add(spreadIndicator.getValue(index).dividedBy(averageSpreadIndicator.getValue(index - 1)).doubleValue());
+		
+		double sum = 0;
+		for(int fib : Maths.fib(5, barCount)) {
+			final Indicator<Num> volatilityContractionIndicator = new VolatilityContractionIndicator(barSeries, fib);
+			final double value = volatilityContractionIndicator.getValue(index - 1).doubleValue();
+			features.add(value);
+			sum += value;
+		}
+		features.add(sum);
+		
 		return features;
-	}
-	
-	private void extract(int index, int barCount, BarSeries barSeries, List<Double> features) {
-		final Function<BarSeries, Indicator<Num>> standardDeviationIndicatorFunction = 
-				series -> new StandardDeviationIndicator(new ClosePriceIndicator(barSeries), barCount);
-		
-		features.addAll(extractStochFeatures(index, barCount, barSeries, closePriceIndicatorFunction));
-		features.addAll(extractStochFeatures(index, barCount, barSeries, highPriceIndicatorFunction));
-		features.addAll(extractStochFeatures(index, barCount, barSeries, volumeIndicatorFunction));
-		features.addAll(extractStochFeatures(index, barCount, barSeries, priceSpreadIndicatorFunction));
-		features.addAll(extractStochFeatures(index, barCount, barSeries, candleBodyIndicatorFunction));
-		features.addAll(extractStochFeatures(index, barCount, barSeries, trueRangeIndicatorFunction));
-		features.addAll(extractStochFeatures(index, barCount, barSeries, avgVolumeIndicatorFunction));
-		features.addAll(extractStochFeatures(index, barCount, barSeries, avgPriceSpreadIndicatorFunction));
-		features.addAll(extractStochFeatures(index, barCount, barSeries, avgCandleBodyIndicatorFunction));
-		features.addAll(extractStochFeatures(index, barCount, barSeries, avgTrueRangeIndicatorFunction));
-		features.addAll(extractStochFeatures(index, barCount, barSeries, standardDeviationIndicatorFunction));
-		
-		features.addAll(extractRatioFeatures(index, barCount, barSeries, volumeIndicatorFunction));
-		features.addAll(extractRatioFeatures(index, barCount, barSeries, priceSpreadIndicatorFunction));
-		features.addAll(extractRatioFeatures(index, barCount, barSeries, candleBodyIndicatorFunction));
-		features.addAll(extractRatioFeatures(index, barCount, barSeries, trueRangeIndicatorFunction));
-		features.addAll(extractRatioFeatures(index, barCount, barSeries, standardDeviationIndicatorFunction));
-	}
-	
-	private Function<BarSeries, Indicator<Num>> getAverageIndicatorFunction (
-			Function<BarSeries, Indicator<Num>> indicatorFunction){
-		return series -> new SMAIndicator(indicatorFunction.apply(series), 5);
-	}
-	
-	private List<Double> extractStochFeatures(int index, int barCount, BarSeries barSeries, Function<BarSeries, Indicator<Num>> function){
-		return new FibonacciStochasticFeatureExtractor(function).extract(index, barCount, barSeries);
-	}
-	
-	private List<Double> extractRatioFeatures(int index, int barCount, BarSeries barSeries, Function<BarSeries, Indicator<Num>> function){
-		return new RatioWithSmaFeatureExtractor(function).extract(index, barCount, barSeries);
 	}
 	
 }

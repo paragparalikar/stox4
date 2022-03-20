@@ -40,12 +40,10 @@ public class ScreenerDataFrameBuilder {
 	private final ScripService scripService;
 	private final LiquidityConfig liquidityConfig;
 	private final LiquidityScreener liquidityScreener;
-	private final BuyTradeClassConfig classIndicatorConfig;
 	private final BarSeriesNormalizer barSeriesNormalizer;
 	private final RuleDataFrameBuilder ruleDataFrameBuilder;
 	private final BuyTradeSuccessConfig buyTradeSuccessConfig;
 	private final BuyTradeSuccessScreener buyTradeSuccessScreener;
-	private final BuyTradeClassIndicatorProvider classIndicatorProvider;
 	
 	@SneakyThrows
 	public <T extends ScreenerConfig> List<Row> build(T config, Screener<T> screener) {
@@ -75,9 +73,8 @@ public class ScreenerDataFrameBuilder {
 			final Rule rule = screener.createRule(config, barSeries);
 			final Rule liquidityRule = liquidityScreener.createRule(liquidityConfig, barSeries);
 			final Rule classificationRule = buyTradeSuccessScreener.createRule(buyTradeSuccessConfig, barSeries);
-			final Indicator<Integer> classIndicator = classIndicatorProvider.createIndicator(classIndicatorConfig, barSeries);
 			final BarSeries normalizedBarSeries = barSeriesNormalizer.normalize(barSeries);
-			return ruleDataFrameBuilder.build(barCount, rule, liquidityRule, classificationRule, classIndicator, normalizedBarSeries);
+			return ruleDataFrameBuilder.build(barCount, rule, liquidityRule, classificationRule, normalizedBarSeries);
 		}
 		return Collections.emptyList();
 	}

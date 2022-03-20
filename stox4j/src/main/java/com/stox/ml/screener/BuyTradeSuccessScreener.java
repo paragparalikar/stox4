@@ -15,9 +15,9 @@ public class BuyTradeSuccessScreener implements Screener<BuyTradeSuccessConfig> 
 
 	@Data
 	public static class BuyTradeSuccessConfig implements ScreenerConfig {
-		private int barCount = 34;
-		private double minGainPercentage = 20;
-		private double maxLossPercentage = 10;
+		private int barCount = 13;
+		private double minGainPercentage = 13;
+		private double maxLossPercentage = 5;
 	}
 
 	@Override

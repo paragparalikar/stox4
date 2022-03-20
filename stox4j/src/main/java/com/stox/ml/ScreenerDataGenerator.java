@@ -8,7 +8,6 @@ import java.util.List;
 import com.stox.StoxApplicationContext;
 import com.stox.ml.domain.Row;
 import com.stox.ml.feature.BarSeriesFeatureExtractor;
-import com.stox.ml.indicator.BuyTradeClassIndicatorProvider.BuyTradeClassConfig;
 import com.stox.ml.screener.BuyTradeSuccessScreener.BuyTradeSuccessConfig;
 import com.stox.ml.screener.LiquidityScreener.LiquidityConfig;
 import com.stox.screener.Screener;
@@ -26,7 +25,6 @@ public class ScreenerDataGenerator {
 	@SneakyThrows
 	public <T extends ScreenerConfig> void generate(
 			LiquidityConfig liquidityConfig, 
-			BuyTradeClassConfig buyTradeClassConfig, 
 			BuyTradeSuccessConfig buyTradeSuccessConfig, 
 			BarSeriesFeatureExtractor barSeriesFeatureExtractor,
 			T ruleConfig, Screener<T> screener, Path path) {
@@ -38,8 +36,6 @@ public class ScreenerDataGenerator {
 				.liquidityScreener(mlContext.getLiquidityScreener())
 				.barSeriesNormalizer(mlContext.getBarSeriesNormalizer())
 				.ruleDataFrameBuilder(new RuleDataFrameBuilder(barSeriesFeatureExtractor))
-				.classIndicatorConfig(buyTradeClassConfig)
-				.classIndicatorProvider(mlContext.getClassIndicatorProvider())
 				.buyTradeSuccessConfig(buyTradeSuccessConfig)
 				.buyTradeSuccessScreener(mlContext.getBuyTradeSuccessScreener())
 				.build()

@@ -15,7 +15,7 @@ public class LiquidityScreener implements Screener<LiquidityConfig> {
 
 	@Data
 	public static class LiquidityConfig implements ScreenerConfig {
-		private int barCount = 34;
+		private int barCount = 55;
 		private double minAmount = 10_00_000;
 	}
 
