@@ -6,17 +6,9 @@ import org.ta4j.core.Rule;
 import com.stox.common.ui.ConfigView;
 import com.stox.common.ui.form.auto.AutoForm;
 import com.stox.rule.VolatilityContractionBreakoutRule;
-import com.stox.screener.VolatilityContractionBreakoutScreener.VolatilityContractionBreakoutConfig;
+import com.stox.rule.VolatilityContractionBreakoutRule.VolatilityContractionBreakoutRuleConfig;
 
-import lombok.Data;
-
-public class VolatilityContractionBreakoutScreener implements Screener<VolatilityContractionBreakoutConfig> {
-
-	@Data
-	public static class VolatilityContractionBreakoutConfig implements ScreenerConfig {
-		private int barCount = 34;
-		private double minValue = 0.9;
-	}
+public class VolatilityContractionBreakoutScreener implements Screener<VolatilityContractionBreakoutRuleConfig> {
 
 	@Override
 	public String toString() {
@@ -24,18 +16,18 @@ public class VolatilityContractionBreakoutScreener implements Screener<Volatilit
 	}
 	
 	@Override
-	public VolatilityContractionBreakoutConfig createConfig() {
-		return new VolatilityContractionBreakoutConfig();
+	public VolatilityContractionBreakoutRuleConfig createConfig() {
+		return new VolatilityContractionBreakoutRuleConfig();
 	}
 
 	@Override
-	public ConfigView createConfigView(VolatilityContractionBreakoutConfig config) {
+	public ConfigView createConfigView(VolatilityContractionBreakoutRuleConfig config) {
 		return new AutoForm(config);
 	}
 
 	@Override
-	public Rule createRule(VolatilityContractionBreakoutConfig config, BarSeries barSeries) {
-		return new VolatilityContractionBreakoutRule(barSeries, config.getBarCount(), config.getMinValue());
+	public Rule createRule(VolatilityContractionBreakoutRuleConfig config, BarSeries barSeries) {
+		return new VolatilityContractionBreakoutRule(barSeries, config.getBarCount(), config);
 	}
 	
 }

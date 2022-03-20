@@ -7,8 +7,8 @@ import com.stox.ml.feature.VolatilityContractionFeatureExtractor;
 import com.stox.ml.indicator.BuyTradeClassIndicatorProvider.BuyTradeClassConfig;
 import com.stox.ml.screener.BuyTradeSuccessScreener.BuyTradeSuccessConfig;
 import com.stox.ml.screener.LiquidityScreener.LiquidityConfig;
+import com.stox.rule.VolatilityContractionBreakoutRule.VolatilityContractionBreakoutRuleConfig;
 import com.stox.screener.VolatilityContractionBreakoutScreener;
-import com.stox.screener.VolatilityContractionBreakoutScreener.VolatilityContractionBreakoutConfig;
 
 public class Main {
 
@@ -25,7 +25,7 @@ public class Main {
 		final LiquidityConfig liquidityConfig = mlContext.getLiquidityConfig();
 		final BuyTradeClassConfig buyTradeClassConfig = mlContext.getClassIndicatorConfig();
 		final BuyTradeSuccessConfig buyTradeSuccessConfig = mlContext.getBuyTradeSuccessConfig();
-		final VolatilityContractionBreakoutConfig ruleConfig = new VolatilityContractionBreakoutConfig();
+		final VolatilityContractionBreakoutRuleConfig ruleConfig = new VolatilityContractionBreakoutRuleConfig();
 		
 		final Path path = mlContext.getAppContext().getHome().resolve(screener.toString() + " - " + ruleConfig.getBarCount() + "-test.csv");
 		mlContext.getScreenerDataGenerator().generate(liquidityConfig, buyTradeClassConfig, 

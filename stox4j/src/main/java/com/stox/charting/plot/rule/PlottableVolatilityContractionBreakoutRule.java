@@ -4,19 +4,11 @@ import org.ta4j.core.BarSeries;
 import org.ta4j.core.Indicator;
 import org.ta4j.core.Rule;
 
-import com.stox.charting.plot.rule.PlottableVolatilityContractionBreakoutRule.VolatilityContractionBreakoutRuleConfig;
 import com.stox.indicator.RuleIndicator;
 import com.stox.rule.VolatilityContractionBreakoutRule;
-
-import lombok.Data;
+import com.stox.rule.VolatilityContractionBreakoutRule.VolatilityContractionBreakoutRuleConfig;
 
 public class PlottableVolatilityContractionBreakoutRule extends AbstractPlottableRule<VolatilityContractionBreakoutRuleConfig> {
-
-	@Data
-	public static class VolatilityContractionBreakoutRuleConfig {
-		private int barCount = 34;
-		private double minValue = 0.9;
-	}
 	
 	@Override
 	public String toString() {
@@ -30,7 +22,7 @@ public class PlottableVolatilityContractionBreakoutRule extends AbstractPlottabl
 
 	@Override
 	public Indicator<Boolean> createIndicator(VolatilityContractionBreakoutRuleConfig config, BarSeries barSeries) {
-		final Rule rule = new VolatilityContractionBreakoutRule(barSeries, config.getBarCount(), config.getMinValue());
+		final Rule rule = new VolatilityContractionBreakoutRule(barSeries, config.getBarCount(), config);
 		return new RuleIndicator(rule, barSeries);
 	}
 	

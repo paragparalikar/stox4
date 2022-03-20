@@ -1,37 +1,41 @@
 package com.stox.indicator;
 
 import org.ta4j.core.BarSeries;
-import org.ta4j.core.Indicator;
-import org.ta4j.core.indicators.ATRIndicator;
 import org.ta4j.core.indicators.CachedIndicator;
 import org.ta4j.core.indicators.ChopIndicator;
+import org.ta4j.core.indicators.SMAIndicator;
+import org.ta4j.core.indicators.helpers.ClosePriceIndicator;
 import org.ta4j.core.indicators.helpers.TypicalPriceIndicator;
 import org.ta4j.core.indicators.statistics.StandardDeviationIndicator;
 import org.ta4j.core.num.Num;
 
 public class VolatilityContractionIndicator extends CachedIndicator<Num> {
 
-	private final Indicator<Num> atrIndicator;
-	private final Indicator<Num> chopIndicator;
-	private final Indicator<Num> stdDevIndicator;
+	private final int barCount;
 	
 	public VolatilityContractionIndicator(BarSeries series, int barCount) {
 		super(series);
-		this.atrIndicator = new ATRIndicator(series, barCount);
-		this.chopIndicator = new ChopIndicator(series, barCount, 100);
-		this.stdDevIndicator = new StandardDeviationIndicator(new TypicalPriceIndicator(series), barCount);
+		this.barCount = barCount;
 	}
 
 	@Override
 	protected Num calculate(int index) {
-		final Num chop = chopIndicator.getValue(index);
-		if(null == chop) return null;
-		final Num stdDev = stdDevIndicator.getValue(index);
-		if(null == stdDev) return null;
-		final Num atr = atrIndicator.getValue(index);
-		if(null == atr) return null;
-		
-		return chop.dividedBy(stdDev.multipliedBy(atr));
+		//final List<Integer> fibs = Maths.fib(5, barCount);
+		return calculateInternal(index, barCount);
+	}
+	
+	private Num calculateInternal(int index, int barCount) {
+		final BarSeries series = getBarSeries();
+		final PlusIndicator plusIndicator = new PlusIndicator(series,
+				new ClosePriceIndicator(series), 
+				new CandleBodyIndicator(series), 
+				new PriceSpreadIndicator(series), 
+				new ChangeIndicator(new ClosePriceIndicator(series), 1), 
+				new StandardDeviationIndicator(new TypicalPriceIndicator(series), barCount));
+		final SMAIndicator smaIndicator = new SMAIndicator(plusIndicator, 5);
+		final int scaleUpTo = series.getBar(index).getClosePrice().intValue();
+		final Num chop = new ChopIndicator(series, barCount, scaleUpTo).getValue(index);
+		return chop.dividedBy(smaIndicator.getValue(index));
 	}
 
 }

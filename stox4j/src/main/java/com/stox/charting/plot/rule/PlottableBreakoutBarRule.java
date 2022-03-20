@@ -31,7 +31,7 @@ public class PlottableBreakoutBarRule implements Plottable<Boolean, SimpleBreako
 
 	@Override
 	public Indicator<Boolean> createIndicator(SimpleBreakoutBarRuleConfig config, BarSeries barSeries) {
-		return new RuleIndicator(new SimpleBreakoutBarRule(barSeries), barSeries);
+		return new RuleIndicator(new SimpleBreakoutBarRule(barSeries, config), barSeries);
 	}
 
 	@Override
