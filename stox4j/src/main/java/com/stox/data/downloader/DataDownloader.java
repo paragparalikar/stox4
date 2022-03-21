@@ -59,7 +59,7 @@ public class DataDownloader {
 				try { barService.save(scrip.getIsin(), bar); } finally { latch.countDown(); }
 			}));
 			latch.await();
-			barService.writeLastDownloadDate(lastDownloadDate);
+			if(!data.isEmpty()) barService.writeLastDownloadDate(lastDownloadDate);
 			eventBus.post(MessageEvent.builder()
 					.icon(Icon.DOWNLOAD)
 					.style("success")

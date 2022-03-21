@@ -10,19 +10,16 @@ import java.util.concurrent.TimeUnit;
 import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeries;
-import org.ta4j.core.Indicator;
 import org.ta4j.core.Rule;
 
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.scrip.ScripService;
 import com.stox.ml.domain.Row;
-import com.stox.ml.indicator.BuyTradeClassIndicatorProvider;
-import com.stox.ml.indicator.BuyTradeClassIndicatorProvider.BuyTradeClassConfig;
 import com.stox.ml.screener.BuyTradeSuccessScreener;
 import com.stox.ml.screener.BuyTradeSuccessScreener.BuyTradeSuccessConfig;
 import com.stox.ml.screener.LiquidityScreener;
-import com.stox.ml.screener.LiquidityScreener.LiquidityConfig;
+import com.stox.rule.LiquidityRule.LiquidityConfig;
 import com.stox.screener.Screener;
 import com.stox.screener.ScreenerConfig;
 
@@ -58,7 +55,7 @@ public class ScreenerDataFrameBuilder {
 				rows.addAll(scripRows);
 				log.info("Built dataframe for scrip : {}, tuples : {}", scrip.getName(), scripRows.size());
 			});
-			if(100 <= count++) break;
+			//if(300 <= count++) break;
 		}
 		executorService.shutdown();
 		executorService.awaitTermination(10, TimeUnit.MINUTES);
@@ -73,8 +70,8 @@ public class ScreenerDataFrameBuilder {
 			final Rule rule = screener.createRule(config, barSeries);
 			final Rule liquidityRule = liquidityScreener.createRule(liquidityConfig, barSeries);
 			final Rule classificationRule = buyTradeSuccessScreener.createRule(buyTradeSuccessConfig, barSeries);
-			final BarSeries normalizedBarSeries = barSeriesNormalizer.normalize(barSeries);
-			return ruleDataFrameBuilder.build(barCount, rule, liquidityRule, classificationRule, normalizedBarSeries);
+			//final BarSeries normalizedBarSeries = barSeriesNormalizer.normalize(barSeries);
+			return ruleDataFrameBuilder.build(barCount, rule, liquidityRule, classificationRule, barSeries);
 		}
 		return Collections.emptyList();
 	}

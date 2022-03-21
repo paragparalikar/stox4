@@ -4,20 +4,11 @@ import org.ta4j.core.BarSeries;
 import org.ta4j.core.Rule;
 
 import com.stox.common.ui.ConfigView;
-import com.stox.ml.screener.LiquidityScreener.LiquidityConfig;
 import com.stox.rule.LiquidityRule;
+import com.stox.rule.LiquidityRule.LiquidityConfig;
 import com.stox.screener.Screener;
-import com.stox.screener.ScreenerConfig;
-
-import lombok.Data;
 
 public class LiquidityScreener implements Screener<LiquidityConfig> {
-
-	@Data
-	public static class LiquidityConfig implements ScreenerConfig {
-		private int barCount = 55;
-		private double minAmount = 10_00_000;
-	}
 
 	@Override
 	public LiquidityConfig createConfig() {
@@ -31,7 +22,7 @@ public class LiquidityScreener implements Screener<LiquidityConfig> {
 
 	@Override
 	public Rule createRule(LiquidityConfig config, BarSeries barSeries) {
-		return new LiquidityRule(barSeries, config.getBarCount(), config.getMinAmount());
+		return new LiquidityRule(barSeries, config);
 	}
 	
 }

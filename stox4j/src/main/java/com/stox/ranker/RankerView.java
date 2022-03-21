@@ -103,10 +103,12 @@ public class RankerView extends BorderPane {
 			final BarSeries barSeries = new BaseBarSeries(bars);
 			final Indicator<Num> indicator = ranker.createIndicator(config, barSeries);
 			final Num rankValue = indicator.getValue(barSeries.getBarCount() - 1);
-			Platform.runLater(() -> {
-				listView.getItems().add(new Rank(rankValue, scrip));
-				FXCollections.sort(listView.getItems(), Comparator.comparing(Rank::getValue));
-			});
+			if(null != rankValue && !rankValue.isNaN()) {
+				Platform.runLater(() -> {
+					listView.getItems().add(new Rank(rankValue, scrip));
+					FXCollections.sort(listView.getItems(), Comparator.comparing(Rank::getValue));
+				});
+			}
 		}
 	}
 }

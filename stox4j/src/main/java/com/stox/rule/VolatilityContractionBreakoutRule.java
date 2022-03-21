@@ -21,12 +21,11 @@ public class VolatilityContractionBreakoutRule extends AbstractRule {
 		private double minValue = 0.5;
 		private int barCount = 55;
 		private int breakoutBarCount = 5;
-		private double volumeMultiple = 5;
 		private double spreadMultiple = 5;
 		private double highDiffATRMultiple = 0.5;
 		
 		public SimpleBreakoutBarRuleConfig toBreakoutBarConfig() {
-			return new SimpleBreakoutBarRuleConfig(breakoutBarCount, volumeMultiple, spreadMultiple, highDiffATRMultiple);
+			return new SimpleBreakoutBarRuleConfig(breakoutBarCount, spreadMultiple, highDiffATRMultiple);
 		}
 	}
 

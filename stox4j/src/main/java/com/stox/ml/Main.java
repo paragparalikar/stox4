@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import com.stox.ml.feature.VolatilityContractionFeatureExtractor;
-import com.stox.ml.indicator.BuyTradeClassIndicatorProvider.BuyTradeClassConfig;
 import com.stox.ml.screener.BuyTradeSuccessScreener.BuyTradeSuccessConfig;
-import com.stox.ml.screener.LiquidityScreener.LiquidityConfig;
+import com.stox.rule.LiquidityRule.LiquidityConfig;
 import com.stox.rule.VolatilityContractionBreakoutRule.VolatilityContractionBreakoutRuleConfig;
 import com.stox.screener.VolatilityContractionBreakoutScreener;
 
@@ -22,11 +21,15 @@ public class Main {
 		final VolatilityContractionFeatureExtractor featureExtractor = new VolatilityContractionFeatureExtractor();
 		
 		// Variable configs - permutations and combinations of these
+		final int barCount = 34;
 		final LiquidityConfig liquidityConfig = mlContext.getLiquidityConfig();
+		liquidityConfig.setBarCount(barCount);
 		final BuyTradeSuccessConfig buyTradeSuccessConfig = mlContext.getBuyTradeSuccessConfig();
 		final VolatilityContractionBreakoutRuleConfig ruleConfig = new VolatilityContractionBreakoutRuleConfig();
+		ruleConfig.setBarCount(barCount);
 		
-		final Path path = mlContext.getAppContext().getHome().resolve(screener.toString() + " - " + ruleConfig.getBarCount() + "-test.csv");
+		
+		final Path path = mlContext.getAppContext().getHome().resolve(screener.toString() + " - " + ruleConfig.getBarCount() + ".csv");
 		mlContext.getScreenerDataGenerator().generate(liquidityConfig, buyTradeSuccessConfig, 
 				featureExtractor, ruleConfig, screener, path);
 	}

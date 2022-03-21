@@ -1,5 +1,7 @@
 package com.stox.charting.tools;
 
+import java.nio.file.Path;
+
 import org.ta4j.core.BarSeries;
 
 import com.stox.charting.ChartingContext;
@@ -10,6 +12,7 @@ import com.stox.charting.plot.rule.PlottableDojiRule;
 import com.stox.charting.plot.rule.PlottableLowPivoteRule;
 import com.stox.charting.plot.rule.PlottableReaccumulationRule;
 import com.stox.charting.plot.rule.PlottableSpringRule;
+import com.stox.charting.plot.rule.PlottableVolatilityContractionBreakoutML34Rule;
 import com.stox.charting.plot.rule.PlottableVolatilityContractionBreakoutRule;
 import com.stox.charting.plot.rule.RulePlot;
 import com.stox.common.scrip.Scrip;
@@ -29,7 +32,7 @@ public class RuleButton extends Button implements EventHandler<ActionEvent> {
 	private final ChartingView chartingView;
 	private final ListView<Plottable<Boolean, ?, Node>> listView = new ListView<>();
 	
-	public RuleButton(ChartingView chartingView, ChartingContext context) {
+	public RuleButton(ChartingView chartingView, ChartingContext context, Path home) {
 		super(Icon.FILTER);
 		getStyleClass().add("icon");
 		setOnAction(this);
@@ -41,6 +44,7 @@ public class RuleButton extends Button implements EventHandler<ActionEvent> {
 		listView.getItems().add(new PlottableBreakoutBarRule());
 		listView.getItems().add(new PlottableReaccumulationRule());
 		listView.getItems().add(new PlottableVolatilityContractionBreakoutRule());
+		listView.getItems().add(new PlottableVolatilityContractionBreakoutML34Rule(home));
 	}
 
 	@Override

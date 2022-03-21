@@ -4,7 +4,7 @@ import com.stox.StoxApplicationContext;
 import com.stox.ml.screener.BuyTradeSuccessScreener;
 import com.stox.ml.screener.BuyTradeSuccessScreener.BuyTradeSuccessConfig;
 import com.stox.ml.screener.LiquidityScreener;
-import com.stox.ml.screener.LiquidityScreener.LiquidityConfig;
+import com.stox.rule.LiquidityRule.LiquidityConfig;
 
 import lombok.Getter;
 

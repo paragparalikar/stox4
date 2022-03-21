@@ -1,5 +1,6 @@
 package com.stox.charting;
 
+import java.nio.file.Path;
 import java.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
@@ -61,7 +62,7 @@ public class ChartingView extends BorderPane {
 	private final StackPane stackPane = new StackPane(verticalGrid, splitPane, controlButtons, crosshair);
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
-	public ChartingView(EventBus eventBus, BarService barService, ScripService scripService) {
+	public ChartingView(EventBus eventBus, BarService barService, ScripService scripService, Path home) {
 		this.scripService = scripService;
 		add(priceChart = new Chart(this));
 		new PlottableVolumeIndicator().add(this);
@@ -77,7 +78,7 @@ public class ChartingView extends BorderPane {
 		splitPane.setOrientation(Orientation.VERTICAL);
 		addEventHandler(PanRequestEvent.TYPE, this::pan);
 		addEventHandler(ZoomRequestEvent.TYPE, this::zoom);
-		toolBar.getItems().addAll(new RuleButton(this, context), new IndicatorButton(this, context));
+		toolBar.getItems().addAll(new RuleButton(this, context, home), new IndicatorButton(this, context));
 		context.getBarSeriesProperty().addListener((o,old,value) -> redraw());
 		crosshair.visibleProperty().bind(new BooleanBinding() {
 			{bind(context.getBarSeriesProperty());}

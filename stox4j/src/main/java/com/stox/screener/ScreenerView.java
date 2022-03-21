@@ -38,6 +38,7 @@ public class ScreenerView extends BorderPane {
 	private final ListView<Scrip> listView = new ListView<>();
 	private final Button actionButton = new Button(Icon.PLAY);
 	private final ComboBox<Screener<?>> comboBox = new ComboBox<>(FXCollections.observableArrayList(
+			new BreakoutBarScreener(),
 			new VolatilityContractionBreakoutScreener()));
 	private final HBox titleBar = new HBox(comboBox, actionButton);
 
@@ -92,7 +93,7 @@ public class ScreenerView extends BorderPane {
 	}
 
 	private void screen(Scrip scrip, Screener screener, ScreenerConfig config) {
-		final int barCount = config.getBarCount();
+		final int barCount = config.getBarCount() * 2 + 1;
 		final List<Bar> bars = barService.find(scrip.getIsin(), barCount);
 		if(bars.size() >= barCount) {
 			final BarSeries barSeries = new BaseBarSeries(bars);

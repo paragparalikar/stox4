@@ -1,15 +1,14 @@
 package com.stox.ml;
 
-import java.io.BufferedWriter;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
 import com.stox.StoxApplicationContext;
 import com.stox.ml.domain.Row;
+import com.stox.ml.domain.Table;
 import com.stox.ml.feature.BarSeriesFeatureExtractor;
 import com.stox.ml.screener.BuyTradeSuccessScreener.BuyTradeSuccessConfig;
-import com.stox.ml.screener.LiquidityScreener.LiquidityConfig;
+import com.stox.rule.LiquidityRule.LiquidityConfig;
 import com.stox.screener.Screener;
 import com.stox.screener.ScreenerConfig;
 
@@ -48,22 +47,11 @@ public class ScreenerDataGenerator {
 					.count()) {
 				throw new IllegalArgumentException("Uneven features size");
 			}
-			writeCsv(path, rows);
+			
+			final Table table = new Table(rows);
+			table.writeCsv(path);
 		} else {
 			throw new Exception("Could not extract any rows");
-		}
-	}
-	
-	@SneakyThrows
-	private void writeCsv(Path path, List<Row> rows) {
-		Files.createDirectories(path.getParent());
-		try (BufferedWriter writer = Files.newBufferedWriter(path)){
-			writer.write(rows.get(0).getHeaderCsv());
-			writer.newLine();
-			for(Row row : rows) {
-				writer.write(row.toCsv());
-				writer.newLine();
-			}
 		}
 	}
 	
