@@ -8,8 +8,12 @@ public class ChangeIndicator extends CachedIndicator<Num> {
 	
 	private final int barCount;
 	private final Indicator<Num> indicator;
+	
+	public ChangeIndicator(Indicator<Num> indicator) {
+		this(indicator, 1);
+	}
 
-	protected ChangeIndicator(Indicator<Num> indicator, int barCount) {
+	public ChangeIndicator(Indicator<Num> indicator, int barCount) {
 		super(indicator.getBarSeries());
 		this.barCount = barCount;
 		this.indicator = indicator;

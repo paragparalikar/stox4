@@ -16,6 +16,7 @@ import com.stox.charting.unit.parent.UnitParent;
 import com.stox.common.ui.ConfigView;
 import com.stox.common.util.Maths;
 
+import javafx.application.Platform;
 import javafx.scene.Group;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,6 +55,7 @@ public class Plot<T, C, N> extends Group {
 			getInfo().setName(null);
 			setIndicator(new ConstantIndicator<>(barSeries, null));
 		}
+		Platform.runLater(getChart()::redraw);
 	}
 	
 	public void setChart(Chart chart) {
@@ -61,6 +63,8 @@ public class Plot<T, C, N> extends Group {
 		chart.getChartingView().getContext().getBarSeriesProperty().addListener((o,old,value) -> reload());
 		chart.getChartingView().getCrosshair().getVerticalLine().endXProperty().addListener((o,old,value) -> {
 			final int index = chart.getChartingView().getXAxis().getIndex(value.doubleValue());
+			System.out.println("indicaor is null " + (null == indicator));
+			System.out.println("indicaor value is null " + (null == indicator.getValue(index)));
 			getInfo().setValue(0 <= index && index < chart.getChartingView().getContext().getBarCount() ? indicator.getValue(index) : null);
 		});
 	}

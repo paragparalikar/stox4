@@ -24,7 +24,7 @@ import lombok.Getter;
 
 @Getter
 public class Chart extends BorderPane {
-	private static final Color[] COLORS = {Color.BLUEVIOLET, Color.BROWN, Color.AQUA};
+	private static final Color[] COLORS = {Color.BLUEVIOLET, Color.BROWN, Color.DARKBLUE, Color.DARKCYAN, Color.BLACK, Color.DARKGREEN};
 	
 	
 	private final YAxis yAxis = new YAxis();

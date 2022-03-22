@@ -26,8 +26,8 @@ public class SimpleBreakoutBarRule extends AbstractRule {
 	@AllArgsConstructor
 	public static class SimpleBreakoutBarRuleConfig implements ScreenerConfig {
 		private int barCount = 5;
-		private double spreadMultiple = 5;
-		private double highDiffATRMultiple = 0.5;
+		private double maxSpreadMultiple = 5;
+		private double maxHighDiffATRMultiple = 0.5;
 	}
 
 	@NonNull private final BarSeries barSeries;
@@ -60,13 +60,13 @@ public class SimpleBreakoutBarRule extends AbstractRule {
 		final Indicator<Num> priceSpreadIndicator = new PriceSpreadIndicator(barSeries);
 		final Indicator<Num> spreadSMAIndicator = new SMAIndicator(priceSpreadIndicator, barCount);
 		final Num avgSpread = spreadSMAIndicator.getValue(index - 1);
-		final Num spreadMultiple = barSeries.numOf(config.getSpreadMultiple());
+		final Num spreadMultiple = barSeries.numOf(config.getMaxSpreadMultiple());
 		if(spread.isGreaterThan(avgSpread.multipliedBy(spreadMultiple))) return false;
 		
 		// Current bar high should be higher than previous bar by amount more than multiple times ATR of last n bars
 		final Indicator<Num> atrIndicator = new ATRIndicator(barSeries, barCount);
 		final Num atrValue = atrIndicator.getValue(index - 1);
-		final Num atrMultiple = barSeries.numOf(config.getHighDiffATRMultiple());
+		final Num atrMultiple = barSeries.numOf(config.getMaxHighDiffATRMultiple());
 		final Num highDiff = bar.getHighPrice().minus(one.getHighPrice());
 		if(highDiff.isLessThan(atrValue.multipliedBy(atrMultiple))) return false;
 		

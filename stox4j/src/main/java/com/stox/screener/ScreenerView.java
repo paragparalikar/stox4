@@ -86,6 +86,7 @@ public class ScreenerView extends BorderPane {
 	
 	@SneakyThrows
 	private void screen(Screener screener, ScreenerConfig config) {
+		listView.getItems().clear();
 		final List<Scrip> scrips = scripService.findAll();
 		final ExecutorService executor = Executors.newWorkStealingPool();
 		for(Scrip scrip : scrips) executor.execute(() -> screen(scrip, screener, config));

@@ -12,7 +12,7 @@ import com.stox.charting.plot.rule.PlottableDojiRule;
 import com.stox.charting.plot.rule.PlottableLowPivoteRule;
 import com.stox.charting.plot.rule.PlottableReaccumulationRule;
 import com.stox.charting.plot.rule.PlottableSpringRule;
-import com.stox.charting.plot.rule.PlottableVolatilityContractionBreakoutML34Rule;
+import com.stox.charting.plot.rule.PlottableTestRule;
 import com.stox.charting.plot.rule.PlottableVolatilityContractionBreakoutRule;
 import com.stox.charting.plot.rule.RulePlot;
 import com.stox.common.scrip.Scrip;
@@ -39,12 +39,12 @@ public class RuleButton extends Button implements EventHandler<ActionEvent> {
 		this.context = context;
 		this.chartingView = chartingView;
 		listView.getItems().add(new PlottableDojiRule());
+		listView.getItems().add(new PlottableTestRule());
 		listView.getItems().add(new PlottableLowPivoteRule());
 		listView.getItems().add(new PlottableSpringRule());
 		listView.getItems().add(new PlottableBreakoutBarRule());
 		listView.getItems().add(new PlottableReaccumulationRule());
 		listView.getItems().add(new PlottableVolatilityContractionBreakoutRule());
-		listView.getItems().add(new PlottableVolatilityContractionBreakoutML34Rule(home));
 	}
 
 	@Override

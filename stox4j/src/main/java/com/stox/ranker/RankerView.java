@@ -22,6 +22,7 @@ import com.stox.common.ui.ConfigView;
 import com.stox.common.ui.Icon;
 import com.stox.common.ui.modal.Modal;
 import com.stox.indicator.VolatilityContractionIndicator;
+import com.stox.screener.ScreenerConfig;
 
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -90,6 +91,7 @@ public class RankerView extends BorderPane {
 	
 	@SneakyThrows
 	private void rank(Ranker ranker, RankerConfig config) {
+		listView.getItems().clear();
 		final List<Scrip> scrips = scripService.findAll();
 		final ExecutorService executor = Executors.newWorkStealingPool();
 		for(Scrip scrip : scrips) executor.execute(() -> rank(scrip, ranker, config));
