@@ -80,11 +80,11 @@ public class XAxis extends StackPane {
 	}
 	
 	public double getX(final int index) {
-		return index * unitWidth + panWidth;
+		return index * unitWidth - unitWidth/2 + panWidth;
 	}
 
 	public int getIndex(final double x) {
-		return (int)Math.ceil((x - panWidth)/unitWidth);
+		return (int)Math.ceil((x - panWidth - unitWidth/2)/unitWidth);
 	}
 
 	public int getEndIndex() {

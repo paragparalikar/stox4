@@ -21,7 +21,7 @@ public class PathUnit implements Unit<Num, PathElement> {
 
 	@Override
 	public void layoutChildren(int index, Num model, UnitParent<PathElement> parent) {
-		lineTo.setX(xAxis.getX(index));
+		lineTo.setX(xAxis.getX(index) + xAxis.getUnitWidth() / 2);
 		lineTo.setY(yAxis.getY(model.doubleValue()));
 		parent.add(lineTo);
 	}

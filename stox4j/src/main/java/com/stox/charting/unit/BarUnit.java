@@ -23,7 +23,7 @@ public class BarUnit implements Unit<Num, Node> {
 	@Override
 	public void layoutChildren(int index, Num model, UnitParent<Node> parent) {
 		final double barWidth = xAxis.getUnitWidth() * 0.8;
-		body.setX(xAxis.getX(index) + 0.1);
+		body.setX(xAxis.getX(index) + xAxis.getUnitWidth() * 0.1);
 		body.setWidth(barWidth);
 		body.setY(yAxis.getY(model.doubleValue()));
 		body.setHeight(yAxis.getY(0));

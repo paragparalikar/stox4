@@ -28,13 +28,15 @@ public class CandleUnit extends Group implements Unit<Bar, Node> {
 		line.getStyleClass().addAll("candle","body");
 		line.strokeProperty().bindBidirectional(body.fillProperty());
 		line.endXProperty().bindBidirectional(line.startXProperty());
-		line.startXProperty().bind(body.xProperty().add(body.widthProperty().divide(2d)));
+		line.startXProperty().bind(body.xProperty()
+				.add(body.widthProperty().divide(2d))
+				.subtract(line.strokeWidthProperty().divide(2)));
 	}
 	
 	@Override
 	public void layoutChildren(int index, Bar bar, UnitParent<Node> parent) {
 		final double barWidth = xAxis.getUnitWidth() * 0.8;
-		body.setX(xAxis.getX(index) + 0.1);
+		body.setX(xAxis.getX(index) + xAxis.getUnitWidth() * 0.1);
 		body.setWidth(barWidth);
 		final double upperY = yAxis.getY(bar.getOpenPrice().max(bar.getClosePrice()).doubleValue());
 		final double lowerY = yAxis.getY(bar.getOpenPrice().min(bar.getClosePrice()).doubleValue());

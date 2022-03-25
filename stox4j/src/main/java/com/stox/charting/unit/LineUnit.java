@@ -20,7 +20,8 @@ public class LineUnit implements Unit<Num, Point2D> {
 	@Override
 	public void layoutChildren(int index, Num model, UnitParent<Point2D> parent) {
 		if(null != model && !model.isNaN()) {
-			parent.add(new Point2D(xAxis.getX(index), yAxis.getY(model.doubleValue())));
+			final double unitWidth = xAxis.getUnitWidth();
+			parent.add(new Point2D(xAxis.getX(index) + unitWidth/2, yAxis.getY(model.doubleValue())));
 		}
 	}
 
