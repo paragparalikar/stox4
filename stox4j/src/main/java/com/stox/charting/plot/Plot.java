@@ -64,9 +64,10 @@ public class Plot<T, C, N> extends Group {
 	public void setChart(Chart chart) {
 		this.chart = chart;
 		chart.getChartingView().getContext().getBarSeriesProperty().addListener((o,old,value) -> reload());
+		final XAxis xAxis = chart.getChartingView().getXAxis();
 		chart.getChartingView().getCrosshair().getVerticalLine().endXProperty().addListener((o,old,value) -> {
-			final int index = chart.getChartingView().getXAxis().getIndex(value.doubleValue());
-			setPlotInfoValue(index);
+			final int index = xAxis.getIndex(value.doubleValue());
+			setPlotInfoValue(index - 1);
 		});
 	}
 	

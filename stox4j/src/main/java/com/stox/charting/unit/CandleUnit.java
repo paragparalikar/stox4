@@ -34,7 +34,7 @@ public class CandleUnit extends Group implements Unit<Bar, Node> {
 	@Override
 	public void layoutChildren(int index, Bar bar, UnitParent<Node> parent) {
 		final double barWidth = xAxis.getUnitWidth() * 0.8;
-		body.setX(xAxis.getX(index) - barWidth/2d);
+		body.setX(xAxis.getX(index) + 0.1);
 		body.setWidth(barWidth);
 		final double upperY = yAxis.getY(bar.getOpenPrice().max(bar.getClosePrice()).doubleValue());
 		final double lowerY = yAxis.getY(bar.getOpenPrice().min(bar.getClosePrice()).doubleValue());
