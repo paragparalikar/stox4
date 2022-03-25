@@ -40,12 +40,12 @@ public class PlottableUpperVolatilityBandIndicator implements Plottable<Num, Upp
 	
 	@Override
 	public double resolveLowValue(Num model) {
-		return model.doubleValue();
+		return Double.MAX_VALUE;
 	}
 
 	@Override
 	public double resolveHighValue(Num model) {
-		return model.doubleValue();
+		return Double.MIN_VALUE;
 	}
 
 	@Override

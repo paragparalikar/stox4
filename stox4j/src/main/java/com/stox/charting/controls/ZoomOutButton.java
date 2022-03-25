@@ -1,6 +1,7 @@
 package com.stox.charting.controls;
 
 import com.stox.charting.ChartingView;
+import com.stox.charting.handler.zoom.ZoomRequestEvent;
 import com.stox.common.ui.Icon;
 
 import javafx.event.ActionEvent;
@@ -22,11 +23,7 @@ public class ZoomOutButton extends Button implements EventHandler<ActionEvent> {
 	public void handle(ActionEvent event) {
 		final int deltaX = -10;
 		final double x = chartingView.getPriceChart().getContentArea().getWidth() / 2;
-		chartingView.getXAxis().zoom(x, deltaX);
-		chartingView.redraw();
-		chartingView.getPricePlot().reloadBars();
+		chartingView.zoom(new ZoomRequestEvent(x, deltaX));
 	}
-
-
 
 }
