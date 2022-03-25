@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import lombok.Getter;
 
 @Getter 
@@ -49,6 +50,11 @@ public class PlotInfo<T> extends HBox {
 	
 	public void setValue(T model) {
 		
+	}
+	
+	public void setColor(Color color) {
+		name.setTextFill(color);
+		configInfo.setTextFill(color);
 	}
 	
 }

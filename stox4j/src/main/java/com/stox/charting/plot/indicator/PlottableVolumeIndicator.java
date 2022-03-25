@@ -7,7 +7,7 @@ import org.ta4j.core.num.Num;
 
 import com.stox.charting.ChartingView;
 import com.stox.charting.plot.Plottable;
-import com.stox.charting.plot.YAxisPlot;
+import com.stox.charting.plot.VolumePlot;
 import com.stox.charting.unit.BarUnit;
 import com.stox.charting.unit.Unit;
 import com.stox.charting.unit.parent.GroupUnitParent;
@@ -43,7 +43,7 @@ public class PlottableVolumeIndicator implements Plottable<Num, Void, Node> {
 	
 	@Override
 	public void add(ChartingView chartingView) {
-		chartingView.add(new YAxisPlot<>(this));
+		chartingView.add(new VolumePlot(this));
 	}
 
 	@Override

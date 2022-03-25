@@ -47,4 +47,9 @@ public class PricePlotInfo extends PlotInfo<Bar>{
 			priceInfoContainer.setVisible(false);
 		}
 	}
+	
+	@Override
+	public void setColor(Color color) {
+
+	}
 }

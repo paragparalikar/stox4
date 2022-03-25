@@ -7,6 +7,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -36,5 +37,12 @@ public class Fx {
 		label.getStyleClass().add("icon");
 		return label;
 	}
+	
+	public String toString(Color color) {
+        return String.format( "#%02X%02X%02X",
+            (int)( color.getRed() * 255 ),
+            (int)( color.getGreen() * 255 ),
+            (int)( color.getBlue() * 255 ) );
+    }
 	
 }

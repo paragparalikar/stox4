@@ -9,7 +9,6 @@ import com.stox.charting.axis.y.YAxis;
 import com.stox.charting.unit.parent.UnitParent;
 
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import lombok.Setter;
 
@@ -20,10 +19,6 @@ public class BooleanUnit extends Polygon implements Unit<Boolean, Node> {
 	private XAxis xAxis;
 	private YAxis yAxis;
 	private ChartingContext context;
-	
-	public BooleanUnit() {
-		setFill(Color.BLUE);
-	}
 
 	@Override
 	public void layoutChildren(int index, Boolean model, UnitParent<Node> parent) {

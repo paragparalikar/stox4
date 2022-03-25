@@ -8,6 +8,7 @@ import com.stox.common.ui.modal.Modal;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 
 public class DefaultPlotInfo<T> extends PlotInfo<T> {
 	
@@ -41,7 +42,11 @@ public class DefaultPlotInfo<T> extends PlotInfo<T> {
 	@Override
 	public void setValue(T model) {
 		valueLabel.setVisible(null != model);
-		valueLabel.setText(null == model ? null : toString(model));
+		setValueText(null == model ? null : toString(model));
+	}
+	
+	public void setValueText(String text) {
+		valueLabel.setText(text);
 	}
 	
 	private String toString(T model) {
@@ -54,6 +59,12 @@ public class DefaultPlotInfo<T> extends PlotInfo<T> {
 			return model.toString();
 		}
 		return String.format("%.2f", value);
+	}
+	
+	@Override
+	public void setColor(Color color) {
+		super.setColor(color);
+		valueLabel.setTextFill(color);
 	}
 
 }

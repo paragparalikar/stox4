@@ -2,6 +2,7 @@ package com.stox.charting.plot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.Indicator;
@@ -18,6 +19,7 @@ import com.stox.common.util.Maths;
 
 import javafx.application.Platform;
 import javafx.scene.Group;
+import javafx.scene.paint.Color;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -64,8 +66,18 @@ public class Plot<T, C, N> extends Group {
 		chart.getChartingView().getContext().getBarSeriesProperty().addListener((o,old,value) -> reload());
 		chart.getChartingView().getCrosshair().getVerticalLine().endXProperty().addListener((o,old,value) -> {
 			final int index = chart.getChartingView().getXAxis().getIndex(value.doubleValue());
-			getInfo().setValue(0 <= index && index < chart.getChartingView().getContext().getBarCount() ? indicator.getValue(index) : null);
+			setPlotInfoValue(index);
 		});
+	}
+	
+	protected void setPlotInfoValue(int index) {
+		final PlotInfo<T> plotInfo = getInfo();
+		final int barCount = chart.getChartingView().getContext().getBarCount();
+		if(0 <= index && index < barCount) {
+			plotInfo.setValue(indicator.getValue(index));
+		} else {
+			plotInfo.setValue(null);
+		}
 	}
 	
 	protected void updateYAxis(int startIndex, int endIndex) {
@@ -133,6 +145,12 @@ public class Plot<T, C, N> extends Group {
 	@Override
 	protected void layoutChildren() {
 
+	}
+	
+	public Plot<T, C, N> setColor(Color color) {
+		Optional.ofNullable(info).ifPresent(info -> info.setColor(color));
+		Optional.ofNullable(unitParent).ifPresent(parent -> parent.setColor(color));
+		return this;
 	}
 	
 }

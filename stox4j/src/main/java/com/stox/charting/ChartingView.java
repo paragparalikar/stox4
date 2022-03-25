@@ -65,8 +65,8 @@ public class ChartingView extends BorderPane {
 	public ChartingView(EventBus eventBus, BarService barService, ScripService scripService, Path home) {
 		this.scripService = scripService;
 		add(priceChart = new Chart(this));
-		new PlottableVolumeIndicator().add(this);
 		add(pricePlot = new PricePlot(barService));
+		new PlottableVolumeIndicator().add(this);
 		
 		contextMenu.setAutoHide(true);
 		contextMenu.setConsumeAutoHidingEvents(true);

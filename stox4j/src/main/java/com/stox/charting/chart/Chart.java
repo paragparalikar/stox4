@@ -78,7 +78,7 @@ public class Chart extends BorderPane {
 		contentArea.getChildren().add(plot);
 		infoPane.getChildren().add(plot.getInfo());
 		infoPane.toFront();
-		plot.getUnitParent().setColor(COLORS[plots.size() - 1]);
+		plot.setColor(COLORS[plots.size() - 1]);
 		plot.reload();
 	}
 	
