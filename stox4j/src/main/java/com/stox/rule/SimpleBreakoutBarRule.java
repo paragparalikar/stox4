@@ -6,10 +6,12 @@ import org.ta4j.core.Indicator;
 import org.ta4j.core.TradingRecord;
 import org.ta4j.core.indicators.ATRIndicator;
 import org.ta4j.core.indicators.SMAIndicator;
+import org.ta4j.core.indicators.helpers.DifferenceIndicator;
+import org.ta4j.core.indicators.helpers.HighPriceIndicator;
+import org.ta4j.core.indicators.helpers.LowPriceIndicator;
 import org.ta4j.core.num.Num;
 import org.ta4j.core.rules.AbstractRule;
 
-import com.stox.indicator.PriceSpreadIndicator;
 import com.stox.screener.ScreenerConfig;
 
 import lombok.AllArgsConstructor;
@@ -58,7 +60,9 @@ public class SimpleBreakoutBarRule extends AbstractRule {
 		
 		// Current bar spread should be more than multiple times average spread of last n bars
 		final Num spread = bar.getHighPrice().minus(bar.getLowPrice());
-		final Indicator<Num> priceSpreadIndicator = new PriceSpreadIndicator(barSeries);
+		final Indicator<Num> highPriceIndicator = new HighPriceIndicator(barSeries);
+		final Indicator<Num> lowPriceIndicator = new LowPriceIndicator(barSeries);
+		final Indicator<Num> priceSpreadIndicator = new DifferenceIndicator(highPriceIndicator, lowPriceIndicator);
 		final Indicator<Num> spreadSMAIndicator = new SMAIndicator(priceSpreadIndicator, barCount);
 		final Num avgSpread = spreadSMAIndicator.getValue(index - 1);
 		final Num spreadMultiple = barSeries.numOf(config.getMaxSpreadMultiple());

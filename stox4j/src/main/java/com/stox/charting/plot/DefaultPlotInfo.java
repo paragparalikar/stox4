@@ -26,6 +26,7 @@ public class DefaultPlotInfo<T> extends PlotInfo<T> {
 		final Label graphics = new Label(Icon.CHECK);
 		graphics.getStyleClass().add("icon");
 		final Button button = new Button("Apply", graphics);
+		button.setDefaultButton(true);
 		final Modal modal = new Modal()
 			.withTitleIcon(Icon.GEAR)
 			.withTitleText("Configure")

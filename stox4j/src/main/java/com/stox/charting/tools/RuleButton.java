@@ -60,6 +60,7 @@ public class RuleButton extends Button implements EventHandler<ActionEvent> {
 		final Label graphics = new Label(Icon.PLUS);
 		graphics.getStyleClass().add("icon");
 		final Button button = new Button("Add", graphics);
+		button.setDefaultButton(true);
 		final Modal modal = new Modal()
 			.withTitleIcon(Icon.FILTER)
 			.withTitleText("Rules")
