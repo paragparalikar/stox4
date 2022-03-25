@@ -55,6 +55,7 @@ public class Plot<T, C, N> extends Group {
 			getInfo().setName(null);
 			setIndicator(new ConstantIndicator<>(barSeries, null));
 		}
+		getInfo().setConfigInfo(null == indicatorConfig ? null : indicatorConfig.toString());
 		Platform.runLater(getChart()::redraw);
 	}
 	

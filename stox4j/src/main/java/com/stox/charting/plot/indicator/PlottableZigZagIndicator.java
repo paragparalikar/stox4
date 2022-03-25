@@ -25,6 +25,7 @@ public class PlottableZigZagIndicator implements Plottable<Move, ZigZagConfig, P
 	public static class ZigZagConfig {
 		private int barCount = 144;
 		private double tolarancePercentage = 20;
+		public String toString() {return String.format("BarCount: %d, Tolarance: %f/%", barCount, tolarancePercentage);}
 	}
 	
 	@Override

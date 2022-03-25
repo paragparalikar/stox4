@@ -37,6 +37,7 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 		super.reload();
 		final Scrip scrip = getChart().getChartingView().getContext().getInputProperty().get().getScrip();
 		pricePlotInfo.setName(null == scrip ? null : scrip.getName());
+		pricePlotInfo.setConfigInfo("D"); // TODO This value should come from BarSpan enum
 	}
 	
 	@Override

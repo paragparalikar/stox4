@@ -23,6 +23,7 @@ public class PlottableADXIndicator implements Plottable<Num, ADXIndicatorConfig,
 	@Data
 	public static class ADXIndicatorConfig{
 		private int barCount = 14;
+		public String toString() {return String.format("BarCount: %d", barCount);}
 	}
 	
 	@Override

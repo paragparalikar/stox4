@@ -25,6 +25,7 @@ public class PlottableUpperVolatilityBandIndicator implements Plottable<Num, Upp
 	@Data
 	public static class UpperVolatilityBandConfig {
 		private int barCount = 5;
+		public String toString() {return String.format("BarCount: %d", barCount);}
 	}
 
 	@Override

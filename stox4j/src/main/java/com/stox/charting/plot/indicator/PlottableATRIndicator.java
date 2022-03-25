@@ -23,6 +23,7 @@ public class PlottableATRIndicator implements Plottable<Num, ATRIndicatorConfig,
 	@Data
 	public static class ATRIndicatorConfig {
 		private int barCount = 14;
+		public String toString() {return String.format("BarCount: %d", barCount);}
 	}
 	
 	@Override

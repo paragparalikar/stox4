@@ -70,8 +70,7 @@ public class DataDownloader {
 		eventBus.post(MessageEvent.builder()
 				.icon(Icon.DOWNLOAD)
 				.style("success")
-				.text(String.format("Last downloaded bar data on %s", 
-						DateTimeFormatter.ISO_DATE.format(barService.readLastDownloadDate())))
+				.text(formatter.format(barService.readLastDownloadDate()))
 				.build());
 	}
 	

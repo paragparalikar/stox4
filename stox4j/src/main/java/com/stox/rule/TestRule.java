@@ -33,6 +33,7 @@ public class TestRule extends AbstractRule {
 		public SimpleBreakoutBarRuleConfig toSimpleBreakoutBarRuleConfig() {
 			return new SimpleBreakoutBarRuleConfig(breakoutBarCount, breakoutBarMaxSpreadMultiple, breakoutBarMaxHighDiffATRMultiple);
 		}
+		public String toString() {return String.format("BarCount: %d", barCount);}
 	}
 
 	private final Rule delegate;

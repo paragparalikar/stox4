@@ -16,6 +16,7 @@ public class PlottableSigmaIndicator implements PlottableLineIndicator<SigmaConf
 	public static class SigmaConfig {
 		private int barCount = 14;
 		private BarValueType barValueType = BarValueType.CLOSE;
+		public String toString() {return String.format("BarCount: %d, Type: %s", barCount, barValueType.name());}
 	}
 	
 	@Override

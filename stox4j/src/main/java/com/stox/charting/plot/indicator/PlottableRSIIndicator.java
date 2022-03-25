@@ -23,8 +23,9 @@ public class PlottableRSIIndicator implements Plottable<Num, RsiIndicatorConfig,
 
 	@Data
 	public static class RsiIndicatorConfig {
-		private int span = 14;
+		private int barCount = 14;
 		private BarValueType barValueType = BarValueType.CLOSE;
+		public String toString() {return String.format("BarCount: %d, Type: %s", barCount, barValueType.name());}
 	}
 	
 	@Override
@@ -64,7 +65,7 @@ public class PlottableRSIIndicator implements Plottable<Num, RsiIndicatorConfig,
 	
 	@Override
 	public Indicator<Num> createIndicator(RsiIndicatorConfig config, BarSeries barSeries) {
-		return new RSIIndicator(createIndicator(config.getBarValueType(), barSeries), config.getSpan());
+		return new RSIIndicator(createIndicator(config.getBarValueType(), barSeries), config.getBarCount());
 	}
 	
 }

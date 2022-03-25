@@ -28,6 +28,7 @@ public class SimpleBreakoutBarRule extends AbstractRule {
 		private int barCount = 5;
 		private double maxSpreadMultiple = 5;
 		private double maxHighDiffATRMultiple = 0.5;
+		public String toString() {return String.format("BarCount: %d", barCount);}
 	}
 
 	@NonNull private final BarSeries barSeries;

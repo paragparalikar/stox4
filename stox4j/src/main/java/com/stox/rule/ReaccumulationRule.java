@@ -18,6 +18,7 @@ public class ReaccumulationRule extends AbstractRule {
 	public static class ReaccumulationRuleConfig {
 		private int barCount = 55;
 		private double priceMoveMultiple = 2;
+		public String toString() {return String.format("BarCount: %d", barCount);}
 	}
 
 	@Override

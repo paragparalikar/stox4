@@ -27,6 +27,7 @@ public class VolatilityContractionBreakoutRule extends AbstractRule {
 		public SimpleBreakoutBarRuleConfig toBreakoutBarConfig() {
 			return new SimpleBreakoutBarRuleConfig(breakoutBarCount, spreadMultiple, highDiffATRMultiple);
 		}
+		public String toString() {return String.format("BarCount: %d", barCount);}
 	}
 
 	@Delegate private final Rule delegate;

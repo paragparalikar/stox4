@@ -23,6 +23,7 @@ public class PlottableStochasticKIndicator implements Plottable<Num, StochasticK
 	@Data
 	public static class StochasticKConfig {
 		private int barCount = 14;
+		public String toString() {return String.format("BarCount: %d", barCount);}
 	}
 	
 	@Override

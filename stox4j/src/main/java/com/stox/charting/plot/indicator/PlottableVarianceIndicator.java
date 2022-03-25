@@ -16,6 +16,7 @@ public class PlottableVarianceIndicator implements PlottableLineIndicator<Varian
 	public static class VarianceConfig {
 		private int barCount = 14;
 		private BarValueType barValueType = BarValueType.CLOSE;
+		public String toString() {return String.format("BarCount: %d, Type: %s", barCount, barValueType.name());}
 	}
 	
 	@Override

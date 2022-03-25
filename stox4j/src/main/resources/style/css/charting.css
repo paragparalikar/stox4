@@ -99,6 +99,6 @@
 	-fx-alignment: center-left;
 }
 .volume-bar{
-	-fx-background-color: gray;
-	-fx-opacity: 0.3;
+	-fx-background-color: lightgray;
+	-fx-opacity: 0.1;
 }

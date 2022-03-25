@@ -25,8 +25,9 @@ public class PlottableSMAIndicator implements Plottable<Num, SmaIndicatorConfig,
 
 	@Data
 	public static class SmaIndicatorConfig {
-		private int span = 14;
+		private int barCount = 14;
 		private BarValueType barValueType = BarValueType.CLOSE;
+		public String toString() {return String.format("BarCount: %d, Type: %s", barCount, barValueType.name());}
 	}
 	
 	@Override
@@ -71,7 +72,7 @@ public class PlottableSMAIndicator implements Plottable<Num, SmaIndicatorConfig,
 
 	@Override
 	public Indicator<Num> createIndicator(SmaIndicatorConfig config, BarSeries barSeries) {
-		return new SMAIndicator(createIndicator(config.getBarValueType(), barSeries), config.getSpan());
+		return new SMAIndicator(createIndicator(config.getBarValueType(), barSeries), config.getBarCount());
 	}
 	
 }

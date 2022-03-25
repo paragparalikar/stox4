@@ -16,6 +16,7 @@ public class PlottableMeanDeviationIndicator implements PlottableLineIndicator<M
 	public static class MeanDeviationConfig {
 		private int barCount = 14;
 		private BarValueType barValueType = BarValueType.CLOSE;
+		public String toString() {return String.format("BarCount: %d, Type: %s", barCount, barValueType.name());}
 	}
 	
 	@Override

@@ -14,6 +14,7 @@ public class PlottableChopIndicator implements PlottableLineIndicator<ChopConfig
 	@Data
 	public static class ChopConfig {
 		private int barCount = 14;
+		public String toString() {return String.format("BarCount: %d", barCount);}
 	}
 	
 	@Override

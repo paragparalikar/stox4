@@ -22,6 +22,7 @@ public class PlottableDojiRule extends AbstractPlottableRule<DojiConfig> {
 		private double bodyFactor = 0.2;
 		private int stochasticsBarCount = 21;
 		private double stochasticsMaxK = 30;
+		public String toString() {return String.format("BarCount: %d, BodyFactor: %f", barCount, bodyFactor);}
 	}
 	
 	@Override

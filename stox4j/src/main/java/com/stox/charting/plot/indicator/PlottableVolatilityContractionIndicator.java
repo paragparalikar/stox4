@@ -23,6 +23,7 @@ public class PlottableVolatilityContractionIndicator implements Plottable<Num, V
 	@Data
 	public static class VolatilityContractionConfig {
 		private int barCount = 34;
+		public String toString() {return String.format("BarCount: %d", barCount);}
 	}
 
 	@Override
