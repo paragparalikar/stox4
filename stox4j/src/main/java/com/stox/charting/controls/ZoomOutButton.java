@@ -24,6 +24,7 @@ public class ZoomOutButton extends Button implements EventHandler<ActionEvent> {
 		final double x = chartingView.getPriceChart().getContentArea().getWidth() / 2;
 		chartingView.getXAxis().zoom(x, deltaX);
 		chartingView.redraw();
+		chartingView.getPricePlot().reloadBars();
 	}
 
 
