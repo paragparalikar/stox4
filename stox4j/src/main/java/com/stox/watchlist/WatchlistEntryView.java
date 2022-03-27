@@ -47,9 +47,7 @@ public class WatchlistEntryView extends ListView<String> {
 	
 	@Subscribe
 	public void onWatchlistUpdated(WatchlistUpdatedEvent event) {
-		System.out.println("Handling event " + event.getWatchlist().getEntries().size());
 		final Watchlist watchlist = watchlistComboBox.getValue();
-		System.out.println("Watchlist in combobox is " + watchlist.getEntries().size());
 		if(null != watchlist && watchlist.getName().equalsIgnoreCase(event.getWatchlist().getName())) {
 			if(watchlist != event.getWatchlist()) {
 				watchlist.getEntries().clear();

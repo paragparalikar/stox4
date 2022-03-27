@@ -30,18 +30,14 @@ public class WatchlistContextMenu extends ContextMenu {
 	private void moveToIndex(Watchlist watchlist, String isin, int index) {
 		watchlist.getEntries().remove(isin);
 		watchlist.getEntries().add(index, isin);
-		System.out.println("Before Update " + watchlist.getEntries().size());
 		watchlistService.update(watchlist);
-		System.out.println("After Update " + watchlist.getEntries().size());
 	}
 	
 	private MenuItem createSendToTopMenuItem() {
 		final MenuItem menuItem = new MenuItem("Send to top", Fx.icon(Icon.CHEVRON_UP));
 		menuItem.setOnAction(event -> {
 			final Watchlist watchlist = watchlistComboBox.getValue();
-			System.out.println("Send to top for " + watchlist.getEntries().size());
 			final String isin = listView.getSelectionModel().getSelectedItem();
-			System.out.println("Send to top for isin " + isin);
 			if(null != watchlist && null != isin) moveToIndex(watchlist, isin, 0);
 		});
 		return menuItem;
