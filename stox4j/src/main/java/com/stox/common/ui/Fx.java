@@ -1,6 +1,7 @@
 package com.stox.common.ui;
 
 import javafx.application.Platform;
+import javafx.css.PseudoClass;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -12,6 +13,8 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class Fx {
+	
+	public final PseudoClass PSEUDO_CLASS_DRAGOVER = PseudoClass.getPseudoClass("dragOver");
 
 	public void run(Runnable runnable) {
 		if(null != runnable) {

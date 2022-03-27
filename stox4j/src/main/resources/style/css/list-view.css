@@ -21,3 +21,8 @@
 	-fx-text-fill: black;
 	-fx-background-color: lightgray;
 }
+
+.list-view .cell:dragOver{
+	-fx-border-width: 2px 0 0 0;
+	-fx-border-color: green;
+}
