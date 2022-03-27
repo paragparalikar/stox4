@@ -10,8 +10,8 @@ import com.stox.example.ExampleTab;
 import com.stox.explorer.ExplorerTab;
 import com.stox.ranker.RankerTab;
 import com.stox.screener.ScreenerTab;
-import com.stox.watchlist.AddToWatchlistMenu;
 import com.stox.watchlist.WatchlistTab;
+import com.stox.watchlist.menu.AddToWatchlistMenu;
 import com.sun.javafx.application.LauncherImpl;
 
 import javafx.application.Application;

@@ -9,16 +9,15 @@ import java.util.stream.Collectors;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import com.stox.common.ui.Fx;
 import com.stox.watchlist.event.WatchlistClearedEvent;
 import com.stox.watchlist.event.WatchlistCreatedEvent;
 import com.stox.watchlist.event.WatchlistDeletedEvent;
 import com.stox.watchlist.event.WatchlistEntryAddedEvent;
 import com.stox.watchlist.event.WatchlistEntryRemovedEvent;
 import com.stox.watchlist.event.WatchlistRenamedEvent;
-import com.stox.watchlist.event.WatchlistSelectedEvent;
 import com.stox.watchlist.event.WatchlistUpdatedEvent;
 
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ComboBox;
 import lombok.RequiredArgsConstructor;
 
@@ -32,13 +31,8 @@ public class WatchlistComboBox extends ComboBox<Watchlist> {
 		final List<Watchlist> watchlists = watchlistService.findAll();
 		watchlists.sort(Comparator.comparing(Watchlist::getName));
 		getItems().setAll(watchlists);
-		getSelectionModel().selectedItemProperty().addListener(this::changed);
-		if(!getItems().isEmpty()) getSelectionModel().select(0);
+		if(!getItems().isEmpty()) Fx.run(() -> getSelectionModel().select(0));
 		eventBus.register(this);
-	}
-	
-	private void changed(ObservableValue<? extends Watchlist> observable, Watchlist oldValue, Watchlist newValue) {
-		eventBus.post(new WatchlistSelectedEvent(newValue));
 	}
 	
 	private Optional<Watchlist> findItem(String name) {
@@ -70,8 +64,10 @@ public class WatchlistComboBox extends ComboBox<Watchlist> {
 	@Subscribe
 	public void onWatchlistUpdated(WatchlistUpdatedEvent event) {
 		findItem(event.getWatchlist().getName()).ifPresent(watchlist -> {
-			watchlist.getEntries().clear();
-			watchlist.getEntries().addAll(event.getWatchlist().getEntries());
+			if(watchlist != event.getWatchlist()) {
+				watchlist.getEntries().clear();
+				watchlist.getEntries().addAll(event.getWatchlist().getEntries());
+			}
 		});
 	}
 	
@@ -90,7 +86,9 @@ public class WatchlistComboBox extends ComboBox<Watchlist> {
 	@Subscribe
 	public void onWatchlistEntryAdded(WatchlistEntryAddedEvent event) {
 		findItem(event.getName()).ifPresent(watchlist -> {
-			watchlist.getEntries().add(event.getEntry());
+			if(!watchlist.getEntries().contains(event.getEntry())) {
+				watchlist.getEntries().add(event.getEntry());
+			}
 		});
 	}
 

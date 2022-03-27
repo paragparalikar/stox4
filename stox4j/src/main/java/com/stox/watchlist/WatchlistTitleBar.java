@@ -1,5 +1,7 @@
 package com.stox.watchlist;
 
+import com.stox.watchlist.menu.WatchlistControlsMenuButton;
+
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;

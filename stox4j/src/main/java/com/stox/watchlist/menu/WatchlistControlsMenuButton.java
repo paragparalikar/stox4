@@ -1,4 +1,4 @@
-package com.stox.watchlist;
+package com.stox.watchlist.menu;
 
 import java.util.Optional;
 
@@ -6,6 +6,9 @@ import com.stox.common.ui.Fx;
 import com.stox.common.ui.Icon;
 import com.stox.common.ui.modal.ConfirmationModal;
 import com.stox.common.ui.modal.Modal;
+import com.stox.watchlist.Watchlist;
+import com.stox.watchlist.WatchlistComboBox;
+import com.stox.watchlist.WatchlistService;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;

@@ -1,4 +1,4 @@
-package com.stox.watchlist;
+package com.stox.watchlist.menu;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +8,8 @@ import org.greenrobot.eventbus.Subscribe;
 
 import com.stox.common.event.SelectedScripQueryEvent;
 import com.stox.common.scrip.Scrip;
+import com.stox.watchlist.Watchlist;
+import com.stox.watchlist.WatchlistService;
 import com.stox.watchlist.event.WatchlistClearedEvent;
 import com.stox.watchlist.event.WatchlistCreatedEvent;
 import com.stox.watchlist.event.WatchlistDeletedEvent;
@@ -56,9 +58,12 @@ public class AddToWatchlistMenu extends Menu {
 	@Subscribe
 	public void onWatchlistUpdated(WatchlistUpdatedEvent event) {
 		findItem(event.getWatchlist().getName()).ifPresent(item -> {
-			final List<String> entries = Watchlist.class.cast(item.getUserData()).getEntries();
-			entries.clear();
-			entries.addAll(event.getWatchlist().getEntries());
+			if(item.getUserData() != event.getWatchlist()) {
+				final Watchlist watchlist = Watchlist.class.cast(item.getUserData());
+				final List<String> entries = watchlist.getEntries();
+				entries.clear();
+				entries.addAll(event.getWatchlist().getEntries());
+			}
 		});
 	}
 	
@@ -80,14 +85,18 @@ public class AddToWatchlistMenu extends Menu {
 	@Subscribe
 	public void onWatchlistEntryAdded(WatchlistEntryAddedEvent event) {
 		findItem(event.getName()).ifPresent(item -> {
-			Watchlist.class.cast(item.getUserData()).getEntries().add(event.getEntry());
+			final Watchlist watchlist = Watchlist.class.cast(item.getUserData());
+			if(!watchlist.getEntries().contains(event.getEntry())) {
+				watchlist.getEntries().add(event.getEntry());
+			}
 		});
 	}
 	
 	@Subscribe
 	public void onWatchlistEntryRemoved(WatchlistEntryRemovedEvent event) {
 		findItem(event.getName()).ifPresent(item -> {
-			Watchlist.class.cast(item.getUserData()).getEntries().remove(event.getEntry());
+			final Watchlist watchlist = Watchlist.class.cast(item.getUserData());
+			watchlist.getEntries().remove(event.getEntry());
 		});
 	}
 	
