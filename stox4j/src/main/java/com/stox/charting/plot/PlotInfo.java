@@ -22,10 +22,12 @@ public class PlotInfo<T> extends HBox {
 	
 	public PlotInfo(Plot<T, ?, ?> plot) {
 		this.plot = plot;
+		
 		getStyleClass().add("plot-info");
 		name.getStyleClass().add("plot-name");
 		configInfo.getStyleClass().add("plot-config-info");
 		buttonBar.getStyleClass().add("plot-info-button-bar");
+
 		getChildren().addAll(name, configInfo, buttonBar);
 		createButton(Icon.EYE, event -> plot.setVisible(!plot.isVisible()));
 	}

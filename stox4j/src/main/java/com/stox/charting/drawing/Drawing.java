@@ -11,4 +11,6 @@ public interface Drawing<S extends DrawingState> {
 	Node getNode();
 	
 	void moveTo(double x, double y);
+	
+	void dragTo(double x, double y);
 }

@@ -3,6 +3,7 @@ package com.stox.charting.drawing;
 import com.stox.charting.ChartingContext;
 import com.stox.charting.axis.x.XAxis;
 import com.stox.charting.axis.y.YAxis;
+import com.stox.charting.chart.Chart;
 import com.stox.charting.drawing.ControlPoint.ControlPointState;
 
 import javafx.scene.Node;
@@ -24,28 +25,31 @@ public class ControlPoint extends Circle implements Drawing<ControlPointState> {
 		private long date;
 		private double price;
 		@Override
-		public ControlPoint create(XAxis xAxis, YAxis yAxis, ChartingContext context) {
-			return new ControlPoint(xAxis, yAxis, context, this);
+		public ControlPoint create(Chart chart) {
+			return new ControlPoint(chart, this);
 		}
 	}
 	
+	private final Chart chart;
 	private final XAxis xAxis;
 	private final YAxis yAxis;
 	private final ChartingContext context;
 	private final ControlPointState state;
 	
-	public ControlPoint(XAxis xAxis, YAxis yAxis, ChartingContext context, ControlPointState state) {
-		this.xAxis = xAxis;
-		this.yAxis = yAxis;
+	public ControlPoint(Chart chart, ControlPointState state) {
+		this.chart = chart;
 		this.state = state;
-		this.context = context;
+		this.yAxis = chart.getYAxis();
+		this.xAxis = chart.getChartingView().getXAxis();
+		this.context = chart.getChartingView().getContext();
 		
 		setRadius(5);
 		setManaged(false);
 		getStyleClass().add("control-point");
 		centerXProperty().addListener((o,old,val) -> updateDate());
 		centerYProperty().addListener((o,old,val) -> updatePrice());
-		addEventFilter(MouseEvent.MOUSE_DRAGGED, this::onMouseDragged);
+		addEventHandler(MouseEvent.MOUSE_DRAGGED, this::onMouseDragged);
+		addEventFilter(MouseEvent.ANY, System.out::println);
 	}
 	
 	@Override
@@ -102,5 +106,10 @@ public class ControlPoint extends Circle implements Drawing<ControlPointState> {
 	public void moveTo(double x, double y) {
 		setCenterX(x);
 		setCenterY(y);
+	}
+	
+	@Override
+	public void dragTo(double x, double y) {
+		moveTo(x, y);
 	}
 }

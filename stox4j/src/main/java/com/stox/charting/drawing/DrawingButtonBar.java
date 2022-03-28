@@ -29,10 +29,7 @@ public class DrawingButtonBar extends HBox {
 				new DrawingModeMouseHandler(
 						chartingView.getPriceChart(), 
 						() -> button.setSelected(false),
-						chart -> new SegmentState().create(
-						chart.getChartingView().getXAxis(), 
-						chart.getYAxis(), 
-						chart.getChartingView().getContext()))
+						chart -> new SegmentState().create(chart))
 				.addListeners();
 			}
 		});

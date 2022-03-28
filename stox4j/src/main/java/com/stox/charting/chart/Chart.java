@@ -16,6 +16,7 @@ import com.stox.charting.handler.CompositeModeMouseHandler;
 import com.stox.charting.handler.pan.PanModeMouseHandler;
 import com.stox.charting.handler.zoom.ZoomModeMouseHandler;
 import com.stox.charting.plot.Plot;
+import com.stox.charting.plot.PlotInfo;
 import com.stox.common.ui.NoLayoutPane;
 
 import javafx.collections.FXCollections;
@@ -36,8 +37,9 @@ public class Chart extends BorderPane {
 	private final ChartingView chartingView;
 	private final VBox infoPane = new VBox();
 	private final HorizontalGrid horizontalGrid = new HorizontalGrid();
-	private final Pane drawingsContainer = new NoLayoutPane();
-	private final StackPane contentArea = new StackPane(horizontalGrid, infoPane, drawingsContainer);
+	private final Pane plotsContainer = new NoLayoutPane();
+	private final Pane widgetsContainer = new Pane(infoPane);
+	private final StackPane contentArea = new StackPane(horizontalGrid, plotsContainer, widgetsContainer);
 	private final ObservableList<Plot<?,?,?>> plots = FXCollections.observableArrayList();
 	private final Set<Drawing<?>> drawings = Collections.newSetFromMap(new IdentityHashMap<>());
 	private final CompositeModeMouseHandler modeMouseHandler = new CompositeModeMouseHandler(
@@ -50,6 +52,7 @@ public class Chart extends BorderPane {
 		decorate();
 		setRight(yAxis);
 		setCenter(contentArea);
+		
 		modeMouseHandler.addListeners();
 		contentArea.widthProperty().addListener((o,old,value) -> redraw());
 		contentArea.heightProperty().addListener((o,old,value) -> redraw());
@@ -83,26 +86,26 @@ public class Chart extends BorderPane {
 	public void add(Plot<?, ?, ?> plot) {
 		plot.setChart(this);
 		plots.add(plot);
-		contentArea.getChildren().add(plot);
-		infoPane.getChildren().add(plot.getInfo());
-		infoPane.toFront();
+		plotsContainer.getChildren().add(plot);
+		final PlotInfo<?> plotInfo = plot.getInfo();
+		infoPane.getChildren().add(plotInfo);
 		plot.setColor(COLORS[plots.size() - 1]);
 		plot.reload();
 	}
 	
 	public void removePlot(Plot<?, ?, ?> plot) {
 		plots.remove(plot);
-		contentArea.getChildren().remove(plot);
+		plotsContainer.getChildren().remove(plot);
 		infoPane.getChildren().remove(plot.getInfo());
 		if(plots.isEmpty()) chartingView.remove(this);
 	}
 	
 	public void add(Drawing<?> drawing) {
-		if(drawings.add(drawing)) drawingsContainer.getChildren().add(drawing.getNode());
+		if(drawings.add(drawing)) widgetsContainer.getChildren().add(drawing.getNode());
 	}
 	
 	public void remove(Drawing<?> drawing) {
 		drawings.remove(drawing);
-		drawingsContainer.getChildren().remove(drawing.getNode());
+		widgetsContainer.getChildren().remove(drawing.getNode());
 	}
 }
