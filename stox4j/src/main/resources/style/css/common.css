@@ -25,6 +25,11 @@
 	-fx-border-width: 0;
 	-fx-background-color: transparent;
 }
+.icon:hover {
+	-fx-border-width: 1px;
+	-fx-border-color: gray;
+	-fx-border-radius: 4px;
+}
 .label{
 	-fx-font-size: 12px;
 }

@@ -1,7 +1,9 @@
 package com.stox.charting.chart;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Set;
 
 import com.stox.charting.ChartingView;
@@ -107,5 +109,10 @@ public class Chart extends BorderPane {
 	public void remove(Drawing<?> drawing) {
 		drawings.remove(drawing);
 		widgetsContainer.getChildren().remove(drawing.getNode());
+	}
+	
+	public void clearDrawings() {
+		final List<Drawing<?>> drawings = new ArrayList<>(this.drawings);
+		drawings.forEach(this::remove);
 	}
 }

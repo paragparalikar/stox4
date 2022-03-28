@@ -7,8 +7,10 @@ import com.stox.charting.chart.Chart;
 import com.stox.charting.drawing.HorizontalSegment.HorizontalSegmentState;
 import com.stox.charting.drawing.Segment.SegmentState;
 import com.stox.charting.drawing.VerticalSegment.VerticalSegmentState;
+import com.stox.common.ui.Icon;
 
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -25,11 +27,20 @@ public class DrawingButtonBar extends HBox {
 		getChildren().addAll(
 				createButton(new Line(2, 14, 14, 2), chart -> new SegmentState().create(chart)),
 				createButton(new Line(8, 2, 8, 14), chart -> new VerticalSegmentState().create(chart)),
-				createButton(new Line(2, 8, 14, 8), chart -> new HorizontalSegmentState().create(chart)));
+				createButton(new Line(2, 8, 14, 8), chart -> new HorizontalSegmentState().create(chart)),
+				createClearButton());
+	}
+	
+	private Button createClearButton() {
+		final Button button = new Button(Icon.ERASER);
+		button.getStyleClass().add("icon");
+		button.setOnAction(event -> chartingView.getPriceChart().clearDrawings());
+		return button;
 	}
 	
 	private ToggleButton createButton(Node graphics, Function<Chart, Drawing<?>> function) {
 		final ToggleButton button = new ToggleButton();
+		button.getStyleClass().add("icon");
 		button.setToggleGroup(toggleGroup);
 		button.setGraphic(graphics);
 		button.setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
