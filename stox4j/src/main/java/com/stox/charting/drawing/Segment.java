@@ -27,6 +27,7 @@ public class Segment extends Line implements Drawing<SegmentState> {
 	private final SegmentState state;
 	private final ControlPoint startPoint, endPoint;
 	private final Group node = new Group();
+	private double previousX, previousY;
 	
 	public Segment(Chart chart, SegmentState state) {
 		this.chart = chart;
@@ -43,7 +44,8 @@ public class Segment extends Line implements Drawing<SegmentState> {
 		endXProperty().bindBidirectional(endPoint.centerXProperty());
 		endYProperty().bindBidirectional(endPoint.centerYProperty());
 		
-		addEventFilter(MouseEvent.MOUSE_PRESSED, this::onMousePressed);
+		addEventHandler(MouseEvent.MOUSE_PRESSED, this::onMousePressed);
+		addEventHandler(MouseEvent.MOUSE_DRAGGED, this::onMouseDragged);
 		this.node.getChildren().addAll(this, startPoint.getNode(), this.endPoint.getNode());
 	}
 	
@@ -51,7 +53,30 @@ public class Segment extends Line implements Drawing<SegmentState> {
 		if(MouseButton.SECONDARY.equals(event.getButton())) {
 			chart.remove(this);
 			event.consume();
+		} else {
+			previousX = event.getX();
+			previousY = event.getY();
 		}
+	}
+	
+	protected void onMouseDragged(MouseEvent event) {
+		dragX(event.getX());
+		dragY(event.getY());
+		event.consume();
+	}
+	
+	protected void dragX(double x) {
+		final double xDiff = previousX - x;
+		endPoint.setCenterX(endPoint.getCenterX() - xDiff);
+		startPoint.setCenterX(startPoint.getCenterX() - xDiff);
+		previousX = x;
+	}
+	
+	protected void dragY(double y) {
+		final double yDiff = previousY - y;
+		startPoint.setCenterY(startPoint.getCenterY() - yDiff);
+		endPoint.setCenterY(endPoint.getCenterY() - yDiff);
+		previousY = y;
 	}
 	
 	@Override

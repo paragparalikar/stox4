@@ -55,5 +55,6 @@ public class DrawingModeMouseHandler implements ModeMouseHandler {
 		removeListeners();
 		chart.getModeMouseHandler().addListeners();
 		Optional.ofNullable(completionCallback).ifPresent(Runnable::run);
+		drawing = null;
 	}
 }

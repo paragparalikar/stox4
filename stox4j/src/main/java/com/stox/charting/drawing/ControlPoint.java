@@ -49,7 +49,6 @@ public class ControlPoint extends Circle implements Drawing<ControlPointState> {
 		centerXProperty().addListener((o,old,val) -> updateDate());
 		centerYProperty().addListener((o,old,val) -> updatePrice());
 		addEventHandler(MouseEvent.MOUSE_DRAGGED, this::onMouseDragged);
-		addEventFilter(MouseEvent.ANY, System.out::println);
 	}
 	
 	@Override

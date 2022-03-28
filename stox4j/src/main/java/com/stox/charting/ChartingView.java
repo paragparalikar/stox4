@@ -38,8 +38,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -96,7 +94,7 @@ public class ChartingView extends BorderPane {
 	}
 	
 	private void onContextMenuRequested(ContextMenuEvent event) {
-		contextMenu.show(xAxis, event.getX(), event.getY());
+		contextMenu.show(xAxis, event.getScreenX(), event.getScreenY());
 	}
 	
 	public void add(Chart chart) {
