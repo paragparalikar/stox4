@@ -102,3 +102,17 @@
 	-fx-background-color: lightgray;
 	-fx-opacity: 0.1;
 }
+.control-point{
+	-fx-opacity: 1;
+	-fx-fill: blue;
+}
+.control-point:hover {
+	-fx-opacity: 1;
+}
+.control-point:pressed{
+	-fx-opacity: 1;
+}
+.drawing {
+	-fx-stroke: black;
+	-fx-stroke-width: 1px;
+}

@@ -1,7 +1,5 @@
 package com.stox.charting.handler;
 
-import javafx.scene.Node;
-
 public class CompositeModeMouseHandler implements ModeMouseHandler {
 
 	private final ModeMouseHandler[] handlers;
@@ -11,20 +9,20 @@ public class CompositeModeMouseHandler implements ModeMouseHandler {
 	}
 
 	@Override
-	public void attach(Node node) {
-		detach();
+	public void addListeners() {
+		removeListeners();
 		if(null != handlers && 0 < handlers.length) {
 			for(ModeMouseHandler handler : handlers) {
-				handler.attach(node);
+				handler.addListeners();
 			}
 		}
 	}
 
 	@Override
-	public void detach() {
+	public void removeListeners() {
 		if(null != handlers && 0 < handlers.length) {
 			for(ModeMouseHandler handler : handlers) {
-				handler.detach();
+				handler.removeListeners();
 			}
 		}
 	}

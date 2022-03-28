@@ -1,16 +1,22 @@
 package com.stox.charting.chart;
 
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Set;
+
 import com.stox.charting.ChartingView;
 import com.stox.charting.axis.y.YAxis;
 import com.stox.charting.axis.y.YAxisGridDecorator;
 import com.stox.charting.axis.y.YAxisInfoLabelDecorator;
 import com.stox.charting.axis.y.YAxisRedrawRequestEvent;
 import com.stox.charting.axis.y.YAxisValueLabelDecorator;
+import com.stox.charting.drawing.Drawing;
 import com.stox.charting.grid.HorizontalGrid;
 import com.stox.charting.handler.CompositeModeMouseHandler;
 import com.stox.charting.handler.pan.PanModeMouseHandler;
 import com.stox.charting.handler.zoom.ZoomModeMouseHandler;
 import com.stox.charting.plot.Plot;
+import com.stox.common.ui.NoLayoutPane;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,18 +30,19 @@ import lombok.Getter;
 
 @Getter
 public class Chart extends BorderPane {
-	private static final Color[] COLORS = {Color.BLUEVIOLET, Color.BROWN, Color.DARKBLUE, Color.DARKCYAN, Color.BLACK, Color.DARKGREEN};
-	
+	private static final Color[] COLORS = {Color.BLACK, Color.BLUEVIOLET, Color.BROWN, Color.DARKBLUE, Color.DARKCYAN, Color.BLACK, Color.DARKGREEN};
 	
 	private final YAxis yAxis = new YAxis();
 	private final ChartingView chartingView;
 	private final VBox infoPane = new VBox();
 	private final HorizontalGrid horizontalGrid = new HorizontalGrid();
-	private final StackPane contentArea = new StackPane(horizontalGrid, infoPane);
+	private final Pane drawingsContainer = new NoLayoutPane();
+	private final StackPane contentArea = new StackPane(horizontalGrid, infoPane, drawingsContainer);
 	private final ObservableList<Plot<?,?,?>> plots = FXCollections.observableArrayList();
-	private final PanModeMouseHandler panModeMouseHandler = new PanModeMouseHandler();
-	private final ZoomModeMouseHandler zoomModeMouseHandler = new ZoomModeMouseHandler();
-	private final CompositeModeMouseHandler compositeModeMouseHandler = new CompositeModeMouseHandler(panModeMouseHandler, zoomModeMouseHandler);
+	private final Set<Drawing<?>> drawings = Collections.newSetFromMap(new IdentityHashMap<>());
+	private final CompositeModeMouseHandler modeMouseHandler = new CompositeModeMouseHandler(
+			new PanModeMouseHandler(this), 
+			new ZoomModeMouseHandler(this));
 	
 	public Chart(ChartingView chartingView) {
 		this.chartingView = chartingView;
@@ -43,7 +50,7 @@ public class Chart extends BorderPane {
 		decorate();
 		setRight(yAxis);
 		setCenter(contentArea);
-		compositeModeMouseHandler.attach(contentArea);
+		modeMouseHandler.addListeners();
 		contentArea.widthProperty().addListener((o,old,value) -> redraw());
 		contentArea.heightProperty().addListener((o,old,value) -> redraw());
 	}
@@ -68,6 +75,7 @@ public class Chart extends BorderPane {
 		if(hasSize()) {
 			yAxis.reset();
 			for(Plot<?, ?, ?> plot : plots) plot.layoutChartChildren();
+			for(Drawing<?> drawing : drawings) drawing.draw();
 			yAxis.fireEvent(new YAxisRedrawRequestEvent());
 		}
 	}
@@ -89,4 +97,12 @@ public class Chart extends BorderPane {
 		if(plots.isEmpty()) chartingView.remove(this);
 	}
 	
+	public void add(Drawing<?> drawing) {
+		if(drawings.add(drawing)) drawingsContainer.getChildren().add(drawing.getNode());
+	}
+	
+	public void remove(Drawing<?> drawing) {
+		drawings.remove(drawing);
+		drawingsContainer.getChildren().remove(drawing.getNode());
+	}
 }

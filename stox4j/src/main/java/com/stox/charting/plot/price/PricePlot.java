@@ -10,7 +10,7 @@ import org.ta4j.core.BaseBarSeries;
 
 import com.stox.charting.ChartingConfig;
 import com.stox.charting.ChartingContext;
-import com.stox.charting.ChartingInput;
+import com.stox.charting.ChartingArguments;
 import com.stox.charting.ChartingView;
 import com.stox.charting.axis.x.XAxis;
 import com.stox.charting.chart.Chart;
@@ -55,7 +55,7 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 	
 	public void reloadBars() {
 		try {
-			final ChartingInput input = getChart().getChartingView().getContext().getInputProperty().get();
+			final ChartingArguments input = getChart().getChartingView().getContext().getInputProperty().get();
 			final Scrip scrip = null == input ? null : input.getScrip();
 			pricePlotInfo.setName(null == scrip ? null : scrip.getName());
 			if(null != scrip && !loading && !fullyLoaded) {
@@ -67,7 +67,7 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 		}
 	}
 
-	private void doReload(ChartingInput input) {
+	private void doReload(ChartingArguments input) {
 		int count = 0;
 		ZonedDateTime to = input.getTo();
 		final XAxis xAxis = getChart().getChartingView().getXAxis();

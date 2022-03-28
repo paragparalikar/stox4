@@ -7,8 +7,8 @@ import com.stox.common.scrip.Scrip;
 import lombok.Value;
 
 @Value
-public class ChartingInput{
-	public static final ChartingInput NULL = new ChartingInput(null, null);
+public class ChartingArguments {
+	public static final ChartingArguments NULL = new ChartingArguments(null, null);
 	
 	private final Scrip scrip;
 	private final ZonedDateTime to;

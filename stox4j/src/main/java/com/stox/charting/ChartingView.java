@@ -11,6 +11,7 @@ import com.stox.charting.axis.x.XAxis;
 import com.stox.charting.chart.Chart;
 import com.stox.charting.controls.ChartingButtonBar;
 import com.stox.charting.crosshair.Crosshair;
+import com.stox.charting.drawing.DrawingButtonBar;
 import com.stox.charting.grid.VerticalGrid;
 import com.stox.charting.handler.pan.PanRequestEvent;
 import com.stox.charting.handler.zoom.ZoomRequestEvent;
@@ -78,7 +79,10 @@ public class ChartingView extends BorderPane {
 		splitPane.setOrientation(Orientation.VERTICAL);
 		addEventHandler(PanRequestEvent.TYPE, this::pan);
 		addEventHandler(ZoomRequestEvent.TYPE, this::zoom);
-		toolBar.getItems().addAll(new RuleButton(this, context, home), new IndicatorButton(this, context));
+		toolBar.getItems().addAll(
+				new DrawingButtonBar(this),
+				new RuleButton(this, context, home), 
+				new IndicatorButton(this, context));
 		context.getBarSeriesProperty().addListener((o,old,value) -> redraw());
 		crosshair.visibleProperty().bind(new BooleanBinding() {
 			{bind(context.getBarSeriesProperty());}
@@ -126,7 +130,7 @@ public class ChartingView extends BorderPane {
 	
 	@Subscribe
 	public void onScripSelected(ScripSelectedEvent event) {
-		context.getInputProperty().set(new ChartingInput(event.getScrip(), null));
+		context.getInputProperty().set(new ChartingArguments(event.getScrip(), null));
 	}
 	
 	@Subscribe
@@ -134,7 +138,7 @@ public class ChartingView extends BorderPane {
 		Optional.ofNullable(event.getExample())
 			.map(Example::getIsin)
 			.map(scripService::findByIsin)
-			.map(scrip -> new ChartingInput(scrip, event.getExample().getTimestamp()))
+			.map(scrip -> new ChartingArguments(scrip, event.getExample().getTimestamp()))
 			.ifPresent(context.getInputProperty()::set);
 	}
 	

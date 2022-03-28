@@ -16,7 +16,7 @@ import lombok.Getter;
 public class ChartingContext {
 	
 	private final ObjectProperty<BarSeries> barSeriesProperty = new SimpleObjectProperty<>(new BaseBarSeries());
-	private final ObjectProperty<ChartingInput> inputProperty = new SimpleObjectProperty<>(new ChartingInput(null, null));
+	private final ObjectProperty<ChartingArguments> inputProperty = new SimpleObjectProperty<>(new ChartingArguments(null, null));
 	
 	public Scrip getScrip() { 
 		return null == inputProperty.get() ? null : inputProperty.get().getScrip();

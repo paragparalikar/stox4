@@ -1,7 +1,7 @@
 package com.stox.charting.controls;
 
 import com.stox.charting.ChartingContext;
-import com.stox.charting.ChartingInput;
+import com.stox.charting.ChartingArguments;
 import com.stox.charting.ChartingView;
 import com.stox.common.ui.Icon;
 
@@ -24,9 +24,9 @@ public class RefreshButton extends Button implements EventHandler<ActionEvent> {
 	@Override
 	public void handle(ActionEvent event) {
 		final ChartingContext context = chartingView.getContext();
-		final ObjectProperty<ChartingInput> inputProperty = context.getInputProperty();
-		final ChartingInput input = inputProperty.get();
-		inputProperty.set(ChartingInput.NULL);
+		final ObjectProperty<ChartingArguments> inputProperty = context.getInputProperty();
+		final ChartingArguments input = inputProperty.get();
+		inputProperty.set(ChartingArguments.NULL);
 		inputProperty.set(input);
 	}
 }
