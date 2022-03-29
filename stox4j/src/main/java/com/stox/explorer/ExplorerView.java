@@ -13,6 +13,7 @@ import com.stox.common.event.ScripSelectedEvent;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.scrip.ScripService;
 import com.stox.common.ui.Fx;
+import com.stox.common.ui.View;
 import com.sun.javafx.scene.control.skin.ListViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 
@@ -21,7 +22,7 @@ import javafx.scene.control.IndexedCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 
-public class ExplorerView extends BorderPane {
+public class ExplorerView extends BorderPane implements View {
 
 	private List<Scrip> scrips;
 	private ExplorerViewState state;
@@ -51,11 +52,13 @@ public class ExplorerView extends BorderPane {
 		Fx.run(() -> listView.getItems().setAll(event.getScrips()));
 	}
 	
+	@Override
 	public void load() {
 		this.scrips = scripService.findAll();
 		this.state = serializationService.deserialize(ExplorerViewState.class);
 	}
 	
+	@Override
 	public void show() {
 		listView.getItems().setAll(scrips);
 		Optional.ofNullable(state).ifPresent(value -> {
@@ -68,6 +71,7 @@ public class ExplorerView extends BorderPane {
 		});
 	}
 	
+	@Override
 	public void unload() {
 		final ExplorerViewState state = new ExplorerViewState();
 		final ListViewSkin<?> listViewSkin = (ListViewSkin<?>) listView.getSkin();

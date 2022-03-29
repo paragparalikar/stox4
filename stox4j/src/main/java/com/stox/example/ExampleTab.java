@@ -5,11 +5,12 @@ import org.greenrobot.eventbus.EventBus;
 import com.stox.common.SerializationService;
 import com.stox.common.scrip.ScripService;
 import com.stox.common.ui.Icon;
+import com.stox.common.ui.View;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 
-public class ExampleTab extends Tab {
+public class ExampleTab extends Tab implements View {
 
 	private final ExampleView exampleView;
 	
@@ -28,8 +29,8 @@ public class ExampleTab extends Tab {
 		setContent(exampleView);
 	}
 	
-	public void load() { exampleView.load(); }
-	public void show() { exampleView.show(); }
-	public void unload() { exampleView.unload(); }
+	@Override public void load() { exampleView.load(); }
+	@Override public void show() { exampleView.show(); }
+	@Override public void unload() { exampleView.unload(); }
 	
 }

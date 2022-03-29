@@ -9,13 +9,14 @@ import org.greenrobot.eventbus.EventBus;
 
 import com.stox.common.SerializationService;
 import com.stox.common.scrip.ScripService;
+import com.stox.common.ui.View;
 import com.sun.javafx.scene.control.skin.ListViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 
 import javafx.scene.control.IndexedCell;
 import javafx.scene.layout.BorderPane;
 
-public class ExampleView extends BorderPane {
+public class ExampleView extends BorderPane implements View {
 	
 	private final ExampleListView exampleListView;
 	private final ExampleGroupComboBox exampleGroupComboBox;
@@ -45,12 +46,14 @@ public class ExampleView extends BorderPane {
 		setCenter(exampleListView);
 	}
 	
+	@Override
 	public void load() {
 		exampleGroups = exampleGroupService.findAll();
 		exampleGroups.sort(Comparator.comparing(ExampleGroup::getName));
 		state = serializationService.deserialize(ExampleViewState.class);
 	}
 	
+	@Override
 	public void show() {
 		exampleGroupComboBox.getItems().addAll(exampleGroups);
 		if(null != state) {
@@ -63,6 +66,7 @@ public class ExampleView extends BorderPane {
 		}
 	}
 	
+	@Override
 	public void unload() {
 		final ExampleViewState state = new ExampleViewState();
 		final ExampleGroup selectedGroup = exampleGroupComboBox.getValue();

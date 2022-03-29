@@ -1,10 +1,15 @@
 package com.stox;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Executor;
 
 import com.stox.charting.ChartingView;
+import com.stox.common.SerializationService;
 import com.stox.common.ui.Fx;
 import com.stox.common.ui.MessagePanel;
+import com.stox.common.ui.View;
 import com.stox.example.AddAsExampleMenu;
 import com.stox.example.ExampleTab;
 import com.stox.explorer.ExplorerTab;
@@ -20,7 +25,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.layout.StackPane;
 
-public class StoxApplicationRoot extends StackPane {
+public class StoxApplicationRoot extends StackPane implements View {
 	
 	private final StoxApplicationContext context;
 	private final ChartingView chartingView;
@@ -34,6 +39,9 @@ public class StoxApplicationRoot extends StackPane {
 	
 	private final TabPane tabPane;
 	private final SplitPane splitPane;
+	private final List<? extends View> views;
+	
+	private StoxApplicationState state;
 	
 	public StoxApplicationRoot(StoxApplicationContext context) {
 		this.context = context;
@@ -54,40 +62,33 @@ public class StoxApplicationRoot extends StackPane {
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		this.splitPane = new SplitPane(tabPane, chartingView);
 		getChildren().add(splitPane);
+		
+		views = Arrays.asList(addAsExampleMenu, addToWatchlistMenu, explorerTab, exampleTab, chartingView);
 	}
 	
 	public void load() {
 		final Executor executor = context.getExecutor();
-		executor.execute(() -> {
-			addAsExampleMenu.load();
-			Platform.runLater(addAsExampleMenu::show);
-		});
-		executor.execute(() -> {
-			addToWatchlistMenu.load();
-			Platform.runLater(addToWatchlistMenu::show);
-		});
-		executor.execute(() -> {
-			explorerTab.load();
-			Platform.runLater(explorerTab::show);
-		});
-		executor.execute(() -> {
-			exampleTab.load();
-			Platform.runLater(exampleTab::show);
-		});
-		executor.execute(() -> {
-			chartingView.load();
-			Platform.runLater(chartingView::show);
+		final SerializationService serializationService = context.getSerializationService();
+		executor.execute(() -> { state = serializationService.deserialize(StoxApplicationState.class); });
+		views.forEach(view -> {
+			view.load();
+			Platform.runLater(view::show);
 		});
 	}
 	
 	public void show() {
 		tabPane.setSide(Side.LEFT);
 		splitPane.setDividerPositions(0.2);
+		Optional.ofNullable(state).map(StoxApplicationState::getSelectedTabIndex)
+			.ifPresent(tabPane.getSelectionModel()::select);
 	}
 	
 	public void unload() {
-		explorerTab.unload();
-		exampleTab.unload();
-		chartingView.unload();
+		views.forEach(View::unload);
+		
+		final StoxApplicationState state = new StoxApplicationState();
+		state.setSelectedTabIndex(tabPane.getSelectionModel().getSelectedIndex());
+		final SerializationService serializationService = context.getSerializationService();
+		serializationService.serialize(state);
 	}
 }

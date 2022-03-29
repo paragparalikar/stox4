@@ -32,6 +32,7 @@ import com.stox.common.event.SelectedBarQueryEvent;
 import com.stox.common.event.SelectedScripQueryEvent;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.scrip.ScripService;
+import com.stox.common.ui.View;
 import com.stox.example.Example;
 import com.stox.example.event.ExampleSelectedEvent;
 
@@ -53,7 +54,7 @@ import lombok.Getter;
 
 
 @Getter
-public class ChartingView extends BorderPane {
+public class ChartingView extends BorderPane implements View {
 	
 	private final Chart priceChart;
 	private final PricePlot pricePlot;
@@ -199,10 +200,12 @@ public class ChartingView extends BorderPane {
 		});
 	}
 	
+	@Override
 	public void load() {
 		this.state = serializationService.deserialize(ChartingViewState.class);
 	}
 	
+	@Override
 	public void show() {
 		if(null != state) {
 			final Scrip scrip = Optional.ofNullable(state.getIsin()).map(scripService::findByIsin).orElse(null);
@@ -213,6 +216,7 @@ public class ChartingView extends BorderPane {
 		}
 	}
 	
+	@Override
 	public void unload() {
 		final String isin = Optional.ofNullable(context.getScrip()).map(Scrip::getIsin).orElse(null);
 		final long to = Optional.ofNullable(context.getTo())

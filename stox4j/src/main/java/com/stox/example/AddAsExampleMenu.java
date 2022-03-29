@@ -12,6 +12,7 @@ import org.ta4j.core.Bar;
 import com.stox.common.event.SelectedBarQueryEvent;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.ui.Fx;
+import com.stox.common.ui.View;
 import com.stox.example.event.ExampleGroupCreatedEvent;
 import com.stox.example.event.ExampleGroupDeletedEvent;
 import com.stox.example.event.ExampleGroupUpdatedEvent;
@@ -22,7 +23,7 @@ import javafx.scene.control.MenuItem;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class AddAsExampleMenu extends Menu {
+public class AddAsExampleMenu extends Menu implements View {
 
 	private List<ExampleGroup> exampleGroups;
 	
@@ -30,12 +31,14 @@ public class AddAsExampleMenu extends Menu {
 	private final ExampleService exampleService;
 	private final ExampleGroupService exampleGroupService;
 	
+	@Override
 	public void load() {
 		eventBus.register(this);
 		this.exampleGroups = exampleGroupService.findAll();
 		exampleGroups.sort(Comparator.comparing(ExampleGroup::getName));
 	}
 	
+	@Override
 	public void show() {
 		setText("Add to example");
 		exampleGroups.forEach(this::addItem);

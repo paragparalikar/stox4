@@ -9,6 +9,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import com.stox.common.event.SelectedScripQueryEvent;
 import com.stox.common.scrip.Scrip;
+import com.stox.common.ui.View;
 import com.stox.watchlist.Watchlist;
 import com.stox.watchlist.WatchlistService;
 import com.stox.watchlist.event.WatchlistClearedEvent;
@@ -22,7 +23,7 @@ import com.stox.watchlist.event.WatchlistUpdatedEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 
-public class AddToWatchlistMenu extends Menu {
+public class AddToWatchlistMenu extends Menu implements View {
 
 	private List<Watchlist> watchlists;
 	
@@ -35,12 +36,14 @@ public class AddToWatchlistMenu extends Menu {
 		this.watchlistService = watchlistService;
 	}
 	
+	@Override
 	public void load() {
 		eventBus.register(this);
 		watchlists = watchlistService.findAll();
 		watchlists.sort(Comparator.comparing(Watchlist::getName));
 	}
 	
+	@Override
 	public void show() {
 		watchlists.forEach(this::createMenuItem);
 	}

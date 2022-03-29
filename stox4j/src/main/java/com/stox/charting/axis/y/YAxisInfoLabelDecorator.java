@@ -1,5 +1,7 @@
 package com.stox.charting.axis.y;
 
+import java.util.Optional;
+
 import com.stox.charting.ChartingContext;
 import com.stox.charting.crosshair.Crosshair;
 import com.stox.common.util.Strings;
@@ -23,9 +25,11 @@ public class YAxisInfoLabelDecorator {
 	private void updateCrosshairLabel(Label label, YAxis yAxis, Crosshair crosshair) {
 		final double crosshairY = crosshair.getHorizontalLine().getEndY();
 		final Point2D screenPoint = crosshair.getHorizontalLine().localToScreen(0, crosshairY);
-		final Point2D point = yAxis.screenToLocal(screenPoint);
-		label.setText(Strings.toString(yAxis.getValue(point.getY())));
-		label.setLayoutY(point.getY() - label.getHeight()/2);
+		Optional.ofNullable(screenPoint).ifPresent(p -> {
+			final Point2D point = yAxis.screenToLocal(screenPoint);
+			label.setText(Strings.toString(yAxis.getValue(point.getY())));
+			label.setLayoutY(point.getY() - label.getHeight()/2);
+		});
 	}
 	
 }
