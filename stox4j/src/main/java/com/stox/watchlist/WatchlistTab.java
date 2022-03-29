@@ -2,35 +2,30 @@ package com.stox.watchlist;
 
 import org.greenrobot.eventbus.EventBus;
 
+import com.stox.common.SerializationService;
 import com.stox.common.scrip.ScripService;
 import com.stox.common.ui.Icon;
+import com.stox.common.ui.View;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 
-public class WatchlistTab extends Tab {
-
-	private final EventBus eventBus;
-	private final ScripService scripService;
-	private final WatchlistService watchlistService;
+public class WatchlistTab extends Tab implements View {
 	
-	public WatchlistTab(EventBus eventBus, ScripService scripService, WatchlistService watchlistService) {
+	private final WatchlistView watchlistView;
+
+	public WatchlistTab(EventBus eventBus, ScripService scripService, 
+			WatchlistService watchlistService, SerializationService serializationService) {
 		super("Watchlists");
-		this.eventBus = eventBus;
-		this.scripService = scripService;
-		this.watchlistService = watchlistService;
 		final Label graphics = new Label(Icon.BOOKMARK);
 		graphics.getStyleClass().add("icon");
 		setGraphic(graphics);
-		setOnSelectionChanged(event -> init());
+		watchlistView = new WatchlistView(eventBus, watchlistService, scripService, serializationService);
+		setContent(watchlistView);
 	}
-	
-	private void init() {
-		if(isSelected() && null == getContent()) {
-			final WatchlistView watchlistView = new WatchlistView(eventBus, watchlistService, scripService);
-			setContent(watchlistView);
-			watchlistView.init();
-		}
-	}
+
+	@Override public void load() { watchlistView.load(); }
+	@Override public void show() { watchlistView.show(); }
+	@Override public void unload() { watchlistView.unload(); }
 	
 }

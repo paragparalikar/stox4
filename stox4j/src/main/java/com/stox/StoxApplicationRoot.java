@@ -50,7 +50,8 @@ public class StoxApplicationRoot extends StackPane implements View {
 		this.explorerTab = new ExplorerTab(context.getEventBus(), context.getScripService(), context.getSerializationService());
 		this.rankerTab = new RankerTab(context.getEventBus(), context.getBarService(), context.getScripService());
 		this.screenerTab = new ScreenerTab(context.getEventBus(), context.getBarService(), context.getScripService());
-		this.watchlistTab = new WatchlistTab(context.getEventBus(), context.getScripService(), context.getWatchlistService());
+		this.watchlistTab = new WatchlistTab(context.getEventBus(), context.getScripService(), context.getWatchlistService(),
+				context.getSerializationService());
 		this.addToWatchlistMenu =  new AddToWatchlistMenu(context.getEventBus(), context.getWatchlistService());
 		this.exampleTab = new ExampleTab(context.getEventBus(), context.getScripService(), 
 				context.getExampleService(), context.getExampleGroupService(), context.getSerializationService());
@@ -63,7 +64,7 @@ public class StoxApplicationRoot extends StackPane implements View {
 		this.splitPane = new SplitPane(tabPane, chartingView);
 		getChildren().add(splitPane);
 		
-		views = Arrays.asList(addAsExampleMenu, addToWatchlistMenu, explorerTab, exampleTab, chartingView);
+		views = Arrays.asList(addAsExampleMenu, addToWatchlistMenu, watchlistTab, explorerTab, exampleTab, chartingView);
 	}
 	
 	public void load() {

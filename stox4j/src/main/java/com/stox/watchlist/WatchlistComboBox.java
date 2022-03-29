@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import com.stox.common.ui.Fx;
 import com.stox.watchlist.event.WatchlistClearedEvent;
 import com.stox.watchlist.event.WatchlistCreatedEvent;
 import com.stox.watchlist.event.WatchlistDeletedEvent;
@@ -19,19 +18,10 @@ import com.stox.watchlist.event.WatchlistRenamedEvent;
 import com.stox.watchlist.event.WatchlistUpdatedEvent;
 
 import javafx.scene.control.ComboBox;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class WatchlistComboBox extends ComboBox<Watchlist> {
 	
-	private final EventBus eventBus;
-	private final WatchlistService watchlistService;
-	
-	public void init() {
-		final List<Watchlist> watchlists = watchlistService.findAll();
-		watchlists.sort(Comparator.comparing(Watchlist::getName));
-		getItems().setAll(watchlists);
-		if(!getItems().isEmpty()) Fx.run(() -> getSelectionModel().select(0));
+	public WatchlistComboBox(EventBus eventBus) {
 		eventBus.register(this);
 	}
 	
