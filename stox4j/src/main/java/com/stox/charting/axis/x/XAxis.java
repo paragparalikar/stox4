@@ -49,7 +49,7 @@ public class XAxis extends StackPane {
 	}
 	
 	private void bind() {
-		context.getInputProperty().addListener((o,old,scrip) -> reset());
+		context.getArgumentsProperty().addListener((o,old,scrip) -> reset());
 		context.getBarSeriesProperty().addListener((o,old,value) -> updateCrosshairLabel());
 		crosshair.getVerticalLine().endXProperty().addListener((o,old,value) -> updateCrosshairLabel());
 		label.visibleProperty().bind(new BooleanBinding() {

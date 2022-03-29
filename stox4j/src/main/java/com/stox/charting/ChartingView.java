@@ -12,6 +12,7 @@ import com.stox.charting.chart.Chart;
 import com.stox.charting.controls.ChartingButtonBar;
 import com.stox.charting.crosshair.Crosshair;
 import com.stox.charting.drawing.DrawingButtonBar;
+import com.stox.charting.drawing.DrawingService;
 import com.stox.charting.grid.VerticalGrid;
 import com.stox.charting.handler.pan.PanRequestEvent;
 import com.stox.charting.handler.zoom.ZoomRequestEvent;
@@ -30,6 +31,7 @@ import com.stox.example.event.ExampleSelectedEvent;
 
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
@@ -50,6 +52,7 @@ public class ChartingView extends BorderPane {
 	private final Chart priceChart;
 	private final PricePlot pricePlot;
 	private final ScripService scripService;
+	private final DrawingService drawingService;
 	private final ToolBar toolBar = new ToolBar();
 	private final SplitPane splitPane = new SplitPane();
 	private final ContextMenu contextMenu = new ContextMenu();
@@ -63,8 +66,9 @@ public class ChartingView extends BorderPane {
 	private final StackPane stackPane = new StackPane(verticalGrid, splitPane, controlButtons, crosshair);
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
-	public ChartingView(EventBus eventBus, BarService barService, ScripService scripService, Path home) {
+	public ChartingView(Path home, EventBus eventBus, BarService barService, ScripService scripService, DrawingService drawingService) {
 		this.scripService = scripService;
+		this.drawingService = drawingService;
 		add(priceChart = new Chart(this));
 		add(pricePlot = new PricePlot(barService));
 		new PlottableVolumeIndicator().add(this);
@@ -83,6 +87,7 @@ public class ChartingView extends BorderPane {
 				new DrawingButtonBar(this),
 				new RuleButton(this, context, home), 
 				new IndicatorButton(this, context));
+		context.getArgumentsProperty().addListener(this::onArgumentsChanged);
 		context.getBarSeriesProperty().addListener((o,old,value) -> redraw());
 		crosshair.visibleProperty().bind(new BooleanBinding() {
 			{bind(context.getBarSeriesProperty());}
@@ -128,9 +133,15 @@ public class ChartingView extends BorderPane {
 		priceChart.removePlot(plot);
 	}
 	
+	private void onArgumentsChanged(ObservableValue<? extends ChartingArguments> observable, ChartingArguments old, ChartingArguments value) {
+		Optional.ofNullable(old).ifPresent(args -> drawingService.save(args.getScrip().getIsin(), priceChart.getDrawings()));
+		priceChart.clearDrawings();
+		Optional.ofNullable(value).ifPresent(args -> drawingService.findByIsin(args.getScrip().getIsin(), priceChart).forEach(priceChart::add));
+	}
+	
 	@Subscribe
 	public void onScripSelected(ScripSelectedEvent event) {
-		context.getInputProperty().set(new ChartingArguments(event.getScrip(), null));
+		context.getArgumentsProperty().set(new ChartingArguments(event.getScrip(), null));
 	}
 	
 	@Subscribe
@@ -139,7 +150,7 @@ public class ChartingView extends BorderPane {
 			.map(Example::getIsin)
 			.map(scripService::findByIsin)
 			.map(scrip -> new ChartingArguments(scrip, event.getExample().getTimestamp()))
-			.ifPresent(context.getInputProperty()::set);
+			.ifPresent(context.getArgumentsProperty()::set);
 	}
 	
 	@Subscribe

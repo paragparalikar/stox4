@@ -7,6 +7,8 @@ import java.util.concurrent.Executors;
 
 import org.greenrobot.eventbus.EventBus;
 
+import com.stox.charting.drawing.DrawingRepository;
+import com.stox.charting.drawing.DrawingService;
 import com.stox.common.bar.BarRepository;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.ScripRepository;
@@ -42,6 +44,8 @@ public class StoxApplicationContext {
 	private final EodBarDownloader eodBarDownloader;
 	private final ScripMasterDownloader scripMasterDownloader;
 	private final ExecutorService executor;
+	private final DrawingRepository drawingRepository;
+	private final DrawingService drawingService;
 
 	public StoxApplicationContext() {
 		eventBus = new EventBus();
@@ -59,6 +63,8 @@ public class StoxApplicationContext {
 		exampleGroupService = new ExampleGroupService(eventBus, exampleGroupRepository);
 		eodBarDownloader = new NseEodBarDownloader(scripService);
 		scripMasterDownloader = new NseScripMasterDownloader();
+		drawingRepository = new DrawingRepository(home);
+		drawingService = new DrawingService(drawingRepository);
 	}
 	
 }

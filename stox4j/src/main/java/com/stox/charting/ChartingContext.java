@@ -16,14 +16,14 @@ import lombok.Getter;
 public class ChartingContext {
 	
 	private final ObjectProperty<BarSeries> barSeriesProperty = new SimpleObjectProperty<>(new BaseBarSeries());
-	private final ObjectProperty<ChartingArguments> inputProperty = new SimpleObjectProperty<>(new ChartingArguments(null, null));
+	private final ObjectProperty<ChartingArguments> argumentsProperty = new SimpleObjectProperty<>(new ChartingArguments(null, null));
 	
 	public Scrip getScrip() { 
-		return null == inputProperty.get() ? null : inputProperty.get().getScrip();
+		return null == argumentsProperty.get() ? null : argumentsProperty.get().getScrip();
 	}
 	
 	public ZonedDateTime getTo() {
-		return null == inputProperty.get() ? null : inputProperty.get().getTo();
+		return null == argumentsProperty.get() ? null : argumentsProperty.get().getTo();
 	}
 	
 	public Bar getBar(int index) {

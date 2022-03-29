@@ -24,7 +24,7 @@ public class RefreshButton extends Button implements EventHandler<ActionEvent> {
 	@Override
 	public void handle(ActionEvent event) {
 		final ChartingContext context = chartingView.getContext();
-		final ObjectProperty<ChartingArguments> inputProperty = context.getInputProperty();
+		final ObjectProperty<ChartingArguments> inputProperty = context.getArgumentsProperty();
 		final ChartingArguments input = inputProperty.get();
 		inputProperty.set(ChartingArguments.NULL);
 		inputProperty.set(input);

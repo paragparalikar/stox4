@@ -42,7 +42,7 @@ public class StoxApplication extends Application {
 		super.init();
 		Font.loadFont(Icon.class.getClassLoader().getResource(Icon.PATH).toExternalForm(), 10);
 		this.context = new StoxApplicationContext();
-		final ChartingView chartingView = new ChartingView(context.getEventBus(), context.getBarService(), context.getScripService(), context.getHome());
+		final ChartingView chartingView = new ChartingView(context.getHome(), context.getEventBus(), context.getBarService(), context.getScripService(), context.getDrawingService());
 		final ExplorerTab explorerTab = new ExplorerTab(context.getEventBus(), context.getScripService());
 		final RankerTab rankerTab = new RankerTab(context.getEventBus(), context.getBarService(), context.getScripService());
 		final ScreenerTab screenerTab = new ScreenerTab(context.getEventBus(), context.getBarService(), context.getScripService());

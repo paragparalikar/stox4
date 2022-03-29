@@ -35,7 +35,7 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 	
 	public void reload() {
 		super.reload();
-		final Scrip scrip = getChart().getChartingView().getContext().getInputProperty().get().getScrip();
+		final Scrip scrip = getChart().getChartingView().getContext().getArgumentsProperty().get().getScrip();
 		pricePlotInfo.setName(null == scrip ? null : scrip.getName());
 		pricePlotInfo.setConfigInfo("D"); // TODO This value should come from BarSpan enum
 	}
@@ -45,7 +45,7 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 		super.setChart(chart);
 		final ChartingView chartingView = chart.getChartingView();
 		final ChartingContext context = chartingView.getContext();
-		context.getInputProperty().addListener((o,old,scrip) -> {
+		context.getArgumentsProperty().addListener((o,old,scrip) -> {
 			loading = false;
 			fullyLoaded = false;
 			context.getBarSeriesProperty().set(new BaseBarSeries());
@@ -55,7 +55,7 @@ public class PricePlot extends Plot<Bar, Void, Node> {
 	
 	public void reloadBars() {
 		try {
-			final ChartingArguments input = getChart().getChartingView().getContext().getInputProperty().get();
+			final ChartingArguments input = getChart().getChartingView().getContext().getArgumentsProperty().get();
 			final Scrip scrip = null == input ? null : input.getScrip();
 			pricePlotInfo.setName(null == scrip ? null : scrip.getName());
 			if(null != scrip && !loading && !fullyLoaded) {
