@@ -9,6 +9,8 @@ import org.greenrobot.eventbus.EventBus;
 
 import com.stox.charting.drawing.DrawingRepository;
 import com.stox.charting.drawing.DrawingService;
+import com.stox.common.SerializationRepository;
+import com.stox.common.SerializationService;
 import com.stox.common.bar.BarRepository;
 import com.stox.common.bar.BarService;
 import com.stox.common.scrip.ScripRepository;
@@ -29,42 +31,24 @@ import lombok.Value;
 @Value
 public class StoxApplicationContext {
 	
-	private final Path home;
-	private final EventBus eventBus;
-	private final BarService barService;
-	private final BarRepository barRepository;
-	private final ScripService scripService;
-	private final ScripRepository scripRepository;
-	private final WatchlistService watchlistService;
-	private final WatchlistRepository watchlistRepository;
-	private final ExampleService exampleService;
-	private final ExampleRepository exampleRepository;
-	private final ExampleGroupService exampleGroupService;
-	private final ExampleGroupRepository exampleGroupRepository;
-	private final EodBarDownloader eodBarDownloader;
-	private final ScripMasterDownloader scripMasterDownloader;
-	private final ExecutorService executor;
-	private final DrawingRepository drawingRepository;
-	private final DrawingService drawingService;
+	private final Path home = Paths.get(System.getProperty("user.home"), ".stox4j");
+	private final EventBus eventBus = new EventBus();
+	private final BarRepository barRepository = new BarRepository(home);
+	private final BarService barService = new BarService(barRepository);
+	private final ScripRepository scripRepository = new ScripRepository(home);
+	private final ScripService scripService = new ScripService(eventBus, scripRepository);
+	private final WatchlistRepository watchlistRepository = new WatchlistRepository(home);
+	private final WatchlistService watchlistService = new WatchlistService(eventBus, watchlistRepository);
+	private final ExampleRepository exampleRepository = new ExampleRepository(home);
+	private final ExampleService exampleService = new ExampleService(eventBus, exampleRepository);
+	private final ExampleGroupRepository exampleGroupRepository = new ExampleGroupRepository(home);
+	private final ExampleGroupService exampleGroupService = new ExampleGroupService(eventBus, exampleGroupRepository);
+	private final EodBarDownloader eodBarDownloader = new NseEodBarDownloader(scripService);
+	private final ScripMasterDownloader scripMasterDownloader = new NseScripMasterDownloader();
+	private final ExecutorService executor = Executors.newWorkStealingPool();
+	private final DrawingRepository drawingRepository = new DrawingRepository(home);
+	private final DrawingService drawingService = new DrawingService(drawingRepository);
+	private final SerializationRepository serializationRepository = new SerializationRepository(home);
+	private final SerializationService serializationService = new SerializationService(serializationRepository);
 
-	public StoxApplicationContext() {
-		eventBus = new EventBus();
-		executor = Executors.newWorkStealingPool();
-		home = Paths.get(System.getProperty("user.home"), ".stox4j");
-		barRepository = new BarRepository(home);
-		barService = new BarService(barRepository);
-		scripRepository = new ScripRepository(home);
-		scripService = new ScripService(eventBus, scripRepository);
-		watchlistRepository = new WatchlistRepository(home);
-		watchlistService = new WatchlistService(eventBus, watchlistRepository);
-		exampleRepository = new ExampleRepository(home);
-		exampleService = new ExampleService(eventBus, exampleRepository);
-		exampleGroupRepository = new ExampleGroupRepository(home);
-		exampleGroupService = new ExampleGroupService(eventBus, exampleGroupRepository);
-		eodBarDownloader = new NseEodBarDownloader(scripService);
-		scripMasterDownloader = new NseScripMasterDownloader();
-		drawingRepository = new DrawingRepository(home);
-		drawingService = new DrawingService(drawingRepository);
-	}
-	
 }

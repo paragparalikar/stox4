@@ -1,5 +1,6 @@
 package com.stox.watchlist.menu;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,8 @@ import javafx.scene.control.MenuItem;
 
 public class AddToWatchlistMenu extends Menu {
 
+	private List<Watchlist> watchlists;
+	
 	private final EventBus eventBus;
 	private final WatchlistService watchlistService;
 	
@@ -32,9 +35,14 @@ public class AddToWatchlistMenu extends Menu {
 		this.watchlistService = watchlistService;
 	}
 	
-	public void init() {
-		watchlistService.findAll().forEach(this::createMenuItem);
+	public void load() {
 		eventBus.register(this);
+		watchlists = watchlistService.findAll();
+		watchlists.sort(Comparator.comparing(Watchlist::getName));
+	}
+	
+	public void show() {
+		watchlists.forEach(this::createMenuItem);
 	}
 	
 	private Optional<MenuItem> findItem(String name){

@@ -1,7 +1,6 @@
 package com.stox.example;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
@@ -16,22 +15,15 @@ import com.stox.example.event.ExampleGroupUpdatedEvent;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 public class ExampleGroupComboBox extends ComboBox<ExampleGroup> {
 
 	private final EventBus eventBus;
-	private final ExampleGroupService exampleGroupService;
 	
-	public void init() {
+	public ExampleGroupComboBox(EventBus eventBus) {
+		this.eventBus = eventBus;
 		eventBus.register(this);
 		getSelectionModel().selectedItemProperty().addListener(this::changed);
-		final List<ExampleGroup> exampleGroups = exampleGroupService.findAll();
-		Fx.run(() -> {
-			getItems().setAll(exampleGroups);
-			if(!exampleGroups.isEmpty()) getSelectionModel().select(0);
-		});
 	}
 	
 	private void changed(ObservableValue<? extends ExampleGroup> observable, ExampleGroup oldValue, ExampleGroup newValue) {

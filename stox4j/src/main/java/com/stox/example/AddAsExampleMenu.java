@@ -1,6 +1,7 @@
 package com.stox.example;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -23,16 +24,21 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AddAsExampleMenu extends Menu {
 
+	private List<ExampleGroup> exampleGroups;
+	
 	private final EventBus eventBus;
 	private final ExampleService exampleService;
 	private final ExampleGroupService exampleGroupService;
 	
-	public void init() {
-		setText("Add to example");
+	public void load() {
 		eventBus.register(this);
-		exampleGroupService.findAll().stream()
-			.sorted(Comparator.comparing(ExampleGroup::getName))
-			.forEach(this::addItem);
+		this.exampleGroups = exampleGroupService.findAll();
+		exampleGroups.sort(Comparator.comparing(ExampleGroup::getName));
+	}
+	
+	public void show() {
+		setText("Add to example");
+		exampleGroups.forEach(this::addItem);
 	}
 	
 	private Optional<MenuItem> findItem(String id){

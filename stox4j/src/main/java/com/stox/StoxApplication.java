@@ -1,26 +1,11 @@
 package com.stox;
 
-import com.stox.charting.ChartingView;
-import com.stox.common.ui.Fx;
 import com.stox.common.ui.Icon;
-import com.stox.common.ui.MessagePanel;
 import com.stox.data.downloader.DataDownloader;
-import com.stox.example.AddAsExampleMenu;
-import com.stox.example.ExampleTab;
-import com.stox.explorer.ExplorerTab;
-import com.stox.ranker.RankerTab;
-import com.stox.screener.ScreenerTab;
-import com.stox.watchlist.WatchlistTab;
-import com.stox.watchlist.menu.AddToWatchlistMenu;
 import com.sun.javafx.application.LauncherImpl;
 
 import javafx.application.Application;
-import javafx.geometry.Side;
 import javafx.scene.Scene;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TabPane.TabClosingPolicy;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -31,10 +16,7 @@ public class StoxApplication extends Application {
 		LauncherImpl.launchApplication(StoxApplication.class, null, args);
 	}
 	
-	private Scene scene;
-	private StackPane root;
-	private TabPane tabPane;
-	private SplitPane splitPane;
+	private StoxApplicationRoot root;
 	private StoxApplicationContext context;
 	
 	@Override
@@ -42,28 +24,13 @@ public class StoxApplication extends Application {
 		super.init();
 		Font.loadFont(Icon.class.getClassLoader().getResource(Icon.PATH).toExternalForm(), 10);
 		this.context = new StoxApplicationContext();
-		final ChartingView chartingView = new ChartingView(context.getHome(), context.getEventBus(), context.getBarService(), context.getScripService(), context.getDrawingService());
-		final ExplorerTab explorerTab = new ExplorerTab(context.getEventBus(), context.getScripService());
-		final RankerTab rankerTab = new RankerTab(context.getEventBus(), context.getBarService(), context.getScripService());
-		final ScreenerTab screenerTab = new ScreenerTab(context.getEventBus(), context.getBarService(), context.getScripService());
-		final WatchlistTab watchlistTab = new WatchlistTab(context.getEventBus(), context.getScripService(), context.getWatchlistService());
-		final AddToWatchlistMenu addToWatchlistMenu =  new AddToWatchlistMenu(context.getEventBus(), context.getWatchlistService());
-		addToWatchlistMenu.init();
-		final ExampleTab exampleTab = new ExampleTab(context.getEventBus(), context.getScripService(), context.getExampleService(), context.getExampleGroupService());
-		final AddAsExampleMenu addAsExampleMenu = new AddAsExampleMenu(context.getEventBus(), context.getExampleService(), context.getExampleGroupService());
-		addAsExampleMenu.init();
-		chartingView.getContextMenu().getItems().addAll(addToWatchlistMenu, addAsExampleMenu);
-		chartingView.getToolBar().getItems().addAll(Fx.spacer(), new MessagePanel(context.getEventBus()));
-		tabPane = new TabPane(explorerTab, watchlistTab, exampleTab, screenerTab, rankerTab);
-		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
-		splitPane = new SplitPane(tabPane, chartingView);
-		root = new StackPane(splitPane);
-		scene = new Scene(root);
-		
+		this.root = new StoxApplicationRoot(context);
+		this.root.load();
 	}
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		final Scene scene = new Scene(root);
 		scene.getStylesheets().addAll("style/css/common.css", 
 				"style/css/check-box.css", "style/css/choice-box.css",
 				"style/css/progress-bar.css", "style/css/progress-indicator.css",
@@ -80,9 +47,7 @@ public class StoxApplication extends Application {
 	}
 	
 	private void onShown(WindowEvent event) {
-		tabPane.setSide(Side.LEFT);
-		splitPane.setDividerPositions(0.2);
-		
+		root.show();
 		DataDownloader.builder()
 			.executor(context.getExecutor())
 			.eventBus(context.getEventBus())
@@ -92,6 +57,11 @@ public class StoxApplication extends Application {
 			.scripMasterDownloader(context.getScripMasterDownloader())
 			.build()
 			.download();
+	}
+
+	@Override
+	public void stop() throws Exception {
+		root.unload();
 	}
 	
 }

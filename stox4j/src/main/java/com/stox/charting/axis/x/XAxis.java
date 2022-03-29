@@ -145,4 +145,14 @@ public class XAxis extends StackPane {
 		label.setLayoutY(0);
 		label.layoutXProperty().bind(label.widthProperty().divide(2).subtract(x).negate());
 	}
+	
+	public XAxisState getState() {
+		return new XAxisState(unitWidth, panWidth);
+	}
+	
+	public void setState(XAxisState state) {
+		if(null == state) return;
+		this.unitWidth = state.getUnitWidth();
+		this.panWidth = state.getPanWidth();
+	}
 }

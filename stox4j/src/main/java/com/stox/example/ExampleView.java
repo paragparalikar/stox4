@@ -1,28 +1,81 @@
 package com.stox.example;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+
 import org.greenrobot.eventbus.EventBus;
 
+import com.stox.common.SerializationService;
 import com.stox.common.scrip.ScripService;
+import com.sun.javafx.scene.control.skin.ListViewSkin;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 
+import javafx.scene.control.IndexedCell;
 import javafx.scene.layout.BorderPane;
 
 public class ExampleView extends BorderPane {
-
-	private final ExampleGroupComboBox exampleGroupComboBox;
 	
-	public ExampleView(EventBus eventBus, ScripService scripService, ExampleService exampleService,
-			ExampleGroupService exampleGroupService) {
-		final ExampleListView exampleListView = new ExampleListView(eventBus, scripService, exampleService);
-		exampleGroupComboBox = new ExampleGroupComboBox(eventBus, exampleGroupService);
-		final ExampleGroupControlsMenuButton exampleGroupControlsMenuButton = new ExampleGroupControlsMenuButton(exampleService,
+	private final ExampleListView exampleListView;
+	private final ExampleGroupComboBox exampleGroupComboBox;
+	private final ExampleGroupTitleBar exampleGroupTitleBar;
+	private final ExampleGroupControlsMenuButton exampleGroupControlsMenuButton;
+	
+	private final ExampleGroupService exampleGroupService;
+	private final SerializationService serializationService;
+	
+	private ExampleViewState state;
+	private List<ExampleGroup> exampleGroups;
+	
+	public ExampleView(
+			EventBus eventBus, 
+			ScripService scripService, 
+			ExampleService exampleService,
+			ExampleGroupService exampleGroupService,
+			SerializationService serializationService) {
+		this.exampleGroupService = exampleGroupService;
+		this.serializationService = serializationService;
+		exampleListView = new ExampleListView(eventBus, scripService, exampleService);
+		exampleGroupComboBox = new ExampleGroupComboBox(eventBus);
+		exampleGroupControlsMenuButton = new ExampleGroupControlsMenuButton(exampleService,
 				exampleGroupService, exampleGroupComboBox);
-		final ExampleGroupTitleBar exampleGroupTitleBar = new ExampleGroupTitleBar(exampleGroupComboBox, exampleGroupControlsMenuButton);
+		exampleGroupTitleBar = new ExampleGroupTitleBar(exampleGroupComboBox, exampleGroupControlsMenuButton);
 		setTop(exampleGroupTitleBar);
 		setCenter(exampleListView);
 	}
 	
-	public void init() {
-		exampleGroupComboBox.init();
+	public void load() {
+		exampleGroups = exampleGroupService.findAll();
+		exampleGroups.sort(Comparator.comparing(ExampleGroup::getName));
+		state = serializationService.deserialize(ExampleViewState.class);
 	}
 	
+	public void show() {
+		exampleGroupComboBox.getItems().addAll(exampleGroups);
+		if(null != state) {
+			exampleGroups.stream().filter(Predicate.isEqual(state.getSelectedGroup()))
+				.findAny().ifPresent(group -> exampleGroupComboBox.getSelectionModel().select(group));
+			exampleListView.getItems().stream().filter(Predicate.isEqual(state.getSelectedItem()))
+				.findAny().ifPresent(item -> exampleListView.getSelectionModel().select(item));
+			exampleListView.getItems().stream().filter(Predicate.isEqual(state.getFirstVisibleItem()))
+				.findFirst().ifPresent(exampleListView::scrollTo);
+		}
+	}
+	
+	public void unload() {
+		final ExampleViewState state = new ExampleViewState();
+		final ExampleGroup selectedGroup = exampleGroupComboBox.getValue();
+		state.setSelectedGroup(selectedGroup);
+		
+		final Example selectedItem = exampleListView.getSelectionModel().getSelectedItem();
+		state.setSelectedItem(selectedItem);
+		
+		final ListViewSkin<?> listViewSkin = (ListViewSkin<?>) exampleListView.getSkin();
+	    final VirtualFlow<?> virtualFlow = (VirtualFlow<?>) listViewSkin.getChildren().get(0);
+	    final Example firstVisibleExample = (Example) Optional.ofNullable(virtualFlow.getFirstVisibleCell())
+	    		.map(IndexedCell::getItem).orElse(null);
+	    state.setFirstVisibleItem(firstVisibleExample);
+	    serializationService.serialize(state);
+	}
 }
