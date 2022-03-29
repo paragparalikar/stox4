@@ -218,14 +218,17 @@ public class ChartingView extends BorderPane implements View {
 	
 	@Override
 	public void unload() {
-		final String isin = Optional.ofNullable(context.getScrip()).map(Scrip::getIsin).orElse(null);
-		final long to = Optional.ofNullable(context.getTo())
-				.map(ZonedDateTime::toInstant)
-				.map(Instant::toEpochMilli)
-				.orElse(0l);
-		final XAxisState xAxisState = xAxis.getState();
-		final ChartingViewState state = new ChartingViewState(to, isin, xAxisState);
-		serializationService.serialize(state);
+		if(null != context.getScrip()) {
+			final String isin = Optional.ofNullable(context.getScrip()).map(Scrip::getIsin).orElse(null);
+			final long to = Optional.ofNullable(context.getTo())
+					.map(ZonedDateTime::toInstant)
+					.map(Instant::toEpochMilli)
+					.orElse(0l);
+			final XAxisState xAxisState = xAxis.getState();
+			final ChartingViewState state = new ChartingViewState(to, isin, xAxisState);
+			serializationService.serialize(state);
+			drawingService.save(isin, priceChart.getDrawings());
+		}
 	}
 
 }

@@ -133,6 +133,16 @@ public class BarRepository {
 		}
 	}
 	
+	@SneakyThrows
+	public void save(String isin, Iterable<Bar> bars) {
+		final Path path = resolvePath(isin);
+		synchronized(isin) {
+			try (final RandomAccessFile file = new RandomAccessFile(path.toString(), "rw")) {
+				for(Bar bar : bars) write(bar, file);
+			}
+		}
+	}
+	
 	private void write(final Bar bar, final RandomAccessFile file) throws IOException {
 		final long date = bar.getEndTime().toInstant().toEpochMilli();
 		if (0 == file.length()) {

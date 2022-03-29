@@ -16,6 +16,10 @@ public class BarService {
 		barRepository.save(isin, bar);
 	}
 	
+	public void save(String isin, Iterable<Bar> bars) {
+		barRepository.save(isin, bars);
+	}
+	
 	public List<Bar> find(final String isin, int count) {
 		return barRepository.find(isin, count);
 	}
