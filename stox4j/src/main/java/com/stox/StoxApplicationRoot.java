@@ -72,8 +72,10 @@ public class StoxApplicationRoot extends StackPane implements View {
 		final SerializationService serializationService = context.getSerializationService();
 		executor.execute(() -> { state = serializationService.deserialize(StoxApplicationState.class); });
 		views.forEach(view -> {
-			view.load();
-			Platform.runLater(view::show);
+			executor.execute(() -> {
+				view.load();
+				Platform.runLater(view::show);
+			});
 		});
 	}
 	
