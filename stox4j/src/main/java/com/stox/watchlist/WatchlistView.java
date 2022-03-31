@@ -12,6 +12,7 @@ import com.stox.common.ui.View;
 import com.stox.watchlist.menu.WatchlistContextMenu;
 import com.stox.watchlist.menu.WatchlistControlsMenuButton;
 
+import javafx.application.Platform;
 import javafx.scene.layout.BorderPane;
 import lombok.Getter;
 
@@ -23,9 +24,6 @@ public class WatchlistView extends BorderPane implements View {
 	private final WatchlistComboBox watchlistComboBox;
 	private final WatchlistEntryView watchlistEntryView;
 	private final SerializationService serializationService;
-	
-	private WatchlistViewState state;
-	private List<Watchlist> watchlists;
 	
 	public WatchlistView(
 			EventBus eventBus, 
@@ -52,21 +50,19 @@ public class WatchlistView extends BorderPane implements View {
 	
 	@Override
 	public void load() {
-		watchlists = watchlistService.findAll();
+		final List<Watchlist> watchlists = watchlistService.findAll();
 		watchlists.sort(Comparator.comparing(Watchlist::getName));
-		state = serializationService.deserialize(WatchlistViewState.class);
-	}
-	
-	@Override
-	public void show() {
-		watchlistComboBox.getItems().addAll(watchlists);
-		if(null != state) {
-			watchlists.stream()
-				.filter(watchlist -> watchlist.getName().equals(state.getSelectedWatchlistName()))
-				.findFirst().ifPresent(watchlistComboBox.getSelectionModel()::select);
-			Optional.ofNullable(state.getSelectedWatchlistEntry())
-				.ifPresent(watchlistEntryView.getSelectionModel()::select);
-		}
+		final WatchlistViewState state = serializationService.deserialize(WatchlistViewState.class);
+		Platform.runLater(() -> {
+			watchlistComboBox.getItems().addAll(watchlists);
+			if(null != state) {
+				watchlists.stream()
+					.filter(watchlist -> watchlist.getName().equals(state.getSelectedWatchlistName()))
+					.findFirst().ifPresent(watchlistComboBox.getSelectionModel()::select);
+				Optional.ofNullable(state.getSelectedWatchlistEntry())
+					.ifPresent(watchlistEntryView.getSelectionModel()::select);
+			}
+		});
 	}
 	
 	@Override

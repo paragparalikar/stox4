@@ -18,7 +18,6 @@ import com.stox.screener.ScreenerTab;
 import com.stox.watchlist.WatchlistTab;
 import com.stox.watchlist.menu.AddToWatchlistMenu;
 
-import javafx.application.Platform;
 import javafx.geometry.Side;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
@@ -71,12 +70,7 @@ public class StoxApplicationRoot extends StackPane implements View {
 		final Executor executor = context.getExecutor();
 		final SerializationService serializationService = context.getSerializationService();
 		executor.execute(() -> { state = serializationService.deserialize(StoxApplicationState.class); });
-		views.forEach(view -> {
-			executor.execute(() -> {
-				view.load();
-				Platform.runLater(view::show);
-			});
-		});
+		views.forEach(view -> executor.execute(view::load));
 	}
 	
 	public void show() {

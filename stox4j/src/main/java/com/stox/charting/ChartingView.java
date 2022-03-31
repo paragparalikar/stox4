@@ -73,8 +73,6 @@ public class ChartingView extends BorderPane implements View {
 	private final StackPane stackPane = new StackPane(verticalGrid, splitPane, controlButtons, crosshair);
 	private final ObservableList<Chart> charts = FXCollections.observableArrayList();
 	
-	private ChartingViewState state;
-	
 	public ChartingView(Path home, 
 			EventBus eventBus, 
 			BarService barService, 
@@ -202,18 +200,16 @@ public class ChartingView extends BorderPane implements View {
 	
 	@Override
 	public void load() {
-		this.state = serializationService.deserialize(ChartingViewState.class);
-	}
-	
-	@Override
-	public void show() {
-		if(null != state) {
-			final Scrip scrip = Optional.ofNullable(state.getIsin()).map(scripService::findByIsin).orElse(null);
-			final ZonedDateTime to = 0 == state.getTo() ? null : ZonedDateTime.ofInstant(Instant.ofEpochMilli(state.getTo()), ZoneId.systemDefault());
-			final ChartingArguments args = new ChartingArguments(scrip, to);
-			context.getArgumentsProperty().set(args);
-			Optional.ofNullable(state.getXAxisState()).ifPresent(xAxis::setState);
-		}
+		Optional.ofNullable(serializationService.deserialize(ChartingViewState.class))
+			.ifPresent(state -> {
+				final Scrip scrip = Optional.ofNullable(state.getIsin()).map(scripService::findByIsin).orElse(null);
+				final ZonedDateTime to = 0 == state.getTo() ? null : ZonedDateTime.ofInstant(Instant.ofEpochMilli(state.getTo()), ZoneId.systemDefault());
+				final ChartingArguments args = new ChartingArguments(scrip, to);
+				Platform.runLater(() -> {
+					context.getArgumentsProperty().set(args);
+					Optional.ofNullable(state.getXAxisState()).ifPresent(xAxis::setState);
+				});
+			});
 	}
 	
 	@Override

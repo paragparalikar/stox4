@@ -17,6 +17,7 @@ import com.stox.common.ui.View;
 import com.sun.javafx.scene.control.skin.ListViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.IndexedCell;
 import javafx.scene.control.ListView;
@@ -24,9 +25,6 @@ import javafx.scene.layout.BorderPane;
 
 public class ExplorerView extends BorderPane implements View {
 
-	private List<Scrip> scrips;
-	private ExplorerViewState state;
-	
 	private final EventBus eventBus;
 	private final ScripService scripService;
 	private final SerializationService serializationService;
@@ -54,20 +52,18 @@ public class ExplorerView extends BorderPane implements View {
 	
 	@Override
 	public void load() {
-		this.scrips = scripService.findAll();
-		this.state = serializationService.deserialize(ExplorerViewState.class);
-	}
-	
-	@Override
-	public void show() {
-		listView.getItems().setAll(scrips);
-		Optional.ofNullable(state).ifPresent(value -> {
-			Optional.ofNullable(state.getSelectedItem())
-				.map(scripService::findByIsin)
-				.ifPresent(listView.getSelectionModel()::select);
-			Optional.ofNullable(state.getFirstVisibleItem())
-				.map(scripService::findByIsin)
-				.ifPresent(listView::scrollTo);
+		final List<Scrip> scrips = scripService.findAll();
+		final ExplorerViewState state = serializationService.deserialize(ExplorerViewState.class);
+		Platform.runLater(() -> {
+			listView.getItems().setAll(scrips);
+			Optional.ofNullable(state).ifPresent(value -> {
+				Optional.ofNullable(state.getSelectedItem())
+					.map(scripService::findByIsin)
+					.ifPresent(listView.getSelectionModel()::select);
+				Optional.ofNullable(state.getFirstVisibleItem())
+					.map(scripService::findByIsin)
+					.ifPresent(listView::scrollTo);
+			});
 		});
 	}
 	

@@ -20,13 +20,12 @@ import com.stox.watchlist.event.WatchlistEntryRemovedEvent;
 import com.stox.watchlist.event.WatchlistRenamedEvent;
 import com.stox.watchlist.event.WatchlistUpdatedEvent;
 
+import javafx.application.Platform;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 
 public class AddToWatchlistMenu extends Menu implements View {
 
-	private List<Watchlist> watchlists;
-	
 	private final EventBus eventBus;
 	private final WatchlistService watchlistService;
 	
@@ -39,13 +38,9 @@ public class AddToWatchlistMenu extends Menu implements View {
 	@Override
 	public void load() {
 		eventBus.register(this);
-		watchlists = watchlistService.findAll();
+		final List<Watchlist> watchlists = watchlistService.findAll();
 		watchlists.sort(Comparator.comparing(Watchlist::getName));
-	}
-	
-	@Override
-	public void show() {
-		watchlists.forEach(this::createMenuItem);
+		Platform.runLater(() -> watchlists.forEach(this::createMenuItem));
 	}
 	
 	private Optional<MenuItem> findItem(String name){

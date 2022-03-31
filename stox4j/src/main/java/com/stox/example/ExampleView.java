@@ -13,6 +13,7 @@ import com.stox.common.ui.View;
 import com.sun.javafx.scene.control.skin.ListViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 
+import javafx.application.Platform;
 import javafx.scene.control.IndexedCell;
 import javafx.scene.layout.BorderPane;
 
@@ -25,9 +26,6 @@ public class ExampleView extends BorderPane implements View {
 	
 	private final ExampleGroupService exampleGroupService;
 	private final SerializationService serializationService;
-	
-	private ExampleViewState state;
-	private List<ExampleGroup> exampleGroups;
 	
 	public ExampleView(
 			EventBus eventBus, 
@@ -48,22 +46,20 @@ public class ExampleView extends BorderPane implements View {
 	
 	@Override
 	public void load() {
-		exampleGroups = exampleGroupService.findAll();
+		final List<ExampleGroup> exampleGroups = exampleGroupService.findAll();
 		exampleGroups.sort(Comparator.comparing(ExampleGroup::getName));
-		state = serializationService.deserialize(ExampleViewState.class);
-	}
-	
-	@Override
-	public void show() {
-		exampleGroupComboBox.getItems().addAll(exampleGroups);
-		if(null != state) {
-			exampleGroups.stream().filter(Predicate.isEqual(state.getSelectedGroup()))
-				.findAny().ifPresent(group -> exampleGroupComboBox.getSelectionModel().select(group));
-			exampleListView.getItems().stream().filter(Predicate.isEqual(state.getSelectedItem()))
-				.findAny().ifPresent(item -> exampleListView.getSelectionModel().select(item));
-			exampleListView.getItems().stream().filter(Predicate.isEqual(state.getFirstVisibleItem()))
-				.findFirst().ifPresent(exampleListView::scrollTo);
-		}
+		final ExampleViewState state = serializationService.deserialize(ExampleViewState.class);
+		Platform.runLater(() -> {
+			exampleGroupComboBox.getItems().addAll(exampleGroups);
+			if(null != state) {
+				exampleGroups.stream().filter(Predicate.isEqual(state.getSelectedGroup()))
+					.findAny().ifPresent(group -> exampleGroupComboBox.getSelectionModel().select(group));
+				exampleListView.getItems().stream().filter(Predicate.isEqual(state.getSelectedItem()))
+					.findAny().ifPresent(item -> exampleListView.getSelectionModel().select(item));
+				exampleListView.getItems().stream().filter(Predicate.isEqual(state.getFirstVisibleItem()))
+					.findFirst().ifPresent(exampleListView::scrollTo);
+			}
+		});
 	}
 	
 	@Override

@@ -4,8 +4,6 @@ public interface View {
 
 	default void load() {};
 	
-	default void show() {};
-	
 	default void unload() {};
 	
 }

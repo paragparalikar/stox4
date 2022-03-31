@@ -30,7 +30,6 @@ public class ExampleTab extends Tab implements View {
 	}
 	
 	@Override public void load() { exampleView.load(); }
-	@Override public void show() { exampleView.show(); }
 	@Override public void unload() { exampleView.unload(); }
 	
 }
