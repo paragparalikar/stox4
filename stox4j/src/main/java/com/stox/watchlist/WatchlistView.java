@@ -49,7 +49,7 @@ public class WatchlistView extends BorderPane implements View {
 	}
 	
 	@Override
-	public void load() {
+	public void loadView() {
 		final List<Watchlist> watchlists = watchlistService.findAll();
 		watchlists.sort(Comparator.comparing(Watchlist::getName));
 		final WatchlistViewState state = serializationService.deserialize(WatchlistViewState.class);
@@ -66,7 +66,7 @@ public class WatchlistView extends BorderPane implements View {
 	}
 	
 	@Override
-	public void unload() {
+	public void unloadView() {
 		final WatchlistViewState state = new WatchlistViewState();
 		Optional.ofNullable(watchlistComboBox.getValue())
 			.map(Watchlist::getName)

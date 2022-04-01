@@ -36,7 +36,7 @@ public class AddToWatchlistMenu extends Menu implements View {
 	}
 	
 	@Override
-	public void load() {
+	public void loadView() {
 		eventBus.register(this);
 		final List<Watchlist> watchlists = watchlistService.findAll();
 		watchlists.sort(Comparator.comparing(Watchlist::getName));

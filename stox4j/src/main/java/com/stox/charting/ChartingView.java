@@ -199,7 +199,7 @@ public class ChartingView extends BorderPane implements View {
 	}
 	
 	@Override
-	public void load() {
+	public void loadView() {
 		Optional.ofNullable(serializationService.deserialize(ChartingViewState.class))
 			.ifPresent(state -> {
 				final Scrip scrip = Optional.ofNullable(state.getIsin()).map(scripService::findByIsin).orElse(null);
@@ -213,7 +213,7 @@ public class ChartingView extends BorderPane implements View {
 	}
 	
 	@Override
-	public void unload() {
+	public void unloadView() {
 		if(null != context.getScrip()) {
 			final String isin = Optional.ofNullable(context.getScrip()).map(Scrip::getIsin).orElse(null);
 			final long to = Optional.ofNullable(context.getTo())

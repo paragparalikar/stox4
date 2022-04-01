@@ -51,7 +51,7 @@ public class ExplorerView extends BorderPane implements View {
 	}
 	
 	@Override
-	public void load() {
+	public void loadView() {
 		final List<Scrip> scrips = scripService.findAll();
 		final ExplorerViewState state = serializationService.deserialize(ExplorerViewState.class);
 		Platform.runLater(() -> {
@@ -68,7 +68,7 @@ public class ExplorerView extends BorderPane implements View {
 	}
 	
 	@Override
-	public void unload() {
+	public void unloadView() {
 		final ExplorerViewState state = new ExplorerViewState();
 		final ListViewSkin<?> listViewSkin = (ListViewSkin<?>) listView.getSkin();
 	    final VirtualFlow<?> virtualFlow = (VirtualFlow<?>) listViewSkin.getChildren().get(0);

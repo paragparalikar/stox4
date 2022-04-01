@@ -26,7 +26,7 @@ public class ExplorerTab extends Tab implements View {
 		setContent(explorerView);
 	}
 	
-	@Override public void load() {explorerView.load();}
-	@Override public void unload() {explorerView.unload();}
+	@Override public void loadView() {explorerView.loadView();}
+	@Override public void unloadView() {explorerView.unloadView();}
 	
 }

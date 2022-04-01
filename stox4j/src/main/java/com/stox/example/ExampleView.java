@@ -45,7 +45,7 @@ public class ExampleView extends BorderPane implements View {
 	}
 	
 	@Override
-	public void load() {
+	public void loadView() {
 		final List<ExampleGroup> exampleGroups = exampleGroupService.findAll();
 		exampleGroups.sort(Comparator.comparing(ExampleGroup::getName));
 		final ExampleViewState state = serializationService.deserialize(ExampleViewState.class);
@@ -63,7 +63,7 @@ public class ExampleView extends BorderPane implements View {
 	}
 	
 	@Override
-	public void unload() {
+	public void unloadView() {
 		final ExampleViewState state = new ExampleViewState();
 		final ExampleGroup selectedGroup = exampleGroupComboBox.getValue();
 		state.setSelectedGroup(selectedGroup);

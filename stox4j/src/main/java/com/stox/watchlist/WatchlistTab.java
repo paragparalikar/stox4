@@ -24,7 +24,7 @@ public class WatchlistTab extends Tab implements View {
 		setContent(watchlistView);
 	}
 
-	@Override public void load() { watchlistView.load(); }
-	@Override public void unload() { watchlistView.unload(); }
+	@Override public void loadView() { watchlistView.loadView(); }
+	@Override public void unloadView() { watchlistView.unloadView(); }
 	
 }

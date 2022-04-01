@@ -32,7 +32,7 @@ public class AddAsExampleMenu extends Menu implements View {
 	private final ExampleGroupService exampleGroupService;
 	
 	@Override
-	public void load() {
+	public void loadView() {
 		eventBus.register(this);
 		this.exampleGroups = exampleGroupService.findAll();
 		exampleGroups.sort(Comparator.comparing(ExampleGroup::getName));

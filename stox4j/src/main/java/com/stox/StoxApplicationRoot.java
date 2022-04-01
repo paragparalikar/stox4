@@ -66,11 +66,11 @@ public class StoxApplicationRoot extends StackPane implements View {
 		views = Arrays.asList(addAsExampleMenu, addToWatchlistMenu, watchlistTab, explorerTab, exampleTab, chartingView);
 	}
 	
-	public void load() {
+	public void loadView() {
 		final Executor executor = context.getExecutor();
 		final SerializationService serializationService = context.getSerializationService();
 		executor.execute(() -> { state = serializationService.deserialize(StoxApplicationState.class); });
-		views.forEach(view -> executor.execute(view::load));
+		for(View view : views) executor.execute(view::loadView);
 	}
 	
 	public void show() {
@@ -80,8 +80,8 @@ public class StoxApplicationRoot extends StackPane implements View {
 			.ifPresent(tabPane.getSelectionModel()::select);
 	}
 	
-	public void unload() {
-		views.forEach(View::unload);
+	public void unloadView() {
+		views.forEach(View::unloadView);
 		
 		final StoxApplicationState state = new StoxApplicationState();
 		state.setSelectedTabIndex(tabPane.getSelectionModel().getSelectedIndex());

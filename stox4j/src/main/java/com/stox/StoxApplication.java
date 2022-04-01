@@ -25,7 +25,7 @@ public class StoxApplication extends Application {
 		Font.loadFont(Icon.class.getClassLoader().getResource(Icon.PATH).toExternalForm(), 10);
 		this.context = new StoxApplicationContext();
 		this.root = new StoxApplicationRoot(context);
-		this.root.load();
+		this.root.loadView();
 	}
 	
 	@Override
@@ -61,7 +61,7 @@ public class StoxApplication extends Application {
 
 	@Override
 	public void stop() throws Exception {
-		root.unload();
+		root.unloadView();
 	}
 	
 }
