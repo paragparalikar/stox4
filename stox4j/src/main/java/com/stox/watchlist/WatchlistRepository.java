@@ -49,7 +49,7 @@ public class WatchlistRepository {
 	private Watchlist read(Path path) {
 		final Watchlist watchlist = new Watchlist();
 		watchlist.setName(path.getFileName().toString());
-		watchlist.setEntries(Files.readAllLines(path));
+		watchlist.setEntries(Files.lines(path).distinct().collect(Collectors.toList()));
 		return watchlist;
 	}	
 	
@@ -71,6 +71,7 @@ public class WatchlistRepository {
 		if(!existsByName(watchlist.getName())) throw new IllegalArgumentException(watchlist.getName() + " does not exists");
 		final Path path = getPath(watchlist.getName());
 		Files.createDirectories(path.getParent());
+		watchlist.setEntries(watchlist.getEntries().stream().distinct().collect(Collectors.toList()));
 		Files.write(path, watchlist.getEntries(), 
 				StandardOpenOption.CREATE, 
 				StandardOpenOption.WRITE, 

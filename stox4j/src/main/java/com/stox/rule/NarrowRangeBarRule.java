@@ -7,31 +7,33 @@ import org.ta4j.core.indicators.helpers.DifferenceIndicator;
 import org.ta4j.core.indicators.helpers.HighPriceIndicator;
 import org.ta4j.core.indicators.helpers.LowPriceIndicator;
 import org.ta4j.core.rules.AbstractRule;
-import org.ta4j.core.rules.IsFallingRule;
+import org.ta4j.core.rules.IsLowestRule;
+
+import com.stox.screener.ScreenerConfig;
 
 import lombok.Data;
 
-public class TestRule extends AbstractRule {
+public class NarrowRangeBarRule extends AbstractRule {
 	
 	@Data
-	public static class TestConfig {
-		private int barCount = 3;
-		private double minStrength = 1.0;
+	public static class NarrowRangeBarConfig implements ScreenerConfig {
+		private int barCount = 7;
+		public String toString() { return "barCount = " + barCount; };
 	}
 	
 	private final Rule delegate;
-
-	public TestRule(BarSeries series, TestConfig config) {
+	
+	public NarrowRangeBarRule(BarSeries series, NarrowRangeBarConfig config) {
 		final HighPriceIndicator highPriceIndicator = new HighPriceIndicator(series);
 		final LowPriceIndicator lowPriceIndicator = new LowPriceIndicator(series);
 		final DifferenceIndicator spreadIndicator = new DifferenceIndicator(highPriceIndicator, lowPriceIndicator);
-		final IsFallingRule isFallingRule = new IsFallingRule(spreadIndicator, config.getBarCount(), config.getMinStrength());
-		this.delegate = isFallingRule;
+		final IsLowestRule isLowestRule = new IsLowestRule(spreadIndicator, config.getBarCount());
+		this.delegate = isLowestRule;
 	}
-	
+
 	@Override
 	public boolean isSatisfied(int index, TradingRecord tradingRecord) {
 		return delegate.isSatisfied(index, tradingRecord);
 	}
-
+	
 }

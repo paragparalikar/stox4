@@ -17,6 +17,7 @@ import com.stox.example.event.ExampleGroupCreatedEvent;
 import com.stox.example.event.ExampleGroupDeletedEvent;
 import com.stox.example.event.ExampleGroupUpdatedEvent;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -36,12 +37,10 @@ public class AddAsExampleMenu extends Menu implements View {
 		eventBus.register(this);
 		this.exampleGroups = exampleGroupService.findAll();
 		exampleGroups.sort(Comparator.comparing(ExampleGroup::getName));
-	}
-	
-	@Override
-	public void show() {
-		setText("Add to example");
-		exampleGroups.forEach(this::addItem);
+		Platform.runLater(() -> {
+			setText("Add to example");
+			exampleGroups.forEach(this::addItem);
+		});
 	}
 	
 	private Optional<MenuItem> findItem(String id){
