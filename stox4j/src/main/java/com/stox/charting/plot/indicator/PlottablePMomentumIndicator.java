@@ -5,40 +5,30 @@ import org.ta4j.core.Indicator;
 import org.ta4j.core.num.Num;
 
 import com.stox.charting.plot.Plottable;
-import com.stox.charting.plot.indicator.PlottableVolatilityContractionIndicator.VolatilityContractionConfig;
+import com.stox.charting.plot.indicator.PlottablePMomentumIndicator.PMomentumConfig;
 import com.stox.charting.unit.LineUnit;
 import com.stox.charting.unit.Unit;
 import com.stox.charting.unit.parent.PolylineUnitParent;
 import com.stox.charting.unit.parent.UnitParent;
 import com.stox.common.ui.ConfigView;
 import com.stox.common.ui.form.auto.AutoForm;
-import com.stox.indicator.VolatilityContractionIndicator;
+import com.stox.indicator.PMomentumIndicator;
 
 import javafx.geometry.Point2D;
 import javafx.scene.shape.Polyline;
 import lombok.Data;
 
-public class PlottableVolatilityContractionIndicator implements Plottable<Num, VolatilityContractionConfig, Point2D> {
+public class PlottablePMomentumIndicator implements Plottable<Num, PMomentumConfig, Point2D>  {
 
 	@Data
-	public static class VolatilityContractionConfig {
+	public static class PMomentumConfig {
 		private int barCount = 34;
 		public String toString() {return String.format("BarCount: %d", barCount);}
 	}
 
 	@Override
 	public String toString() {
-		return "Volaitlity Contraction";
-	}
-	
-	@Override
-	public VolatilityContractionConfig createConfig() {
-		return new VolatilityContractionConfig();
-	}
-
-	@Override
-	public Indicator<Num> createIndicator(VolatilityContractionConfig config, BarSeries barSeries) {
-		return new VolatilityContractionIndicator(barSeries, config.getBarCount());
+		return "PMomentum";
 	}
 
 	@Override
@@ -62,8 +52,18 @@ public class PlottableVolatilityContractionIndicator implements Plottable<Num, V
 	}
 
 	@Override
-	public ConfigView createConfigView(VolatilityContractionConfig config) {
+	public PMomentumConfig createConfig() {
+		return new PMomentumConfig();
+	}
+
+	@Override
+	public ConfigView createConfigView(PMomentumConfig config) {
 		return new AutoForm(config);
+	}
+
+	@Override
+	public Indicator<Num> createIndicator(PMomentumConfig config, BarSeries barSeries) {
+		return new PMomentumIndicator(config.getBarCount(), barSeries);
 	}
 	
 }

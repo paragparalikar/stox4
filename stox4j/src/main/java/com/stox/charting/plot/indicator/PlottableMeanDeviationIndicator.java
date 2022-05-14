@@ -31,7 +31,8 @@ public class PlottableMeanDeviationIndicator implements PlottableLineIndicator<M
 
 	@Override
 	public Indicator<Num> createIndicator(MeanDeviationConfig config, BarSeries barSeries) {
-		return new MeanDeviationIndicator(createIndicator(config.getBarValueType(), barSeries), config.getBarCount());
+		final Indicator<Num> indicator = config.getBarValueType().createIndicator(barSeries);
+		return new MeanDeviationIndicator(indicator, config.getBarCount());
 	}
 	
 }

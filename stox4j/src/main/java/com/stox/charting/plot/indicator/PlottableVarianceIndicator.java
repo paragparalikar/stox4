@@ -31,7 +31,8 @@ public class PlottableVarianceIndicator implements PlottableLineIndicator<Varian
 
 	@Override
 	public Indicator<Num> createIndicator(VarianceConfig config, BarSeries barSeries) {
-		return new VarianceIndicator(createIndicator(config.getBarValueType(), barSeries), config.getBarCount());
+		final Indicator<Num> indicator = config.getBarValueType().createIndicator(barSeries);
+		return new VarianceIndicator(indicator, config.getBarCount());
 	}
 	
 }

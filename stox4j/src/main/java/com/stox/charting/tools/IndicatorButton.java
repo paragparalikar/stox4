@@ -9,6 +9,8 @@ import com.stox.charting.plot.indicator.PlottableADXIndicator;
 import com.stox.charting.plot.indicator.PlottableATRIndicator;
 import com.stox.charting.plot.indicator.PlottableChopIndicator;
 import com.stox.charting.plot.indicator.PlottableMeanDeviationIndicator;
+import com.stox.charting.plot.indicator.PlottablePMomentumIndicator;
+import com.stox.charting.plot.indicator.PlottablePVolatilityIndicator;
 import com.stox.charting.plot.indicator.PlottablePriceRejectionIndicator;
 import com.stox.charting.plot.indicator.PlottableROCIndicator;
 import com.stox.charting.plot.indicator.PlottableRSIIndicator;
@@ -19,7 +21,6 @@ import com.stox.charting.plot.indicator.PlottableStochasticKIndicator;
 import com.stox.charting.plot.indicator.PlottableStochasticRSIIndicator;
 import com.stox.charting.plot.indicator.PlottableTRIndicator;
 import com.stox.charting.plot.indicator.PlottableVarianceIndicator;
-import com.stox.charting.plot.indicator.PlottableVolatilityContractionIndicator;
 import com.stox.charting.plot.indicator.PlottableVolumeIndicator;
 import com.stox.charting.plot.indicator.PlottableZigZagIndicator;
 import com.stox.common.scrip.Scrip;
@@ -61,7 +62,8 @@ public class IndicatorButton extends Button implements EventHandler<ActionEvent>
 		listView.getItems().add(new PlottableMeanDeviationIndicator());
 		listView.getItems().add(new PlottablePriceRejectionIndicator());
 		listView.getItems().add(new PlottableStandardDeviationIndicator());
-		listView.getItems().add(new PlottableVolatilityContractionIndicator());
+		listView.getItems().add(new PlottablePVolatilityIndicator());
+		listView.getItems().add(new PlottablePMomentumIndicator());
 	}
 
 	@Override

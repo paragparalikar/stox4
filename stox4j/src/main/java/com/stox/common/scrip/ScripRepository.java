@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class ScripRepository {
 		return Files.lines(getPath())
 				.map(this::parse)
 				.sorted().distinct()
+				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}
 	

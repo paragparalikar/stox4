@@ -72,7 +72,8 @@ public class PlottableSMAIndicator implements Plottable<Num, SmaIndicatorConfig,
 
 	@Override
 	public Indicator<Num> createIndicator(SmaIndicatorConfig config, BarSeries barSeries) {
-		return new SMAIndicator(createIndicator(config.getBarValueType(), barSeries), config.getBarCount());
+		final Indicator<Num> indicator = config.getBarValueType().createIndicator(barSeries);
+		return new SMAIndicator(indicator, config.getBarCount());
 	}
 	
 }

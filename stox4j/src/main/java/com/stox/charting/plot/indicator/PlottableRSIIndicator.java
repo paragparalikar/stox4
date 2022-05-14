@@ -65,7 +65,8 @@ public class PlottableRSIIndicator implements Plottable<Num, RsiIndicatorConfig,
 	
 	@Override
 	public Indicator<Num> createIndicator(RsiIndicatorConfig config, BarSeries barSeries) {
-		return new RSIIndicator(createIndicator(config.getBarValueType(), barSeries), config.getBarCount());
+		final Indicator<Num> indicator = config.getBarValueType().createIndicator(barSeries);
+		return new RSIIndicator(indicator, config.getBarCount());
 	}
 	
 }

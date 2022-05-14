@@ -65,7 +65,8 @@ public class PlottableStochasticRSIIndicator implements Plottable<Num, Stochasti
 
 	@Override
 	public Indicator<Num> createIndicator(StochasticRSIIndicatorConfig config, BarSeries barSeries) {
-		return new StochasticRSIIndicator(createIndicator(config.getBarValueType(), barSeries), config.getBarCount());
+		final Indicator<Num> indicator = config.getBarValueType().createIndicator(barSeries);
+		return new StochasticRSIIndicator(indicator, config.getBarCount());
 	}
 	
 }

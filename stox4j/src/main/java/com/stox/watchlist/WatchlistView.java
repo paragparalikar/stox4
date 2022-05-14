@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
 
-import com.stox.common.SerializationService;
+import com.stox.common.persistence.SerializationService;
 import com.stox.common.scrip.ScripService;
 import com.stox.common.ui.View;
 import com.stox.watchlist.menu.WatchlistContextMenu;

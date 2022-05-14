@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.Executor;
 
 import com.stox.charting.ChartingView;
-import com.stox.common.SerializationService;
+import com.stox.common.persistence.SerializationService;
 import com.stox.common.ui.Fx;
 import com.stox.common.ui.MessagePanel;
 import com.stox.common.ui.View;

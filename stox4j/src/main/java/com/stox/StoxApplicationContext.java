@@ -9,10 +9,10 @@ import org.greenrobot.eventbus.EventBus;
 
 import com.stox.charting.drawing.DrawingRepository;
 import com.stox.charting.drawing.DrawingService;
-import com.stox.common.SerializationRepository;
-import com.stox.common.SerializationService;
 import com.stox.common.bar.BarRepository;
 import com.stox.common.bar.BarService;
+import com.stox.common.persistence.SerializationRepository;
+import com.stox.common.persistence.SerializationService;
 import com.stox.common.scrip.ScripRepository;
 import com.stox.common.scrip.ScripService;
 import com.stox.data.downloader.bar.EodBarDownloader;

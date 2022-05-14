@@ -6,9 +6,9 @@ import org.ta4j.core.Rule;
 import com.stox.common.ui.ConfigView;
 import com.stox.common.ui.form.auto.AutoForm;
 import com.stox.rule.SimpleBreakoutBarRule;
-import com.stox.rule.SimpleBreakoutBarRule.SimpleBreakoutBarRuleConfig;
+import com.stox.screener.ScreenerConfig.FixedBarCountScreenerConfig;
 
-public class BreakoutBarScreener implements Screener<SimpleBreakoutBarRuleConfig> {
+public class BreakoutBarScreener implements Screener<FixedBarCountScreenerConfig> {
 
 	@Override
 	public String toString() {
@@ -16,18 +16,18 @@ public class BreakoutBarScreener implements Screener<SimpleBreakoutBarRuleConfig
 	}
 	
 	@Override
-	public SimpleBreakoutBarRuleConfig createConfig() {
-		return new SimpleBreakoutBarRuleConfig();
+	public FixedBarCountScreenerConfig createConfig() {
+		return new FixedBarCountScreenerConfig(2);
 	}
 
 	@Override
-	public ConfigView createConfigView(SimpleBreakoutBarRuleConfig config) {
+	public ConfigView createConfigView(FixedBarCountScreenerConfig config) {
 		return new AutoForm(config);
 	}
 
 	@Override
-	public Rule createRule(SimpleBreakoutBarRuleConfig config, BarSeries barSeries) {
-		return new SimpleBreakoutBarRule(barSeries, config);
+	public Rule createRule(FixedBarCountScreenerConfig config, BarSeries barSeries) {
+		return new SimpleBreakoutBarRule(barSeries);
 	}
 
 }

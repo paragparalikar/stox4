@@ -7,9 +7,9 @@ import java.util.Optional;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import com.stox.common.SerializationService;
 import com.stox.common.event.ScripMasterDownloadedEvent;
 import com.stox.common.event.ScripSelectedEvent;
+import com.stox.common.persistence.SerializationService;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.scrip.ScripService;
 import com.stox.common.ui.Fx;

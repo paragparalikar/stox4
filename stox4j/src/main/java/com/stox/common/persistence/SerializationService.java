@@ -1,4 +1,4 @@
-package com.stox.common;
+package com.stox.common.persistence;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;

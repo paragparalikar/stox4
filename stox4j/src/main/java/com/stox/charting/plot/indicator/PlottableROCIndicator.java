@@ -31,7 +31,8 @@ public class PlottableROCIndicator implements PlottableLineIndicator<ROCConfig> 
 
 	@Override
 	public Indicator<Num> createIndicator(ROCConfig config, BarSeries barSeries) {
-		return new ROCIndicator(createIndicator(config.getBarValueType(), barSeries), config.getBarCount());
+		final Indicator<Num> indicator = config.getBarValueType().createIndicator(barSeries);
+		return new ROCIndicator(indicator, config.getBarCount());
 	}
 	
 }

@@ -1,4 +1,4 @@
-package com.stox.common;
+package com.stox.common.persistence;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

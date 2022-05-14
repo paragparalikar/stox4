@@ -6,7 +6,7 @@ import org.ta4j.core.num.Num;
 
 import com.stox.common.ui.ConfigView;
 import com.stox.common.ui.form.auto.AutoForm;
-import com.stox.indicator.VolatilityContractionIndicator;
+import com.stox.indicator.PVolatilityIndicator;
 import com.stox.ranker.VolatilityContractionRanker.VolatilityContractionConfig;
 
 import lombok.Data;
@@ -35,7 +35,7 @@ public class VolatilityContractionRanker implements Ranker<VolatilityContraction
 
 	@Override
 	public Indicator<Num> createIndicator(VolatilityContractionConfig config, BarSeries barSeries) {
-		return new VolatilityContractionIndicator(barSeries, config.getBarCount());
+		return new PVolatilityIndicator(barSeries, config.getBarCount());
 	}
 	
 }

@@ -7,7 +7,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Logger.SystemOutLogger;
 import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.BaseBarSeries;
@@ -21,8 +20,6 @@ import com.stox.common.scrip.ScripService;
 import com.stox.common.ui.ConfigView;
 import com.stox.common.ui.Icon;
 import com.stox.common.ui.modal.Modal;
-import com.stox.indicator.VolatilityContractionIndicator;
-import com.stox.screener.ScreenerConfig;
 
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;

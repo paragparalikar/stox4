@@ -16,7 +16,7 @@ import org.ta4j.core.indicators.helpers.VolumeIndicator;
 import org.ta4j.core.num.Num;
 
 import com.stox.common.util.Maths;
-import com.stox.indicator.VolatilityContractionIndicator;
+import com.stox.indicator.PVolatilityIndicator;
 
 public class VolatilityContractionFeatureExtractor implements BarSeriesFeatureExtractor {
 	
@@ -46,7 +46,7 @@ public class VolatilityContractionFeatureExtractor implements BarSeriesFeatureEx
 		
 		double sum = 0;
 		for(int fib : Maths.fib(5, barCount)) {
-			final Indicator<Num> volatilityContractionIndicator = new VolatilityContractionIndicator(barSeries, fib);
+			final Indicator<Num> volatilityContractionIndicator = new PVolatilityIndicator(barSeries, fib);
 			final double value = volatilityContractionIndicator.getValue(index - 1).doubleValue();
 			features.add(value);
 			sum += value;

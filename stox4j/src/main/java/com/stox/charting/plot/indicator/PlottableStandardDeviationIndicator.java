@@ -65,7 +65,8 @@ public class PlottableStandardDeviationIndicator implements Plottable<Num, Stand
 
 	@Override
 	public Indicator<Num> createIndicator(StandardDeviationConfig config, BarSeries barSeries) {
-		return new StandardDeviationIndicator(createIndicator(config.getBarValueType(), barSeries), config.getBarCount());
+		final Indicator<Num> indicator = config.getBarValueType().createIndicator(barSeries);
+		return new StandardDeviationIndicator(indicator, config.getBarCount());
 	}
 	
 }

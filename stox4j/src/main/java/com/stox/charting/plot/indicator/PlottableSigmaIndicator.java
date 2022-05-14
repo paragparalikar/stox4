@@ -31,7 +31,8 @@ public class PlottableSigmaIndicator implements PlottableLineIndicator<SigmaConf
 
 	@Override
 	public Indicator<Num> createIndicator(SigmaConfig config, BarSeries barSeries) {
-		return new SigmaIndicator(createIndicator(config.getBarValueType(), barSeries), config.getBarCount());
+		final Indicator<Num> indicator = config.getBarValueType().createIndicator(barSeries);
+		return new SigmaIndicator(indicator, config.getBarCount());
 	}
 	
 }

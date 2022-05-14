@@ -10,6 +10,7 @@ import com.stox.charting.plot.Plottable;
 import com.stox.charting.plot.rule.PlottableBreakoutBarRule;
 import com.stox.charting.plot.rule.PlottableDojiRule;
 import com.stox.charting.plot.rule.PlottableLowPivoteRule;
+import com.stox.charting.plot.rule.PlottableMovingAverageBreakoutRule;
 import com.stox.charting.plot.rule.PlottableNarrowRangeBarRule;
 import com.stox.charting.plot.rule.PlottableReaccumulationRule;
 import com.stox.charting.plot.rule.PlottableSpringRule;
@@ -46,6 +47,7 @@ public class RuleButton extends Button implements EventHandler<ActionEvent> {
 		listView.getItems().add(new PlottableBreakoutBarRule());
 		listView.getItems().add(new PlottableReaccumulationRule());
 		listView.getItems().add(new PlottableNarrowRangeBarRule());
+		listView.getItems().add(new PlottableMovingAverageBreakoutRule());
 		listView.getItems().add(new PlottableVolatilityContractionBreakoutRule());
 	}
 
@@ -75,7 +77,7 @@ public class RuleButton extends Button implements EventHandler<ActionEvent> {
 	private void action(Modal modal) {
 		final Plottable<Boolean, ?, Node> plottable = listView.getSelectionModel().getSelectedItem();
 		if(null != plottable) {
-			final RulePlot<?> rulePlot = new RulePlot(plottable);
+			final RulePlot<?> rulePlot = new RulePlot<>(plottable);
 			chartingView.add(rulePlot);
 		}
 		modal.hide();
