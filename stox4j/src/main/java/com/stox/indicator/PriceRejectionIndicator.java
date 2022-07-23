@@ -1,5 +1,6 @@
 package com.stox.indicator;
 
+import org.ta4j.core.Bar;
 import org.ta4j.core.BarSeries;
 import org.ta4j.core.indicators.CachedIndicator;
 import org.ta4j.core.num.Num;
@@ -12,14 +13,14 @@ public class PriceRejectionIndicator extends CachedIndicator<Num> {
 
 	@Override
 	protected Num calculate(int index) {
-		if(index < 1 || index > getBarSeries().getBarCount() - 2) return null;
-		final double previousHigh = getBarSeries().getBar(index - 1).getHighPrice().doubleValue();
-		final double currentLow = getBarSeries().getBar(index).getLowPrice().doubleValue();
-		final double currentHigh = getBarSeries().getBar(index).getHighPrice().doubleValue();
-		final double nextHigh = getBarSeries().getBar(index + 1).getHighPrice().doubleValue();
-		final double rejection =( Math.max(previousHigh, currentHigh) - currentLow) + 
-				(Math.max(nextHigh, currentHigh) - currentLow);
-		return numOf(rejection * 100 / currentLow);
+		final BarSeries series = getBarSeries();
+		if(3 > series.getBarCount()) return null;
+		final Bar bar = series.getBar(index);
+		final Bar one = series.getBar(index - 1);
+		final Bar two = series.getBar(index - 2);
+		final Num min = bar.getLowPrice().min(one.getLowPrice()).min(two.getLowPrice());
+		final Num delta = two.getOpenPrice().minus(min).plus(bar.getClosePrice().min(min));
+		return delta.multipliedBy(numOf(100)).dividedBy(bar.getClosePrice());
 	}
 
 }

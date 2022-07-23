@@ -41,7 +41,8 @@ public class RankerView extends BorderPane {
 	private final ListView<Rank> listView = new ListView<>();
 	private final Button actionButton = new Button(Icon.PLAY);
 	private final ComboBox<Ranker<?>> comboBox = new ComboBox<>(FXCollections.observableArrayList(
-			new VolatilityContractionRanker()));
+			new VolatilityContractionRanker(),
+			new PMomentumRanker()));
 	private final HBox titleBar = new HBox(comboBox, actionButton);
 	
 	public RankerView(EventBus eventBus, BarService barService, ScripService scripService) {

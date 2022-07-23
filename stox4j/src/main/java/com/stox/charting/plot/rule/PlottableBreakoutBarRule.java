@@ -12,7 +12,6 @@ import com.stox.charting.unit.parent.UnitParent;
 import com.stox.common.ui.ConfigView;
 import com.stox.common.ui.form.auto.AutoForm;
 import com.stox.indicator.RuleIndicator;
-import com.stox.rule.DeMarkFlipRule;
 import com.stox.rule.SimpleBreakoutBarRule;
 
 import javafx.scene.Group;
@@ -32,7 +31,7 @@ public class PlottableBreakoutBarRule implements Plottable<Boolean, Void, Node> 
 
 	@Override
 	public Indicator<Boolean> createIndicator(Void config, BarSeries barSeries) {
-		final Rule rule = new DeMarkFlipRule(barSeries).and(new SimpleBreakoutBarRule(barSeries));
+		final Rule rule = new SimpleBreakoutBarRule(barSeries);
 		return new RuleIndicator(rule, barSeries);
 	}
 
