@@ -22,7 +22,7 @@ public class LiquidityScreener implements Screener<LiquidityConfig> {
 
 	@Override
 	public Rule createRule(LiquidityConfig config, BarSeries barSeries) {
-		return new LiquidityRule(barSeries, config);
+		return new LiquidityRule(barSeries, config.getBarCount(), config.getMinAmount());
 	}
 	
 }

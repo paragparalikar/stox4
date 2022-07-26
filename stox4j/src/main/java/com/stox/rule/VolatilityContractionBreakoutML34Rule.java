@@ -25,7 +25,7 @@ public class VolatilityContractionBreakoutML34Rule extends AbstractRule {
 		final WekaClassifierRule wekaClassifierRule = new WekaClassifierRule(barSeries, BAR_COUNT, modelPath, featureExtractor);
 		
 		final LiquidityConfig liquidityConfig = new LiquidityConfig();
-		final LiquidityRule liquidityRule = new LiquidityRule(barSeries, liquidityConfig);
+		final LiquidityRule liquidityRule = new LiquidityRule(barSeries, liquidityConfig.getBarCount(), liquidityConfig.getMinAmount());
 		
 		final VolatilityContractionBreakoutRuleConfig config = new VolatilityContractionBreakoutRuleConfig();
 		final Rule rule = new VolatilityContractionBreakoutRule(barSeries, BAR_COUNT, config);
