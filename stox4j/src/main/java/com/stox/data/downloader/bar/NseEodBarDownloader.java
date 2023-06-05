@@ -27,9 +27,7 @@ import com.stox.common.scrip.ScripService;
 import com.stox.common.util.Strings;
 
 import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public class NseEodBarDownloader implements EodBarDownloader {
 	private static final Duration PERIOD = Duration.ofDays(1);
 	
@@ -66,8 +64,6 @@ public class NseEodBarDownloader implements EodBarDownloader {
 		} catch(FileNotFoundException e) {
 			return Collections.emptyMap();
 		} catch(IOException ioe) {
-			//log.error("URL : " + url, ioe);
-			//throw ioe;
 			return Collections.emptyMap();
 		}
 	}
