@@ -27,7 +27,9 @@ import com.stox.common.scrip.ScripService;
 import com.stox.common.util.Strings;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class NseEodBarDownloader implements EodBarDownloader {
 	private static final Duration PERIOD = Duration.ofDays(1);
 	
@@ -44,12 +46,12 @@ public class NseEodBarDownloader implements EodBarDownloader {
 	
 	@Override
 	public Map<Scrip, Bar> download(ZonedDateTime date) throws IOException{
+		final String formattedDate = bhavcopyDateFormat.format(new Date(date.toInstant().toEpochMilli()));
+		final String url = "https://archives.nseindia.com/content/historical/EQUITIES/" + formattedDate + "bhav.csv.zip";
 		try {
 			if(DayOfWeek.SUNDAY.equals(date.getDayOfWeek()) ||  DayOfWeek.SATURDAY.equals(date.getDayOfWeek())) {
 				return Collections.emptyMap();
 			}
-			final String formattedDate = bhavcopyDateFormat.format(new Date(date.toInstant().toEpochMilli()));
-			final String url = "https://www1.nseindia.com/content/historical/EQUITIES/" + formattedDate + "bhav.csv.zip";
 			final HttpURLConnection connection = init((HttpURLConnection) new URL(url).openConnection());
 			final String rawData = Strings.toString(new ZipInputStream(connection.getInputStream()));
 			final String[] tokens = rawData.split("\n");
@@ -63,20 +65,32 @@ public class NseEodBarDownloader implements EodBarDownloader {
 			return data;
 		} catch(FileNotFoundException e) {
 			return Collections.emptyMap();
+		} catch(IOException ioe) {
+			//log.error("URL : " + url, ioe);
+			//throw ioe;
+			return Collections.emptyMap();
 		}
 	}
 
 	private HttpURLConnection init(HttpURLConnection connection) throws ProtocolException{
 		connection.setRequestMethod("GET");
-		connection.setRequestProperty("Connection", "keep-alive");
-		connection.setRequestProperty("Host", "www.nseindia.com");
+		//connection.setRequestProperty("Connection", "keep-alive");
+		//connection.setRequestProperty("Host", "www.nseindia.com");
 		connection.setRequestProperty("Upgrade-Insecure-Requests", "1");
 		connection.setRequestProperty("Accept-Language", "en-US,en;q=0.8");
 		connection.setRequestProperty("Accept-Encoding", "gzip, deflate, br");
-		connection.setRequestProperty("Referer", "https://www.nseindia.com/products/content/equities/equities/archieve_eq.htm");
-		connection.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
-		connection.setRequestProperty("Cookie", "pointer=1; sym1=VEDL; JSESSIONID=FF543E1FC76463AC703391CB6300C2C1; NSE-TEST-1=1826627594.20480.0000");
-		connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.78 Safari/537.36");
+		connection.setRequestProperty("Sec-Ch-Ua", "\"Google Chrome\";v=\"113\", \"Chromium\";v=\"113\", \"Not-A.Brand\";v=\"24\"");
+		connection.setRequestProperty("Sec-Ch-Ua-Mobile", "?0");
+		connection.setRequestProperty("Sec-Ch-Ua-Platform", "\"Windows\"");
+		connection.setRequestProperty("Sec-Fetch-Dest", "document");
+		connection.setRequestProperty("Sec-Fetch-Mode", "navigate");
+		connection.setRequestProperty("Sec-Fetch-Site", "none");
+		connection.setRequestProperty("Sec-Fetch-User", "?1");
+		
+		//connection.setRequestProperty("Referer", "https://www.nseindia.com/products/content/equities/equities/archieve_eq.htm");
+		connection.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7");
+		//connection.setRequestProperty("Cookie", "pointer=1; sym1=VEDL; JSESSIONID=FF543E1FC76463AC703391CB6300C2C1; NSE-TEST-1=1826627594.20480.0000");
+		connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36");
 		return connection;
 	}
 	

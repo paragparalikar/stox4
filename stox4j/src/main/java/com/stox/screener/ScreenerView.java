@@ -39,6 +39,7 @@ public class ScreenerView extends BorderPane {
 	private final Button actionButton = new Button(Icon.PLAY);
 	private final ComboBox<Screener<?>> comboBox = new ComboBox<>(FXCollections.observableArrayList(
 			new BreakoutBarScreener(),
+			new BullishBarInUptrendScreener(),
 			new MovingAverageBreakoutScreener(),
 			new VolatilityContractionBreakoutScreener()));
 	private final HBox titleBar = new HBox(comboBox, actionButton);

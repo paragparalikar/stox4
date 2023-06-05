@@ -1,9 +1,9 @@
 package com.stox.common.scrip;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +19,7 @@ public class ScripService {
 
 	private final EventBus eventBus;
 	private final ScripRepository scripRepository;
-	private final List<Scrip> scrips = new LinkedList<>();
+	private final List<Scrip> scrips = new ArrayList<>();
 	private final Map<String, Scrip> isinScripMapping = new HashMap<>();
 	private final Map<String, Scrip> codeScripMapping = new HashMap<>();
 	private final Map<String, Scrip> nameScripMapping = new HashMap<>();

@@ -53,11 +53,13 @@ public class ReaccumulationRule extends AbstractRule {
 		if(highestHigh <= lowestLow) return false;
 		if(currentLow <= lowestLow) return false;
 		
-		final double upMove = highestHigh - lowestLow;
-		final double downMove = highestHigh - currentLow;
-		final double averageUpMove = upMove/(index - highestHighBarIndex);
-		final double averageDownMove = downMove / (highestHighBarIndex - lowestLowBarIndex);
-		if(averageUpMove < config.getPriceMoveMultiple() * averageDownMove) return false;
+		/*
+		 * final double upMove = highestHigh - lowestLow; final double downMove =
+		 * highestHigh - currentLow; final double averageUpMove = upMove/(index -
+		 * highestHighBarIndex); final double averageDownMove = downMove /
+		 * (highestHighBarIndex - lowestLowBarIndex); if(averageUpMove <
+		 * config.getPriceMoveMultiple() * averageDownMove) return false;
+		 */
 		
 		return true;
 	}

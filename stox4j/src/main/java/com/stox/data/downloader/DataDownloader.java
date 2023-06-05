@@ -54,18 +54,21 @@ public class DataDownloader {
 		while(lastDownloadDate.isBefore(ZonedDateTime.now())) {
 			lastDownloadDate = lastDownloadDate.plusDays(1);
 			final Map<Scrip, Bar> data = eodBarDownloader.download(lastDownloadDate);
-			final CountDownLatch latch = new CountDownLatch(data.size());
-			data.forEach((scrip, bar) -> executor.execute(() -> {
-				try { barService.save(scrip.getIsin(), bar); } finally { latch.countDown(); }
-			}));
-			latch.await();
-			if(!data.isEmpty()) barService.writeLastDownloadDate(lastDownloadDate);
-			eventBus.post(MessageEvent.builder()
-					.icon(Icon.DOWNLOAD)
-					.style("success")
-					.text(String.format("Downloaded %d bars for %s", 
-							data.size(), formatter.format(lastDownloadDate)))
-					.build());
+			if(!data.isEmpty()) {
+				final CountDownLatch latch = new CountDownLatch(data.size());
+				data.forEach((scrip, bar) -> executor.execute(() -> {
+					try { barService.save(scrip.getIsin(), bar); } 
+					finally { latch.countDown(); }
+				}));
+				latch.await();
+				barService.writeLastDownloadDate(lastDownloadDate);
+				eventBus.post(MessageEvent.builder()
+						.icon(Icon.DOWNLOAD)
+						.style("success")
+						.text(String.format("Downloaded %d bars for %s", 
+								data.size(), formatter.format(lastDownloadDate)))
+						.build());
+			}
 		}
 		eventBus.post(MessageEvent.builder()
 				.icon(Icon.DOWNLOAD)

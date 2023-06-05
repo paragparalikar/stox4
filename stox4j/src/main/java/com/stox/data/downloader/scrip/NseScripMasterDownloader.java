@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import com.stox.common.scrip.Scrip;
 
 public class NseScripMasterDownloader implements ScripMasterDownloader {
-	private static final String URL_SCRIP_MASTER = "https://www1.nseindia.com/content/equities/EQUITY_L.csv";
+	private static final String URL_SCRIP_MASTER = "https://archives.nseindia.com/content/equities/EQUITY_L.csv";
 
 	@Override
 	public List<Scrip> download() throws IOException {
