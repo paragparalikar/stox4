@@ -8,7 +8,6 @@ import com.stox.charting.ChartingContext;
 import com.stox.charting.ChartingView;
 import com.stox.charting.plot.Plottable;
 import com.stox.charting.plot.rule.PlottableBreakoutBarRule;
-import com.stox.charting.plot.rule.PlottableBullishBarInUptrendRule;
 import com.stox.charting.plot.rule.PlottableDojiRule;
 import com.stox.charting.plot.rule.PlottableLowPivoteRule;
 import com.stox.charting.plot.rule.PlottableMovingAverageBreakoutRule;
@@ -50,7 +49,6 @@ public class RuleButton extends Button implements EventHandler<ActionEvent> {
 		listView.getItems().add(new PlottableNarrowRangeBarRule());
 		listView.getItems().add(new PlottableMovingAverageBreakoutRule());
 		listView.getItems().add(new PlottableVolatilityContractionBreakoutRule());
-		listView.getItems().add(new PlottableBullishBarInUptrendRule());
 	}
 
 	@Override

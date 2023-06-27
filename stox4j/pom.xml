@@ -13,18 +13,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.amazonaws</groupId>
-				<artifactId>aws-java-sdk-bom</artifactId>
-				<version>1.11.942</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -45,15 +33,6 @@
 			<groupId>org.greenrobot</groupId>
 			<artifactId>eventbus-java</artifactId>
 			<version>3.3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.amazonaws</groupId>
-			<artifactId>aws-java-sdk-dynamodb</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>nz.ac.waikato.cms.weka</groupId>
-			<artifactId>weka-stable</artifactId>
-			<version>3.8.6</version>
 		</dependency>
 	</dependencies>
 
