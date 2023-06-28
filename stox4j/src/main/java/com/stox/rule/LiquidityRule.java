@@ -19,7 +19,7 @@ public class LiquidityRule extends AbstractRule {
 	@Data
 	public static class LiquidityConfig implements ScreenerConfig {
 		private int barCount = 55;
-		private double minAmount = 10_00_000;
+		private double minAmount = 100_00_000;
 	}
 	
 	private final Rule delegate;
