@@ -47,7 +47,11 @@ public class ExplorerView extends BorderPane implements View {
 	@Subscribe
 	public void onScripMasterDownloaded(ScripMasterDownloadedEvent event) {
 		event.getScrips().sort(Comparator.comparing(Scrip::getName));
-		Fx.run(() -> listView.getItems().setAll(event.getScrips()));
+		Fx.run(() -> {
+			synchronized(listView) {
+				listView.getItems().setAll(event.getScrips());
+			}
+		});
 	}
 	
 	@Override
@@ -55,15 +59,17 @@ public class ExplorerView extends BorderPane implements View {
 		final List<Scrip> scrips = scripService.findAll();
 		final ExplorerViewState state = serializationService.deserialize(ExplorerViewState.class);
 		Platform.runLater(() -> {
-			listView.getItems().setAll(scrips);
-			Optional.ofNullable(state).ifPresent(value -> {
-				Optional.ofNullable(state.getSelectedItem())
-					.map(scripService::findByIsin)
-					.ifPresent(listView.getSelectionModel()::select);
-				Optional.ofNullable(state.getFirstVisibleItem())
-					.map(scripService::findByIsin)
-					.ifPresent(listView::scrollTo);
-			});
+			synchronized(listView) {
+				listView.getItems().setAll(scrips);
+				Optional.ofNullable(state).ifPresent(value -> {
+					Optional.ofNullable(state.getSelectedItem())
+						.map(scripService::findByIsin)
+						.ifPresent(listView.getSelectionModel()::select);
+					Optional.ofNullable(state.getFirstVisibleItem())
+						.map(scripService::findByIsin)
+						.ifPresent(listView::scrollTo);
+				});
+			}
 		});
 	}
 	

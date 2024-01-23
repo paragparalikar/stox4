@@ -47,9 +47,6 @@ public class NseEodBarDownloader implements EodBarDownloader {
 		final String formattedDate = bhavcopyDateFormat.format(new Date(date.toInstant().toEpochMilli()));
 		final String url = "https://archives.nseindia.com/content/historical/EQUITIES/" + formattedDate + "bhav.csv.zip";
 		try {
-			if(DayOfWeek.SUNDAY.equals(date.getDayOfWeek()) ||  DayOfWeek.SATURDAY.equals(date.getDayOfWeek())) {
-				return Collections.emptyMap();
-			}
 			final HttpURLConnection connection = init((HttpURLConnection) new URL(url).openConnection());
 			final String rawData = Strings.toString(new ZipInputStream(connection.getInputStream()));
 			final String[] tokens = rawData.split("\n");
