@@ -7,6 +7,8 @@ import java.util.concurrent.Executors;
 
 import org.greenrobot.eventbus.EventBus;
 
+import com.stox.alert.AlertRepository;
+import com.stox.alert.AlertService;
 import com.stox.charting.drawing.DrawingRepository;
 import com.stox.charting.drawing.DrawingService;
 import com.stox.common.bar.BarRepository;
@@ -43,6 +45,8 @@ public class StoxApplicationContext {
 	private final ExampleService exampleService = new ExampleService(eventBus, exampleRepository);
 	private final ExampleGroupRepository exampleGroupRepository = new ExampleGroupRepository(home);
 	private final ExampleGroupService exampleGroupService = new ExampleGroupService(eventBus, exampleGroupRepository);
+	private final AlertRepository alertRepository = new AlertRepository(home);
+	private final AlertService alertService = new AlertService(alertRepository);
 	private final EodBarDownloader eodBarDownloader = new NseEodBarDownloader(scripService);
 	private final ScripMasterDownloader scripMasterDownloader = new NseScripMasterDownloader();
 	private final ExecutorService executor = Executors.newWorkStealingPool();

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 
+import com.stox.alert.AlertTab;
+import com.stox.alert.CreateAlertMenu;
 import com.stox.charting.ChartingView;
 import com.stox.common.persistence.SerializationService;
 import com.stox.common.ui.Fx;
@@ -30,11 +32,13 @@ public class StoxApplicationRoot extends StackPane implements View {
 	private final ChartingView chartingView;
 	private final ExplorerTab explorerTab;
 	private final ExampleTab exampleTab;
+	private final AlertTab alertTab;
 	private final RankerTab rankerTab;
 	private final ScreenerTab screenerTab;
 	private final WatchlistTab watchlistTab;
 	private final AddToWatchlistMenu addToWatchlistMenu;
 	private final AddAsExampleMenu addAsExampleMenu;
+	private final CreateAlertMenu createAlertMenu;
 	
 	private final TabPane tabPane;
 	private final SplitPane splitPane;
@@ -55,10 +59,12 @@ public class StoxApplicationRoot extends StackPane implements View {
 		this.exampleTab = new ExampleTab(context.getEventBus(), context.getScripService(), 
 				context.getExampleService(), context.getExampleGroupService(), context.getSerializationService());
 		this.addAsExampleMenu = new AddAsExampleMenu(context.getEventBus(), context.getExampleService(), context.getExampleGroupService());
-		chartingView.getContextMenu().getItems().addAll(addToWatchlistMenu, addAsExampleMenu);
+		this.alertTab = new AlertTab(context.getEventBus(), context.getScripService(), context.getAlertService());
+		this.createAlertMenu = new CreateAlertMenu(context.getEventBus(), context.getAlertService());
+		chartingView.getContextMenu().getItems().addAll(createAlertMenu, addToWatchlistMenu, addAsExampleMenu);
 		chartingView.getToolBar().getItems().addAll(Fx.spacer(), new MessagePanel(context.getEventBus()));
 		
-		this.tabPane = new TabPane(explorerTab, watchlistTab, exampleTab, screenerTab, rankerTab);
+		this.tabPane = new TabPane(explorerTab, watchlistTab, alertTab, exampleTab, screenerTab, rankerTab);
 		tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
 		this.splitPane = new SplitPane(tabPane, chartingView);
 		getChildren().add(splitPane);
