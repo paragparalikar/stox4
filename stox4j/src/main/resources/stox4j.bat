@@ -1,1 +1,1 @@
-start javaw -jar C:\git\stox4\stox4j\target\stox4j-0.0.1-SNAPSHOT.jar
+start C:\progra~1\Java\jre1.8.0_301\bin\javaw -jar C:\git\stox4\stox4j\target\stox4j-0.0.1-SNAPSHOT.jar
