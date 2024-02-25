@@ -3,7 +3,6 @@ package com.stox;
 import com.stox.common.ui.Icon;
 import com.stox.data.downloader.DataDownloader;
 
-import atlantafx.base.theme.PrimerLight;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
@@ -19,7 +18,7 @@ public class StoxApplication extends Application {
 	public void init() throws Exception {
 		super.init();
 		Font.loadFont(Icon.class.getClassLoader().getResource(Icon.PATH).toExternalForm(), 10);
-		Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+		//Application.setUserAgentStylesheet(new NordLight().getUserAgentStylesheet());
 		this.context = new StoxApplicationContext();
 		this.root = new StoxApplicationRoot(context);
 		this.root.loadView();
@@ -35,7 +34,8 @@ public class StoxApplication extends Application {
 				"style/css/table-view.css", "style/css/tab-pane.css",
 				"style/css/scroll-bar.css", "style/css/menu.css",
 				"style/css/charting.css", "style/css/charting-controls.css", 
-				"style/css/modal.css", "style/css/form.css");
+				"style/css/modal.css", "style/css/form.css"
+				);
 		primaryStage.setTitle("Stox4j by Parag Paralikar (parag.paralikar@gmail.com)");
 		primaryStage.setScene(scene);
 		primaryStage.setMaximized(true);
