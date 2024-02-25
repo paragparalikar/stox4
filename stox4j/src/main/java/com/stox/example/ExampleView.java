@@ -10,11 +10,11 @@ import org.greenrobot.eventbus.EventBus;
 import com.stox.common.persistence.SerializationService;
 import com.stox.common.scrip.ScripService;
 import com.stox.common.ui.View;
-import com.sun.javafx.scene.control.skin.ListViewSkin;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 
 import javafx.application.Platform;
 import javafx.scene.control.IndexedCell;
+import javafx.scene.control.skin.ListViewSkin;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.layout.BorderPane;
 
 public class ExampleView extends BorderPane implements View {

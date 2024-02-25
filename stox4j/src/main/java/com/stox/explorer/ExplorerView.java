@@ -14,13 +14,13 @@ import com.stox.common.scrip.Scrip;
 import com.stox.common.scrip.ScripService;
 import com.stox.common.ui.Fx;
 import com.stox.common.ui.View;
-import com.sun.javafx.scene.control.skin.ListViewSkin;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.IndexedCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.skin.ListViewSkin;
+import javafx.scene.control.skin.VirtualFlow;
 import javafx.scene.layout.BorderPane;
 
 public class ExplorerView extends BorderPane implements View {

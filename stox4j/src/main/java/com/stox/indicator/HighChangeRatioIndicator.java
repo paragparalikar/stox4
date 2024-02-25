@@ -4,7 +4,7 @@ import org.ta4j.core.BarSeries;
 import org.ta4j.core.Indicator;
 import org.ta4j.core.indicators.AbstractIndicator;
 import org.ta4j.core.indicators.SMAIndicator;
-import org.ta4j.core.indicators.helpers.DifferenceIndicator;
+import org.ta4j.core.indicators.helpers.CombineIndicator;
 import org.ta4j.core.indicators.helpers.HighPriceIndicator;
 import org.ta4j.core.indicators.helpers.PreviousValueIndicator;
 import org.ta4j.core.indicators.helpers.TransformIndicator;
@@ -18,7 +18,7 @@ public class HighChangeRatioIndicator extends AbstractIndicator<Num> {
 		super(series);
 		final Indicator<Num> highPriceIndicator = new HighPriceIndicator(series);
 		final Indicator<Num> previousHighIndicator = new PreviousValueIndicator(highPriceIndicator);
-		final Indicator<Num> highChangeIndicator = new DifferenceIndicator(highPriceIndicator, previousHighIndicator);
+		final Indicator<Num> highChangeIndicator = CombineIndicator.minus(highPriceIndicator, previousHighIndicator);
 		final Indicator<Num> absHighChangeIndicator = TransformIndicator.abs(highChangeIndicator);
 		final Indicator<Num> avgAbsHighChangeIndicator = new SMAIndicator(absHighChangeIndicator, barCount);
 		final Indicator<Num> prevAvgAbsHighChangeIndicator = new PreviousValueIndicator(avgAbsHighChangeIndicator);

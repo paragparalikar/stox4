@@ -2,8 +2,8 @@ package com.stox;
 
 import com.stox.common.ui.Icon;
 import com.stox.data.downloader.DataDownloader;
-import com.sun.javafx.application.LauncherImpl;
 
+import atlantafx.base.theme.PrimerLight;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.text.Font;
@@ -12,10 +12,6 @@ import javafx.stage.WindowEvent;
 
 public class StoxApplication extends Application {
 	
-	public static void main(String[] args) {
-		LauncherImpl.launchApplication(StoxApplication.class, null, args);
-	}
-	
 	private StoxApplicationRoot root;
 	private StoxApplicationContext context;
 	
@@ -23,6 +19,7 @@ public class StoxApplication extends Application {
 	public void init() throws Exception {
 		super.init();
 		Font.loadFont(Icon.class.getClassLoader().getResource(Icon.PATH).toExternalForm(), 10);
+		Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
 		this.context = new StoxApplicationContext();
 		this.root = new StoxApplicationRoot(context);
 		this.root.loadView();

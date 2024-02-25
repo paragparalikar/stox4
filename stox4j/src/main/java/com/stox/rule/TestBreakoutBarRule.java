@@ -6,7 +6,7 @@ import org.ta4j.core.Rule;
 import org.ta4j.core.TradingRecord;
 import org.ta4j.core.indicators.ATRIndicator;
 import org.ta4j.core.indicators.helpers.ClosePriceIndicator;
-import org.ta4j.core.indicators.helpers.DifferenceIndicator;
+import org.ta4j.core.indicators.helpers.CombineIndicator;
 import org.ta4j.core.indicators.helpers.HighPriceIndicator;
 import org.ta4j.core.indicators.helpers.LowPriceIndicator;
 import org.ta4j.core.indicators.helpers.PreviousValueIndicator;
@@ -36,14 +36,14 @@ public class TestBreakoutBarRule extends AbstractRule {
 		final Rule highRule = new OverIndicatorRule(highPriceIndicator, previousRegressionHighPlusAtrMultipleIndicator);
 		
 		final Indicator<Num> lowPriceIndicator = new LowPriceIndicator(series);
-		final Indicator<Num> priceSpreadIndicator = new DifferenceIndicator(highPriceIndicator, lowPriceIndicator);
+		final Indicator<Num> priceSpreadIndicator = CombineIndicator.minus(highPriceIndicator, lowPriceIndicator);
 		final Indicator<Num> priceSpreadRegressionIndicator = new SimpleLinearRegressionIndicator(priceSpreadIndicator, barCount);
 		final Indicator<Num> regressedSpreadMultipleIndicator = new TransformIndicator(priceSpreadRegressionIndicator, multiple::multipliedBy);
 		final Rule spreadRule = new OverIndicatorRule(priceSpreadIndicator, regressedSpreadMultipleIndicator);
 		
 		final Indicator<Num> closePriceIndicator = new ClosePriceIndicator(series);
 		final Indicator<Num> previousCloseIndicator = new PreviousValueIndicator(closePriceIndicator);
-		final Indicator<Num> closeChangeIndicator = new DifferenceIndicator(closePriceIndicator, previousCloseIndicator);
+		final Indicator<Num> closeChangeIndicator = CombineIndicator.minus(closePriceIndicator, previousCloseIndicator);
 		final Indicator<Num> absoluteCloseChangeIndicator = new TransformIndicator(closeChangeIndicator, Num::abs);
 		final Indicator<Num> regressedAbsoluteCloseChangeIndicator = new SimpleLinearRegressionIndicator(absoluteCloseChangeIndicator, barCount);
 		final Rule closeChangeRule = new OverIndicatorRule(closeChangeIndicator, regressedAbsoluteCloseChangeIndicator);

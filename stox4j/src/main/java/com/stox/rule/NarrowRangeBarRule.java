@@ -1,11 +1,13 @@
 package com.stox.rule;
 
 import org.ta4j.core.BarSeries;
+import org.ta4j.core.Indicator;
 import org.ta4j.core.Rule;
 import org.ta4j.core.TradingRecord;
-import org.ta4j.core.indicators.helpers.DifferenceIndicator;
+import org.ta4j.core.indicators.helpers.CombineIndicator;
 import org.ta4j.core.indicators.helpers.HighPriceIndicator;
 import org.ta4j.core.indicators.helpers.LowPriceIndicator;
+import org.ta4j.core.num.Num;
 import org.ta4j.core.rules.AbstractRule;
 import org.ta4j.core.rules.IsLowestRule;
 
@@ -26,7 +28,7 @@ public class NarrowRangeBarRule extends AbstractRule {
 	public NarrowRangeBarRule(BarSeries series, NarrowRangeBarConfig config) {
 		final HighPriceIndicator highPriceIndicator = new HighPriceIndicator(series);
 		final LowPriceIndicator lowPriceIndicator = new LowPriceIndicator(series);
-		final DifferenceIndicator spreadIndicator = new DifferenceIndicator(highPriceIndicator, lowPriceIndicator);
+		final Indicator<Num> spreadIndicator = CombineIndicator.minus(highPriceIndicator, lowPriceIndicator);
 		final IsLowestRule isLowestRule = new IsLowestRule(spreadIndicator, config.getBarCount());
 		this.delegate = isLowestRule;
 	}
