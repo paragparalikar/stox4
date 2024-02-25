@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class Quote {
 
-	private double ltp;
+	private final double ltp;
 
 }

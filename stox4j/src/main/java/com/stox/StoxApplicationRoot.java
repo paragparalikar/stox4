@@ -59,7 +59,7 @@ public class StoxApplicationRoot extends StackPane implements View {
 		this.exampleTab = new ExampleTab(context.getEventBus(), context.getScripService(), 
 				context.getExampleService(), context.getExampleGroupService(), context.getSerializationService());
 		this.addAsExampleMenu = new AddAsExampleMenu(context.getEventBus(), context.getExampleService(), context.getExampleGroupService());
-		this.alertTab = new AlertTab(context.getEventBus(), context.getScripService(), context.getAlertService());
+		this.alertTab = new AlertTab(context.getEventBus(), context.getScripService(), context.getAlertService(), context.getScheduledExecutorService());
 		this.createAlertMenu = new CreateAlertMenu(context.getEventBus(), context.getAlertService());
 		chartingView.getContextMenu().getItems().addAll(createAlertMenu, addToWatchlistMenu, addAsExampleMenu);
 		chartingView.getToolBar().getItems().addAll(Fx.spacer(), new MessagePanel(context.getEventBus()));

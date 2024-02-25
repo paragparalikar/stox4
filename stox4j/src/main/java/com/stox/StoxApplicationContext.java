@@ -8,6 +8,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import org.greenrobot.eventbus.EventBus;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stox.alert.AlertRepository;
 import com.stox.alert.AlertService;
 import com.stox.charting.drawing.DrawingRepository;
@@ -16,6 +17,7 @@ import com.stox.common.bar.BarRepository;
 import com.stox.common.bar.BarService;
 import com.stox.common.persistence.SerializationRepository;
 import com.stox.common.persistence.SerializationService;
+import com.stox.common.quote.NseQuoteProvider;
 import com.stox.common.quote.QuoteService;
 import com.stox.common.scrip.ScripRepository;
 import com.stox.common.scrip.ScripService;
@@ -35,6 +37,7 @@ import lombok.Value;
 @Value
 public class StoxApplicationContext {
 	
+	private final ObjectMapper objectMapper = new ObjectMapper();
 	private final Path home = Paths.get(System.getProperty("user.home"), ".stox4j");
 	private final EventBus eventBus = new EventBus();
 	private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
@@ -49,8 +52,8 @@ public class StoxApplicationContext {
 	private final ExampleGroupRepository exampleGroupRepository = new ExampleGroupRepository(home);
 	private final ExampleGroupService exampleGroupService = new ExampleGroupService(eventBus, exampleGroupRepository);
 	private final AlertRepository alertRepository = new AlertRepository(home);
-	private final QuoteService quoteService = null;
-	private final AlertService alertService = new AlertService(home, scripService, quoteService, alertRepository);
+	private final QuoteService quoteService = new QuoteService(new NseQuoteProvider(objectMapper));
+	private final AlertService alertService = new AlertService(scripService, quoteService, alertRepository);
 	private final EodBarDownloader eodBarDownloader = new NseEodBarDownloader(scripService);
 	private final ScripMasterDownloader scripMasterDownloader = new NseScripMasterDownloader();
 	private final ExecutorService executor = Executors.newWorkStealingPool();

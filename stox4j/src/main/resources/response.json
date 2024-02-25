@@ -1,0 +1,161 @@
+{
+	"info": {
+		"symbol": "SBIN",
+		"companyName": "State Bank of India",
+		"industry": "BANKS",
+		"activeSeries": [
+			"EQ"
+		],
+		"debtSeries": [
+		],
+		"tempSuspendedSeries": [
+			"IL",
+			"N1",
+			"N2",
+			"N3",
+			"N4",
+			"N5",
+			"N6"
+		],
+		"isFNOSec": true,
+		"isCASec": false,
+		"isSLBSec": true,
+		"isDebtSec": false,
+		"isSuspended": false,
+		"isETFSec": false,
+		"isDelisted": false,
+		"isin": "INE062A08066",
+		"isTop10": false,
+		"identifier": "SBINEQN"
+	},
+	"metadata": {
+		"series": "EQ",
+		"symbol": "SBIN",
+		"isin": "INE062A01020",
+		"status": "Listed",
+		"listingDate": "01-Mar-1995",
+		"industry": "Public Sector Bank",
+		"lastUpdateTime": "23-Feb-2024 16:00:00",
+		"pdSectorPe": 9.76,
+		"pdSymbolPe": 10.56,
+		"pdSectorInd": "NIFTY BANK                                        "
+	},
+	"securityInfo": {
+		"boardStatus": "Main",
+		"tradingStatus": "Active",
+		"tradingSegment": "Normal Market",
+		"sessionNo": "-",
+		"slb": "Yes",
+		"classOfShare": "Equity",
+		"derivatives": "Yes",
+		"surveillance": {
+			"surv": null,
+			"desc": null
+		},
+		"faceValue": 1,
+		"issuedSize": 8924611934
+	},
+	"sddDetails": {
+		"SDDAuditor": "-",
+		"SDDStatus": "-"
+	},
+	"priceInfo": {
+		"lastPrice": 760.35,
+		"change": -5.5499999999999545,
+		"pChange": -0.7246376811594144,
+		"previousClose": 765.9,
+		"open": 765.9,
+		"close": 759.05,
+		"vwap": 761.81,
+		"lowerCP": "689.35",
+		"upperCP": "842.45",
+		"pPriceBand": "No Band",
+		"basePrice": 765.9,
+		"intraDayHighLow": {
+			"min": 755,
+			"max": 770.5,
+			"value": 760.35
+		},
+		"weekHighLow": {
+			"min": 501.55,
+			"minDate": "27-Mar-2023",
+			"max": 777.5,
+			"maxDate": "21-Feb-2024",
+			"value": 760.35
+		},
+		"iNavValue": null,
+		"checkINAV": false
+	},
+	"industryInfo": {
+		"macro": "Financial Services",
+		"sector": "Financial Services",
+		"industry": "Banks",
+		"basicIndustry": "Public Sector Bank"
+	},
+	"preOpenMarket": {
+		"preopen": [
+			{
+				"price": 689.35,
+				"buyQty": 0,
+				"sellQty": 86
+			},
+			{
+				"price": 690,
+				"buyQty": 0,
+				"sellQty": 6
+			},
+			{
+				"price": 699,
+				"buyQty": 0,
+				"sellQty": 25
+			},
+			{
+				"price": 710,
+				"buyQty": 0,
+				"sellQty": 80
+			},
+			{
+				"price": 765.9,
+				"buyQty": 0,
+				"sellQty": 0,
+				"iep": true
+			},
+			{
+				"price": 800.4,
+				"buyQty": 236,
+				"sellQty": 0
+			},
+			{
+				"price": 801.5,
+				"buyQty": 50,
+				"sellQty": 0
+			},
+			{
+				"price": 804.15,
+				"buyQty": 1289,
+				"sellQty": 0
+			},
+			{
+				"price": 842,
+				"buyQty": 220,
+				"sellQty": 0
+			}
+		],
+		"ato": {
+			"buy": 19577,
+			"sell": 3569
+		},
+		"IEP": 765.9,
+		"totalTradedVolume": 53284,
+		"finalPrice": 765.9,
+		"finalQuantity": 53284,
+		"lastUpdateTime": "23-Feb-2024 09:07:29",
+		"totalBuyQuantity": 92077,
+		"totalSellQuantity": 176053,
+		"atoBuyQty": 19577,
+		"atoSellQty": 3569,
+		"Change": 0,
+		"perChange": 0,
+		"prevClose": 765.9
+	}
+}
