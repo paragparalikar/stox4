@@ -1,10 +1,15 @@
 package com.stox;
 
+import java.net.URL;
+
+import com.stox.alert.AlertService;
 import com.stox.common.ui.Icon;
 import com.stox.data.downloader.DataDownloader;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -54,6 +59,16 @@ public class StoxApplication extends Application {
 			.scripMasterDownloader(context.getScripMasterDownloader())
 			.build()
 			.download();
+		
+		final URL url = AlertService.class.getClassLoader().getResource("dhol_tashe.mp3");
+		System.out.println(url);
+		final Media media = new Media(url.toExternalForm());
+		final MediaPlayer mediaPlayer = new MediaPlayer(media);
+		mediaPlayer.setAutoPlay(true);
+		mediaPlayer.setVolume(1);
+		mediaPlayer.play();
+		
+		
 	}
 
 	@Override

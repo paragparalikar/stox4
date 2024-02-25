@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -15,6 +16,7 @@ import com.stox.common.bar.BarRepository;
 import com.stox.common.bar.BarService;
 import com.stox.common.persistence.SerializationRepository;
 import com.stox.common.persistence.SerializationService;
+import com.stox.common.quote.QuoteService;
 import com.stox.common.scrip.ScripRepository;
 import com.stox.common.scrip.ScripService;
 import com.stox.data.downloader.bar.EodBarDownloader;
@@ -35,6 +37,7 @@ public class StoxApplicationContext {
 	
 	private final Path home = Paths.get(System.getProperty("user.home"), ".stox4j");
 	private final EventBus eventBus = new EventBus();
+	private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 	private final BarRepository barRepository = new BarRepository(home);
 	private final BarService barService = new BarService(barRepository);
 	private final ScripRepository scripRepository = new ScripRepository(home);
@@ -46,7 +49,8 @@ public class StoxApplicationContext {
 	private final ExampleGroupRepository exampleGroupRepository = new ExampleGroupRepository(home);
 	private final ExampleGroupService exampleGroupService = new ExampleGroupService(eventBus, exampleGroupRepository);
 	private final AlertRepository alertRepository = new AlertRepository(home);
-	private final AlertService alertService = new AlertService(alertRepository);
+	private final QuoteService quoteService = null;
+	private final AlertService alertService = new AlertService(home, scripService, quoteService, alertRepository);
 	private final EodBarDownloader eodBarDownloader = new NseEodBarDownloader(scripService);
 	private final ScripMasterDownloader scripMasterDownloader = new NseScripMasterDownloader();
 	private final ExecutorService executor = Executors.newWorkStealingPool();

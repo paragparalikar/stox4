@@ -26,3 +26,7 @@
 	-fx-border-width: 2px 0 0 0;
 	-fx-border-color: green;
 }
+
+.list-view .cell.success{
+	-fx-background-color: lightgreen;
+}

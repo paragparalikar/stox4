@@ -59,6 +59,7 @@ public class AlertListView extends ListView<Alert> {
 					final Scrip scrip = scripService.findByIsin(item.getIsin());
 					final String scripName = null == scrip ? item.getIsin() : scrip.getName();
 					setText(scripName + " - " + NumberFormat.getCurrencyInstance().format(item.getPrice()));
+					if(item.isSatisfied()) getStyleClass().add("success");
 					setGraphic(deleteButton);
 					deleteButton.setOnAction(event -> {
 						alertService.delete(item);
