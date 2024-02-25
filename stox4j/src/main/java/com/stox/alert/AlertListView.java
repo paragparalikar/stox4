@@ -4,12 +4,15 @@ import java.text.NumberFormat;
 import java.util.Optional;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
+import com.stox.alert.event.AlertCreatedEvent;
 import com.stox.alert.event.AlertSelectedEvent;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.scrip.ScripService;
 import com.stox.common.ui.Icon;
 
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
@@ -27,7 +30,7 @@ public class AlertListView extends ListView<Alert> {
 		this.scripService = scripService;
 		setCellFactory(this::createAlertCell);
 		getSelectionModel().selectedItemProperty().addListener(this::changed);
-		
+		eventBus.register(this);
 	}
 	
 	private void changed(ObservableValue<? extends Alert> observable, 
@@ -35,6 +38,11 @@ public class AlertListView extends ListView<Alert> {
 		Optional.ofNullable(newValue)
 			.map(AlertSelectedEvent::new)
 			.ifPresent(eventBus::post);
+	}
+	
+	@Subscribe
+	public void onAlertCreated(AlertCreatedEvent event) {
+		Platform.runLater(() -> getItems().add(event.getAlert()));
 	}
 	
 	private ListCell<Alert> createAlertCell(ListView<Alert> listView){
@@ -48,7 +56,6 @@ public class AlertListView extends ListView<Alert> {
 					setText(null);
 					setGraphic(null);
 				} else {
-					
 					final Scrip scrip = scripService.findByIsin(item.getIsin());
 					final String scripName = null == scrip ? item.getIsin() : scrip.getName();
 					setText(scripName + " - " + NumberFormat.getCurrencyInstance().format(item.getPrice()));
