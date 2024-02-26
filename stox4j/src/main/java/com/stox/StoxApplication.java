@@ -1,5 +1,7 @@
 package com.stox;
 
+import java.util.concurrent.TimeUnit;
+
 import com.stox.common.ui.Icon;
 import com.stox.data.downloader.DataDownloader;
 
@@ -59,6 +61,8 @@ public class StoxApplication extends Application {
 	@Override
 	public void stop() throws Exception {
 		root.unloadView();
+		context.getScheduledExecutorService().shutdown();
+		context.getScheduledExecutorService().awaitTermination(1, TimeUnit.SECONDS);
 	}
 	
 }

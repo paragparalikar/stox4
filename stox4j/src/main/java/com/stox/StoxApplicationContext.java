@@ -53,7 +53,7 @@ public class StoxApplicationContext {
 	private final ExampleGroupService exampleGroupService = new ExampleGroupService(eventBus, exampleGroupRepository);
 	private final AlertRepository alertRepository = new AlertRepository(home);
 	private final QuoteService quoteService = new QuoteService(new NseQuoteProvider(objectMapper));
-	private final AlertService alertService = new AlertService(scripService, quoteService, alertRepository);
+	private final AlertService alertService = new AlertService(eventBus, scripService, quoteService, alertRepository);
 	private final EodBarDownloader eodBarDownloader = new NseEodBarDownloader(scripService);
 	private final ScripMasterDownloader scripMasterDownloader = new NseScripMasterDownloader();
 	private final ExecutorService executor = Executors.newWorkStealingPool();

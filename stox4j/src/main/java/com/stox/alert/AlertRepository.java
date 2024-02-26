@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.stox.common.util.Strings;
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
@@ -28,6 +30,7 @@ public class AlertRepository {
 			final Path path = getPath();
 			if(Files.exists(path)) {
 				Files.lines(path)
+					.filter(Strings::hasText)
 					.map(this::fromString)
 					.forEach(cache::add);
 			}
@@ -66,10 +69,13 @@ public class AlertRepository {
 		return Alert.builder()
 				.isin(tokens[0])
 				.price(Double.parseDouble(tokens[1]))
+				.satisfied(Boolean.parseBoolean(tokens[2]))
 				.build();
 	}
 	
 	private String toString(Alert alert) {
-		return String.join(",", alert.getIsin(), String.valueOf(alert.getPrice()));
+		return String.join(",", alert.getIsin(), 
+				String.valueOf(alert.getPrice()),
+				String.valueOf(alert.isSatisfied()));
 	}
 }

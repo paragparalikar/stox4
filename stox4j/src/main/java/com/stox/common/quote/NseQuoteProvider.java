@@ -45,7 +45,7 @@ public class NseQuoteProvider implements QuoteProvider {
 		final HttpRequest.Builder builder = Http.addHeaders(HttpRequest.newBuilder(uri).GET());
 		final HttpResponse<InputStream> response = httpClient.send(builder.build(), BodyHandlers.ofInputStream());
 		final JsonNode node = objectMapper.readTree(new GZIPInputStream(response.body()));
-		return new Quote(node.get("priceInfo").get("lastPrice").doubleValue());
+		return new Quote(scrip, node.get("priceInfo").get("lastPrice").doubleValue());
 	}
 	
 }

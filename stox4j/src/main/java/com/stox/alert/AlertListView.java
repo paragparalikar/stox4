@@ -7,6 +7,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import com.stox.alert.event.AlertCreatedEvent;
+import com.stox.alert.event.AlertSatisfiedEvent;
 import com.stox.alert.event.AlertSelectedEvent;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.scrip.ScripService;
@@ -45,6 +46,11 @@ public class AlertListView extends ListView<Alert> {
 		Platform.runLater(() -> getItems().add(event.getAlert()));
 	}
 	
+	@Subscribe
+	public void onAlertSatisfied(AlertSatisfiedEvent event) {
+		refresh();
+	}
+	
 	private ListCell<Alert> createAlertCell(ListView<Alert> listView){
 		return new ListCell<Alert>() {
 			private final Button deleteButton = new Button(Icon.TRASH);
@@ -55,6 +61,7 @@ public class AlertListView extends ListView<Alert> {
 				if(empty || null == item) {
 					setText(null);
 					setGraphic(null);
+					getStyleClass().remove("success");
 				} else {
 					final Scrip scrip = scripService.findByIsin(item.getIsin());
 					final String scripName = null == scrip ? item.getIsin() : scrip.getName();

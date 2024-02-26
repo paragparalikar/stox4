@@ -10,6 +10,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.ta4j.core.Bar;
 
+import com.stox.alert.event.AlertSelectedEvent;
 import com.stox.charting.axis.x.XAxis;
 import com.stox.charting.axis.x.XAxisState;
 import com.stox.charting.chart.Chart;
@@ -151,6 +152,12 @@ public class ChartingView extends BorderPane implements View {
 		if(null != old && null != old.getScrip()) drawingService.save(old.getScrip().getIsin(), priceChart.getDrawings());
 		priceChart.clearDrawings();
 		if(null != value && null != value.getScrip()) drawingService.findByIsin(value.getScrip().getIsin(), priceChart).forEach(priceChart::add);
+	}
+	
+	@Subscribe
+	public void onAlertSelected(AlertSelectedEvent event) {
+		final Scrip scrip = scripService.findByIsin(event.getAlert().getIsin());
+		context.getArgumentsProperty().set(new ChartingArguments(scrip, null));
 	}
 	
 	@Subscribe

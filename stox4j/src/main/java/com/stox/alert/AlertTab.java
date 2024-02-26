@@ -28,7 +28,7 @@ public class AlertTab extends Tab implements View {
 		setGraphic(graphics);
 		this.alertView = new AlertView(eventBus, scripService, alertService);
 		setContent(alertView);
-		future = scheduledExecutorService.scheduleWithFixedDelay(alertService::poll, 10, 60, TimeUnit.SECONDS);
+		future = scheduledExecutorService.scheduleWithFixedDelay(alertService::pollAsync, 10, 60, TimeUnit.SECONDS);
 	}
 
 	@Override

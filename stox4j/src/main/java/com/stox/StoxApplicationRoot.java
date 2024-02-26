@@ -69,7 +69,7 @@ public class StoxApplicationRoot extends StackPane implements View {
 		this.splitPane = new SplitPane(tabPane, chartingView);
 		getChildren().add(splitPane);
 		
-		views = Arrays.asList(addAsExampleMenu, addToWatchlistMenu, watchlistTab, explorerTab, exampleTab, chartingView);
+		views = Arrays.asList(addAsExampleMenu, addToWatchlistMenu, watchlistTab, explorerTab, alertTab, exampleTab, chartingView);
 	}
 	
 	public void loadView() {
