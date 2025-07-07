@@ -40,9 +40,10 @@ public class RankerView extends BorderPane {
 	private final ScripService scripService;
 	private final ListView<Rank> listView = new ListView<>();
 	private final Button actionButton = new Button(Icon.PLAY);
-	private final ComboBox<Ranker<?>> comboBox = new ComboBox<>(FXCollections.observableArrayList(
-			new VolatilityContractionRanker(),
-			new PMomentumRanker()));
+	private final ComboBox<Ranker<? extends RankerConfig>> comboBox = new ComboBox<>(FXCollections.observableArrayList(
+			new ShortTermVolatilityContractionRanker(),
+			new LongTermVolatilityContractionRanker(),
+			new AccumulationRanker()));
 	private final HBox titleBar = new HBox(comboBox, actionButton);
 	
 	public RankerView(EventBus eventBus, BarService barService, ScripService scripService) {

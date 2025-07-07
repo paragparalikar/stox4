@@ -2,21 +2,12 @@ package com.stox.charting.tools;
 
 import java.nio.file.Path;
 
+import com.stox.charting.plot.rule.*;
 import org.ta4j.core.BarSeries;
 
 import com.stox.charting.ChartingContext;
 import com.stox.charting.ChartingView;
 import com.stox.charting.plot.Plottable;
-import com.stox.charting.plot.rule.PlottableBreakoutBarRule;
-import com.stox.charting.plot.rule.PlottableDojiRule;
-import com.stox.charting.plot.rule.PlottableLowPivoteRule;
-import com.stox.charting.plot.rule.PlottableMovingAverageBreakoutRule;
-import com.stox.charting.plot.rule.PlottableNarrowRangeBarRule;
-import com.stox.charting.plot.rule.PlottableReaccumulationRule;
-import com.stox.charting.plot.rule.PlottableSpringRule;
-import com.stox.charting.plot.rule.PlottableTestRule;
-import com.stox.charting.plot.rule.PlottableVolatilityContractionBreakoutRule;
-import com.stox.charting.plot.rule.RulePlot;
 import com.stox.common.scrip.Scrip;
 import com.stox.common.ui.Icon;
 import com.stox.common.ui.modal.Modal;
@@ -40,6 +31,7 @@ public class RuleButton extends Button implements EventHandler<ActionEvent> {
 		setOnAction(this);
 		this.context = context;
 		this.chartingView = chartingView;
+		listView.getItems().add(new PlottablePullbackRule());
 		listView.getItems().add(new PlottableDojiRule());
 		listView.getItems().add(new PlottableTestRule());
 		listView.getItems().add(new PlottableLowPivoteRule());

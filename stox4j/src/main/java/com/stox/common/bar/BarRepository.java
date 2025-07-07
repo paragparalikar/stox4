@@ -126,6 +126,7 @@ public class BarRepository {
 	@SneakyThrows
 	public void save(String isin, Bar bar) {
 		final Path path = resolvePath(isin);
+		Files.createDirectories(path.getParent());
 		synchronized(isin) {
 			try (final RandomAccessFile file = new RandomAccessFile(path.toString(), "rw")) {
 				write(bar, file);
@@ -136,6 +137,7 @@ public class BarRepository {
 	@SneakyThrows
 	public void save(String isin, Iterable<Bar> bars) {
 		final Path path = resolvePath(isin);
+		Files.createDirectories(path.getParent());
 		synchronized(isin) {
 			try (final RandomAccessFile file = new RandomAccessFile(path.toString(), "rw")) {
 				for(Bar bar : bars) write(bar, file);

@@ -34,7 +34,7 @@ class VolumePlotInfo extends DefaultPlotInfo<Num> {
 		numberFormat.setMaximumFractionDigits(0);
 		numberFormat.setMinimumIntegerDigits(1);
 		numberFormat.setGroupingUsed(true);
-		numberFormat.setRoundingMode(RoundingMode.UNNECESSARY);
+		numberFormat.setRoundingMode(RoundingMode.CEILING);
 	}
 	
 	@Override

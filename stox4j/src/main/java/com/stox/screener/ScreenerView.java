@@ -38,6 +38,7 @@ public class ScreenerView extends BorderPane {
 	private final ListView<Scrip> listView = new ListView<>();
 	private final Button actionButton = new Button(Icon.PLAY);
 	private final ComboBox<Screener<?>> comboBox = new ComboBox<>(FXCollections.observableArrayList(
+			new PullbackScreener(),
 			new LiquidityScreener(),
 			new BreakoutBarScreener(),
 			new MovingAverageBreakoutScreener(),

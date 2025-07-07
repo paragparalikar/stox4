@@ -1,10 +1,8 @@
 package com.stox.example;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -21,16 +19,16 @@ public class ExampleGroupService {
 	private final ExampleGroupRepository repository;
 	private final Map<String, ExampleGroup> cache = new HashMap<>();
 	
-	public List<ExampleGroup> findAll(){
+	public synchronized List<ExampleGroup> findAll(){
 		if(cache.isEmpty()) {
 			final List<ExampleGroup> groups = repository.findAll();
 			groups.forEach(group -> cache.put(group.getId(), group));
-			return groups;
 		}
 		return new ArrayList<>(cache.values());
 	}
 	
 	public ExampleGroup create(ExampleGroup exampleGroup) {
+		if(existsByName(exampleGroup.getName())) throw new IllegalArgumentException(String.format("Example Group with name %s already exists", exampleGroup.getName()));
 		if(null != exampleGroup.getId()) throw new IllegalArgumentException("Id must be null for creating a resource");
 		exampleGroup.setId(UUID.randomUUID().toString());
 		cache.put(exampleGroup.getId(), exampleGroup);
@@ -40,6 +38,7 @@ public class ExampleGroupService {
 	}
 	
 	public ExampleGroup update(ExampleGroup exampleGroup) {
+		if(existsByName(exampleGroup.getName())) throw new IllegalArgumentException(String.format("Example Group with name %s already exists", exampleGroup.getName()));
 		if(null == exampleGroup.getId()) throw new IllegalArgumentException("Id must not be null for updating a resource");
 		cache.put(exampleGroup.getId(), exampleGroup);
 		repository.saveAll(cache.values());
@@ -53,4 +52,12 @@ public class ExampleGroupService {
 		eventBus.post(new ExampleGroupDeletedEvent(exampleGroup));
 		return exampleGroup;
 	}
+
+	public boolean existsByName(String name){
+		if(null == name || name.isEmpty()) return false;
+		return findAll().stream()
+				.map(ExampleGroup::getName)
+				.anyMatch(exampleGroupName -> exampleGroupName.trim().equalsIgnoreCase(name.trim()));
+	}
+
 }
